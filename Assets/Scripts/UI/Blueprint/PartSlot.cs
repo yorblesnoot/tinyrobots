@@ -15,7 +15,6 @@ public class PartSlot : MonoBehaviour
 
     private void Awake()
     {
-        BlueprintControl.submitPartTree.AddListener(SubmitChildSlots);
         slotButton.onClick.AddListener(CheckToActivate);
     }
 
@@ -58,10 +57,14 @@ public class PartSlot : MonoBehaviour
         }
     }
 
-    void SubmitChildSlots(SimpleTree<CraftablePart> tree)
+    public void BuildTree(TreeNode<CraftablePart> parent)
     {
-        if(partIdentity == null) return;
-        tree.AddNode(partIdentity);
-        tree.AddChildren(partIdentity, childSlots.Where(x => x.partIdentity != null).Select(x => x.partIdentity).ToList());
+        if (partIdentity == null) return;
+        TreeNode<CraftablePart> myNode = parent.AddChild(partIdentity);
+        if (childSlots == null) return;
+        foreach(var slot in childSlots)
+        {
+            slot.BuildTree(myNode);
+        }
     }
 }

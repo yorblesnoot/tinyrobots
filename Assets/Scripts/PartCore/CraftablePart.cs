@@ -13,7 +13,6 @@ public enum PartType
 [CreateAssetMenu(fileName = "CraftPart", menuName = "ScriptableObjects/CraftPart")]
 public class CraftablePart : ScriptableObject
 {
-    public List<Ability> abilities;
     public GameObject attachableObject;
     [HideInInspector] public AttachmentPoint[] attachmentPoints;
     [HideInInspector] public Vector3[] slotPositions;
@@ -21,9 +20,10 @@ public class CraftablePart : ScriptableObject
 
     public void DeriveAttachmentAttributes()
     {
-        GameObject.Instantiate(attachableObject);
+        GameObject spawned = GameObject.Instantiate(attachableObject);
         attachmentPoints = attachableObject.GetComponentsInChildren<AttachmentPoint>();
         Create2DSlotLayout();
+        spawned.SetActive(false);
     }
 
     void Create2DSlotLayout()

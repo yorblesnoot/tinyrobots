@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class GetPartTree : UnityEvent<SimpleTree<CraftablePart>> { }
 public class BlueprintControl : MonoBehaviour
 {
     public static CraftablePart ActivePart;
-    public static GetPartTree submitPartTree = new();
+    public static TreeNode<CraftablePart> activeTree;
 
     [SerializeField] public static GameObject NewSlot;
     [SerializeField] GameObject newSlot;
     [SerializeField] BotAssembler assembler;
+    [SerializeField] CraftablePart originPart;
+    [SerializeField] PartSlot originSlot;
 
     public static void SetActivePart(CraftablePart part)
     {
@@ -37,11 +38,12 @@ public class BlueprintControl : MonoBehaviour
         partDisplays[i].InitializeDisplay(playerData.partInventory[i]);
     }
 
-    public SimpleTree<CraftablePart> partTree;
-    public void BuildBotTree()
+    public TreeNode<CraftablePart> partTree;
+    public void BuildBot()
     {
-        partTree = new();
-        submitPartTree.Invoke(partTree);
+        partTree = new(originPart);
+        originSlot.BuildTree(partTree);
+        
         //playerData.bot = partTree;
         assembler.BuildBotFromTree(partTree);
         gameObject.SetActive(false);
