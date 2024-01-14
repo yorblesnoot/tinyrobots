@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MarchingCubes : MonoBehaviour
@@ -9,11 +10,12 @@ public class MarchingCubes : MonoBehaviour
     [SerializeField] GameObject dot;
     [SerializeField] int mapSize;
     [SerializeField] float scale = 1;
-    [SerializeField] float threshold = .5f;
+    [SerializeField][Range(.4f,.6f)] float threshold = .5f;
     private void Start()
     {
         byte[,,] mapGrid = generator.Generate(mapSize, threshold);
         RenderIntoDots(mapGrid);
+        /*StartCoroutine(*/RenderIntoCubes(mapGrid);
     }
 
     void RenderIntoDots(byte[,,] mapGrid)
@@ -36,11 +38,12 @@ public class MarchingCubes : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
         List<Vector3> vertices = new();
         List<int> triangles = new();
-        for (int x = 0; x < mapSize; x++)
+        int mapSizeMinus = mapSize - 1;
+        for (int x = 0; x < mapSizeMinus; x++)
         {
-            for (int y = 0; y < mapSize; y++)
+            for (int y = 0; y < mapSizeMinus; y++)
             {
-                for (int z = 0; z < mapSize; z++)
+                for (int z = 0; z < mapSizeMinus; z++)
                 {
                     MarchCube(mapGrid, x, y, z, vertices, triangles);
                 }
@@ -48,30 +51,28 @@ public class MarchingCubes : MonoBehaviour
         }
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
+        mesh.RecalculateNormals();
     }
-    int width, height, depth = 2;
+
     private void MarchCube(byte[,,] mapGrid, int x, int y, int z, List<Vector3> vertices, List<int> triangles)
     {
         Vector3[] vertexInitial = new Vector3[12];
         //get the 8 relevant points on the grid
         byte[] cube = new byte[8];
-        int index = 0;
 
-        for (int ix = 0; ix < width; x++)
-        {
-            for (int iy = 0; iy < height; y++)
-            {
-                for (int iz = 0; iz < depth; z++)
-                {
-                    cube[index] = mapGrid[x + ix,y + iy,z + iz];
-                    index++;
-                }
-            }
-        }
+        cube[0] = mapGrid[x + 0, y + 0, z + 0];
+        cube[1] = mapGrid[x + 1, y + 0, z + 0];
+        cube[2] = mapGrid[x + 1, y + 1, z + 0];
+        cube[3] = mapGrid[x + 0, y + 1, z + 0];
+        cube[4] = mapGrid[x + 0, y + 0, z + 1];
+        cube[5] = mapGrid[x + 1, y + 0, z + 1];
+        cube[6] = mapGrid[x + 1, y + 1, z + 1];
+        cube[7] = mapGrid[x + 0, y + 1, z + 1];
+
 
         //convert 8 points to edges
         int flagIndex = 0;
-        for (int i = 0; i < 8; i++) if (cube[i] == 1) flagIndex |= 1 << i;
+        for (int i = 0; i < 8; i++) if (cube[i] == 1) { flagIndex |= 1 << i; }
         int edgeFlags = CubeEdgeFlags[flagIndex];
         if (edgeFlags == 0) return;
 
@@ -80,7 +81,7 @@ public class MarchingCubes : MonoBehaviour
             //if there is an intersection on this edge...
             if ((edgeFlags & (1 << i)) != 0)
             {
-                float offset = .5f;
+                float offset = GetOffset(cube[EdgeConnection[i, 0]], cube[EdgeConnection[i, 1]]);
 
                 vertexInitial[i].x = x + (VertexOffset[EdgeDefinitions[i, 0], 0] + offset * EdgeDirection[i, 0]);
                 vertexInitial[i].y = y + (VertexOffset[EdgeDefinitions[i, 0], 1] + offset * EdgeDirection[i, 1]);
@@ -98,7 +99,7 @@ public class MarchingCubes : MonoBehaviour
             for (int j = 0; j < 3; j++)
             {
                 var vert = TriangleConnectionTable[flagIndex, 3 * i + j];
-                triangles.Add(idx + j);
+                triangles.Add(idx + ReverseWind[j]);
                 vertices.Add(vertexInitial[vert]);
             }
         }
@@ -108,6 +109,21 @@ public class MarchingCubes : MonoBehaviour
     {
         return new Vector3(x * scale, y * scale, z * scale);
     }
+
+    protected virtual float GetOffset(float v1, float v2)
+    {
+        float delta = v2 - v1;
+        return (delta == 0.0f) ? 0f : (0f - v1) / delta;
+    }
+
+    static readonly int[] ReverseWind = { 2, 1, 0 };
+
+    private static readonly int[,] EdgeConnection = new int[,]
+        {
+            {0,1}, {1,2}, {2,3}, {3,0},
+            {4,5}, {5,6}, {6,7}, {7,4},
+            {0,4}, {1,5}, {2,6}, {3,7}
+        };
 
     protected static readonly int[,] VertexOffset = new int[,]
 	    {

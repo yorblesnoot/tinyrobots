@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class ProceduralMapGenerator : MonoBehaviour
@@ -10,6 +11,7 @@ public class ProceduralMapGenerator : MonoBehaviour
     int seed2;
     int seed3;
     float offset = .1f;
+    [SerializeField] [Range(0, 1)] float frequency;
     private void Awake()
     {
         seed1 = Random.Range(0, 999999);
@@ -18,21 +20,26 @@ public class ProceduralMapGenerator : MonoBehaviour
     }
     public byte[,,] Generate(int mapSize, float solidThreshold)
     {
+        int bufferedSize = mapSize + 2;
         byte[,,] mapGrid;
-        mapGrid = new byte[mapSize, mapSize, mapSize];
-        for(int x = 0; x < mapSize; x++)
+        mapGrid = new byte[bufferedSize, bufferedSize, bufferedSize];
+        for(int x = 1; x < mapSize - 1; x++)
         {
-            for(int y = 0; y < mapSize; y++)
+            for(int y = 1; y < mapSize - 1; y++)
             {
-                for(int z = 0; z < mapSize; z++)
+                for(int z = 1; z < mapSize - 1; z++)
                 {
-                    float noise = Perlin3D(offset + x + seed1, offset + y + seed2, offset + z + seed3);
-                    Debug.Log(noise);
+                    float noise = Perlin3D(Modify(x, seed1), Modify(y, seed2), Modify(z, seed3));
                     if (noise > solidThreshold) mapGrid[x, y, z] = 1;
                 }
             }
         }
         return mapGrid;
+    }
+
+    public float Modify(int val, int seed)
+    {
+        return (offset + val + seed) * frequency;
     }
 
     //dunno how this works. copied it from somewhere.
