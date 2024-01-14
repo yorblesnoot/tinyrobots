@@ -5,6 +5,7 @@ using UnityEngine;
 public class PrimaryCursor : MonoBehaviour
 {
     public static GameObject globalCursor;
+    public static TinyBot ActiveBot;
     public static Vector3 Position { get { return globalCursor.transform.position; } }
     private void Awake()
     {
@@ -14,9 +15,9 @@ public class PrimaryCursor : MonoBehaviour
     {
         Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit);
         transform.position = hit.point;
-        if (Input.GetMouseButtonDown(0))
+        if (ClickableAbility.Active != null && Input.GetMouseButtonDown(0))
         {
-            //do something
+            ClickableAbility.Active.ActivateAbility(ActiveBot, Position);
         }
     }
 

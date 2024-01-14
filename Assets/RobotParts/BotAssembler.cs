@@ -15,6 +15,7 @@ public class BotAssembler : MonoBehaviour
 
         botUnit.Initialize(objectTree);
         abilityUI.VisualizeAbilityList(botUnit.GenerateAbilityList());
+        PrimaryCursor.ActiveBot = botUnit;
 
         GameObject DeployOrigin(TreeNode<CraftablePart> tree, out TreeNode<GameObject> oTree)
         {

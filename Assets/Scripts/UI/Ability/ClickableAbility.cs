@@ -12,8 +12,6 @@ public class ClickableAbility : MonoBehaviour
     public void Become(Ability ability)
     {
         gameObject.SetActive(true);
-        Debug.Log(image);
-        Debug.Log(ability);
         image.sprite = ability.icon;
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => Activate(ability));
@@ -22,5 +20,6 @@ public class ClickableAbility : MonoBehaviour
     void Activate(Ability ability)
     {
         Active = ability;
+        image.color = Color.red;
     }
 }
