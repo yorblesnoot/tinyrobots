@@ -7,28 +7,35 @@ using UnityEngine;
 
 public class ProceduralMapGenerator : MonoBehaviour
 {
+    [SerializeField] int mapSize;
+    [SerializeField] float scale = 1;
+    [SerializeField][Range(.4f, .6f)] float solidThreshold = .5f;
+
     int seed1;
     int seed2;
     int seed3;
     float offset = .1f;
     [SerializeField] [Range(0, 1)] float frequency;
+    [SerializeField] bool spherize;
     private void Awake()
     {
         seed1 = Random.Range(0, 999999);
         seed2 = Random.Range(0, 999999);
         seed3 = Random.Range(0, 999999);
     }
-    public byte[,,] Generate(int mapSize, float solidThreshold)
+    public byte[,,] Generate()
     {
         int bufferedSize = mapSize + 2;
         byte[,,] mapGrid;
         mapGrid = new byte[bufferedSize, bufferedSize, bufferedSize];
-        for(int x = 1; x < mapSize - 1; x++)
+        Vector3 cubeCenter = new(bufferedSize /2, bufferedSize /2, bufferedSize /2);
+        for (int x = 1; x < mapSize - 1; x++)
         {
             for(int y = 1; y < mapSize - 1; y++)
             {
                 for(int z = 1; z < mapSize - 1; z++)
                 {
+                    if (spherize && (cubeCenter - new Vector3(x, y, z)).magnitude > mapSize/2) continue;
                     float noise = Perlin3D(Modify(x, seed1), Modify(y, seed2), Modify(z, seed3));
                     if (noise > solidThreshold) mapGrid[x, y, z] = 1;
                 }
@@ -36,6 +43,7 @@ public class ProceduralMapGenerator : MonoBehaviour
         }
         return mapGrid;
     }
+
 
     public float Modify(int val, int seed)
     {

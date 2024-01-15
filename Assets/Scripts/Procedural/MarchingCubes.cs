@@ -7,43 +7,18 @@ using UnityEngine;
 public class MarchingCubes : MonoBehaviour
 {
     [SerializeField] ProceduralMapGenerator generator;
-    [SerializeField] GameObject dot;
-    [SerializeField] int mapSize;
-    [SerializeField] float scale = 1;
-    [SerializeField][Range(.4f,.6f)] float threshold = .5f;
-    private void Start()
-    {
-        byte[,,] mapGrid = generator.Generate(mapSize, threshold);
-        RenderIntoDots(mapGrid);
-        /*StartCoroutine(*/RenderIntoCubes(mapGrid);
-    }
 
-    void RenderIntoDots(byte[,,] mapGrid)
-    {
-        for (int x = 0; x < mapSize; x++)
-        {
-            for (int y = 0; y < mapSize; y++)
-            {
-                for (int z = 0; z < mapSize; z++)
-                {
-                    if (mapGrid[x, y, z] == 1) Instantiate(dot, MapToWorldPosition(x,y,z), Quaternion.identity);
-                }
-            }
-        }
-    }
-
-    void RenderIntoCubes(byte[,,] mapGrid)
+    public void RenderIntoCubes(byte[,,] mapGrid)
     {
         var mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         List<Vector3> vertices = new();
         List<int> triangles = new();
-        int mapSizeMinus = mapSize - 1;
-        for (int x = 0; x < mapSizeMinus; x++)
+        for (int x = 0; x < mapGrid.GetLength(0) - 1; x++)
         {
-            for (int y = 0; y < mapSizeMinus; y++)
+            for (int y = 0; y < mapGrid.GetLength(1) - 1; y++)
             {
-                for (int z = 0; z < mapSizeMinus; z++)
+                for (int z = 0; z < mapGrid.GetLength(2) - 1; z++)
                 {
                     MarchCube(mapGrid, x, y, z, vertices, triangles);
                 }
@@ -103,11 +78,6 @@ public class MarchingCubes : MonoBehaviour
                 vertices.Add(vertexInitial[vert]);
             }
         }
-    }
-
-    Vector3 MapToWorldPosition(int x, int y, int z)
-    {
-        return new Vector3(x * scale, y * scale, z * scale);
     }
 
     protected virtual float GetOffset(float v1, float v2)

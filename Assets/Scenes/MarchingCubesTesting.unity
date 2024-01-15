@@ -155,6 +155,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 447eb32ccdaf94845bd4e635da81802a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  frequency: 0.08
+  sphereRadius: 10
 --- !u!114 &324784890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,10 +171,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   generator: {fileID: 324784889}
   dot: {fileID: 7046006132780434542, guid: e788cd60c17ad0f44800b067b6c34406, type: 3}
-  mapSize: 10
+  mapSize: 20
   scale: 1
-  threshold: 0.53
-  delay: 0
+  threshold: 0.525
 --- !u!4 &324784891
 Transform:
   m_ObjectHideFlags: 0
