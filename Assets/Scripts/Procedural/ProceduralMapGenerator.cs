@@ -1,14 +1,8 @@
-
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ProceduralMapGenerator : MonoBehaviour
 {
     [SerializeField] int mapSize;
-    [SerializeField] float scale = 1;
     [SerializeField][Range(.4f, .6f)] float solidThreshold = .5f;
 
     int seed1;
@@ -16,9 +10,15 @@ public class ProceduralMapGenerator : MonoBehaviour
     int seed3;
     float offset = .1f;
     [SerializeField] [Range(0, 1)] float frequency;
+    [SerializeField] float scale = 1;
+    public static float Scale;
     [SerializeField] bool spherize;
+
+    public static byte[,,] mapGrid;
     private void Awake()
     {
+        Scale = scale;
+        transform.localScale = Vector3.one * scale;
         seed1 = Random.Range(0, 999999);
         seed2 = Random.Range(0, 999999);
         seed3 = Random.Range(0, 999999);
@@ -26,7 +26,6 @@ public class ProceduralMapGenerator : MonoBehaviour
     public byte[,,] Generate()
     {
         int bufferedSize = mapSize + 2;
-        byte[,,] mapGrid;
         mapGrid = new byte[bufferedSize, bufferedSize, bufferedSize];
         Vector3 cubeCenter = new(bufferedSize /2, bufferedSize /2, bufferedSize /2);
         for (int x = 1; x < mapSize - 1; x++)

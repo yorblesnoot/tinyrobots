@@ -17,18 +17,18 @@ public static class Pathfinder3D
                 {
                     Vector3Int location = new(x, y, z);
                     nodeMap.Add(location,
-                        new Node { blocked = map[x,y,z] == 0,
+                        new Node { blocked = map[x,y,z] == 1,
                         location = location });
                 }
             }
         }
     }
 
-    public static List<Vector3Int> FindVectorPath(Vector3Int start, Vector3Int end)
+    public static List<Vector3> FindVectorPath(Vector3Int start, Vector3Int end)
     {
         List<Node> path = FindPath(start, end);
         if (path == null || path.Count == 0) return null;
-        return path.Select(x => x.location).ToList();
+        return path.Select(x => x.location.ToWorldVector()).ToList();
     }
 
     public static int GetPathLength(Vector3Int start, Vector3Int end)
@@ -40,14 +40,15 @@ public static class Pathfinder3D
     static List<Node> FindPath(Vector3Int startCoords, Vector3Int endCoords)
     {
         if (!nodeMap.TryGetValue(startCoords, out Node start) || !nodeMap.TryGetValue(endCoords, out Node end)) return null;
-        List<Node> openList = new();
-        List<Node> closeList = new();
+        if(end.blocked) return null;
+        HashSet<Node> openList = new();
+        HashSet<Node> closeList = new();
 
         openList.Add(start);
 
         while (openList.Count > 0)
         {
-            Node current = openList.OrderBy(x => x.F).First();
+            Node current = GetMinimum(openList);
 
             openList.Remove(current);
             closeList.Add(current);
@@ -80,6 +81,19 @@ public static class Pathfinder3D
         }
 
         return new List<Node>();
+    }
+
+    static Node GetMinimum(HashSet<Node> set)
+    {
+        var en = set.GetEnumerator();
+        en.MoveNext();
+        int min = en.Current.F;
+        Node output = null;
+        foreach(var item in set)
+        {
+            if(item.F < min) { min = item.F; output = item; }
+        }
+        return output;
     }
 
     static List<Node> GetFinishedRoute(Node start, Node end)

@@ -7,10 +7,11 @@ public class PropellerMove : Ability
     public override void ActivateAbility(TinyBot user, Vector3 target)
     {
         var path = Pathfinder3D.FindVectorPath(Vector3Int.RoundToInt(user.transform.position), Vector3Int.RoundToInt(target));
+        if(path == null) return;
         StartCoroutine(FlyPath(user, path));
     }
 
-    IEnumerator FlyPath(TinyBot user, List<Vector3Int> path)
+    IEnumerator FlyPath(TinyBot user, List<Vector3> path)
     {
         foreach (var target in path)
         {

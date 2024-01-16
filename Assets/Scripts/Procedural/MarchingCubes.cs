@@ -7,7 +7,7 @@ using UnityEngine;
 public class MarchingCubes : MonoBehaviour
 {
     [SerializeField] ProceduralMapGenerator generator;
-
+    [SerializeField] GameObject dot;
     public void RenderIntoCubes(byte[,,] mapGrid)
     {
         var mesh = new Mesh();
@@ -21,12 +21,14 @@ public class MarchingCubes : MonoBehaviour
                 for (int z = 0; z < mapGrid.GetLength(2) - 1; z++)
                 {
                     MarchCube(mapGrid, x, y, z, vertices, triangles);
+                    //Instantiate(dot, new Vector3Int(x,y,z).ToWorldVector(), Quaternion.identity);
                 }
             }
         }
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
         mesh.RecalculateNormals();
+        GetComponent<MeshCollider>().sharedMesh = mesh;
     }
 
     private void MarchCube(byte[,,] mapGrid, int x, int y, int z, List<Vector3> vertices, List<int> triangles)

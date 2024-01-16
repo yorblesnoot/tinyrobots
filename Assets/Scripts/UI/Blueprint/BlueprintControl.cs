@@ -13,6 +13,7 @@ public class BlueprintControl : MonoBehaviour
     [SerializeField] BotAssembler assembler;
     [SerializeField] CraftablePart originPart;
     [SerializeField] PartSlot originSlot;
+    [SerializeField] FreeFlyCamera flyCamera;
 
     public static void SetActivePart(CraftablePart part)
     {
@@ -47,6 +48,7 @@ public class BlueprintControl : MonoBehaviour
         //playerData.bot = partTree;
         assembler.BuildBotFromTree(partTree);
         gameObject.SetActive(false);
+        flyCamera._active = true;
     }
 
 

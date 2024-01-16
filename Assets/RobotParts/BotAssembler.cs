@@ -10,7 +10,7 @@ public class BotAssembler : MonoBehaviour
     public void BuildBotFromTree(TreeNode<CraftablePart> tree)
     {
         GameObject bot = DeployOrigin(tree, out var objectTree);
-        bot.transform.position = spawnPoint.transform.position;
+        bot.transform.position = ProceduralMapGenerator.mapGrid.FindUnoccupiedCoordinate().ToWorldVector();
         TinyBot botUnit = bot.GetComponent<TinyBot>();
 
         botUnit.Initialize(objectTree);
