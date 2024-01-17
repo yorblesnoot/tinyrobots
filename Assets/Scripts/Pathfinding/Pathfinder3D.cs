@@ -5,6 +5,7 @@ using UnityEngine;
 public static class Pathfinder3D
 {
     static Dictionary<Vector3Int, Node> nodeMap = new();
+    public static LineRenderer lineRenderer;
 
     public static void Initialize(byte[,,] map)
     {
@@ -22,13 +23,23 @@ public static class Pathfinder3D
                 }
             }
         }
+        foreach(Node node in nodeMap.Values)
+        {
+            node.neighbors = GetNeighbors(node);
+        }
     }
 
     public static List<Vector3> FindVectorPath(Vector3Int start, Vector3Int end)
     {
         List<Node> path = FindPath(start, end);
         if (path == null || path.Count == 0) return null;
-        return path.Select(x => x.location.ToWorldVector()).ToList();
+        List<Vector3> worldPath = path.Select(x => x.location.ToWorldVector()).ToList();
+        if (lineRenderer != null)
+        {
+            lineRenderer.positionCount = worldPath.Count;
+            lineRenderer.SetPositions(worldPath.ToArray());
+        }
+        return worldPath;
     }
 
     public static int GetPathLength(Vector3Int start, Vector3Int end)
@@ -59,9 +70,7 @@ public static class Pathfinder3D
                 return GetFinishedRoute(start, end);
             }
 
-            var neighbors = GetNeighbors(current);
-
-            foreach (Node neighbor in neighbors)
+            foreach (Node neighbor in current.neighbors)
             {
                 if (neighbor.blocked || closeList.Contains(neighbor))
                 {
@@ -69,7 +78,6 @@ public static class Pathfinder3D
                 }
 
                 neighbor.G = GetTaxiDistance(start, neighbor);
-                neighbor.H = GetTaxiDistance(end, neighbor);
 
                 neighbor.previous = current;
 
@@ -85,15 +93,11 @@ public static class Pathfinder3D
 
     static Node GetMinimum(HashSet<Node> set)
     {
-        var en = set.GetEnumerator();
+        var ordered = set.OrderBy(x => x.G);
+        /*var en = set.GetEnumerator();
         en.MoveNext();
-        int min = en.Current.F;
-        Node output = null;
-        foreach(var item in set)
-        {
-            if(item.F < min) { min = item.F; output = item; }
-        }
-        return output;
+        return en.Current;*/
+        return ordered.FirstOrDefault();
     }
 
     static List<Node> GetFinishedRoute(Node start, Node end)
@@ -114,16 +118,17 @@ public static class Pathfinder3D
 
     static int GetTaxiDistance(Node start, Node neighbor)
     {
-        return Mathf.Abs(start.location.x - neighbor.location.x) + Mathf.Abs(start.location.y - neighbor.location.y);
+        return System.Math.Abs(start.location.x - neighbor.location.x) + System.Math.Abs(start.location.y - neighbor.location.y) + System.Math.Abs(start.location.z - neighbor.location.z);
     }
 
     static List<Node> GetNeighbors(Node current)
     {
         List<Node> neighbors = new();
-        foreach (var direction in directions)
+        for (int i = 0; i < directions.Length; i++)
         {
+            Vector3Int direction = directions[i];
             Vector3Int locationCheck = direction + current.location;
-            if (nodeMap.ContainsKey(locationCheck)) neighbors.Add(nodeMap[locationCheck]);
+            if (nodeMap.TryGetValue(locationCheck, out Node val)) neighbors.Add(val);
         }
         return neighbors;
     }
@@ -135,14 +140,12 @@ public static class Pathfinder3D
 class Node
 {
     public int G;
-    public int H;
-
-    public int P;
-    public int F { get { return G + H + P; } }
 
     public Vector3Int location;
 
     public bool blocked;
 
     public Node previous;
+
+    public List<Node> neighbors;
 }
