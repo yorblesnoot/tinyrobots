@@ -18,7 +18,7 @@ public class PropellerMove : Ability
             Vector3 flatPosition = target;
             flatPosition.y = user.transform.position.y;
             user.transform.LookAt(flatPosition);
-            yield return StartCoroutine(user.gameObject.LerpTo(target, .2f));
+            yield return StartCoroutine(user.gameObject.LerpTo(target, .1f));
         }
     }
 }

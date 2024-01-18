@@ -52,16 +52,16 @@ public static class Pathfinder3D
     {
         if (!nodeMap.TryGetValue(startCoords, out Node start) || !nodeMap.TryGetValue(endCoords, out Node end)) return null;
         if(end.blocked) return null;
-        HashSet<Node> openList = new();
+        PriorityQueue<Node, int> openList = new();
+        HashSet<Node> openHash = new();
         HashSet<Node> closeList = new();
 
-        openList.Add(start);
+        openList.Enqueue(start, start.G);
+        openHash.Add(start);
 
         while (openList.Count > 0)
         {
-            Node current = GetMinimum(openList);
-
-            openList.Remove(current);
+            Node current = openList.Dequeue();
             closeList.Add(current);
 
             if (current == end)
@@ -81,9 +81,10 @@ public static class Pathfinder3D
 
                 neighbor.previous = current;
 
-                if (!openList.Contains(neighbor))
+                if (!openHash.Contains(neighbor))
                 {
-                    openList.Add(neighbor);
+                    openHash.Add(neighbor);
+                    openList.Enqueue(neighbor, neighbor.G);
                 }
             }
         }

@@ -4,22 +4,29 @@ using UnityEngine;
 
 public class PrimaryCursor : MonoBehaviour
 {
-    public static GameObject globalCursor;
     public static TinyBot ActiveBot;
-    public static Vector3 Position { get { return globalCursor.transform.position; } }
+    int activeIndex;
+    [SerializeField] CursorBehaviour[] cursorBehaviours;
     private void Awake()
     {
-        globalCursor = gameObject;
+        activeIndex = 0;
     }
     private void Update()
     {
-        Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit);
-        transform.position = hit.point;
+        cursorBehaviours[activeIndex].ControlCursor();
         if (ClickableAbility.Active != null && Input.GetMouseButtonDown(0))
         {
-            ClickableAbility.Active.ActivateAbility(ActiveBot, Position);
+            ClickableAbility.Active.ActivateAbility(ActiveBot, transform.position);
+            return;
         }
+        if(Input.GetKeyDown(KeyCode.G)) CycleCursorMode();
     }
 
-    
+    void CycleCursorMode()
+    {
+        cursorBehaviours[activeIndex].ToggleCursor();
+        activeIndex++;
+        if(activeIndex == cursorBehaviours.Length) activeIndex = 0;
+        cursorBehaviours[activeIndex].ToggleCursor();
+    }
 }

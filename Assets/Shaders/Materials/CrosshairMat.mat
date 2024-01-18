@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-8173239149332713782
+--- !u!114 &-6832652375528776638
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SelectBubble
-  m_Shader: {fileID: -6465566751694194690, guid: 50f36fc052a5dc4438642294c2ce4f9e,
+  m_Name: CrosshairMat
+  m_Shader: {fileID: -6465566751694194690, guid: 39066fdf8250712469e499ddd148843f,
     type: 3}
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -48,9 +48,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _FresnelPower: 1
+    - _AlphaMult: 1
+    - _DitherLevel: 0.423
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _Color: {r: 3.137255, g: 0, b: 0.24638128, a: 1}
+    - _GlowColor: {r: 0.23036647, g: 3.4764395, b: 5.3403134, a: 1}
   m_BuildTextureStacks: []
