@@ -1,7 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class CameraControl : MonoBehaviour
 {
@@ -13,32 +16,22 @@ public class CameraControl : MonoBehaviour
     [SerializeField] float zoomSpeed;
     [SerializeField] int maxZoom;
     [SerializeField] int minZoom;
+    [SerializeField] float snapSpeed;
+
+    [SerializeField] Transform projector;
 
     Quaternion startRotation;
     Vector3 initialClick;
+
     private void Update()
     {
         Vector3 mouse = Input.mousePosition;
-        if (Input.GetMouseButtonDown(2))
-        {
-            startRotation = focusPoint.rotation;
-            initialClick = Input.mousePosition;
-        }
-        if (Input.GetMouseButton(2))
-        {
-            //Vector3 rotationCenter = new(Screen.width/2, Screen.height/2);
-            Vector3 centerOffset = mouse - initialClick;
-            Vector3 weightedDirection = (centerOffset * rotationSpeed);
-            Vector3 finalEulerRotation = startRotation.eulerAngles;
-            finalEulerRotation.x -= weightedDirection.y;
-            finalEulerRotation.y += weightedDirection.x;
-            focusPoint.rotation = Quaternion.Euler(finalEulerRotation);
-        }
-        else if(Input.GetKey(KeyCode.W))
+
+        if (Input.GetKey(KeyCode.W))
         {
             Zoom(zoomSpeed);
         }
-        else if (Input.GetKey(KeyCode.S))
+        if (Input.GetKey(KeyCode.S))
         {
             Zoom(-zoomSpeed);
         }
@@ -50,6 +43,25 @@ public class CameraControl : MonoBehaviour
         {
             SlideCamera(new Vector3(scrollZoneX / 2, 0f, 0f));
         }
+
+        if (Input.GetMouseButtonDown(2))
+        {
+            startRotation = focusPoint.rotation;
+            initialClick = Input.mousePosition;
+            PrimaryCursor.Locked = true;
+            StartCoroutine(focusPoint.gameObject.LerpTo(PrimaryCursor.Transform.position, originReturnTime));
+        }
+        else if(Input.GetMouseButtonUp(2)) PrimaryCursor.Locked = false;
+        else if (Input.GetMouseButton(2))
+        {
+            //Vector3 rotationCenter = new(Screen.width/2, Screen.height/2);
+            Vector3 centerOffset = mouse - initialClick;
+            Vector3 weightedDirection = (centerOffset * rotationSpeed);
+            Vector3 finalEulerRotation = startRotation.eulerAngles;
+            finalEulerRotation.x -= weightedDirection.y;
+            finalEulerRotation.y += weightedDirection.x;
+            focusPoint.rotation = Quaternion.Euler(finalEulerRotation);
+        }
         else
         {
             float leftScroll = Mathf.Clamp(scrollZoneX - mouse.x, 0, float.MaxValue);
@@ -60,7 +72,10 @@ public class CameraControl : MonoBehaviour
 
             SlideCamera(moveOffset);
         }
+        
     }
+
+    [SerializeField] float originReturnTime;
 
     private void SlideCamera(Vector3 moveOffset)
     {
