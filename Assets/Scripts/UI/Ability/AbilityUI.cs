@@ -9,7 +9,7 @@ public class AbilityUI : MonoBehaviour
 
     List<ClickableAbility> deployedAbilities;
 
-    readonly static KeyCode[] keyCodes = {KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R, KeyCode.T, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.F };
+    readonly static KeyCode[] keyCodes = {KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9 };
     public void VisualizeAbilityList(List<Ability> abilityList)
     {
         deployedAbilities = new();

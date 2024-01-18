@@ -14,6 +14,7 @@ public class PrimaryCursor : MonoBehaviour
     private void Update()
     {
         cursorBehaviours[activeIndex].ControlCursor();
+        //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
         if (ClickableAbility.Active != null && Input.GetMouseButtonDown(0))
         {
             ClickableAbility.Active.ActivateAbility(ActiveBot, transform.position);

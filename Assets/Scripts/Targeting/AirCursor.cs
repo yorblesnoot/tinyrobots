@@ -14,9 +14,9 @@ public class AirCursor : CursorBehaviour
     public override void ControlCursor()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
-        Vector3 pos = cursorLoadout.transform.position;
-        pos.y += scroll * scrollRate;
-        cursorLoadout.transform.position = pos;
+        Vector3 pos = cursorLoadout.transform.localPosition;
+        pos.z += scroll * scrollRate;
+        cursorLoadout.transform.localPosition = pos;
         Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var hit, 99999, layerMask);
         transform.position = hit.point;
     }
