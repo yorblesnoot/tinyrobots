@@ -6,5 +6,5 @@ using UnityEngine;
 public class PlayerData : ScriptableObject
 {
     public List<CraftablePart> partInventory;
-    public TreeNode<CraftablePart> bot;
+    public List<BotRecord> botsInventory;
 }

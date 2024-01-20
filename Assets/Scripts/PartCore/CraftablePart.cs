@@ -11,7 +11,7 @@ public enum PartType
 }
 
 [CreateAssetMenu(fileName = "CraftPart", menuName = "ScriptableObjects/CraftPart")]
-public class CraftablePart : ScriptableObject
+public class CraftablePart : SOWithGUID
 {
     public GameObject attachableObject;
     [HideInInspector] public AttachmentPoint[] attachmentPoints;
