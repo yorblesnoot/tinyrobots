@@ -8,7 +8,7 @@ public class AirCursor : CursorBehaviour
     int layerMask;
     private void Awake()
     {
-        layerMask = LayerMask.GetMask("SelectPlane");
+        layerMask = LayerMask.GetMask("Ignore Raycast");
     }
 
     public override void ControlCursor()

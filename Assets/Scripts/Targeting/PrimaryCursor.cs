@@ -3,36 +3,79 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
+public enum CursorState
+{
+    FREE,
+    SPACELOCKED,
+    UNITSNAPPED,
+}
 public class PrimaryCursor : MonoBehaviour
 {
     public static TinyBot ActiveBot;
-    int activeIndex;
+
     [SerializeField] CursorBehaviour[] cursorBehaviours;
+    int activeCursorIndex;
+    
     public static Transform Transform;
-    public static bool Locked;
+    public static CursorState State;
+    public static TinyBot TargetedBot;
+
+    [SerializeField] AbilityUI abilityUI;
     private void Awake()
     {
         Transform = transform;
-        activeIndex = 0;
+        activeCursorIndex = 0;
     }
     private void Update()
     {
-        if (Locked) return;
-        cursorBehaviours[activeIndex].ControlCursor();
+        
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
-        if (ClickableAbility.Active != null && Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0))
         {
-            ClickableAbility.Active.ActivateAbility(ActiveBot, transform.position);
-            return;
+            
+            if(TargetedBot != null) 
+            {
+                ActiveBot = TargetedBot;
+                abilityUI.VisualizeAbilityList(TargetedBot.GenerateAbilityList());
+            }
+            else if (AbilityUI.Active != null)
+            {
+                AbilityUI.Active.ActivateAbility(ActiveBot, transform.position);
+                return;
+            }
         }
+        
         if(Input.GetKeyDown(KeyCode.G)) CycleCursorMode();
+
+        if (State != CursorState.FREE) return;
+        cursorBehaviours[activeCursorIndex].ControlCursor();
     }
 
     void CycleCursorMode()
     {
-        cursorBehaviours[activeIndex].ToggleCursor();
-        activeIndex++;
-        if(activeIndex == cursorBehaviours.Length) activeIndex = 0;
-        cursorBehaviours[activeIndex].ToggleCursor();
+        cursorBehaviours[activeCursorIndex].ToggleCursor();
+        activeCursorIndex++;
+        if(activeCursorIndex == cursorBehaviours.Length) activeCursorIndex = 0;
+        cursorBehaviours[activeCursorIndex].ToggleCursor();
     }
+
+    static bool canUnitSnap = true;
+    public static void ToggleUnitLock(TinyBot unit = null)
+    {
+        if (!canUnitSnap) return;
+        TargetedBot = unit;
+        if(unit == null && State == CursorState.UNITSNAPPED)
+        {
+            Transform.SetParent(null, true);
+            State = CursorState.FREE;
+        }
+        else if(State == CursorState.FREE)
+        {
+            State = CursorState.UNITSNAPPED;
+            Transform.SetParent(unit.transform, false);
+            Transform.localPosition = Vector3.zero;
+        }
+    }
+
+
 }

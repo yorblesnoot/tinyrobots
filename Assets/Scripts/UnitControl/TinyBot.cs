@@ -24,4 +24,14 @@ public class TinyBot : MonoBehaviour
         }
         return abilities;
     }
+
+    private void OnMouseEnter()
+    {
+        PrimaryCursor.ToggleUnitLock(this);
+    }
+
+    private void OnMouseExit()
+    {
+        PrimaryCursor.ToggleUnitLock();
+    }
 }

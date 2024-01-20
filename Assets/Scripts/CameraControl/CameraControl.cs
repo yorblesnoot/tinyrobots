@@ -48,10 +48,10 @@ public class CameraControl : MonoBehaviour
         {
             startRotation = focusPoint.rotation;
             initialClick = Input.mousePosition;
-            PrimaryCursor.Locked = true;
+            PrimaryCursor.State = CursorState.SPACELOCKED;
             StartCoroutine(focusPoint.gameObject.LerpTo(PrimaryCursor.Transform.position, originReturnTime));
         }
-        else if(Input.GetMouseButtonUp(2)) PrimaryCursor.Locked = false;
+        else if(Input.GetMouseButtonUp(2)) PrimaryCursor.State = CursorState.FREE;
         else if (Input.GetMouseButton(2))
         {
             //Vector3 rotationCenter = new(Screen.width/2, Screen.height/2);

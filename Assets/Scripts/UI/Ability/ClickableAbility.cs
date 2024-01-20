@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ClickableAbility : MonoBehaviour
@@ -11,7 +13,17 @@ public class ClickableAbility : MonoBehaviour
     [SerializeField] TMP_Text letter;
     Ability thisAbility;
 
-    public static Ability Active { get; private set; }
+    public static UnityEvent clearActive = new();
+    private void Awake()
+    {
+        clearActive.AddListener(Deactivate);
+    }
+
+    private void Deactivate()
+    {
+        image.color = Color.white;
+    }
+
     public void Become(Ability ability, KeyCode key)
     {
         gameObject.SetActive(true);
@@ -22,9 +34,17 @@ public class ClickableAbility : MonoBehaviour
         button.onClick.AddListener(Activate);
     }
 
+    public void Clear()
+    {
+        thisAbility = null;
+        button.onClick.RemoveAllListeners();
+        gameObject.SetActive(false);
+    }
+
     public void Activate()
     {
-        Active = thisAbility;
+        clearActive.Invoke();
+        AbilityUI.Active = thisAbility;
         image.color = Color.red;
     }
 }
