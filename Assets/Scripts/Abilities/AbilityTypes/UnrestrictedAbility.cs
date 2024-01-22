@@ -1,0 +1,11 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public abstract class UnrestrictedAbility : Ability
+{
+    public override void ControlTargetLine()
+    {
+        return;
+    }
+}

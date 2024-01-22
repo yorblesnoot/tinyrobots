@@ -22,6 +22,7 @@ public class ClickableAbility : MonoBehaviour
     private void Deactivate()
     {
         image.color = Color.white;
+        thisAbility.ToggleTargetLine(false);
     }
 
     public void Become(Ability ability, KeyCode key)
@@ -44,7 +45,9 @@ public class ClickableAbility : MonoBehaviour
     public void Activate()
     {
         clearActive.Invoke();
+        
         AbilityUI.Active = thisAbility;
+        thisAbility.ToggleTargetLine(true);
         image.color = Color.red;
     }
 }

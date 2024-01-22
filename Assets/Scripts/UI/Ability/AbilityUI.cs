@@ -18,7 +18,7 @@ public class AbilityUI : MonoBehaviour
     public void VisualizeAbilityList(List<Ability> abilityList)
     {
         Active = null;
-        ClickableAbility.clearActive.Invoke();
+        ClickableAbility.clearActive?.Invoke();
         deployedAbilities = new();
         abilityList = abilityList.Where(a => a != null).ToList();
         for(int i = 0; i < clickableAbilities.Count(); i++)
