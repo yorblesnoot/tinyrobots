@@ -1,10 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class CameraControl : MonoBehaviour
 {
@@ -19,6 +13,8 @@ public class CameraControl : MonoBehaviour
     [SerializeField] float snapSpeed;
 
     [SerializeField] Transform projector;
+
+    [SerializeField] float maxTiltAngle;
 
     Quaternion startRotation;
     Vector3 initialClick;
@@ -58,8 +54,13 @@ public class CameraControl : MonoBehaviour
             Vector3 centerOffset = mouse - initialClick;
             Vector3 weightedDirection = (centerOffset * rotationSpeed);
             Vector3 finalEulerRotation = startRotation.eulerAngles;
+            bool invertedAngle = finalEulerRotation.x <= 1f;
             finalEulerRotation.x -= weightedDirection.y;
             finalEulerRotation.y += weightedDirection.x;
+            
+            Debug.Log(finalEulerRotation);
+            if (invertedAngle) finalEulerRotation.x = Mathf.Clamp(finalEulerRotation.x, -maxTiltAngle, 0);
+            else finalEulerRotation.x = Mathf.Clamp(finalEulerRotation.x, 360-maxTiltAngle, 360);
             focusPoint.rotation = Quaternion.Euler(finalEulerRotation);
         }
         else

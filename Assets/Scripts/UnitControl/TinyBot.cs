@@ -9,6 +9,8 @@ public class TinyBot : MonoBehaviour
     public TreeNode<GameObject> componentParts;
     List<GameObject> flatParts;
 
+    public GameObject selectBrackets;
+
     public void Initialize(TreeNode<GameObject> tree)
     {
         componentParts = tree;
@@ -27,11 +29,11 @@ public class TinyBot : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        PrimaryCursor.ToggleUnitLock(this);
+        PrimaryCursor.ToggleUnitSnap(this);
     }
 
     private void OnMouseExit()
     {
-        PrimaryCursor.ToggleUnitLock();
+        PrimaryCursor.ToggleUnitSnap();
     }
 }

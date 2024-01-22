@@ -11,7 +11,7 @@ public enum CursorState
 }
 public class PrimaryCursor : MonoBehaviour
 {
-    public static TinyBot ActiveBot;
+    public static TinyBot SelectedBot;
 
     [SerializeField] CursorBehaviour[] cursorBehaviours;
     int activeCursorIndex;
@@ -32,15 +32,13 @@ public class PrimaryCursor : MonoBehaviour
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
         if (Input.GetMouseButtonDown(0))
         {
-            
-            if(TargetedBot != null) 
+            if(TargetedBot != null)
             {
-                ActiveBot = TargetedBot;
-                abilityUI.VisualizeAbilityList(TargetedBot.GenerateAbilityList());
+                SelectTargetedBot();
             }
             else if (AbilityUI.Active != null)
             {
-                AbilityUI.Active.ActivateAbility(ActiveBot, transform.position);
+                AbilityUI.Active.ActivateAbility(SelectedBot, transform.position);
                 return;
             }
         }
@@ -49,6 +47,14 @@ public class PrimaryCursor : MonoBehaviour
 
         if (State != CursorState.FREE) return;
         cursorBehaviours[activeCursorIndex].ControlCursor();
+    }
+
+    private void SelectTargetedBot()
+    {
+        if (SelectedBot != null) SelectedBot.selectBrackets.SetActive(false);
+        SelectedBot = TargetedBot;
+        SelectedBot.selectBrackets.SetActive(true);
+        abilityUI.VisualizeAbilityList(SelectedBot.GenerateAbilityList());
     }
 
     void CycleCursorMode()
@@ -60,7 +66,7 @@ public class PrimaryCursor : MonoBehaviour
     }
 
     static bool canUnitSnap = true;
-    public static void ToggleUnitLock(TinyBot unit = null)
+    public static void ToggleUnitSnap(TinyBot unit = null)
     {
         if (!canUnitSnap) return;
         TargetedBot = unit;

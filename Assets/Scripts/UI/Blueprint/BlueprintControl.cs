@@ -45,7 +45,6 @@ public class BlueprintControl : MonoBehaviour
         partTree = new(originPart);
         originSlot.BuildTree(partTree);
         
-        //assembler.BuildBotFromTree(partTree);
         GUIUtility.systemCopyBuffer = BotConverter.BotToString(partTree);
         gameObject.SetActive(false);
     }
