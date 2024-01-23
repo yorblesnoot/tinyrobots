@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class LaserShot : LinearAbility
 {
-    public override void ActivateAbility(TinyBot user, Vector3 target)
+    [SerializeField] GameObject laser;
+    [SerializeField] float shotSpeed;
+    public override void ExecuteAbility(TinyBot user, Vector3 target)
     {
-        
+        Vector3 direction = (target - user.transform.position).normalized;
+        GameObject shot = Instantiate(laser, emissionPoint.transform);
+        shot.transform.SetParent(null);
+        Rigidbody rigidbody = shot.GetComponent<Rigidbody>();
+        rigidbody.velocity = direction * shotSpeed;
     }
 }

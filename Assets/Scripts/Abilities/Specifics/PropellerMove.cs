@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PropellerMove : UnrestrictedAbility
 {
-    public override void ActivateAbility(TinyBot user, Vector3 target)
+    public override void ExecuteAbility(TinyBot user, Vector3 target)
     {
         var path = Pathfinder3D.FindVectorPath(Vector3Int.RoundToInt(user.transform.position), Vector3Int.RoundToInt(target));
         if(path == null) return;

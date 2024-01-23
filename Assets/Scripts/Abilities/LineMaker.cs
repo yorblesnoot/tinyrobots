@@ -17,5 +17,10 @@ public class LineMaker : MonoBehaviour
         LineRenderer.SetPositions(locations);
     }
 
+    public static void HideLine()
+    {
+        LineRenderer.positionCount = 0;
+    }
+
 
 }

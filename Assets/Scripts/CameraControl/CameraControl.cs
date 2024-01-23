@@ -58,7 +58,6 @@ public class CameraControl : MonoBehaviour
             finalEulerRotation.x -= weightedDirection.y;
             finalEulerRotation.y += weightedDirection.x;
             
-            Debug.Log(finalEulerRotation);
             if (invertedAngle) finalEulerRotation.x = Mathf.Clamp(finalEulerRotation.x, -maxTiltAngle, 0);
             else finalEulerRotation.x = Mathf.Clamp(finalEulerRotation.x, 360-maxTiltAngle, 360);
             focusPoint.rotation = Quaternion.Euler(finalEulerRotation);

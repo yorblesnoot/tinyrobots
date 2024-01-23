@@ -32,14 +32,17 @@ public class PrimaryCursor : MonoBehaviour
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
         if (Input.GetMouseButtonDown(0))
         {
-            if(TargetedBot != null)
+            
+            if (AbilityUI.Active != null)
+            {
+                AbilityUI.Active.ExecuteAbility(SelectedBot, transform.position);
+                AbilityUI.Active = null;
+                ClickableAbility.clearActive.Invoke();
+                return;
+            }
+            else if (TargetedBot != null)
             {
                 SelectTargetedBot();
-            }
-            else if (AbilityUI.Active != null)
-            {
-                AbilityUI.Active.ActivateAbility(SelectedBot, transform.position);
-                return;
             }
         }
         
@@ -51,9 +54,9 @@ public class PrimaryCursor : MonoBehaviour
 
     private void SelectTargetedBot()
     {
-        if (SelectedBot != null) SelectedBot.selectBrackets.SetActive(false);
+        if (SelectedBot != null) SelectedBot.BecomeActiveUnit(false);
         SelectedBot = TargetedBot;
-        SelectedBot.selectBrackets.SetActive(true);
+        SelectedBot.BecomeActiveUnit(true);
         abilityUI.VisualizeAbilityList(SelectedBot.GenerateAbilityList());
     }
 

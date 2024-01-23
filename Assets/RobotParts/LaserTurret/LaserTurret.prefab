@@ -40,7 +40,7 @@ PrefabInstance:
     - target: {fileID: 2492069091629794176, guid: 7720e2096f975f944b47c6983c6d88da,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.556054
+      value: -1.235
       objectReference: {fileID: 0}
     - target: {fileID: 2492069091629794176, guid: 7720e2096f975f944b47c6983c6d88da,
         type: 3}
@@ -177,6 +177,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: laserturretmodel
       objectReference: {fileID: 0}
+    - target: {fileID: 1818887364682035894, guid: c2625f0d9f8225f42bc27754fa7e7d1f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 45736949c1a91314c8e85b8de38ccdfd, type: 2}
+    - target: {fileID: 1818887364682035894, guid: c2625f0d9f8225f42bc27754fa7e7d1f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 0aa32adada4dcac4897e1649a033f407, type: 2}
+    - target: {fileID: 1818887364682035894, guid: c2625f0d9f8225f42bc27754fa7e7d1f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: ae83016fff1647446adda861a3b4eff3, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c2625f0d9f8225f42bc27754fa7e7d1f, type: 3}
 --- !u!4 &6450585361629342093 stripped
@@ -311,3 +326,5 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: d0abed84aa6f5489fb1695cbcafffef0, type: 3}
   maxRange: 50
   emissionPoint: {fileID: 646414412058972572}
+  laser: {fileID: 4700887371249141454, guid: 96e320672d3da51439a874f0e20d154a, type: 3}
+  shotSpeed: 60
