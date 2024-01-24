@@ -9,8 +9,10 @@ public class TinyBot : MonoBehaviour
     public TreeNode<GameObject> componentParts;
     List<GameObject> flatParts;
 
-    public GameObject selectBrackets;
-    Collider collider;
+    [SerializeField] GameObject selectBrackets;
+    [SerializeField] BotStateFeedback feedback;
+    public Transform headshotPosition;
+   
 
     int maxHealth;
     int currentHealth;
@@ -19,7 +21,6 @@ public class TinyBot : MonoBehaviour
     {
         componentParts = tree;
         flatParts = componentParts.Flatten().ToList();
-        collider = GetComponent<Collider>();
     }
 
     internal List<Ability> GenerateAbilityList()
@@ -60,7 +61,7 @@ public class TinyBot : MonoBehaviour
 
     public void ReceiveDamage(int damage)
     {
-        Debug.Log("damaged");
+        feedback.QueuePopup(damage, Color.red);
         currentHealth = Math.Clamp(currentHealth - damage, 0, maxHealth);
         if(currentHealth == 0) Die();
     }

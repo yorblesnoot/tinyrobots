@@ -17,7 +17,7 @@ public class BattleInitializer : MonoBehaviour
         marchingCubesRenderer.RenderIntoCubes(mapGrid);
 
         Pathfinder3D.Initialize(mapGrid);
-        Pathfinder3D.lineRenderer = lineRenderer;
+        //Pathfinder3D.lineRenderer = lineRenderer;
 
         botPlacer.PlaceBots();
     }
