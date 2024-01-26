@@ -12,25 +12,27 @@ public class TinyBot : MonoBehaviour
     [SerializeField] GameObject selectBrackets;
     [SerializeField] BotStateFeedback feedback;
     public Transform headshotPosition;
-   
 
+    [HideInInspector] public Sprite portrait;
+   
     int maxHealth;
     int currentHealth;
 
+    public List<Ability> Abilities { get; private set; }
     public void Initialize(TreeNode<GameObject> tree)
     {
         componentParts = tree;
         flatParts = componentParts.Flatten().ToList();
+        GenerateAbilityList();
     }
 
-    internal List<Ability> GenerateAbilityList()
+    void GenerateAbilityList()
     {
-        List<Ability> abilities = new();
+        Abilities = new();
         foreach (var componentPart in flatParts)
         {
-            abilities.Add(componentPart.GetComponent<Ability>());
+            Abilities.Add(componentPart.GetComponent<Ability>());
         }
-        return abilities;
     }
 
     private void Update()

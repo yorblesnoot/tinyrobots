@@ -8,6 +8,7 @@ public class BotAssembler : MonoBehaviour
     [SerializeField] GameObject spawnPoint;
     [SerializeField] AbilityUI abilityUI;
     [SerializeField] TurnUI turnUI;
+    [SerializeField] PortraitGenerator portraitGenerator;
     public void BuildBotFromTree(TreeNode<CraftablePart> tree)
     {
         GameObject bot = DeployOrigin(tree, out var objectTree);
@@ -15,6 +16,8 @@ public class BotAssembler : MonoBehaviour
         TinyBot botUnit = bot.GetComponent<TinyBot>();
 
         botUnit.Initialize(objectTree);
+        portraitGenerator.AttachPortrait(botUnit);
+        
         turnUI.AddTurnDisplay(botUnit);
 
         GameObject DeployOrigin(TreeNode<CraftablePart> tree, out TreeNode<GameObject> oTree)

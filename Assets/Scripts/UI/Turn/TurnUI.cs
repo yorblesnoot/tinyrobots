@@ -9,7 +9,7 @@ public class TurnUI : MonoBehaviour
     [SerializeField] Camera headshotCam;
     public void AddTurnDisplay(TinyBot bot)
     {
-        turnPortraitList[0].Become(bot, headshotCam);
+        turnPortraitList[0].Become(bot);
         turnPortraitList.RemoveAt(0);
     }
 }

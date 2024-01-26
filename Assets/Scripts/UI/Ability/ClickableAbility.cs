@@ -22,6 +22,7 @@ public class ClickableAbility : MonoBehaviour
     private void Deactivate()
     {
         image.color = Color.white;
+        if (thisAbility == null) return;
         thisAbility.ToggleTargetLine(false);
     }
 

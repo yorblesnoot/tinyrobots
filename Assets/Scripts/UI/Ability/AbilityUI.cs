@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AbilityUI : MonoBehaviour
 {
     [SerializeField] ClickableAbility[] clickableAbilities;
+    [SerializeField] Image unitPortrait;
 
     List<ClickableAbility> deployedAbilities;
     public static Ability Active;
@@ -15,12 +17,19 @@ public class AbilityUI : MonoBehaviour
     }
 
     readonly static KeyCode[] keyCodes = {KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9 };
-    public void VisualizeAbilityList(List<Ability> abilityList)
+
+    public void ShowControlForUnit(TinyBot bot)
+    {
+        VisualizeAbilityList(bot);
+        unitPortrait.sprite = bot.portrait;
+    }
+
+    void VisualizeAbilityList(TinyBot bot)
     {
         Active = null;
         ClickableAbility.clearActive?.Invoke();
         deployedAbilities = new();
-        abilityList = abilityList.Where(a => a != null).ToList();
+        List<Ability> abilityList = bot.Abilities.Where(a => a != null).ToList();
         for(int i = 0; i < clickableAbilities.Count(); i++)
         {
             if(i < abilityList.Count)
