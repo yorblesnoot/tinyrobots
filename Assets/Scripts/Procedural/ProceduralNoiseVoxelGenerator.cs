@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ProceduralMapGenerator : MonoBehaviour
+public class ProceduralNoiseVoxelGenerator : MonoBehaviour
 {
     [SerializeField] int mapSize;
     [SerializeField][Range(.4f, .6f)] float solidThreshold = .5f;

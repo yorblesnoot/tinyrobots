@@ -1257,6 +1257,7 @@ GameObject:
   - component: {fileID: 468739837}
   - component: {fileID: 468739838}
   - component: {fileID: 468739839}
+  - component: {fileID: 468739840}
   m_Layer: 0
   m_Name: GameMaster
   m_TagString: Untagged
@@ -1307,7 +1308,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 585e3890a505e0e40951909b9eef50eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapGenerator: {fileID: 1110564609}
+  mapGenerator: {fileID: 0}
+  treeGenerator: {fileID: 0}
   marchingCubesRenderer: {fileID: 1110564608}
   lineRenderer: {fileID: 1599781106}
   botPlacer: {fileID: 468739837}
@@ -1357,6 +1359,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   renderTexture: {fileID: 8400000, guid: 08c69513d27003444916ff6976160934, type: 2}
   headCam: {fileID: 1917068457}
+--- !u!114 &468739840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 468739833}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60af11ec5d0aef54ab5212f41d3c2682, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eulerRotation: {x: 10, y: 0, z: 0}
+  treeParams:
+    mapSize: 30
+    canopyCenterHeight: 20
+    canopyRadius: 10
+    initialBranches: 5
 --- !u!224 &468842883 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9119217915258957823, guid: 112a7f78f45dc654ab52dc0975616f36,
@@ -3411,7 +3431,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1110564610}
-  - component: {fileID: 1110564609}
   - component: {fileID: 1110564608}
   - component: {fileID: 1110564612}
   - component: {fileID: 1110564611}
@@ -3435,25 +3454,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f25e4a46bd14d284ebefe9cd4694d5e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  generator: {fileID: 1110564609}
+  generator: {fileID: 0}
   dot: {fileID: 7046006132780434542, guid: e788cd60c17ad0f44800b067b6c34406, type: 3}
---- !u!114 &1110564609
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1110564607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 447eb32ccdaf94845bd4e635da81802a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mapSize: 40
-  solidThreshold: 0.5
-  frequency: 0.115
-  scale: 1
-  spherize: 1
 --- !u!4 &1110564610
 Transform:
   m_ObjectHideFlags: 0
