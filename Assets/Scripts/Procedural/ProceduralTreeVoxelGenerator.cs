@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class ProceduralTreeVoxelGenerator : MonoBehaviour
 {
@@ -138,12 +139,11 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
 
         public Node()
         {
-            Edge[] edges = new Edge[EdgePrecalculator.DirectionCount];
+            edges = new Edge[EdgePrecalculator.DirectionCount];
             for (int i = 0; i < EdgePrecalculator.DirectionCount; i++)
             {
                 edges[i] = new Edge() { directionIndex = i };
             }
-            Debug.Log(edges.Length);
         }
 
         public int positionX, positionY, positionZ;
@@ -152,22 +152,6 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
         public float distanceFromRoot = float.PositiveInfinity;
 
         public Node parent;
-
-        public void FindNeighbors()
-        {
-            for (int i = 0; i < EdgePrecalculator.DirectionCount; i++)
-            {
-                int x = EdgePrecalculator.GetDirectionComponent(i, 0);
-                int y = EdgePrecalculator.GetDirectionComponent(i, 1);
-                int z = EdgePrecalculator.GetDirectionComponent(i, 2);
-                if (x == 0 && y==0 && z==0) continue;
-                int checkX = x + positionX;
-                int checkY = y + positionY;
-                int checkZ = z + positionZ;
-                if (checkX < 0 || checkY < 0 || checkZ < 0) continue;
-                if(checkX >= mapSize || checkY >= mapSize || checkZ >= mapSize) continue;
-            }
-        }
 
         Vector3 baseGuidance = Vector3.right;
         public void CalculateGuidingVector()
@@ -178,7 +162,6 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
 
         public void CalculateEdgeWeights()
         {
-            Debug.Log(edges);
             for (int i = 0; i < edges.Count(); i++)
             {
                 Vector3 direction = EdgePrecalculator.GetDirectionVector(i);
@@ -238,7 +221,6 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
             unvisited.Remove(currentlyVisiting);
 
             currentlyVisiting.CalculateGuidingVector();
-            currentlyVisiting.FindNeighbors();
             currentlyVisiting.CalculateEdgeWeights();
 
 
@@ -249,6 +231,7 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
                 int y = currentlyVisiting.positionY + EdgePrecalculator.GetDirectionComponent(i, 1);
                 int z = currentlyVisiting.positionZ + EdgePrecalculator.GetDirectionComponent(i, 2);
 
+                if (PointIsOffMap(x, y, z)) continue;
                 Node neighbor = Map[x, y, z];
                 if (!unvisited.Contains(neighbor)) continue;
                     
@@ -262,6 +245,13 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
                 
             }
 
+        }
+
+        bool PointIsOffMap(int x, int y, int z)
+        {
+            if (x < 0 || y < 0 || z < 0) return true;
+            if (x >= Node.mapSize || y >= Node.mapSize || z >= Node.mapSize) return true;
+            return false;
         }
     }
 }
