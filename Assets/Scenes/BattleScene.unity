@@ -1308,8 +1308,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 585e3890a505e0e40951909b9eef50eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapGenerator: {fileID: 0}
-  treeGenerator: {fileID: 0}
+  mapGenerator: {fileID: 1110564614}
+  treeGenerator: {fileID: 1110564615}
   marchingCubesRenderer: {fileID: 1110564608}
   lineRenderer: {fileID: 1599781106}
   botPlacer: {fileID: 468739837}
@@ -3435,6 +3435,8 @@ GameObject:
   - component: {fileID: 1110564612}
   - component: {fileID: 1110564611}
   - component: {fileID: 1110564613}
+  - component: {fileID: 1110564614}
+  - component: {fileID: 1110564615}
   m_Layer: 8
   m_Name: BattleMap
   m_TagString: Untagged
@@ -3535,6 +3537,41 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &1110564614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1110564607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 249afb7e679822a4aac001b7208a89d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapSize: 30
+  solidThreshold: 0.5
+  frequency: 0.452
+  scale: 1
+  spherize: 1
+--- !u!114 &1110564615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1110564607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60af11ec5d0aef54ab5212f41d3c2682, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eulerRotation: {x: 10, y: 0, z: 0}
+  treeParams:
+    mapSize: 30
+    canopyCenterHeight: 20
+    canopyRadius: 10
+    initialBranches: 5
 --- !u!1 &1113871614
 GameObject:
   m_ObjectHideFlags: 0

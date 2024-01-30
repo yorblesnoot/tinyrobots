@@ -25,6 +25,7 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
     {
         var (mapSize, canopyCenterHeight, canopyRadius, initialBranches) = treeParams;
         byte[,,] output = new byte[mapSize, mapSize, mapSize];
+        Node.mapSize = mapSize;
 
         Djikstra djikGraph = new(mapSize);
         List<Node> origins = GetInitialBranchPoints(djikGraph, canopyCenterHeight, canopyRadius, initialBranches);
@@ -37,6 +38,7 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
         void AddTreeLines(Node point)
         {
             output[point.position.x, point.position.y, point.position.z] = 1;
+            //this line is causing an infinite loop; parenting must be messed up
             if(point.parent != null) AddTreeLines(point.parent);
         }
 
@@ -48,16 +50,23 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
         Vector3Int canopyCenter = djikGraph.Origin;
         List<Node> potentialOrigins = new();
         canopyCenter.z += canopyCenterHeight;
-        foreach (var nodePosition in djikGraph.Map.Keys)
+        for (int x = 0; x < Node.mapSize; x++)
         {
-            if (Vector3.Distance(nodePosition, canopyCenter) < canopyRadius)
+            for (int y = 0; y < Node.mapSize; y++)
             {
-                potentialOrigins.Add(djikGraph.Map[nodePosition]);
+                for (int z = 0; z < Node.mapSize; z++)
+                {
+                    Vector3Int check = new(x, y, z);
+                    if (Vector3.Distance(check, canopyCenter) < canopyRadius)
+                    {
+                        potentialOrigins.Add(djikGraph.Map[x,y,z]);
+                    }
+                }
             }
         }
 
         List<Node> origins = new();
-        while(numberOfBranches > 0)
+        while (numberOfBranches > 0)
         {
             Node origin = potentialOrigins[Random.Range(0, potentialOrigins.Count)];
             origins.Add(origin);
@@ -65,44 +74,50 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
         }
 
         return origins;
-    }
+        } 
 
     class Node
     {
+        public static int mapSize;
         public class Edge
         {
-            public Node neighbor;
+            public Vector3Int neighbor;
             public float weight;
             public void CalculateEdgeWeight(Vector3 guiding, Node source)
             {
-                Vector3 edge = source.position - neighbor.position;
+                Vector3 edge = source.position - neighbor;
                 Vector3 direction = edge.normalized;
                 
                 //check this if things go wrong
                 weight = edge.magnitude * (1 - Vector3.Dot(direction, guiding));
             }
         }
+
+        public HashSet<Edge> neighborLinks = new();
         public Vector3Int position;
         public Vector3 guidingVector;
 
         public float distanceFromRoot = float.PositiveInfinity;
 
         public Node parent;
-        public HashSet<Edge> neighborLinks = new();
 
-        readonly static int checkRange = 2;
-        public void GenerateNeighbors(Dictionary<Vector3Int, Node> fullMap)
+
+        readonly static int checkMin = -1;
+        readonly static int checkMax = 2;
+        public void FindNeighbors()
         {
-            for (int x = 0; x < checkRange; x++)
+            for (int x = checkMin; x < checkMax; x++)
             {
-                for (int y = 0; y < checkRange; y++)
+                for (int y = checkMin; y < checkMax; y++)
                 {
-                    for (int z = 0; z < checkRange; z++)
+                    for (int z = checkMin; z < checkMax; z++)
                     {
-                        Vector3Int pos = new(x, y, z);
-                        if (pos == Vector3Int.zero) continue;
-                        if (!fullMap.TryGetValue(pos, out var value)) continue;
-                        neighborLinks.Add(new() { neighbor = value });
+                        Vector3Int checkedPos = new(x, y, z);
+                        if (checkedPos == Vector3Int.zero) continue;
+                        checkedPos += position;
+                        if (checkedPos.x < 0 || checkedPos.y < 0 || checkedPos.z < 0) continue;
+                        if(checkedPos.x >= mapSize || checkedPos.y >= mapSize || checkedPos.z >= mapSize) continue;
+                        neighborLinks.Add(new() { neighbor = checkedPos });
                     }
                 }
             }
@@ -110,7 +125,7 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
         public void CalculateGuidingVector()
         {
             if (parent == null) guidingVector = Vector3.up;
-            else guidingVector =  trueRotation * parent.guidingVector;
+            else guidingVector = trueRotation * parent.guidingVector;
         }
 
         public void CalculateEdgeWeights()
@@ -128,31 +143,30 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
         HashSet<Node> unvisited = new();
         HashSet<Node> visited = new();
 
-        public Dictionary<Vector3Int, Node> Map = new();
+        public Node[,,] Map;
         public Vector3Int Origin;
 
         public Djikstra(int size)
         {
+            
             //create the root node for the tree
             Node currentNode = GenerateMap(size);
             Origin = currentNode.position;
-
-            foreach(var val in Map.Values)
-            {
-                val.GenerateNeighbors(Map);
-            }
 
             //add the root to the frontier
             frontier.Enqueue(currentNode, 0);
 
             while(unvisited.Count > 0)
             {
+                Debug.Log("visited");
                 VisitCurrent();
-            }           
+            }   
+            
         }
 
         Node GenerateMap(int size)
         {
+            Map = new Node[size, size, size];
             for(int x = 0; x < size; x++)
             {
                 for(int y = 0; y < size; y++)
@@ -160,24 +174,29 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
                     for(int z = 0; z < size; z++)
                     {
                         Vector3Int pos = new(x, y, z);
-                        Map.Add(pos, new() { position = pos });
+                        Node outgoing = new() { position = pos };
+                        Map[x,y,z] = outgoing;
+                        unvisited.Add(outgoing);
                     }
                 }
             }
-            return Map[new(size / 2, size / 2, 0)];
+            Node origin = Map[size / 2, size / 2, 0];
+            origin.distanceFromRoot = 0;
+            return origin;
         }
         void VisitCurrent()
         {
             //pick the lowest distance from the current frontier
             Node currentlyVisiting = frontier.Dequeue();
             currentlyVisiting.CalculateGuidingVector();
+            currentlyVisiting.FindNeighbors();
             currentlyVisiting.CalculateEdgeWeights();
             
 
             //check all the neighbors and assign them tentative distances
             foreach (var edge in currentlyVisiting.neighborLinks)
             {
-                Node neighbor = edge.neighbor;
+                Node neighbor = Map[edge.neighbor.x, edge.neighbor.y, edge.neighbor.z];
                 if (!visited.Contains(neighbor))
                 {
                     float tentativeDistance = (neighbor.position - currentlyVisiting.position).magnitude;
@@ -186,6 +205,7 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
                     {
                         neighbor.distanceFromRoot = pathDistance;
                         neighbor.parent = currentlyVisiting;
+                        Debug.Log("added parent");
                     }
                     frontier.Enqueue(neighbor, neighbor.distanceFromRoot);
                 }
