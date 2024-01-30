@@ -1,15 +1,15 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
-using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class ProceduralTreeVoxelGenerator : MonoBehaviour
 {
     [SerializeField] Vector3 eulerRotation;
     [SerializeField] TreeParams treeParams;
     static Quaternion trueRotation;
+    HashSet<Node> treeNodes;
     private void Awake()
     {
         trueRotation = Quaternion.Euler(eulerRotation);
@@ -19,40 +19,68 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
     [System.Serializable]
     public struct TreeParams
     {
-        public int mapSize, canopyCenterHeight, canopyRadius, initialBranches;
-        public void Deconstruct(out int size, out int height, out int radius, out int initial)
+        public int mapSize, canopyCenterHeight, canopyRadius, initialBranches, iterations, iterationRange;
+
+        public float iterationBranchMultiplier;
+        public void Deconstruct(out int size, out int height, out int radius, out int initial, out int iterations)
         {
-            size = mapSize; height = canopyCenterHeight; radius = canopyRadius; initial = initialBranches;
+            size = mapSize; height = canopyCenterHeight; radius = canopyRadius; initial = initialBranches; iterations = this.iterations;
         }
     }
 
     public byte[,,] Generate()
     {
-        var (mapSize, canopyCenterHeight, canopyRadius, initialBranches) = treeParams;
+        var (mapSize, canopyCenterHeight, canopyRadius, initialBranches, iterations) = treeParams;
         byte[,,] output = new byte[mapSize, mapSize, mapSize];
         Node.mapSize = mapSize;
+        Node firstNode = InitialMapGeneration(mapSize);
+        treeNodes = new() { firstNode };
+        IterateGrowthField();
 
-        Djikstra djikGraph = new(mapSize);
-        List<Node> origins = GetInitialBranchPoints(djikGraph, canopyCenterHeight, canopyRadius, initialBranches);
+        HashSet<Node> canpoyInitialGrowthPoints = GetInitialBranchPoints(canopyCenterHeight, canopyRadius, initialBranches);
+        OutputFromOrigins(canpoyInitialGrowthPoints);
 
-        foreach(var origin in origins)
+        for(int i = 0; i < iterations; i++)
         {
-            AddTreeLines(origin);
-        }
-
-        void AddTreeLines(Node point)
-        {
-            output[point.positionX, point.positionY, point.positionZ] = 1;
-            //this line is causing an infinite loop; parenting must be messed up
-            if(point.parent != null) AddTreeLines(point.parent);
+            IterateGrowthField();
+            HashSet<Node> newOrigins = GetSecondaryBranchPoints();
+            OutputFromOrigins(newOrigins);
         }
 
         return output;
+
+        void OutputFromOrigins(HashSet<Node> origins)
+        {
+            foreach (var origin in origins)
+            {
+                TreePointToOutput(origin);
+            }
+
+            void TreePointToOutput(Node point)
+            {
+                output[point.positionX, point.positionY, point.positionZ] = 1;
+                treeNodes.Add(point);
+                if (point.parent == null || treeNodes.Contains(point.parent)) return;
+                TreePointToOutput(point.parent);
+            }
+        }
     }
 
-    private static List<Node> GetInitialBranchPoints(Djikstra djikGraph, int canopyCenterHeight, int canopyRadius, int numberOfBranches)
+    private HashSet<Node> GetSecondaryBranchPoints()
     {
-        Vector3Int canopyCenter = new(djikGraph.Origin[0], djikGraph.Origin[1], djikGraph.Origin[2]);
+        HashSet<Node> output = new();
+        treeParams.initialBranches = Mathf.RoundToInt(treeParams.initialBranches * treeParams.iterationBranchMultiplier);
+        List<Node> branchPoints = treeNodes.Where(node => node.hopsFromOrigin == treeParams.iterationRange).ToList();
+        for(int i = 0; i < branchPoints.Count; i++)
+        {
+            output.Add(branchPoints.GrabRandomly());
+        }
+        return output;
+    }
+
+    private HashSet<Node> GetInitialBranchPoints(int canopyCenterHeight, int canopyRadius, int numberOfBranches)
+    {
+        Vector3Int canopyCenter = new(treeParams.mapSize / 2, 0, treeParams.mapSize / 2);
         List<Node> potentialOrigins = new();
         canopyCenter.y += canopyCenterHeight;
         for (int x = 0; x < Node.mapSize; x++)
@@ -64,13 +92,13 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
                     Vector3Int check = new(x, y, z);
                     if (Vector3.Distance(check, canopyCenter) < canopyRadius)
                     {
-                        potentialOrigins.Add(djikGraph.Map[x,y,z]);
+                        potentialOrigins.Add(Map[x,y,z]);
                     }
                 }
             }
         }
 
-        List<Node> origins = new();
+        HashSet<Node> origins = new();
         while (numberOfBranches > 0)
         {
             Node origin = potentialOrigins[UnityEngine.Random.Range(0, potentialOrigins.Count)];
@@ -79,9 +107,119 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
         }
 
         return origins;
+    }
+
+    PriorityQueue<Node, float> frontier = new();
+    HashSet<Node> unvisited = new();
+
+    Node[,,] Map;
+    public int[] Origin;
+
+    void IterateGrowthField()
+    {
+        ReinitializeMap();
+        Debug.Log(treeNodes.Count + " in oset");
+        //add the root to the frontier
+        foreach (Node node in treeNodes)
+        {
+            frontier.Enqueue(node, 0);
+        }
+        
+
+        while (unvisited.Count > 0)
+        {
+            VisitCurrent();
+        }
+    }
+
+    Node InitialMapGeneration(int size)
+    {
+        Map = new Node[size, size, size];
+        for (int x = 0; x < size; x++)
+        {
+            for (int y = 0; y < size; y++)
+            {
+                for (int z = 0; z < size; z++)
+                {
+                    Node outgoing = new() { positionX = x, positionY = y, positionZ = z };
+                    Map[x, y, z] = outgoing;
+                    unvisited.Add(outgoing);
+                }
+            }
+        }
+        Node origin = Map[size / 2, 0, size / 2];
+        origin.distanceFromRoot = 0;
+        origin.hopsFromOrigin = 0;
+        return origin;
+    }
+
+    void ReinitializeMap()
+    {
+        int size = Node.mapSize;
+        for (int x = 0; x < size; x++)
+        {
+            for (int y = 0; y < size; y++)
+            {
+                for (int z = 0; z < size; z++)
+                {
+                    Node outgoing = Map[x, y, z];
+                    if (treeNodes.Contains(outgoing))
+                    {
+                        outgoing.distanceFromRoot = 0;
+                    }
+                    else
+                    {
+                        unvisited.Add(outgoing);
+                        outgoing.Reset();
+                    }
+                }
+            }
+        }
+        
+    }
+    void VisitCurrent()
+    {
+        //pick the lowest distance from the current frontier
+        Node currentlyVisiting = frontier.Dequeue();
+        unvisited.Remove(currentlyVisiting);
+
+        currentlyVisiting.CalculateGuidingVector();
+        currentlyVisiting.CalculateEdgeWeights();
+
+
+        //check all the neighbors and assign them tentative distances
+        for (int i = 0; i < EdgePrecalculator.DirectionCount; i++)
+        {
+            int x = currentlyVisiting.positionX + EdgePrecalculator.GetDirectionComponent(i, 0);
+            int y = currentlyVisiting.positionY + EdgePrecalculator.GetDirectionComponent(i, 1);
+            int z = currentlyVisiting.positionZ + EdgePrecalculator.GetDirectionComponent(i, 2);
+
+            if (PointIsOffMap(x, y, z)) continue;
+            Node neighbor = Map[x, y, z];
+            if (!unvisited.Contains(neighbor)) continue;
+
+            float finalWeight = currentlyVisiting.distanceFromRoot + currentlyVisiting.edges[i].weight;
+            if (finalWeight < neighbor.distanceFromRoot)
+            {
+                neighbor.distanceFromRoot = finalWeight;
+                neighbor.parent = currentlyVisiting;
+                neighbor.hopsFromOrigin = currentlyVisiting.hopsFromOrigin + 1;
+                frontier.Enqueue(neighbor, neighbor.distanceFromRoot);
+            }
+
         }
 
-    
+    }
+
+    bool PointIsOffMap(int x, int y, int z)
+    {
+        if (x < 0 || y < 0 || z < 0) return true;
+        if (x >= Node.mapSize || y >= Node.mapSize || z >= Node.mapSize) return true;
+        return false;
+    }
+
+
+
     public static class EdgePrecalculator
     {
         static readonly int[,] directions = {
@@ -113,9 +251,15 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
             vectors = new Vector3Int[directions.GetLength(0)];
             for (int i = 0; i < directions.GetLength(0); i++)
             {
-                magnitudes[i] = Mathf.Sqrt(Mathf.Pow(directions[i, 0], 2) + Mathf.Pow(directions[i, 1], 2) + Mathf.Pow(directions[i, 2], 2));
+                magnitudes[i] = GetMagnitude(directions[i, 0], directions[i, 1], directions[i, 2]);
+                //magnitudes[i] = Mathf.Sqrt(Mathf.Pow(directions[i, 0], 2) + Mathf.Pow(directions[i, 1], 2) + Mathf.Pow(directions[i, 2], 2));
                 vectors[i] = new(directions[i, 0], directions[i,1], directions[i,2]);
             }
+        }
+
+        static float GetMagnitude(int x, int y, int z)
+        {
+            return Mathf.Sqrt(Mathf.Pow(x, 2) + Mathf.Pow(y, 2) + Mathf.Pow(z, 2));
         }
 
         public static int GetDirectionComponent(int directionIndex, int componentIndex)
@@ -149,12 +293,19 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
             }
         }
 
+        public void Reset()
+        {
+            distanceFromRoot = float.PositiveInfinity;
+            parent = null;
+        }
+
         public int positionX, positionY, positionZ;
         public Vector3 guidingVector;
 
         public float distanceFromRoot = float.PositiveInfinity;
 
         public Node parent;
+        public int hopsFromOrigin;
 
         Vector3 baseGuidance = Vector3.right;
         public void CalculateGuidingVector()
@@ -170,91 +321,6 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
                 Vector3 direction = EdgePrecalculator.GetDirectionVector(i);
                 edges[i].weight = EdgePrecalculator.GetMagnitude(i) * (1 - Vector3.Dot(direction, guidingVector));
             }
-        }
-    }
-
-    class Djikstra
-    {
-        PriorityQueue<Node, float> frontier = new();
-        HashSet<Node> unvisited = new();
-
-        public Node[,,] Map;
-        public int[] Origin;
-
-        public Djikstra(int size)
-        {
-            
-            //create the root node for the tree
-            Node currentNode = GenerateMap(size);
-            Origin = new int[] { currentNode.positionX, currentNode.positionY, currentNode.positionZ };
-
-            //add the root to the frontier
-            frontier.Enqueue(currentNode, 0);
-
-            while(unvisited.Count > 0)
-            {
-                VisitCurrent();
-            }   
-            
-        }
-
-        Node GenerateMap(int size)
-        {
-            Map = new Node[size, size, size];
-            for(int x = 0; x < size; x++)
-            {
-                for(int y = 0; y < size; y++)
-                {
-                    for(int z = 0; z < size; z++)
-                    {
-                        Node outgoing = new() { positionX = x, positionY = y, positionZ = z };
-                        Map[x,y,z] = outgoing;
-                        unvisited.Add(outgoing);
-                    }
-                }
-            }
-            Node origin = Map[size / 2, 0, size / 2];
-            origin.distanceFromRoot = 0;
-            return origin;
-        }
-        void VisitCurrent()
-        {
-            //pick the lowest distance from the current frontier
-            Node currentlyVisiting = frontier.Dequeue();
-            unvisited.Remove(currentlyVisiting);
-
-            currentlyVisiting.CalculateGuidingVector();
-            currentlyVisiting.CalculateEdgeWeights();
-
-
-            //check all the neighbors and assign them tentative distances
-            for(int i = 0; i < EdgePrecalculator.DirectionCount; i++) 
-            {
-                int x = currentlyVisiting.positionX + EdgePrecalculator.GetDirectionComponent(i, 0);
-                int y = currentlyVisiting.positionY + EdgePrecalculator.GetDirectionComponent(i, 1);
-                int z = currentlyVisiting.positionZ + EdgePrecalculator.GetDirectionComponent(i, 2);
-
-                if (PointIsOffMap(x, y, z)) continue;
-                Node neighbor = Map[x, y, z];
-                if (!unvisited.Contains(neighbor)) continue;
-                    
-                float finalWeight = currentlyVisiting.distanceFromRoot + currentlyVisiting.edges[i].weight;
-                if(finalWeight < neighbor.distanceFromRoot)
-                {
-                    neighbor.distanceFromRoot = finalWeight;
-                    neighbor.parent = currentlyVisiting;
-                    frontier.Enqueue(neighbor, neighbor.distanceFromRoot);
-                }
-                
-            }
-
-        }
-
-        bool PointIsOffMap(int x, int y, int z)
-        {
-            if (x < 0 || y < 0 || z < 0) return true;
-            if (x >= Node.mapSize || y >= Node.mapSize || z >= Node.mapSize) return true;
-            return false;
         }
     }
 }

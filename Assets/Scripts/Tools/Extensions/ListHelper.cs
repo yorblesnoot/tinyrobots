@@ -21,4 +21,12 @@ public static class ListHelper
             (list[n], list[k]) = (list[k], list[n]);
         }
     }
+
+    public static T GrabRandomly<T>(this List<T> list)
+    {
+        int index = Random.Range(0, list.Count);
+        T output = list[index];
+        list.RemoveAt(index);
+        return output;
+    }
 }

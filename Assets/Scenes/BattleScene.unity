@@ -1377,6 +1377,8 @@ MonoBehaviour:
     canopyCenterHeight: 20
     canopyRadius: 10
     initialBranches: 5
+    iterations: 0
+  Origin: 
 --- !u!224 &468842883 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9119217915258957823, guid: 112a7f78f45dc654ab52dc0975616f36,
@@ -3663,12 +3665,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60af11ec5d0aef54ab5212f41d3c2682, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eulerRotation: {x: 15, y: 0, z: 0}
+  eulerRotation: {x: 30, y: 0, z: 0}
   treeParams:
     mapSize: 40
-    canopyCenterHeight: 20
+    canopyCenterHeight: 15
     canopyRadius: 10
-    initialBranches: 10
+    initialBranches: 5
+    iterations: 2
+  Origin: 
 --- !u!1 &1113871614
 GameObject:
   m_ObjectHideFlags: 0
