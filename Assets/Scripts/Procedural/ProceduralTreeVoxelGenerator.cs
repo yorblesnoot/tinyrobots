@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -100,18 +101,20 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
         public static int DirectionCount { get { return directions.GetLength(0); } }
 
         static float[] magnitudes;
+        static Vector3Int[] vectors;
 
         public static Vector3Int GetDirectionVector(int directionIndex)
         {
-            return new Vector3Int(GetDirectionComponent(directionIndex, 0), GetDirectionComponent(directionIndex, 1),
-            GetDirectionComponent(directionIndex, 2));
+            return vectors[directionIndex];
         }
         public static void Initialize()
         {
             magnitudes = new float[directions.GetLength(0)];
+            vectors = new Vector3Int[directions.GetLength(0)];
             for (int i = 0; i < directions.GetLength(0); i++)
             {
                 magnitudes[i] = Mathf.Sqrt(Mathf.Pow(directions[i, 0], 2) + Mathf.Pow(directions[i, 1], 2) + Mathf.Pow(directions[i, 2], 2));
+                vectors[i] = new(directions[i, 0], directions[i,1], directions[i,2]);
             }
         }
 
