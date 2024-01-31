@@ -10,7 +10,9 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
     [SerializeField] TreeParams treeParams;
     [SerializeField] GameObject debugger;
     [SerializeField] GameObject hopDebugger;
-    [SerializeField] int sphereLevels = 2;
+    [SerializeField] int sphereLevels = 3;
+    [SerializeField] int sphereBoost;
+    [SerializeField] int inflationFactor = 2;
     HashSet<Node> treeNodes;
 
 
@@ -20,14 +22,17 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
         EdgePrecalculator.Initialize();
         GenerateSpheres();
     }
-    List<Vector3>[] spheres;
+    List<Vector3Int>[] spheres;
     private void GenerateSpheres()
     {
-        spheres = new List<Vector3>[sphereLevels];
-        for (int i = sphereLevels; i > 0; i++)
+        spheres = new List<Vector3Int>[sphereLevels];
+        spheres[0] = new() { Vector3Int.zero };
+        for (int i = 1; i < sphereLevels; i++)
         {
-            int diameter = 2 * i + 1;
-            Vector3 centerPoint = new(i, i, i);
+            spheres[i] = new();
+            int b = i + sphereBoost;
+            int diameter = 2 * b + 1;
+            Vector3 centerPoint = new(b, b, b);
             for(int x = 0; x < diameter; x++)
             {
                 for(int y = 0; y < diameter; y++)
@@ -35,11 +40,12 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
                     for(int z = 0; z < diameter; z++)
                     {
                         Vector3 candidate = new(x, y, z);
-                        if (Vector3.Distance(candidate, centerPoint) <= i) spheres[i].Add(candidate);
+                        if (Vector3.Distance(candidate, centerPoint) < b) spheres[i].Add(Vector3Int.CeilToInt(candidate));
                     }
                 }
             }
         }
+        Debug.Log("generated " + spheres.Length + " spheres");
     }
 
     [System.Serializable]
@@ -101,21 +107,22 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
 
     private byte[,,] InflateTree(HashSet<Node> treeNodes)
     {
-        int inflationFactor = 3;
         int inflatedSize = inflationFactor * Node.mapSize;
         byte[,,] output = new byte[inflatedSize, inflatedSize, inflatedSize];
         foreach(var node in treeNodes)
         {
-            int ilevel = node.iterationLevel;
-            Vector3 center = new(node.positionX, node.positionY, node.positionZ);
+            int ilevel = -1 + sphereLevels - node.iterationLevel;
+            Vector3Int center = new(node.positionX, node.positionY, node.positionZ);
             center *= inflationFactor;
-            Vector3 corner = center;
-            corner -= new Vector3(ilevel, ilevel, ilevel);
+            Vector3Int corner = center;
+            corner -= new Vector3Int(ilevel, ilevel, ilevel);
+            Debug.Log(spheres.Length + " size");
+            Debug.Log(ilevel);
             foreach(var point in spheres[ilevel])
             {
-                Vector3 position = corner + point;
-                Vector3Int cleanPosition = Vector3Int.RoundToInt(position);
-                output[cleanPosition.x, cleanPosition.y, cleanPosition.z] = 1;
+                Vector3Int position = corner + point;
+                if (PointIsOffMap(position.x, position.y, position.z, inflatedSize)) continue;
+                output[position.x, position.y, position.z] = 1;
             }
         }
         return output;
@@ -286,7 +293,7 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
             int y = currentlyVisiting.positionY + EdgePrecalculator.GetDirectionComponent(i, 1);
             int z = currentlyVisiting.positionZ + EdgePrecalculator.GetDirectionComponent(i, 2);
 
-            if (PointIsOffMap(x, y, z)) continue;
+            if (PointIsOffMap(x, y, z, Node.mapSize)) continue;
             Node neighbor = Map[x, y, z];
             if (!unvisited.Contains(neighbor)) continue;
 
@@ -304,10 +311,10 @@ public class ProceduralTreeVoxelGenerator : MonoBehaviour
 
     }
 
-    bool PointIsOffMap(int x, int y, int z)
+    bool PointIsOffMap(int x, int y, int z, int size)
     {
         if (x < 0 || y < 0 || z < 0) return true;
-        if (x >= Node.mapSize || y >= Node.mapSize || z >= Node.mapSize) return true;
+        if (x >= size || y >= size || z >= size) return true;
         return false;
     }
 
