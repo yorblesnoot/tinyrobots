@@ -3444,8 +3444,8 @@ GameObject:
   - component: {fileID: 1110564612}
   - component: {fileID: 1110564611}
   - component: {fileID: 1110564613}
-  - component: {fileID: 1110564614}
   - component: {fileID: 1110564615}
+  - component: {fileID: 1110564614}
   m_Layer: 8
   m_Name: BattleMap
   m_TagString: Untagged
@@ -3577,21 +3577,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationFactor: 4
   treeParams:
-    mapSize: 30
-    canopyCenterHeight: 20
-    canopyRadius: 10
+    mapSize: 40
+    canopyCenterHeight: 30
+    canopyRadius: 5
     initialBranches: 1
     iterations: 3
-    iterationRange: 5
+    iterationRange: 10
     iterationBranchMultiplier: 3
-    iterationExclusionHeight: 0.261
+    iterationExclusionHeight: 0.805
   debugger: {fileID: 6884629592514652684, guid: f7a1b1e8b1c8eb44ca293795d87e2794,
     type: 3}
   hopDebugger: {fileID: 1080446608581669569, guid: dd2477316c438bb4a9926b1d31022a17,
     type: 3}
   sphereLevels: 3
-  sphereBoost: 2
-  inflationFactor: 2
+  sphereBoost: 1
+  inflationFactor: 1
 --- !u!1 &1113871614
 GameObject:
   m_ObjectHideFlags: 0

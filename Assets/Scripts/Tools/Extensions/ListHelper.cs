@@ -24,6 +24,7 @@ public static class ListHelper
 
     public static T GrabRandomly<T>(this List<T> list)
     {
+        if (list.Count == 0) Debug.LogError($"{list} is empty.");
         int index = Random.Range(0, list.Count);
         T output = list[index];
         list.RemoveAt(index);
