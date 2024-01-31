@@ -1380,7 +1380,7 @@ MonoBehaviour:
     iterations: 0
     iterationRange: 0
     iterationBranchMultiplier: 0
-    branchSurfaceInclusionProportion: 0
+    iterationExclusionHeight: 0
   debugger: {fileID: 0}
   hopDebugger: {fileID: 0}
 --- !u!224 &468842883 stripped
@@ -3555,7 +3555,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 249afb7e679822a4aac001b7208a89d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSize: 40
+  mapSize: 50
   solidThreshold: 0.5
   frequency: 0.173
   scale: 1
@@ -3574,14 +3574,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationFactor: 4
   treeParams:
-    mapSize: 40
-    canopyCenterHeight: 30
-    canopyRadius: 10
+    mapSize: 50
+    canopyCenterHeight: 20
+    canopyRadius: 5
     initialBranches: 1
-    iterations: 1
-    iterationRange: 2
+    iterations: 3
+    iterationRange: 10
     iterationBranchMultiplier: 3
-    branchSurfaceInclusionProportion: 0.126
+    iterationExclusionHeight: 0.357
   debugger: {fileID: 6884629592514652684, guid: f7a1b1e8b1c8eb44ca293795d87e2794,
     type: 3}
   hopDebugger: {fileID: 1080446608581669569, guid: dd2477316c438bb4a9926b1d31022a17,
