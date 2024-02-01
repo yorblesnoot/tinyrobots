@@ -28,6 +28,7 @@ public class TreeRenderer : MonoBehaviour
         List<Vector3> vertices = new();
         List<int> triangles = new();
         int startIndex = 0;
+
         vertices.AddRange(GetVertexRing(origin));
         BuildAndAttachRing(origin, childIndex);
         FinalizeMesh(spawned, mesh, vertices, triangles);
@@ -37,10 +38,8 @@ public class TreeRenderer : MonoBehaviour
             if (parent.children == null || parent.children.Count == 0) return;
 
             TreeGeneratorNode child = parent.children[childIndex];
-            if (parent == child) {Debug.LogError("recursive tree structure"); return;
-        }
-                //create vertices for child node
-                vertices.AddRange(GetVertexRing(child));
+            //create vertices for child node
+            vertices.AddRange(GetVertexRing(child));
             for (int i = 0; i < numberOfPanelsPerRing; i++)
             {
                 //add vertices to master list and create triangles between source and child node
@@ -76,10 +75,9 @@ public class TreeRenderer : MonoBehaviour
     public Vector3[] GetVertexRing(TreeGeneratorNode node)
     {
         Vector3[] vertices = new Vector3[directions.Length];
-        Vector3 parentGuiding = node.Parent == null ? Vector3.up : node.Parent.guidingVector;
-        Vector3 growthDirection = parentGuiding + node.guidingVector;
-        growthDirection.Normalize();
         float thickness = (longestBranch - node.hopsFromRoot) / thickFactor;
+        Vector3 growthDirection = node.incomingVector + (node.outgoingVectors.Count > 0 ? node.outgoingVectors[0] : Vector3.zero);
+        growthDirection.Normalize();
         Quaternion mod = Quaternion.FromToRotation(Vector3.forward, growthDirection);
 
         for (int i = 0; i < directions.Length; i++)
@@ -90,8 +88,6 @@ public class TreeRenderer : MonoBehaviour
         }
         return vertices;
     }
-
-
 
     void GenerateDirections()
     {

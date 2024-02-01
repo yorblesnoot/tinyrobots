@@ -22,7 +22,7 @@ public class TreeParams : ScriptableObject
     public class Iteration
     {
         public int branches;
-        [Range(-10, 10)] public int rotationFactor = 5;
+        [Range(-50, 50)] public int rotationFactor = 5;
         public int branchLength;
         [Range(0f, .95f)] public float inclusionZone;
     }
@@ -30,7 +30,7 @@ public class TreeParams : ScriptableObject
     [System.Serializable]
     public class FirstIteration
     {
-        [Range(-10, 10)] public int rotationFactor;
+        [Range(-50, 50)] public int rotationFactor;
         public int canopyCenterHeight, canopyRadius, branches;
     }
 }

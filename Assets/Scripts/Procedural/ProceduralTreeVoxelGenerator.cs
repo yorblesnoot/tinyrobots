@@ -80,6 +80,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         }
 
         float longestBranch = treeNodes.Select(node => node.hopsFromRoot).Max();
+        AnnotateTreeForRendering();
         treeRenderer.RenderTree(origin, longestBranch);
 
         void OutputFromOrigins(HashSet<TreeGeneratorNode> origins)
@@ -96,6 +97,15 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
                 if (origin.Parent == null || treeNodes.Contains(origin.Parent)) return;
                 TreePointToOutput(origin.Parent);
             }
+        }
+    }
+
+    private void AnnotateTreeForRendering()
+    {
+        foreach(var node in treeNodes)
+        {
+            node.Parent?.children.Add(node);
+            node.Parent?.outgoingVectors.Add(node.incomingVector);
         }
     }
 
@@ -267,7 +277,6 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
                 {
                     TreeGeneratorNode outgoing = Map[x, y, z];
                     unvisited.Add(outgoing);
-                    outgoing.children.Clear();
                     
                     if (treeNodes.Contains(outgoing))
                     {
@@ -288,8 +297,6 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         //pick the lowest distance from the current frontier
         TreeGeneratorNode currentlyVisiting = frontier.Dequeue();
         unvisited.Remove(currentlyVisiting);
-
-        if(currentlyVisiting.Parent != null) currentlyVisiting.Parent.children.Add(currentlyVisiting);
 
         currentlyVisiting.CalculateGuidingVector(rotationFactor);
         currentlyVisiting.CalculateEdgeWeights();
@@ -313,6 +320,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
                 neighbor.distanceFromRoot = finalWeight;
                 neighbor.Parent = currentlyVisiting;
                 neighbor.parentEdgeIndex = i;
+                neighbor.incomingVector = currentlyVisiting.edges[i].jitteredDirection;
                 frontier.Enqueue(neighbor, neighbor.distanceFromRoot);
             }
 
@@ -420,7 +428,6 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             hopsFromRoot = 0;
             distanceFromRoot = float.PositiveInfinity;
             Parent = null;
-            children = new();
         }
 
         public int positionX, positionY, positionZ;
@@ -434,6 +441,9 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         public TreeGeneratorNode Parent;
         public List<TreeGeneratorNode> children = new();
         public int parentEdgeIndex, hopsFromRoot;
+
+        public Vector3 incomingVector;
+        public List<Vector3> outgoingVectors = new();
 
 
         public void CalculateGuidingVector(float rotationFactor)
