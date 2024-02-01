@@ -4,7 +4,7 @@ using UnityEngine;
 
 public static class Pathfinder3D
 {
-    static Dictionary<Vector3Int, Node> nodeMap = new();
+    static Dictionary<Vector3Int, PathfindingNode> nodeMap = new();
     public static LineRenderer lineRenderer;
 
     public static void Initialize(byte[,,] map)
@@ -18,12 +18,12 @@ public static class Pathfinder3D
                 {
                     Vector3Int location = new(x, y, z);
                     nodeMap.Add(location,
-                        new Node { blocked = map[x,y,z] == 1,
+                        new PathfindingNode { blocked = map[x,y,z] == 1,
                         location = location });
                 }
             }
         }
-        foreach(Node node in nodeMap.Values)
+        foreach(PathfindingNode node in nodeMap.Values)
         {
             node.neighbors = GetNeighbors(node);
         }
@@ -31,7 +31,7 @@ public static class Pathfinder3D
 
     public static List<Vector3> FindVectorPath(Vector3Int start, Vector3Int end)
     {
-        List<Node> path = FindPath(start, end);
+        List<PathfindingNode> path = FindPath(start, end);
         if (path == null || path.Count == 0) return null;
         List<Vector3> worldPath = path.Select(x => x.location.ToWorldVector()).ToList();
         if (lineRenderer != null)
@@ -44,24 +44,24 @@ public static class Pathfinder3D
 
     public static int GetPathLength(Vector3Int start, Vector3Int end)
     {
-        List<Node> path = FindPath(start, end);
+        List<PathfindingNode> path = FindPath(start, end);
         if (path != null) return path.Count;
         else return -1;
     }
-    static List<Node> FindPath(Vector3Int startCoords, Vector3Int endCoords)
+    static List<PathfindingNode> FindPath(Vector3Int startCoords, Vector3Int endCoords)
     {
-        if (!nodeMap.TryGetValue(startCoords, out Node start) || !nodeMap.TryGetValue(endCoords, out Node end)) return null;
+        if (!nodeMap.TryGetValue(startCoords, out PathfindingNode start) || !nodeMap.TryGetValue(endCoords, out PathfindingNode end)) return null;
         if(end.blocked) return null;
-        PriorityQueue<Node, int> openList = new();
-        HashSet<Node> openHash = new();
-        HashSet<Node> closeList = new();
+        PriorityQueue<PathfindingNode, int> openList = new();
+        HashSet<PathfindingNode> openHash = new();
+        HashSet<PathfindingNode> closeList = new();
 
         openList.Enqueue(start, start.G);
         openHash.Add(start);
 
         while (openList.Count > 0)
         {
-            Node current = openList.Dequeue();
+            PathfindingNode current = openList.Dequeue();
             closeList.Add(current);
 
             if (current == end)
@@ -70,7 +70,7 @@ public static class Pathfinder3D
                 return GetFinishedRoute(start, end);
             }
 
-            foreach (Node neighbor in current.neighbors)
+            foreach (PathfindingNode neighbor in current.neighbors)
             {
                 if (neighbor.blocked || closeList.Contains(neighbor))
                 {
@@ -89,10 +89,10 @@ public static class Pathfinder3D
             }
         }
 
-        return new List<Node>();
+        return new List<PathfindingNode>();
     }
 
-    static Node GetMinimum(HashSet<Node> set)
+    static PathfindingNode GetMinimum(HashSet<PathfindingNode> set)
     {
         var ordered = set.OrderBy(x => x.G);
         /*var en = set.GetEnumerator();
@@ -101,11 +101,11 @@ public static class Pathfinder3D
         return ordered.FirstOrDefault();
     }
 
-    static List<Node> GetFinishedRoute(Node start, Node end)
+    static List<PathfindingNode> GetFinishedRoute(PathfindingNode start, PathfindingNode end)
     {
-        List<Node> finishedList = new();
+        List<PathfindingNode> finishedList = new();
 
-        Node current = end;
+        PathfindingNode current = end;
 
         while (current != start)
         {
@@ -117,19 +117,19 @@ public static class Pathfinder3D
         return finishedList;
     }
 
-    static int GetTaxiDistance(Node start, Node neighbor)
+    static int GetTaxiDistance(PathfindingNode start, PathfindingNode neighbor)
     {
         return System.Math.Abs(start.location.x - neighbor.location.x) + System.Math.Abs(start.location.y - neighbor.location.y) + System.Math.Abs(start.location.z - neighbor.location.z);
     }
 
-    static List<Node> GetNeighbors(Node current)
+    static List<PathfindingNode> GetNeighbors(PathfindingNode current)
     {
-        List<Node> neighbors = new();
+        List<PathfindingNode> neighbors = new();
         for (int i = 0; i < directions.Length; i++)
         {
             Vector3Int direction = directions[i];
             Vector3Int locationCheck = direction + current.location;
-            if (nodeMap.TryGetValue(locationCheck, out Node val)) neighbors.Add(val);
+            if (nodeMap.TryGetValue(locationCheck, out PathfindingNode val)) neighbors.Add(val);
         }
         return neighbors;
     }
@@ -138,7 +138,7 @@ public static class Pathfinder3D
 
 
 
-class Node
+class PathfindingNode
 {
     public int G;
 
@@ -146,7 +146,7 @@ class Node
 
     public bool blocked;
 
-    public Node previous;
+    public PathfindingNode previous;
 
-    public List<Node> neighbors;
+    public List<PathfindingNode> neighbors;
 }

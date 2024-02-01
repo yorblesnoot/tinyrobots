@@ -99,8 +99,8 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             void TreePointToOutput(Node origin)
             {
                 treeNodes.Add(origin);
-                if (origin.parent == null || treeNodes.Contains(origin.parent)) return;
-                TreePointToOutput(origin.parent);
+                if (origin.Parent == null || treeNodes.Contains(origin.Parent)) return;
+                TreePointToOutput(origin.Parent);
             }
         }
     }
@@ -313,7 +313,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             {
                 neighbor.hopsFromRoot = currentlyVisiting.hopsFromRoot + 1;
                 neighbor.distanceFromRoot = finalWeight;
-                neighbor.parent = currentlyVisiting;
+                neighbor.Parent = currentlyVisiting;
                 neighbor.parentEdgeIndex = i;
                 frontier.Enqueue(neighbor, neighbor.distanceFromRoot);
             }
@@ -421,7 +421,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         {
             hopsFromRoot = 0;
             distanceFromRoot = float.PositiveInfinity;
-            parent = null;
+            Parent = null;
         }
 
         public int positionX, positionY, positionZ;
@@ -429,17 +429,19 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
 
         public float distanceFromRoot = float.PositiveInfinity;
 
-        public Node parent;
+        public Node Parent { get; set; }
+        Node parent;
+        HashSet<Node> children;
         public int parentEdgeIndex, hopsFromRoot;
 
         
         public void CalculateGuidingVector(float rotationFactor)
         {
-            if (parent == null) guidingVector = baseGuidance;
+            if (Parent == null) guidingVector = baseGuidance;
             else
             {
                 Quaternion rotator = Quaternion.AngleAxis(rotationFactor, EdgePrecalculator.GetCross(parentEdgeIndex));
-                guidingVector = rotator * parent.guidingVector;
+                guidingVector = rotator * Parent.guidingVector;
                 //Debug.Log("parent guidance " + parent.guidingVector + ", incoming vector" + EdgePrecalculator.GetDirectionVector(parentEdgeIndex) + " guiding vector " + guidingVector);
             }
         }
