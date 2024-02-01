@@ -361,7 +361,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &147156314
 Transform:
   m_ObjectHideFlags: 0
@@ -3794,6 +3794,7 @@ MonoBehaviour:
   tp: {fileID: 11400000, guid: 43165335b1c166c41ad58afd4c0d0fd9, type: 2}
   ground: {fileID: 147156313}
   treeRenderer: {fileID: 1110564616}
+  debugger: {fileID: 1944592595}
 --- !u!114 &1110564616
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3809,7 +3810,7 @@ MonoBehaviour:
   numberOfPanelsPerRing: 6
   meshSource: {fileID: 1429851821537814884, guid: 6db660b9a5e373f4faf62971982ba983,
     type: 3}
-  thickFactor: 10
+  thickFactor: 15
 --- !u!1 &1113871614
 GameObject:
   m_ObjectHideFlags: 0
@@ -7835,6 +7836,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1917232307}
   m_CullTransparentMesh: 1
+--- !u!1 &1944592595 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6884629592514652684, guid: f7a1b1e8b1c8eb44ca293795d87e2794,
+    type: 3}
+  m_PrefabInstance: {fileID: 8960442921628211699}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1993126623
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityMeshSimplifier;
 using static ProceduralTreeVoxelGenerator;
 
 public class TreeRenderer : MonoBehaviour
@@ -9,29 +11,63 @@ public class TreeRenderer : MonoBehaviour
     [SerializeField] int thickFactor = 10;
     Vector3[] directions;
     float longestBranch;
+
+    static List<Mesh> meshParts;
     private void Awake()
     {
-        GenerateDirections();
+        directions = GenerateDirections(numberOfPanelsPerRing);
     }
 
     public void RenderTree(TreeGeneratorNode origin, float longest)
     {
         longestBranch = longest;
+        meshParts = new();
         RenderBranch(origin);
+        FuseMeshes();
+    }
+
+    private void FuseMeshes()
+    {
+        Mesh finalMesh = new();
+        GameObject spawned = Instantiate(meshSource);
+        MeshFilter filter = spawned.GetComponent<MeshFilter>();
+        filter.mesh = finalMesh;
+        spawned.GetComponent<MeshCollider>().sharedMesh = finalMesh;
+        CombineInstance[] combiner = new CombineInstance[meshParts.Count];
+        for (int i = 0; i < meshParts.Count; i++)
+        {
+            combiner[i].mesh = meshParts[i];
+            combiner[i].transform = filter.transform.localToWorldMatrix;
+        }
+        
+
+        finalMesh.CombineMeshes(combiner);
+        finalMesh.RecalculateNormals();
+        //finalMesh = SimplifyMesh(finalMesh, filter);
+
+    }
+
+    private static Mesh SimplifyMesh(Mesh finalMesh, MeshFilter filter)
+    {
+        MeshSimplifier simplifier = new();
+        simplifier.Initialize(finalMesh);
+        simplifier.SimplifyMeshLossless();
+        finalMesh = simplifier.ToMesh();
+        
+        return finalMesh;
     }
 
     public void RenderBranch(TreeGeneratorNode origin, int childIndex = 0)
     {
-        GameObject spawned = Instantiate(meshSource);
         var mesh = new Mesh();
-        spawned.GetComponent<MeshFilter>().mesh = mesh;
+        
         List<Vector3> vertices = new();
         List<int> triangles = new();
         int startIndex = 0;
 
         vertices.AddRange(GetVertexRing(origin));
         BuildAndAttachRing(origin, childIndex);
-        FinalizeMesh(spawned, mesh, vertices, triangles);
+        FinalizeMesh(mesh, vertices, triangles);
 
         void BuildAndAttachRing(TreeGeneratorNode parent, int childIndex)
         {
@@ -64,18 +100,18 @@ public class TreeRenderer : MonoBehaviour
 
     }
 
-    private static void FinalizeMesh(GameObject spawned, Mesh mesh, List<Vector3> vertices, List<int> triangles)
+    private static void FinalizeMesh(Mesh mesh, List<Vector3> vertices, List<int> triangles)
     {
         mesh.vertices = vertices.ToArray();
         mesh.triangles = triangles.ToArray();
-        mesh.RecalculateNormals();
-        spawned.GetComponent<MeshCollider>().sharedMesh = mesh;
+        meshParts.Add(mesh);
     }
 
     public Vector3[] GetVertexRing(TreeGeneratorNode node)
     {
         Vector3[] vertices = new Vector3[directions.Length];
         float thickness = (longestBranch - node.hopsFromRoot) / thickFactor;
+        thickness = Mathf.Clamp(thickness, .1f, thickness);
         Vector3 growthDirection = node.incomingVector + (node.outgoingVectors.Count > 0 ? node.outgoingVectors[0] : Vector3.zero);
         growthDirection.Normalize();
         Quaternion mod = Quaternion.FromToRotation(Vector3.forward, growthDirection);
@@ -89,15 +125,16 @@ public class TreeRenderer : MonoBehaviour
         return vertices;
     }
 
-    void GenerateDirections()
+    public static Vector3[] GenerateDirections(int pointsPerSource)
     {
-        directions = new Vector3[numberOfPanelsPerRing];
+        Vector3[] directions = new Vector3[pointsPerSource];
         directions[0] = Vector3.left;
-        Quaternion rotationFactor = Quaternion.AngleAxis(360 / numberOfPanelsPerRing, Vector3.forward);
-        for(int i = 1; i < numberOfPanelsPerRing; i++)
+        Quaternion rotationFactor = Quaternion.AngleAxis(360 / pointsPerSource, Vector3.forward);
+        for(int i = 1; i < pointsPerSource; i++)
         {
             directions[i] = rotationFactor * directions[i - 1];
         }
+        return directions;
     }
 
 }
