@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ProceduralNoiseVoxelGenerator : MonoBehaviour
+public class ProceduralNoiseVoxelGenerator : MapGenerator
 {
     [SerializeField] int mapSize;
     [SerializeField][Range(.4f, .6f)] float solidThreshold = .5f;
@@ -23,7 +23,7 @@ public class ProceduralNoiseVoxelGenerator : MonoBehaviour
         seed2 = Random.Range(0, 999999);
         seed3 = Random.Range(0, 999999);
     }
-    public byte[,,] Generate()
+    public override byte[,,] GenerateCoreMap()
     {
         int bufferedSize = mapSize + 2;
         mapGrid = new byte[bufferedSize, bufferedSize, bufferedSize];
@@ -64,4 +64,8 @@ public class ProceduralNoiseVoxelGenerator : MonoBehaviour
         return abc / 6f;
     }
 
+    public override void PlaceSecondaries()
+    {
+        throw new System.NotImplementedException();
+    }
 }

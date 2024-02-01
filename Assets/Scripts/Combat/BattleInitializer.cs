@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class BattleInitializer : MonoBehaviour
 {
-    [SerializeField] ProceduralNoiseVoxelGenerator mapGenerator;
-    [SerializeField] ProceduralTreeVoxelGenerator treeGenerator;
-
+    [SerializeField] MapGenerator[] mapGenerators;
+    [SerializeField] int generatorIndex;
 
     [SerializeField] MarchingCubes marchingCubesRenderer;
     [SerializeField] LineRenderer lineRenderer;
@@ -15,9 +14,9 @@ public class BattleInitializer : MonoBehaviour
 
     private void Start()
     {
-        //byte[,,] mapGrid = mapGenerator.Generate();
-        byte[,,] mapGrid = treeGenerator.Generate();
+        byte[,,] mapGrid = mapGenerators[generatorIndex].GenerateCoreMap();
         marchingCubesRenderer.RenderIntoCubes(mapGrid);
+        mapGenerators[generatorIndex].PlaceSecondaries();
 
         Pathfinder3D.Initialize(mapGrid);
         //Pathfinder3D.lineRenderer = lineRenderer;
