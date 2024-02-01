@@ -1,26 +1,24 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class ProceduralTreeVoxelGenerator : MapGenerator
 {
     
     [SerializeField] TreeParams tp;
     [SerializeField] GameObject ground;
-    [SerializeField] GameObject debugger;
-    [SerializeField] GameObject hopDebugger;
-    HashSet<Node> treeNodes;
+    [SerializeField] TreeRenderer treeRenderer;
+    HashSet<TreeGeneratorNode> treeNodes;
 
     static TreeParams.Iteration currentIteration;
-    static Vector3 baseGuidance = Vector3.up;
+    public static Vector3 baseGuidance = Vector3.up;
 
-    PriorityQueue<Node, float> frontier = new();
-    HashSet<Node> unvisited = new();
-    Node[,,] Map;
+    PriorityQueue<TreeGeneratorNode, float> frontier = new();
+    HashSet<TreeGeneratorNode> unvisited = new();
+    static TreeGeneratorNode[,,] Map;
 
-    Vector3 originLocation;
+    TreeGeneratorNode origin;
 
     private void Awake()
     {
@@ -62,15 +60,14 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         }
     }
 
-    public override byte[,,] GenerateCoreMap()
+    public override void GenerateCoreMap()
     {
-        byte[,,] output = new byte[tp.mapSize, tp.mapSize, tp.mapSize];
-        Node.mapSize = tp.mapSize;
+        TreeGeneratorNode.mapSize = tp.mapSize;
         GenerateInitialMap(tp.mapSize);
         
         IterateGrowthField();
 
-        HashSet<Node> canpoyInitialGrowthPoints = GetInitialBranchPoints(tp.initialGeneration.canopyCenterHeight, tp.initialGeneration.canopyRadius, tp.initialGeneration.branches);
+        HashSet<TreeGeneratorNode> canpoyInitialGrowthPoints = GetInitialBranchPoints(tp.initialGeneration.canopyCenterHeight, tp.initialGeneration.canopyRadius, tp.initialGeneration.branches);
         OutputFromOrigins(canpoyInitialGrowthPoints);
 
         foreach(var iteration in tp.iterations)
@@ -78,17 +75,14 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             currentIteration = iteration;
             ReinitializeMap();
             IterateGrowthField();
-            HashSet<Node> newOrigins = GetSecondaryBranchPoints();
+            HashSet<TreeGeneratorNode> newOrigins = GetSecondaryBranchPoints();
             OutputFromOrigins(newOrigins);
         }
 
-        
-        
-        //DebugDirections();
+        float longestBranch = treeNodes.Select(node => node.hopsFromRoot).Max();
+        treeRenderer.RenderTree(origin, longestBranch);
 
-        return InflateTree(treeNodes);
-
-        void OutputFromOrigins(HashSet<Node> origins)
+        void OutputFromOrigins(HashSet<TreeGeneratorNode> origins)
         {
             foreach (var origin in origins)
             {
@@ -96,7 +90,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             }
 
             
-            void TreePointToOutput(Node origin)
+            void TreePointToOutput(TreeGeneratorNode origin)
             {
                 treeNodes.Add(origin);
                 if (origin.Parent == null || treeNodes.Contains(origin.Parent)) return;
@@ -105,9 +99,14 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         }
     }
 
-    private byte[,,] InflateTree(HashSet<Node> treeNodes)
+    public override byte[,,] GetByteMap()
     {
-        int inflatedSize = tp.inflationFactor * Node.mapSize;
+        return InflateTree(treeNodes);
+    }
+
+    private byte[,,] InflateTree(HashSet<TreeGeneratorNode> treeNodes)
+    {
+        int inflatedSize = tp.inflationFactor * TreeGeneratorNode.mapSize;
         byte[,,] output = new byte[inflatedSize, inflatedSize, inflatedSize];
 
         int longestBranch = treeNodes.Select(x => x.hopsFromRoot).Max();
@@ -131,25 +130,12 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         }
         return output;
     }
-    
-    private void DebugDirections()
-    {
-        for (int x = 0; x < Node.mapSize; x++)
-        {
-            for (int y = 0; y < Node.mapSize; y++)
-            {
-                Node outgoing = Map[x, y, Node.mapSize/2];
-                GameObject spawned = Instantiate(debugger, new Vector3(x, y, Node.mapSize / 2), Quaternion.LookRotation(outgoing.guidingVector));
-                //spawned.name = outgoing.hopsFromOrigin.ToString();
-            }
-        }
-    }
 
-    private HashSet<Node> GetSecondaryBranchPoints()
+    private HashSet<TreeGeneratorNode> GetSecondaryBranchPoints()
     {
-        HashSet<Node> output = new();
-        HashSet<Node> branchPoints = GenerateBranchSurface();
-        List<Node> orderedPoints = branchPoints.OrderByDescending(x => x.distanceFromRoot)
+        HashSet<TreeGeneratorNode> output = new();
+        HashSet<TreeGeneratorNode> branchPoints = GenerateBranchSurface();
+        List<TreeGeneratorNode> orderedPoints = branchPoints.OrderByDescending(x => x.distanceFromRoot)
             .Take(Mathf.RoundToInt(branchPoints.Count * currentIteration.inclusionZone))
             .ToList();
         /*foreach (Node node in orderedPoints)
@@ -171,39 +157,40 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         new Vector3(-1, 1, 0), new Vector3(1, 1, 0)    // Edges along xy-plane
     };
 
-    HashSet<Node> GenerateBranchSurface()
+    HashSet<TreeGeneratorNode> GenerateBranchSurface()
     {
-        HashSet<Node> output = new();
+        HashSet<TreeGeneratorNode> output = new();
         
         foreach(var node in treeNodes)
         {
-            Quaternion rot = Quaternion.LookRotation(EdgePrecalculator.GetDirectionVector(node.parentEdgeIndex));
+            Vector3 parentDirection = EdgePrecalculator.GetDirectionVector(node.parentEdgeIndex);
+            Quaternion surfaceRingAxis = Quaternion.LookRotation(parentDirection);
             
             for(int i = 0; i < 8; i++)
             {
-                Vector3 tiltedDirection = rot * crossDirections[i];
+                Vector3 tiltedDirection = surfaceRingAxis * crossDirections[i];
                 tiltedDirection *= currentIteration.branchLength;
                 Vector3Int finalPosition = new(node.positionX, node.positionY, node.positionZ);
                 finalPosition += Vector3Int.RoundToInt(tiltedDirection);
                 int x = finalPosition.x;
                 int y = finalPosition.y;
                 int z = finalPosition.z;
-                if (PointIsOffMap(x, y, z, Node.mapSize)) continue;
+                if (PointIsOffMap(x, y, z, TreeGeneratorNode.mapSize)) continue;
                 output.Add(Map[x, y, z]);
             }
         }
         return output;
     }
-    HashSet<Node> GetInitialBranchPoints(int canopyCenterHeight, int canopyRadius, int numberOfBranches)
+    HashSet<TreeGeneratorNode> GetInitialBranchPoints(int canopyCenterHeight, int canopyRadius, int numberOfBranches)
     {
         Vector3Int canopyCenter = new(tp.mapSize / 2, 0, tp.mapSize / 2);
-        List<Node> potentialOrigins = new();
+        List<TreeGeneratorNode> potentialOrigins = new();
         canopyCenter.y += canopyCenterHeight;
-        for (int x = 0; x < Node.mapSize; x++)
+        for (int x = 0; x < TreeGeneratorNode.mapSize; x++)
         {
-            for (int y = 0; y < Node.mapSize; y++)
+            for (int y = 0; y < TreeGeneratorNode.mapSize; y++)
             {
-                for (int z = 0; z < Node.mapSize; z++)
+                for (int z = 0; z < TreeGeneratorNode.mapSize; z++)
                 {
                     Vector3Int check = new(x, y, z);
                     if (Vector3.Distance(check, canopyCenter) < canopyRadius)
@@ -214,10 +201,10 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             }
         }
 
-        HashSet<Node> origins = new();
+        HashSet<TreeGeneratorNode> origins = new();
         while (numberOfBranches > 0)
         {
-            Node origin = potentialOrigins[UnityEngine.Random.Range(0, potentialOrigins.Count)];
+            TreeGeneratorNode origin = potentialOrigins[UnityEngine.Random.Range(0, potentialOrigins.Count)];
             origins.Add(origin);
             numberOfBranches--;
         }
@@ -236,26 +223,34 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
 
     void GenerateInitialMap(int size)
     {
-        Map = new Node[size, size, size];
+        Map = new TreeGeneratorNode[size, size, size];
         for (int x = 0; x < size; x++)
         {
             for (int y = 0; y < size; y++)
             {
                 for (int z = 0; z < size; z++)
                 {
-                    Node outgoing = new() { positionX = x, positionY = y, positionZ = z };
+                    TreeGeneratorNode outgoing = new() 
+                    { positionX = x, positionY = y, positionZ = z, 
+                      worldPosition = new( Jitter(x), Jitter(y), Jitter(z)) };
                     Map[x, y, z] = outgoing;
                     unvisited.Add(outgoing);
                 }
             }
         }
-        Node origin = Map[size / 2, 0, size / 2];
-        originLocation = new(origin.positionX, origin.positionY, origin.positionZ);
+        TreeGeneratorNode origin = Map[size / 2, 0, size / 2];
+        this.origin = origin;
         treeNodes = new() { origin };
         AddOriginNodeToFrontier(origin);
     }
 
-    void AddOriginNodeToFrontier(Node outgoing)
+    float Jitter(int input)
+    {
+        float factor = Random.Range(-tp.jitterSize, tp.jitterSize);
+        return factor + input;
+    }
+
+    void AddOriginNodeToFrontier(TreeGeneratorNode outgoing)
     {
         frontier.Enqueue(outgoing, 0);
         outgoing.distanceFromRoot = 0;
@@ -263,15 +258,16 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
 
     void ReinitializeMap()
     {
-        int size = Node.mapSize;
+        int size = TreeGeneratorNode.mapSize;
         for (int x = 0; x < size; x++)
         {
             for (int y = 0; y < size; y++)
             {
                 for (int z = 0; z < size; z++)
                 {
-                    Node outgoing = Map[x, y, z];
+                    TreeGeneratorNode outgoing = Map[x, y, z];
                     unvisited.Add(outgoing);
+                    outgoing.children.Clear();
                     
                     if (treeNodes.Contains(outgoing))
                     {
@@ -290,8 +286,10 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
     void VisitCurrent(int rotationFactor)
     {
         //pick the lowest distance from the current frontier
-        Node currentlyVisiting = frontier.Dequeue();
+        TreeGeneratorNode currentlyVisiting = frontier.Dequeue();
         unvisited.Remove(currentlyVisiting);
+
+        if(currentlyVisiting.Parent != null) currentlyVisiting.Parent.children.Add(currentlyVisiting);
 
         currentlyVisiting.CalculateGuidingVector(rotationFactor);
         currentlyVisiting.CalculateEdgeWeights();
@@ -304,8 +302,8 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             int y = currentlyVisiting.positionY + EdgePrecalculator.GetDirectionComponent(i, 1);
             int z = currentlyVisiting.positionZ + EdgePrecalculator.GetDirectionComponent(i, 2);
 
-            if (PointIsOffMap(x, y, z, Node.mapSize)) continue;
-            Node neighbor = Map[x, y, z];
+            if (PointIsOffMap(x, y, z, TreeGeneratorNode.mapSize)) continue;
+            TreeGeneratorNode neighbor = Map[x, y, z];
             if (!unvisited.Contains(neighbor)) continue;
 
             float finalWeight = currentlyVisiting.hopsFromRoot + currentlyVisiting.edges[i].weight;
@@ -322,7 +320,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
 
     }
 
-    bool PointIsOffMap(int x, int y, int z, int size)
+    public static bool PointIsOffMap(int x, int y, int z, int size)
     {
         if (x < 0 || y < 0 || z < 0) return true;
         if (x >= size || y >= size || z >= size) return true;
@@ -331,7 +329,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
 
     public override void PlaceSecondaries()
     {
-        ground.transform.position = originLocation;
+        ground.transform.position = origin.worldPosition;
     }
 
     public static class EdgePrecalculator
@@ -396,19 +394,19 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         }
     }
 
-    
-    class Node
+    public class TreeGeneratorNode
     {
         public static int mapSize;
         public struct Edge
         {
+            public Vector3 jitteredDirection;
             public int directionIndex;
             public float weight;
         }
 
         public Edge[] edges;
 
-        public Node()
+        public TreeGeneratorNode()
         {
             edges = new Edge[EdgePrecalculator.DirectionCount];
             for (int i = 0; i < EdgePrecalculator.DirectionCount; i++)
@@ -422,19 +420,22 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             hopsFromRoot = 0;
             distanceFromRoot = float.PositiveInfinity;
             Parent = null;
+            children = new();
         }
 
         public int positionX, positionY, positionZ;
+
+        public Vector3 worldPosition;
         public Vector3 guidingVector;
+
 
         public float distanceFromRoot = float.PositiveInfinity;
 
-        public Node Parent { get; set; }
-        Node parent;
-        HashSet<Node> children;
+        public TreeGeneratorNode Parent;
+        public List<TreeGeneratorNode> children = new();
         public int parentEdgeIndex, hopsFromRoot;
 
-        
+
         public void CalculateGuidingVector(float rotationFactor)
         {
             if (Parent == null) guidingVector = baseGuidance;
@@ -442,7 +443,6 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             {
                 Quaternion rotator = Quaternion.AngleAxis(rotationFactor, EdgePrecalculator.GetCross(parentEdgeIndex));
                 guidingVector = rotator * Parent.guidingVector;
-                //Debug.Log("parent guidance " + parent.guidingVector + ", incoming vector" + EdgePrecalculator.GetDirectionVector(parentEdgeIndex) + " guiding vector " + guidingVector);
             }
         }
 
@@ -450,12 +450,22 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         {
             for (int i = 0; i < edges.Count(); i++)
             {
-                Vector3 direction = EdgePrecalculator.GetDirectionVector(i);
-                edges[i].weight = EdgePrecalculator.GetMagnitude(i) * (1 - Vector3.Dot(direction, guidingVector));
+                //weighting is applied based on direction vectors between jittered points
+                int x = positionX + EdgePrecalculator.GetDirectionComponent(i, 0);
+                int y = positionY + EdgePrecalculator.GetDirectionComponent(i, 1);
+                int z = positionZ + EdgePrecalculator.GetDirectionComponent(i, 2);
+                if (PointIsOffMap(x, y, z, mapSize)) { edges[i].weight = float.PositiveInfinity; continue; }
+                TreeGeneratorNode edgeTo = Map[x, y, z];
+                Vector3 edge = edgeTo.worldPosition - worldPosition;
+                Vector3 normalEdge = edge.normalized;
+                edges[i].jitteredDirection = normalEdge;
+                edges[i].weight = edge.magnitude * (1 - Vector3.Dot(normalEdge, guidingVector));
             }
         }
     }
 }
+
+
 
 
 

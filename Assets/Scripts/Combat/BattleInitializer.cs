@@ -12,11 +12,19 @@ public class BattleInitializer : MonoBehaviour
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] BotPlacer botPlacer;
 
+    [SerializeField] TreeRenderer treeRenderer;
+
+    [SerializeField] bool testing = true;
     private void Start()
     {
-        byte[,,] mapGrid = mapGenerators[generatorIndex].GenerateCoreMap();
-        marchingCubesRenderer.RenderIntoCubes(mapGrid);
+        mapGenerators[generatorIndex].GenerateCoreMap();
         mapGenerators[generatorIndex].PlaceSecondaries();
+
+
+        if (testing) return;
+        byte[,,] mapGrid = mapGenerators[generatorIndex].GetByteMap();
+        marchingCubesRenderer.RenderIntoCubes(mapGrid);
+        
 
         Pathfinder3D.Initialize(mapGrid);
         //Pathfinder3D.lineRenderer = lineRenderer;

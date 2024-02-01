@@ -12,6 +12,8 @@ public class TreeParams : ScriptableObject
     public int sphereBoost;
     public int inflationFactor = 2;
 
+    public float jitterSize = .5f;
+
     public FirstIteration initialGeneration;
     public Iteration[] iterations;
     public Iteration leafIteration;

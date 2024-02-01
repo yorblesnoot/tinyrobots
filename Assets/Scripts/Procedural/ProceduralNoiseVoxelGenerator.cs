@@ -23,7 +23,12 @@ public class ProceduralNoiseVoxelGenerator : MapGenerator
         seed2 = Random.Range(0, 999999);
         seed3 = Random.Range(0, 999999);
     }
-    public override byte[,,] GenerateCoreMap()
+
+    public override byte[,,] GetByteMap()
+    {
+        return mapGrid;
+    }
+    public override void GenerateCoreMap()
     {
         int bufferedSize = mapSize + 2;
         mapGrid = new byte[bufferedSize, bufferedSize, bufferedSize];
@@ -40,7 +45,6 @@ public class ProceduralNoiseVoxelGenerator : MapGenerator
                 }
             }
         }
-        return mapGrid;
     }
 
 

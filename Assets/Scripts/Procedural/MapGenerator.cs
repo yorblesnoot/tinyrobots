@@ -4,7 +4,9 @@ using UnityEngine;
 
 public abstract class MapGenerator : MonoBehaviour
 {
-    public abstract byte[,,] GenerateCoreMap();
+    public abstract void GenerateCoreMap();
 
     public abstract void PlaceSecondaries();
+
+    public abstract byte[,,] GetByteMap();
 }

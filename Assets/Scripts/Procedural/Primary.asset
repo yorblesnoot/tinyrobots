@@ -16,24 +16,21 @@ MonoBehaviour:
   sphereLevels: 6
   sphereBoost: 0
   inflationFactor: 1
+  jitterSize: 0.5
   initialGeneration:
     rotationFactor: 5
     canopyCenterHeight: 40
     canopyRadius: 10
-    branches: 5
+    branches: 1
   iterations:
-  - branches: 5
-    rotationFactor: 5
-    branchLength: 10
-    inclusionZone: 0.433
+  - branches: 3
+    rotationFactor: 9
+    branchLength: 15
+    inclusionZone: 0.126
   - branches: 10
-    rotationFactor: 5
-    branchLength: 8
-    inclusionZone: 0.174
-  - branches: 10
-    rotationFactor: 5
+    rotationFactor: 9
     branchLength: 5
-    inclusionZone: 0.174
+    inclusionZone: 0.057
   leafIteration:
     branches: 0
     rotationFactor: 5

@@ -1,33 +1,26 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using static ProceduralTreeVoxelGenerator;
 
 public class TreeRenderer : MonoBehaviour
 {
     [SerializeField] int numberOfPanelsPerRing;
     [SerializeField] GameObject meshSource;
+    [SerializeField] int thickFactor = 10;
     Vector3[] directions;
+    float longestBranch;
     private void Awake()
     {
         GenerateDirections();
-
-        RenderBranch(BuildDummyTree(5));
     }
 
-    TreeRenderNode BuildDummyTree(int levels)
+    public void RenderTree(TreeGeneratorNode origin, float longest)
     {
-        TreeRenderNode origin = new() { position = Vector3.zero, growthDirection = Vector3.up, thickness = 1f};
-        TreeRenderNode current = origin;
-        for(int i = 0; i < levels; i++)
-        {
-            current.children = new TreeRenderNode[1];
-            current.children[0] = new() { position = current.position + current.growthDirection, growthDirection = Vector3.left + Vector3.up, thickness = 2f };
-            current = current.children[0];
-        }
-        return origin;
+        longestBranch = longest;
+        RenderBranch(origin);
     }
 
-    void RenderBranch(TreeRenderNode origin, int childIndex = 0)
+    public void RenderBranch(TreeGeneratorNode origin, int childIndex = 0)
     {
         GameObject spawned = Instantiate(meshSource);
         var mesh = new Mesh();
@@ -35,40 +28,70 @@ public class TreeRenderer : MonoBehaviour
         List<Vector3> vertices = new();
         List<int> triangles = new();
         int startIndex = 0;
-        vertices.AddRange(origin.SetVertexRing(directions));
+        vertices.AddRange(GetVertexRing(origin));
         BuildAndAttachRing(origin, childIndex);
-        mesh.vertices = vertices.ToArray();
-        mesh.triangles = triangles.ToArray();
-        mesh.RecalculateNormals();
-        spawned.GetComponent<MeshCollider>().sharedMesh = mesh;
+        FinalizeMesh(spawned, mesh, vertices, triangles);
 
-
-        void BuildAndAttachRing(TreeRenderNode source, int childIndex)
+        void BuildAndAttachRing(TreeGeneratorNode parent, int childIndex)
         {
-            if (source.children == null) return;
+            if (parent.children == null || parent.children.Count == 0) return;
 
-            vertices.AddRange(source.children[childIndex].SetVertexRing(directions));
-            for(int i = 0; i < numberOfPanelsPerRing; i++)
+            TreeGeneratorNode child = parent.children[childIndex];
+            if (parent == child) {Debug.LogError("recursive tree structure"); return;
+        }
+                //create vertices for child node
+                vertices.AddRange(GetVertexRing(child));
+            for (int i = 0; i < numberOfPanelsPerRing; i++)
             {
+                //add vertices to master list and create triangles between source and child node
                 int vertex = startIndex + i;
                 int nextVertex = i == numberOfPanelsPerRing - 1 ? startIndex : vertex + 1;
-                int[] upperTri = { vertex, nextVertex, nextVertex + numberOfPanelsPerRing};
+                int[] upperTri = { vertex, nextVertex, nextVertex + numberOfPanelsPerRing };
                 int[] lowerTri = { vertex, nextVertex + numberOfPanelsPerRing, vertex + numberOfPanelsPerRing };
                 triangles.AddRange(upperTri);
                 triangles.AddRange(lowerTri);
             }
             startIndex += numberOfPanelsPerRing;
-            BuildAndAttachRing(source.children[childIndex], 0);
-            if (source.children.Count() == 1) return;
-            for(int i = 1; i < source.children.Count(); i++)
+
+            //tell the child node to attach to its first child
+            BuildAndAttachRing(child, 0);
+
+            //if there is an additional child, create a new branch starting at the origin and connecting to the next child
+            if (childIndex < parent.children.Count - 1)
             {
-                RenderBranch(source, i);
+                RenderBranch(parent, childIndex + 1);
             }
         }
-        
+
     }
 
-    
+    private static void FinalizeMesh(GameObject spawned, Mesh mesh, List<Vector3> vertices, List<int> triangles)
+    {
+        mesh.vertices = vertices.ToArray();
+        mesh.triangles = triangles.ToArray();
+        mesh.RecalculateNormals();
+        spawned.GetComponent<MeshCollider>().sharedMesh = mesh;
+    }
+
+    public Vector3[] GetVertexRing(TreeGeneratorNode node)
+    {
+        Vector3[] vertices = new Vector3[directions.Length];
+        Vector3 parentGuiding = node.Parent == null ? Vector3.up : node.Parent.guidingVector;
+        Vector3 growthDirection = parentGuiding + node.guidingVector;
+        growthDirection.Normalize();
+        float thickness = (longestBranch - node.hopsFromRoot) / thickFactor;
+        Quaternion mod = Quaternion.FromToRotation(Vector3.forward, growthDirection);
+
+        for (int i = 0; i < directions.Length; i++)
+        {
+            Vector3 finalDirection = mod * directions[i];
+            finalDirection *= thickness;
+            vertices[i] = finalDirection + node.worldPosition;
+        }
+        return vertices;
+    }
+
+
 
     void GenerateDirections()
     {
@@ -81,27 +104,4 @@ public class TreeRenderer : MonoBehaviour
         }
     }
 
-}
-
-public class TreeRenderNode
-{
-    public Vector3 position, growthDirection;
-    public Vector3[] vertices;
-  
-    public float thickness;
-
-    public TreeRenderNode[] children;
-
-    public Vector3[] SetVertexRing(Vector3[] directions)
-    {
-        vertices = new Vector3[directions.Length];
-        Quaternion mod = Quaternion.LookRotation(growthDirection);
-        for (int i = 0; i < directions.Length; i++)
-        {
-            Vector3 finalDirection = mod * directions[i];
-            finalDirection *= thickness;
-            vertices[i] = finalDirection + position;
-        }
-        return vertices;
-    }
 }
