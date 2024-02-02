@@ -24,9 +24,11 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
     static TreeGeneratorNode[,,] Map;
 
     TreeGeneratorNode origin;
+    static bool leaf = false;
 
     private void Awake()
     {
+        leaf = false;
         currentIteration = null;
         firstIteration = tp.initialGeneration;
         EdgePrecalculator.Initialize();
@@ -88,24 +90,31 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         IterateGrowthField();
 
         HashSet<TreeGeneratorNode> canpoyInitialGrowthPoints = GetInitialBranchPoints(tp.initialGeneration.canopyCenterHeight, tp.initialGeneration.canopyRadius, tp.initialGeneration.branches);
-        OutputFromOrigins(canpoyInitialGrowthPoints);
+        BuildTreeToBranchPoints(canpoyInitialGrowthPoints);
 
         foreach(var iteration in tp.iterations)
         {
-            currentIteration = iteration;
-            ReinitializeMap();
-            IterateGrowthField();
-
-            HashSet<TreeGeneratorNode> newOrigins = GetSecondaryBranchPoints();
-            OutputFromOrigins(newOrigins);
+            PerformIteration(iteration);
         }
+        leaf = true;
+        PerformIteration(tp.leafIteration);
         //DebugGuiding();
 
         float longestBranch = treeNodes.Select(node => node.hopsFromRoot).Max();
         AnnotateTreeForRendering();
         treeRenderer.RenderTree(origin, longestBranch);
 
-        void OutputFromOrigins(HashSet<TreeGeneratorNode> origins)
+        void PerformIteration(TreeParams.Iteration iteration)
+        {
+            currentIteration = iteration;
+            ReinitializeMap();
+            IterateGrowthField();
+
+            HashSet<TreeGeneratorNode> newOrigins = GetSecondaryBranchPoints();
+            BuildTreeToBranchPoints(newOrigins);
+        }
+
+        void BuildTreeToBranchPoints(HashSet<TreeGeneratorNode> origins)
         {
             foreach (var origin in origins)
             {
@@ -120,6 +129,8 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
                 TreePointToOutput(origin.Parent);
             }
         }
+
+        
     }
 
     private void AnnotateTreeForRendering()
@@ -360,7 +371,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             {-1, 1, 1}, {1, 1, 1}        // Corners
         };
 
-        public static int DirectionCount { get { return directions.GetLength(0); } }
+        public static int DirectionCount { get; private set; }
 
         static float[] magnitudes;
         
@@ -372,6 +383,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         }
         public static void Initialize()
         {
+            DirectionCount = directions.GetLength(0);
             magnitudes = new float[directions.GetLength(0)];
             vectors = new Vector3[directions.GetLength(0)];
             for (int i = 0; i < directions.GetLength(0); i++)
@@ -416,6 +428,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
 
         public void Reset()
         {
+            isLeaf = leaf;
             shortestPath = float.PositiveInfinity;
             Parent = null;
         }
@@ -433,6 +446,8 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
 
         public Vector3 incomingVector;
         public List<Vector3> outgoingVectors = new();
+
+        public bool isLeaf;
 
 
         public void CalculateGuidingVector()
@@ -463,7 +478,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
 
         public void CalculateEdgeWeights()
         {
-            for (int i = 0; i < edges.Count(); i++)
+            for (int i = 0; i < EdgePrecalculator.DirectionCount; i++)
             {
                 //weighting is applied based on direction vectors between jittered points
                 int x = positionX + EdgePrecalculator.GetDirectionComponent(i, 0);
@@ -472,11 +487,13 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
                 if (PointIsOffMap(x, y, z, mapSize)) { edges[i].weight = float.PositiveInfinity; continue; }
                 TreeGeneratorNode edgeTo = Map[x, y, z];
                 Vector3 edge = edgeTo.worldPosition - worldPosition;
-                Vector3 normalEdge = edge.normalized;
+                Vector3 normalEdge = edge.FastNormalize();
                 edges[i].jitteredDirection = normalEdge;
                 edges[i].weight = edge.magnitude * (1 - Vector3.Dot(normalEdge, guidingVector));
             }
         }
+
+        
     }
 }
 

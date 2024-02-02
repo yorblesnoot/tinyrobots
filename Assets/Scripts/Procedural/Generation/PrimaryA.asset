@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c61fdb3635b175c40a5cef338f904109, type: 3}
-  m_Name: Primary
+  m_Name: PrimaryA
   m_EditorClassIdentifier: 
   mapSize: 50
   sphereLevels: 6
@@ -24,28 +24,22 @@ MonoBehaviour:
     canopyRadius: 2
     branches: 1
   iterations:
-  - branches: 6
-    rotationFactor: 20
+  - branches: 10
+    rotationFactor: 30
     rotationChangeThreshold: 1
     secondaryRotationFactor: 0
-    surfaceRadius: 6
-    inclusionZone: 0.292
+    surfaceRadius: 4
+    inclusionZone: 0.26
   - branches: 10
-    rotationFactor: -3
+    rotationFactor: 2
     rotationChangeThreshold: 100
     secondaryRotationFactor: 0
-    surfaceRadius: 6
-    inclusionZone: 0.115
-  - branches: 10
-    rotationFactor: 5
-    rotationChangeThreshold: 100
-    secondaryRotationFactor: 0
-    surfaceRadius: 6
-    inclusionZone: 0.112
+    surfaceRadius: 4
+    inclusionZone: 0.061
   leafIteration:
-    branches: 0
-    rotationFactor: 5
-    rotationChangeThreshold: 5
+    branches: 100
+    rotationFactor: 2
+    rotationChangeThreshold: 100
     secondaryRotationFactor: 5
-    surfaceRadius: 0
-    inclusionZone: 0
+    surfaceRadius: 2
+    inclusionZone: 0.22

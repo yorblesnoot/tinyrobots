@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c61fdb3635b175c40a5cef338f904109, type: 3}
+  m_Name: Profiling
+  m_EditorClassIdentifier: 
+  mapSize: 20
+  sphereLevels: 6
+  sphereBoost: 0
+  inflationFactor: 1
+  surfacePoints: 20
+  jitterSize: 0.5
+  initialGeneration:
+    rotationFactor: 0
+    canopyCenterHeight: 10
+    canopyRadius: 2
+    branches: 1
+  iterations:
+  - branches: 5
+    rotationFactor: -2
+    rotationChangeThreshold: 100
+    secondaryRotationFactor: 0
+    surfaceRadius: 4
+    inclusionZone: 0.228
+  leafIteration:
+    branches: 50
+    rotationFactor: 6
+    rotationChangeThreshold: 100
+    secondaryRotationFactor: 5
+    surfaceRadius: 2
+    inclusionZone: 0.296

@@ -18,4 +18,9 @@ public static class VectorHelper
     {
         return Rotated(vector, Quaternion.Euler(x, y, z), pivot);
     }
+
+    public static Vector3 FastNormalize(this Vector3 input)
+    {
+        return input / Mathf.Sqrt(input.sqrMagnitude);
+    }
 }

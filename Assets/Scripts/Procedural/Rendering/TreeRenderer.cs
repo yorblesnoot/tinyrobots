@@ -6,16 +6,17 @@ using static ProceduralTreeVoxelGenerator;
 
 public class TreeRenderer : MonoBehaviour
 {
-    [SerializeField] int numberOfPanelsPerRing;
+    [SerializeField] TreeRenderParams tp;
+    
     [SerializeField] GameObject meshSource;
-    [SerializeField] int thickFactor = 10;
+    [SerializeField] GameObject leaf;
     Vector3[] directions;
     float longestBranch;
 
     static List<Mesh> meshParts;
     private void Awake()
     {
-        directions = GenerateDirections(numberOfPanelsPerRing);
+        directions = GenerateDirections(tp.numberOfPanelsPerRing);
     }
 
     public void RenderTree(TreeGeneratorNode origin, float longest)
@@ -47,7 +48,7 @@ public class TreeRenderer : MonoBehaviour
 
     }
 
-    private static Mesh SimplifyMesh(Mesh finalMesh, MeshFilter filter)
+    private static Mesh SimplifyMesh(Mesh finalMesh)
     {
         MeshSimplifier simplifier = new();
         simplifier.Initialize(finalMesh);
@@ -76,17 +77,17 @@ public class TreeRenderer : MonoBehaviour
             TreeGeneratorNode child = parent.children[childIndex];
             //create vertices for child node
             vertices.AddRange(GetVertexRing(child));
-            for (int i = 0; i < numberOfPanelsPerRing; i++)
+            for (int i = 0; i < tp.numberOfPanelsPerRing; i++)
             {
                 //add vertices to master list and create triangles between source and child node
                 int vertex = startIndex + i;
-                int nextVertex = i == numberOfPanelsPerRing - 1 ? startIndex : vertex + 1;
-                int[] upperTri = { vertex, nextVertex, nextVertex + numberOfPanelsPerRing };
-                int[] lowerTri = { vertex, nextVertex + numberOfPanelsPerRing, vertex + numberOfPanelsPerRing };
+                int nextVertex = i == tp.numberOfPanelsPerRing - 1 ? startIndex : vertex + 1;
+                int[] upperTri = { vertex, nextVertex, nextVertex + tp.numberOfPanelsPerRing };
+                int[] lowerTri = { vertex, nextVertex + tp.numberOfPanelsPerRing, vertex + tp.numberOfPanelsPerRing };
                 triangles.AddRange(upperTri);
                 triangles.AddRange(lowerTri);
             }
-            startIndex += numberOfPanelsPerRing;
+            startIndex += tp.numberOfPanelsPerRing;
 
             //tell the child node to attach to its first child
             BuildAndAttachRing(child, 0);
@@ -110,11 +111,18 @@ public class TreeRenderer : MonoBehaviour
     public Vector3[] GetVertexRing(TreeGeneratorNode node)
     {
         Vector3[] vertices = new Vector3[directions.Length];
-        float thickness = (longestBranch - node.hopsFromRoot) / thickFactor;
+        float thicknessLevel = node.hopsFromRoot / longestBranch;
+        float thickness = tp.thicknessCurve.Evaluate(thicknessLevel);
         thickness = Mathf.Clamp(thickness, .1f, thickness);
-        Vector3 growthDirection = node.incomingVector + (node.outgoingVectors.Count > 0 ? node.outgoingVectors[0] : Vector3.zero);
+        Vector3 growthDirection = node.incomingVector == Vector3.zero ? Vector3.up : node.incomingVector
+            + (node.outgoingVectors.Count > 0 ? node.outgoingVectors[0] : Vector3.zero);
         growthDirection.Normalize();
         Quaternion mod = Quaternion.FromToRotation(Vector3.forward, growthDirection);
+
+        if (node.isLeaf)
+        {
+            AttachLeaves(node, thickness, mod);
+        }
 
         for (int i = 0; i < directions.Length; i++)
         {
@@ -123,6 +131,17 @@ public class TreeRenderer : MonoBehaviour
             vertices[i] = finalDirection + node.worldPosition;
         }
         return vertices;
+    }
+
+    static readonly Vector3[] leafAngles = { Vector3.left, Vector3.right};
+    private void AttachLeaves(TreeGeneratorNode node, float thickness, Quaternion mod)
+    {
+        foreach(var angle in leafAngles)
+        {
+            Vector3 leafDirection = mod * angle;
+            Vector3 leafOffset = leafDirection * thickness;
+            Instantiate(leaf, node.worldPosition + leafOffset, Quaternion.LookRotation(leafDirection));
+        }
     }
 
     public static Vector3[] GenerateDirections(int pointsPerSource)
