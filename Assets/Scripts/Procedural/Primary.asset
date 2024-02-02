@@ -17,32 +17,31 @@ MonoBehaviour:
   sphereBoost: 0
   inflationFactor: 1
   surfacePoints: 20
-  iterationRiseFactor: 3
   jitterSize: 0.5
   initialGeneration:
     rotationFactor: 0
     canopyCenterHeight: 30
-    canopyRadius: 1
+    canopyRadius: 2
     branches: 1
   iterations:
   - branches: 6
-    rotationFactor: 23
-    rotationChangeThreshold: 2
+    rotationFactor: 20
+    rotationChangeThreshold: 1
     secondaryRotationFactor: 0
-    surfaceRadius: 10
-    inclusionZone: 0.169
+    surfaceRadius: 6
+    inclusionZone: 0.292
   - branches: 10
-    rotationFactor: 6
-    rotationChangeThreshold: 0
-    secondaryRotationFactor: 6
-    surfaceRadius: 10
-    inclusionZone: 0.124
+    rotationFactor: -3
+    rotationChangeThreshold: 100
+    secondaryRotationFactor: 0
+    surfaceRadius: 6
+    inclusionZone: 0.115
   - branches: 10
-    rotationFactor: 6
-    rotationChangeThreshold: 0
-    secondaryRotationFactor: 6
-    surfaceRadius: 10
-    inclusionZone: 0.106
+    rotationFactor: 5
+    rotationChangeThreshold: 100
+    secondaryRotationFactor: 0
+    surfaceRadius: 6
+    inclusionZone: 0.112
   leafIteration:
     branches: 0
     rotationFactor: 5

@@ -27,7 +27,6 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
 
     private void Awake()
     {
-        crossDirections = TreeRenderer.GenerateDirections(tp.surfacePoints);
         currentIteration = null;
         firstIteration = tp.initialGeneration;
         EdgePrecalculator.Initialize();
@@ -96,10 +95,11 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             currentIteration = iteration;
             ReinitializeMap();
             IterateGrowthField();
+
             HashSet<TreeGeneratorNode> newOrigins = GetSecondaryBranchPoints();
             OutputFromOrigins(newOrigins);
         }
-        DebugGuiding();
+        //DebugGuiding();
 
         float longestBranch = treeNodes.Select(node => node.hopsFromRoot).Max();
         AnnotateTreeForRendering();
@@ -166,53 +166,38 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
     private HashSet<TreeGeneratorNode> GetSecondaryBranchPoints()
     {
         HashSet<TreeGeneratorNode> output = new();
-        HashSet<TreeGeneratorNode> branchPoints = GenerateBranchSurface();
-        List<TreeGeneratorNode> orderedPoints = branchPoints.OrderByDescending(x => x.hopsFromRoot)
-            .Take(Mathf.RoundToInt(branchPoints.Count * currentIteration.inclusionZone))
-            .ToList();
-        foreach (TreeGeneratorNode node in orderedPoints)
+        List<TreeGeneratorNode> branchPoints = new();
+        for (int x = 0; x < TreeGeneratorNode.mapSize; x++)
         {
-            Instantiate(debugger, node.worldPosition, Quaternion.identity);
-            
-        }
-        for(int i = 0; i < currentIteration.branches; i++)
-        {
-            output.Add(orderedPoints.GrabRandomly());
-        }
-        return output;
-    }
-
-    static Vector3[] crossDirections = {
-        new Vector3(-1, 0, 0), new Vector3(1, 0, 0),    // Faces along x-axis
-        new Vector3(0, -1, 0), new Vector3(0, 1, 0),    // Faces along y-axis
-        new Vector3(-1, -1, 0), new Vector3(1, -1, 0),  // Edges along xy-plane
-        new Vector3(-1, 1, 0), new Vector3(1, 1, 0)    // Edges along xy-plane
-    };
-
-    HashSet<TreeGeneratorNode> GenerateBranchSurface()
-    {
-        HashSet<TreeGeneratorNode> output = new();
-        
-        foreach(var node in treeNodes)
-        {
-            Vector3 parentDirection = node.incomingVector;
-            Quaternion surfaceRingAxis = Quaternion.LookRotation(parentDirection);
-            
-            for(int i = 0; i < 8; i++)
+            for (int y = 0; y < TreeGeneratorNode.mapSize; y++)
             {
-                Vector3 tiltedDirection = surfaceRingAxis * crossDirections[i];
-                tiltedDirection *= currentIteration.surfaceRadius;
-                Vector3Int finalPosition = new(node.positionX, node.positionY, node.positionZ);
-                finalPosition += Vector3Int.RoundToInt(tiltedDirection);
-                int x = finalPosition.x;
-                int y = finalPosition.y + tp.iterationRiseFactor;
-                int z = finalPosition.z;
-                if (PointIsOffMap(x, y, z, TreeGeneratorNode.mapSize)) continue;
-                output.Add(Map[x, y, z]);
+                for (int z = 0; z < TreeGeneratorNode.mapSize; z++)
+                {
+                    TreeGeneratorNode node = Map[x, y, z];
+                    if (Mathf.RoundToInt(node.shortestPath) == currentIteration.surfaceRadius) branchPoints.Add(node);
+                }
             }
         }
+
+        branchPoints = branchPoints.OrderByDescending(node => node.hopsFromRoot).ToList();
+        branchPoints = branchPoints.Take(Mathf.RoundToInt(branchPoints.Count * currentIteration.inclusionZone)).ToList();
+        //DebugSecondaryBranches(orderedPoints);
+        for (int i = 0; i < currentIteration.branches; i++)
+        {
+            output.Add(branchPoints.GrabRandomly());
+        }
         return output;
+
+        void DebugSecondaryBranches(List<TreeGeneratorNode> orderedPoints)
+        {
+            foreach (TreeGeneratorNode node in orderedPoints)
+            {
+                Instantiate(debugger, node.worldPosition, Quaternion.identity);
+
+            }
+        }
     }
+
     HashSet<TreeGeneratorNode> GetInitialBranchPoints(int canopyCenterHeight, int canopyRadius, int numberOfBranches)
     {
         Vector3Int canopyCenter = new(tp.mapSize / 2, 0, tp.mapSize / 2);
