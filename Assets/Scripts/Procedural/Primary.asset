@@ -12,25 +12,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c61fdb3635b175c40a5cef338f904109, type: 3}
   m_Name: Primary
   m_EditorClassIdentifier: 
-  mapSize: 30
+  mapSize: 50
   sphereLevels: 6
   sphereBoost: 0
   inflationFactor: 1
-  surfacePoints: 10
-  iterationRiseFactor: 5
+  surfacePoints: 20
+  iterationRiseFactor: 3
   jitterSize: 0.5
   initialGeneration:
-    rotationFactor: 2
-    canopyCenterHeight: 20
+    rotationFactor: 0
+    canopyCenterHeight: 30
     canopyRadius: 1
     branches: 1
   iterations:
   - branches: 6
-    rotationFactor: -91
+    rotationFactor: 23
     rotationChangeThreshold: 2
     secondaryRotationFactor: 0
     surfaceRadius: 10
-    inclusionZone: 0.399
+    inclusionZone: 0.169
+  - branches: 10
+    rotationFactor: 6
+    rotationChangeThreshold: 0
+    secondaryRotationFactor: 6
+    surfaceRadius: 10
+    inclusionZone: 0.124
+  - branches: 10
+    rotationFactor: 6
+    rotationChangeThreshold: 0
+    secondaryRotationFactor: 6
+    surfaceRadius: 10
+    inclusionZone: 0.106
   leafIteration:
     branches: 0
     rotationFactor: 5

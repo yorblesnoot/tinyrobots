@@ -167,7 +167,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
     {
         HashSet<TreeGeneratorNode> output = new();
         HashSet<TreeGeneratorNode> branchPoints = GenerateBranchSurface();
-        List<TreeGeneratorNode> orderedPoints = branchPoints.OrderByDescending(x => x.distanceFromRoot)
+        List<TreeGeneratorNode> orderedPoints = branchPoints.OrderByDescending(x => x.hopsFromRoot)
             .Take(Mathf.RoundToInt(branchPoints.Count * currentIteration.inclusionZone))
             .ToList();
         foreach (TreeGeneratorNode node in orderedPoints)
@@ -284,8 +284,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
     void AddOriginNodeToFrontier(TreeGeneratorNode outgoing)
     {
         frontier.Enqueue(outgoing, 0);
-        outgoing.distanceFromRoot = 0;
-        outgoing.hopsFromOrigin = 0;
+        outgoing.shortestPath = 0;
     }
 
     void ReinitializeMap()
@@ -333,17 +332,15 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             if (PointIsOffMap(x, y, z, TreeGeneratorNode.mapSize)) continue;
             TreeGeneratorNode neighbor = Map[x, y, z];
             if (!unvisited.Contains(neighbor)) continue;
-
-            float finalWeight = currentlyVisiting.hopsFromRoot + currentlyVisiting.edges[i].weight;
-            if (finalWeight < neighbor.distanceFromRoot)
+            float travelCost = currentlyVisiting.shortestPath + currentlyVisiting.edges[i].weight;
+            if (travelCost < neighbor.shortestPath)
             {
-                neighbor.hopsFromRoot = currentlyVisiting.hopsFromRoot + 1;
-                neighbor.hopsFromOrigin = currentlyVisiting.hopsFromRoot + 1;
-                neighbor.distanceFromRoot = finalWeight;
                 neighbor.Parent = currentlyVisiting;
-                neighbor.parentEdgeIndex = i;
+                neighbor.shortestPath = travelCost;
+                neighbor.hopsFromRoot = currentlyVisiting.hopsFromRoot + 1;
+               
                 neighbor.incomingVector = currentlyVisiting.edges[i].jitteredDirection;
-                frontier.Enqueue(neighbor, neighbor.distanceFromRoot);
+                frontier.Enqueue(neighbor, neighbor.shortestPath);
             }
 
         }
@@ -434,8 +431,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
 
         public void Reset()
         {
-            hopsFromRoot = 0;
-            distanceFromRoot = float.PositiveInfinity;
+            shortestPath = float.PositiveInfinity;
             Parent = null;
         }
 
@@ -444,12 +440,11 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         public Vector3 worldPosition;
         public Vector3 guidingVector;
 
-
-        public float distanceFromRoot = float.PositiveInfinity;
+        public float shortestPath = float.PositiveInfinity;
+        public int hopsFromRoot = 0;
 
         public TreeGeneratorNode Parent;
         public List<TreeGeneratorNode> children = new();
-        public int parentEdgeIndex, hopsFromRoot, hopsFromOrigin;
 
         public Vector3 incomingVector;
         public List<Vector3> outgoingVectors = new();
@@ -474,7 +469,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             {
                 return firstIteration.rotationFactor;
             }
-            else if(hopsFromOrigin >= currentIteration.rotationChangeThreshold)
+            else if(shortestPath >= currentIteration.rotationChangeThreshold)
             {
                 return currentIteration.secondaryRotationFactor;
             }
