@@ -185,14 +185,15 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
                 for (int z = 0; z < TreeGeneratorNode.mapSize; z++)
                 {
                     TreeGeneratorNode node = Map[x, y, z];
-                    if (Mathf.RoundToInt(node.shortestPath) == currentIteration.surfaceRadius) branchPoints.Add(node);
+                    if (node.hopsFromOrigin == currentIteration.surfaceRadius) branchPoints.Add(node);
                 }
             }
         }
 
         branchPoints = branchPoints.OrderByDescending(node => node.hopsFromRoot).ToList();
         branchPoints = branchPoints.Take(Mathf.RoundToInt(branchPoints.Count * currentIteration.inclusionZone)).ToList();
-        //DebugSecondaryBranches(orderedPoints);
+        //DebugSecondaryBranches(branchPoints);
+        int branchNum = Mathf.Clamp(currentIteration.branches, 0, branchPoints.Count);
         for (int i = 0; i < currentIteration.branches; i++)
         {
             output.Add(branchPoints.GrabRandomly());
@@ -204,7 +205,6 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             foreach (TreeGeneratorNode node in orderedPoints)
             {
                 Instantiate(debugger, node.worldPosition, Quaternion.identity);
-
             }
         }
     }
@@ -281,6 +281,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
     {
         frontier.Enqueue(outgoing, 0);
         outgoing.shortestPath = 0;
+        outgoing.hopsFromOrigin = 0;
     }
 
     void ReinitializeMap()
@@ -334,6 +335,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
                 neighbor.Parent = currentlyVisiting;
                 neighbor.shortestPath = travelCost;
                 neighbor.hopsFromRoot = currentlyVisiting.hopsFromRoot + 1;
+                neighbor.hopsFromOrigin = currentlyVisiting.hopsFromOrigin + 1;
                
                 neighbor.incomingVector = currentlyVisiting.edges[i].jitteredDirection;
                 frontier.Enqueue(neighbor, neighbor.shortestPath);
@@ -439,7 +441,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         public Vector3 guidingVector;
 
         public float shortestPath = float.PositiveInfinity;
-        public int hopsFromRoot = 0;
+        public int hopsFromRoot = 0, hopsFromOrigin;
 
         public TreeGeneratorNode Parent;
         public List<TreeGeneratorNode> children = new();

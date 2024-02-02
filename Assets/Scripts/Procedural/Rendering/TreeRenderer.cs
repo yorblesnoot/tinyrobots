@@ -111,18 +111,21 @@ public class TreeRenderer : MonoBehaviour
     public Vector3[] GetVertexRing(TreeGeneratorNode node)
     {
         Vector3[] vertices = new Vector3[directions.Length];
-        float thicknessLevel = node.hopsFromRoot / longestBranch;
-        float thickness = tp.thicknessCurve.Evaluate(thicknessLevel);
-        thickness = Mathf.Clamp(thickness, .1f, thickness);
         Vector3 growthDirection = node.incomingVector == Vector3.zero ? Vector3.up : node.incomingVector
             + (node.outgoingVectors.Count > 0 ? node.outgoingVectors[0] : Vector3.zero);
         growthDirection.Normalize();
         Quaternion mod = Quaternion.FromToRotation(Vector3.forward, growthDirection);
-
+        float thickness;
+        
+        float thicknessLevel = node.hopsFromRoot / longestBranch;
+        thickness = tp.thicknessCurve.Evaluate(thicknessLevel);
+        thickness = Mathf.Clamp(thickness, .1f, thickness);
         if (node.isLeaf)
         {
+            thickness /= 5;
             AttachLeaves(node, thickness, mod);
         }
+        
 
         for (int i = 0; i < directions.Length; i++)
         {

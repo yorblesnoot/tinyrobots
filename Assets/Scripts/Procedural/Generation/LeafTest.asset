@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c61fdb3635b175c40a5cef338f904109, type: 3}
-  m_Name: PrimaryA
+  m_Name: LeafTest
   m_EditorClassIdentifier: 
   mapSize: 50
   sphereLevels: 6
@@ -30,16 +30,10 @@ MonoBehaviour:
     secondaryRotationFactor: 0
     surfaceRadius: 4
     inclusionZone: 0.26
-  - branches: 10
-    rotationFactor: 2
-    rotationChangeThreshold: 100
-    secondaryRotationFactor: 0
-    surfaceRadius: 4
-    inclusionZone: 0.061
   leafIteration:
     branches: 100
     rotationFactor: 10
     rotationChangeThreshold: 1
     secondaryRotationFactor: 0
-    surfaceRadius: 5
-    inclusionZone: 0.546
+    surfaceRadius: 3
+    inclusionZone: 0.369
