@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -67,6 +68,19 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         }
     }
 
+    void DebugGuiding()
+    {
+        for(int x = 0; x < TreeGeneratorNode.mapSize; x++)
+        {
+            for(int y = 0;y < TreeGeneratorNode.mapSize; y++)
+            {
+                TreeGeneratorNode node = Map[x, y, TreeGeneratorNode.mapSize / 2];
+                Instantiate(debugger, node.worldPosition, Quaternion.LookRotation(node.guidingVector));
+                
+            }
+        }
+    }
+
     public override void GenerateCoreMap()
     {
         TreeGeneratorNode.mapSize = tp.mapSize;
@@ -85,6 +99,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             HashSet<TreeGeneratorNode> newOrigins = GetSecondaryBranchPoints();
             OutputFromOrigins(newOrigins);
         }
+        DebugGuiding();
 
         float longestBranch = treeNodes.Select(node => node.hopsFromRoot).Max();
         AnnotateTreeForRendering();
@@ -190,7 +205,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
                 Vector3Int finalPosition = new(node.positionX, node.positionY, node.positionZ);
                 finalPosition += Vector3Int.RoundToInt(tiltedDirection);
                 int x = finalPosition.x;
-                int y = finalPosition.y;
+                int y = finalPosition.y + tp.iterationRiseFactor;
                 int z = finalPosition.z;
                 if (PointIsOffMap(x, y, z, TreeGeneratorNode.mapSize)) continue;
                 output.Add(Map[x, y, z]);
@@ -307,7 +322,6 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
 
         currentlyVisiting.CalculateGuidingVector();
         currentlyVisiting.CalculateEdgeWeights();
-
 
         //check all the neighbors and assign them tentative distances
         for (int i = 0; i < EdgePrecalculator.DirectionCount; i++)
@@ -446,10 +460,11 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             if (Parent == null) guidingVector = baseGuidance;
             else
             {
-                Vector3 rotationAxis = Vector3.Cross(Parent.guidingVector, baseGuidance);
+                Vector3 rotationAxis = Vector3.Cross(incomingVector, baseGuidance);
                 Quaternion rotator = Quaternion.AngleAxis(GetRotationFactor(), rotationAxis);
                 guidingVector = rotator * Parent.guidingVector;
                 guidingVector.Normalize();
+                //Debug.Log(Parent.guidingVector + " pgv " + rotationAxis + ": axis " + rotator.eulerAngles + ": rotator " + guidingVector + " gv");
             }
         }
 
