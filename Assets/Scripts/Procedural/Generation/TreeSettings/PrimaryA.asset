@@ -20,26 +20,26 @@ MonoBehaviour:
   jitterSize: 0.5
   initialGeneration:
     rotationFactor: 0
-    canopyCenterHeight: 25
+    canopyCenterHeight: 30
     canopyRadius: 2
     branches: 1
   iterations:
   - branches: 10
-    rotationFactor: 20
+    rotationFactor: 30
     rotationChangeThreshold: 1
-    secondaryRotationFactor: 0
-    surfaceRadius: 4
-    inclusionZone: 0.26
-  - branches: 10
+    secondaryRotationFactor: 2
+    surfaceRadius: 15
+    inclusionZone: 0.391
+  - branches: 7
     rotationFactor: 2
     rotationChangeThreshold: 100
     secondaryRotationFactor: 0
-    surfaceRadius: 4
-    inclusionZone: 0.061
+    surfaceRadius: 7
+    inclusionZone: 0.269
   leafIteration:
-    branches: 100
-    rotationFactor: 10
+    branches: 300
+    rotationFactor: 20
     rotationChangeThreshold: 1
     secondaryRotationFactor: 0
-    surfaceRadius: 5
-    inclusionZone: 0.546
+    surfaceRadius: 7
+    inclusionZone: 0.704

@@ -1,8 +1,5 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityMeshSimplifier;
-using static ProceduralTreeVoxelGenerator;
 
 public class TreeRenderer : MonoBehaviour
 {
@@ -19,7 +16,7 @@ public class TreeRenderer : MonoBehaviour
         directions = GenerateDirections(tp.numberOfPanelsPerRing);
     }
 
-    public void RenderTree(TreeGeneratorNode origin, float longest)
+    public void RenderTree(SimplifiedTreeNode origin, float longest)
     {
         longestBranch = longest;
         meshParts = new();
@@ -44,21 +41,9 @@ public class TreeRenderer : MonoBehaviour
 
         finalMesh.CombineMeshes(combiner);
         finalMesh.RecalculateNormals();
-        //finalMesh = SimplifyMesh(finalMesh, filter);
-
     }
 
-    private static Mesh SimplifyMesh(Mesh finalMesh)
-    {
-        MeshSimplifier simplifier = new();
-        simplifier.Initialize(finalMesh);
-        simplifier.SimplifyMeshLossless();
-        finalMesh = simplifier.ToMesh();
-        
-        return finalMesh;
-    }
-
-    public void RenderBranch(TreeGeneratorNode origin, int childIndex = 0)
+    public void RenderBranch(SimplifiedTreeNode origin, int childIndex = 0)
     {
         var mesh = new Mesh();
         
@@ -70,11 +55,15 @@ public class TreeRenderer : MonoBehaviour
         BuildAndAttachRing(origin, childIndex);
         FinalizeMesh(mesh, vertices, triangles);
 
-        void BuildAndAttachRing(TreeGeneratorNode parent, int childIndex)
+        void BuildAndAttachRing(SimplifiedTreeNode parent, int childIndex)
         {
-            if (parent.children == null || parent.children.Count == 0) return;
+            if (parent.children == null || parent.children.Count == 0)
+            {
+                //place cap
+                return;
+            }
 
-            TreeGeneratorNode child = parent.children[childIndex];
+            SimplifiedTreeNode child = parent.children[childIndex];
             //create vertices for child node
             vertices.AddRange(GetVertexRing(child));
             for (int i = 0; i < tp.numberOfPanelsPerRing; i++)
@@ -108,7 +97,7 @@ public class TreeRenderer : MonoBehaviour
         meshParts.Add(mesh);
     }
 
-    public Vector3[] GetVertexRing(TreeGeneratorNode node)
+    public Vector3[] GetVertexRing(SimplifiedTreeNode node)
     {
         Vector3[] vertices = new Vector3[directions.Length];
         Vector3 growthDirection = node.incomingVector == Vector3.zero ? Vector3.up : node.incomingVector
@@ -137,7 +126,7 @@ public class TreeRenderer : MonoBehaviour
     }
 
     static readonly Vector3[] leafAngles = { Vector3.left, Vector3.right};
-    private void AttachLeaves(TreeGeneratorNode node, float thickness, Quaternion mod)
+    private void AttachLeaves(SimplifiedTreeNode node, float thickness, Quaternion mod)
     {
         foreach(var angle in leafAngles)
         {

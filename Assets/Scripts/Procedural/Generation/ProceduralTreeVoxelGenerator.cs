@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -101,8 +100,8 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         //DebugGuiding();
 
         float longestBranch = treeNodes.Select(node => node.hopsFromRoot).Max();
-        AnnotateTreeForRendering();
-        treeRenderer.RenderTree(origin, longestBranch);
+        SimplifiedTreeNode saveableOrigin = AnnotateTreeForRendering(origin);
+        treeRenderer.RenderTree(saveableOrigin, longestBranch);
 
         void PerformIteration(TreeParams.Iteration iteration)
         {
@@ -133,12 +132,28 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         
     }
 
-    private void AnnotateTreeForRendering()
+    private SimplifiedTreeNode AnnotateTreeForRendering(TreeGeneratorNode origin)
     {
         foreach(var node in treeNodes)
         {
             node.Parent?.children.Add(node);
             node.Parent?.outgoingVectors.Add(node.incomingVector);
+        }
+        return ConvertNode(origin);
+
+        static SimplifiedTreeNode ConvertNode(TreeGeneratorNode node)
+        {
+            SimplifiedTreeNode output = new() { incomingVector = node.incomingVector, outgoingVectors = node.outgoingVectors,
+                hopsFromRoot = node.hopsFromRoot, isLeaf = node.isLeaf, worldPosition = node.worldPosition };
+            if(node.children != null && node.children.Count > 0)
+            {
+                output.children = new();
+                foreach (var child in node.children)
+                {
+                    output.children.Add(ConvertNode(child));
+                }
+            }
+            return output;
         }
     }
 
@@ -407,7 +422,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         }
     }
 
-    public class TreeGeneratorNode
+    class TreeGeneratorNode
     {
         public static int mapSize;
         public struct Edge
@@ -471,7 +486,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             {
                 return firstIteration.rotationFactor;
             }
-            else if(shortestPath >= currentIteration.rotationChangeThreshold)
+            else if(hopsFromOrigin >= currentIteration.rotationChangeThreshold)
             {
                 return currentIteration.secondaryRotationFactor;
             }
