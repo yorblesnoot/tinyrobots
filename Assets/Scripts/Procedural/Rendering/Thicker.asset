@@ -10,39 +10,44 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45b66609a274e6b4fbb327e93104848a, type: 3}
-  m_Name: SpindlyBranches
+  m_Name: Thicker
   m_EditorClassIdentifier: 
+  treeSizeMultiplier: 2
   numberOfPanelsPerRing: 10
   thicknessCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: -0.006198652
-      value: 5.9452424
-      inSlope: -10.7350025
-      outSlope: -10.7350025
+      time: -0.010876864
+      value: 7.616159
+      inSlope: -6.8848834
+      outSlope: -6.8848834
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.29520518
+      outWeight: 0.12405778
     - serializedVersion: 3
-      time: 0.28964168
-      value: 1.8784497
-      inSlope: -7.357735
-      outSlope: -7.357735
+      time: 0.34361324
+      value: 4.368618
+      inSlope: -11.204304
+      outSlope: -11.204304
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.069029264
+      inWeight: 0.13685042
+      outWeight: 0.053682517
     - serializedVersion: 3
-      time: 0.9951172
-      value: 0.04510498
-      inSlope: -1.8799012
-      outSlope: -1.8799012
+      time: 1.0048218
+      value: 0.5686035
+      inSlope: -1.5524375
+      outSlope: -1.5524375
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.08394002
+      inWeight: 0.09661681
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  leafSizeVariance: 0.2
+  leafPositionVariance: 0.5
+  trunkThicknessMultiplier: 2
+  leafThicknessMultiplier: 0.108

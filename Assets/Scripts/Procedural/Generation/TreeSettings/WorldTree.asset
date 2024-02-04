@@ -10,30 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c61fdb3635b175c40a5cef338f904109, type: 3}
-  m_Name: LeafTest
+  m_Name: WorldTree
   m_EditorClassIdentifier: 
   mapSize: 50
-  sphereLevels: 6
+  sphereLevels: 3
   sphereBoost: 0
-  inflationFactor: 1
-  surfacePoints: 20
+  inflationFactor: 2
   jitterSize: 0.5
   initialGeneration:
     rotationFactor: 0
-    canopyCenterHeight: 25
-    canopyRadius: 2
+    canopyCenterHeight: 30
+    canopyRadius: 1
     branches: 1
   iterations:
   - branches: 10
-    rotationFactor: 20
+    rotationFactor: 30
     rotationChangeThreshold: 1
     secondaryRotationFactor: 0
-    surfaceRadius: 4
-    inclusionZone: 0.26
-  leafIteration:
-    branches: 100
-    rotationFactor: 10
-    rotationChangeThreshold: 1
-    secondaryRotationFactor: 0
-    surfaceRadius: 3
-    inclusionZone: 0.369
+    surfaceRadius: 15
+    inclusionZone: 0.583
+  leafIterations: []

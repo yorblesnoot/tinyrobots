@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class MarchingCubes : MonoBehaviour
 {
-    [SerializeField] ProceduralNoiseVoxelGenerator generator;
+    [SerializeField] NoiseVoxelGenerator generator;
     [SerializeField] GameObject dot;
     public void RenderIntoCubes(byte[,,] mapGrid)
     {

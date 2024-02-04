@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class ProceduralTreeVoxelGenerator : MapGenerator
+public class TreeGenerator : MapGenerator
 {
     
     [SerializeField] TreeParams tp;
@@ -89,18 +89,15 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         IterateGrowthField();
 
         HashSet<TreeGeneratorNode> canpoyInitialGrowthPoints = GetInitialBranchPoints(tp.initialGeneration.canopyCenterHeight, tp.initialGeneration.canopyRadius, tp.initialGeneration.branches);
-        BuildTreeToBranchPoints(canpoyInitialGrowthPoints);
+        BuildTreeToBranchPoints(canpoyInitialGrowthPoints, true);
 
-        foreach(var iteration in tp.iterations)
-        {
-            PerformIteration(iteration);
-        }
+        foreach(var iteration in tp.iterations) PerformIteration(iteration);
         leaf = true;
-        PerformIteration(tp.leafIteration);
+        foreach (var iteration in tp.leafIterations) PerformIteration(iteration);
         //DebugGuiding();
 
         float longestBranch = treeNodes.Select(node => node.hopsFromRoot).Max();
-        SimplifiedTreeNode saveableOrigin = AnnotateTreeForRendering(origin);
+        SimplifiedTreeNode saveableOrigin = SimplifyTree(origin);
         treeRenderer.RenderTree(saveableOrigin, longestBranch);
 
         void PerformIteration(TreeParams.Iteration iteration)
@@ -113,7 +110,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             BuildTreeToBranchPoints(newOrigins);
         }
 
-        void BuildTreeToBranchPoints(HashSet<TreeGeneratorNode> origins)
+        void BuildTreeToBranchPoints(HashSet<TreeGeneratorNode> origins, bool thicken = false)
         {
             foreach (var origin in origins)
             {
@@ -123,6 +120,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
             
             void TreePointToOutput(TreeGeneratorNode origin)
             {
+                if(thicken) origin.isTrunk = true;
                 treeNodes.Add(origin);
                 if (origin.Parent == null || treeNodes.Contains(origin.Parent)) return;
                 TreePointToOutput(origin.Parent);
@@ -132,7 +130,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         
     }
 
-    private SimplifiedTreeNode AnnotateTreeForRendering(TreeGeneratorNode origin)
+    private SimplifiedTreeNode SimplifyTree(TreeGeneratorNode origin)
     {
         foreach(var node in treeNodes)
         {
@@ -143,8 +141,11 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
 
         static SimplifiedTreeNode ConvertNode(TreeGeneratorNode node)
         {
-            SimplifiedTreeNode output = new() { incomingVector = node.incomingVector, outgoingVectors = node.outgoingVectors,
-                hopsFromRoot = node.hopsFromRoot, isLeaf = node.isLeaf, worldPosition = node.worldPosition };
+            Vector3 growthDirection = node.Parent == null ? Vector3.up : (node.incomingVector
+            + (node.outgoingVectors.Count > 0 ? node.outgoingVectors[0] : node.incomingVector));
+            growthDirection.Normalize();
+            SimplifiedTreeNode output = new() { growthDirection = growthDirection,
+                hopsFromRoot = node.hopsFromRoot, isLeaf = node.isLeaf, worldPosition = node.worldPosition, isTrunk = node.isTrunk };
             if(node.children != null && node.children.Count > 0)
             {
                 output.children = new();
@@ -465,6 +466,7 @@ public class ProceduralTreeVoxelGenerator : MapGenerator
         public List<Vector3> outgoingVectors = new();
 
         public bool isLeaf;
+        public bool isTrunk;
 
 
         public void CalculateGuidingVector()

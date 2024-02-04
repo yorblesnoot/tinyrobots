@@ -5,9 +5,9 @@ public class SimplifiedTreeNode
 {
     public List<SimplifiedTreeNode> children;
 
-    public Vector3 incomingVector;
-    public List<Vector3> outgoingVectors;
+    public Vector3 growthDirection;
     public int hopsFromRoot;
     public bool isLeaf;
+    public bool isTrunk;
     public Vector3 worldPosition;
 }

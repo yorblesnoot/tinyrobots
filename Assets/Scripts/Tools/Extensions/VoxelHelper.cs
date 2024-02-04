@@ -25,6 +25,6 @@ public static class VoxelHelper
 
     public static Vector3 ToWorldVector(this Vector3Int mapVec)
     {
-        return (Vector3)mapVec * ProceduralNoiseVoxelGenerator.Scale;
+        return (Vector3)mapVec * NoiseVoxelGenerator.Scale;
     }
 }

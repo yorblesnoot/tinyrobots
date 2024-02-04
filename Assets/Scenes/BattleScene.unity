@@ -1440,7 +1440,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapGenerators:
   - {fileID: 1110564615}
-  - {fileID: 1110564614}
+  - {fileID: 0}
   generatorIndex: 0
   marchingCubesRenderer: {fileID: 1110564608}
   lineRenderer: {fileID: 1599781106}
@@ -3552,7 +3552,6 @@ GameObject:
   - component: {fileID: 1110564611}
   - component: {fileID: 1110564613}
   - component: {fileID: 1110564615}
-  - component: {fileID: 1110564614}
   - component: {fileID: 1110564616}
   m_Layer: 8
   m_Name: BattleMap
@@ -3654,23 +3653,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &1110564614
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1110564607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 249afb7e679822a4aac001b7208a89d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mapSize: 50
-  solidThreshold: 0.5
-  frequency: 0.173
-  scale: 1
-  spherize: 1
 --- !u!114 &1110564615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3683,7 +3665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60af11ec5d0aef54ab5212f41d3c2682, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tp: {fileID: 11400000, guid: 2dda99e1afaf1cf48aca11c6084c450f, type: 2}
+  tp: {fileID: 11400000, guid: 88fe7fdd9327aa24f83cc6dc0c3ae160, type: 2}
   ground: {fileID: 147156313}
   treeRenderer: {fileID: 1110564616}
   debugger: {fileID: 1944592595}

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class TreeRenderer : MonoBehaviour
@@ -59,7 +60,17 @@ public class TreeRenderer : MonoBehaviour
         {
             if (parent.children == null || parent.children.Count == 0)
             {
-                //place cap
+                Vector3 capPosition = parent.worldPosition + parent.growthDirection * 2;
+                vertices.Add(capPosition);
+                int capVertex = startIndex;
+                for (int i = 0; i < tp.numberOfPanelsPerRing; i++)
+                {
+                    //add vertices to master list and create triangles between source and child node
+                    int vertex = startIndex + i;
+                    int nextVertex = i == tp.numberOfPanelsPerRing - 1 ? startIndex : vertex + 1;
+                    int[] capTri = { vertex, capVertex, nextVertex };
+                    triangles.AddRange(capTri);
+                }
                 return;
             }
 
@@ -100,10 +111,8 @@ public class TreeRenderer : MonoBehaviour
     public Vector3[] GetVertexRing(SimplifiedTreeNode node)
     {
         Vector3[] vertices = new Vector3[directions.Length];
-        Vector3 growthDirection = node.incomingVector == Vector3.zero ? Vector3.up : node.incomingVector
-            + (node.outgoingVectors.Count > 0 ? node.outgoingVectors[0] : Vector3.zero);
-        growthDirection.Normalize();
-        Quaternion mod = Quaternion.FromToRotation(Vector3.forward, growthDirection);
+        
+        Quaternion mod = Quaternion.FromToRotation(Vector3.forward, node.growthDirection);
         float thickness;
         
         float thicknessLevel = node.hopsFromRoot / longestBranch;
@@ -111,8 +120,12 @@ public class TreeRenderer : MonoBehaviour
         thickness = Mathf.Clamp(thickness, .1f, thickness);
         if (node.isLeaf)
         {
-            thickness /= 5;
+            thickness *= tp.leafThicknessMultiplier;
             AttachLeaves(node, thickness, mod);
+        }
+        else if (node.isTrunk)
+        {
+            thickness *= tp.trunkThicknessMultiplier;
         }
         
 
@@ -120,7 +133,7 @@ public class TreeRenderer : MonoBehaviour
         {
             Vector3 finalDirection = mod * directions[i];
             finalDirection *= thickness;
-            vertices[i] = finalDirection + node.worldPosition;
+            vertices[i] = finalDirection + node.worldPosition * tp.treeSizeMultiplier;
         }
         return vertices;
     }
@@ -132,7 +145,11 @@ public class TreeRenderer : MonoBehaviour
         {
             Vector3 leafDirection = mod * angle;
             Vector3 leafOffset = leafDirection * thickness;
-            Instantiate(leaf, node.worldPosition + leafOffset, Quaternion.LookRotation(leafDirection));
+            float placeVariance = Random.Range(0, tp.leafPositionVariance);
+            Vector3 leafDisplacement = node.growthDirection * placeVariance;
+            GameObject spawned = Instantiate(leaf, node.worldPosition * tp.treeSizeMultiplier + leafOffset - leafDisplacement, Quaternion.LookRotation(leafDirection));
+            float sizeVariance = Random.Range(1 - tp.leafSizeVariance, 1 + tp.leafSizeVariance);
+            spawned.transform.localScale *= sizeVariance * tp.treeSizeMultiplier;
         }
     }
 
