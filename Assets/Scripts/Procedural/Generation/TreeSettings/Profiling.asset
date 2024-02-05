@@ -16,7 +16,6 @@ MonoBehaviour:
   sphereLevels: 6
   sphereBoost: 0
   inflationFactor: 1
-  surfacePoints: 20
   jitterSize: 0.5
   initialGeneration:
     rotationFactor: 0
@@ -30,10 +29,10 @@ MonoBehaviour:
     secondaryRotationFactor: 0
     surfaceRadius: 4
     inclusionZone: 0.228
-  leafIteration:
-    branches: 50
-    rotationFactor: 6
-    rotationChangeThreshold: 100
-    secondaryRotationFactor: 5
-    surfaceRadius: 2
-    inclusionZone: 0.296
+  leafIterations:
+  - branches: 5
+    rotationFactor: 0
+    rotationChangeThreshold: 0
+    secondaryRotationFactor: 0
+    surfaceRadius: 0
+    inclusionZone: 0.316

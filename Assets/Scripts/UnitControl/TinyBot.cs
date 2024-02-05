@@ -38,7 +38,7 @@ public class TinyBot : MonoBehaviour
     private void Update()
     {
         if (PrimaryCursor.SelectedBot != this) return;
-        TurnTowardsCursor();
+        //TurnTowardsCursor();
     }
 
     private void TurnTowardsCursor()

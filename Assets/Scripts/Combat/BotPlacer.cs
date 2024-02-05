@@ -11,6 +11,7 @@ public class BotPlacer : MonoBehaviour
 
     public void PlaceBots()
     {
+        botConverter.Initialize();
         foreach (var botRecord in botRecords)
         {
             var tree = botConverter.StringToBot(botRecord.record);

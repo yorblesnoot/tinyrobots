@@ -70,6 +70,6 @@ public class NoiseVoxelGenerator : MapGenerator
 
     public override void PlaceSecondaries()
     {
-        throw new System.NotImplementedException();
+        
     }
 }
