@@ -13,6 +13,8 @@ public class SpiderCrawl : UnrestrictedAbility
     [SerializeField] Anchor[] anchors;
     [SerializeField] float anchorZoneRadius = .1f;
 
+    [SerializeField] Transform legModel;
+
     bool stepping;
     private void Awake()
     {
@@ -37,11 +39,16 @@ public class SpiderCrawl : UnrestrictedAbility
     {
         foreach (var target in path)
         {
-            Collider[] colliders = Physics.OverlapSphere(target, 2f, LayerMask.GetMask("Terrain"));
+            Collider[] colliders = Physics.OverlapSphere(target, 1f, LayerMask.GetMask("Terrain"));
             detector.transform.SetParent(null);
             detector.transform.position = target;
             CheckSphereExtra(colliders[0], detector, out Vector3 closestPoint, out Vector3 surfaceNormal);
             yield return StartCoroutine(InterpolatePositionAndRotation(user.transform, target, surfaceNormal));
+        }
+
+        foreach(var anchor in anchors)
+        {
+            yield return StartCoroutine(StepToBase(anchor, true));
         }
     }
 
@@ -71,28 +78,43 @@ public class SpiderCrawl : UnrestrictedAbility
         {
             farthestFromBase ??= anchor;
             anchor.GluePosition();
-            anchor.CalculateDisplacementFromBase();
             if(anchor.distanceFromBase > farthestFromBase.distanceFromBase) farthestFromBase = anchor;
         }
 
         if(farthestFromBase.distanceFromBase >= anchorZoneRadius && !stepping)
         {
-            StartCoroutine(StepPastBasePosition(farthestFromBase, anchorZoneRadius, legStepDuration));
+            StartCoroutine(StepToBase(farthestFromBase));
         }
     }
 
-    IEnumerator StepPastBasePosition(Anchor anchor, float distance, float legMoveDuration)
+    IEnumerator StepToBase(Anchor anchor, bool goToNeutral = false)
     {
         stepping = true;
         anchor.stepping = true;
-        Vector3 startPosition = anchor.ikTarget.localPosition;
-        Vector3 direction =  anchor.basePosition - startPosition;
+        Vector3 localStartPosition = anchor.ikTarget.localPosition;
+        Vector3 direction =  anchor.localBasePosition - localStartPosition;
         direction.Normalize();
-        Vector3 finalPosition = anchor.basePosition + direction * distance;
-        float timeElapsed = 0;
-        while (timeElapsed < legMoveDuration)
+
+        Vector3 initialPosition = anchor.localBasePosition + (goToNeutral ? Vector3.zero : direction * anchorZoneRadius);
+        Vector3 rayPosition = initialPosition;
+        rayPosition.y += 2;
+        rayPosition = legModel.TransformPoint(rayPosition);
+        Ray ray = new(rayPosition, -transform.up);
+        Vector3 finalPosition;
+        if (Physics.Raycast(ray, out var hitInfo, 3f, LayerMask.GetMask("Terrain")))
         {
-            anchor.ikTarget.localPosition = Vector3.Lerp(startPosition, finalPosition, timeElapsed / legMoveDuration);
+            finalPosition = hitInfo.point;
+            finalPosition = legModel.InverseTransformPoint(finalPosition);
+        }
+        else
+        {
+            finalPosition = initialPosition;
+        }
+
+        float timeElapsed = 0;
+        while (timeElapsed < legStepDuration)
+        {
+            anchor.ikTarget.localPosition = Vector3.Lerp(localStartPosition, finalPosition, timeElapsed / legStepDuration);
             timeElapsed += Time.deltaTime;
             yield return null;
         }
@@ -122,14 +144,13 @@ public class SpiderCrawl : UnrestrictedAbility
     {
         public bool stepping;
         public Transform ikTarget;
-        [HideInInspector] public Vector3 basePosition;
+        [HideInInspector] public Vector3 localBasePosition;
         [HideInInspector] public float distanceFromBase;
 
         Vector3 gluedWorldPosition;
         public void Initialize()
         {
-            basePosition = ikTarget.localPosition;
-            UpdateGluedPosition();
+            localBasePosition = ikTarget.localPosition;
         }
 
         public void UpdateGluedPosition()
@@ -137,15 +158,11 @@ public class SpiderCrawl : UnrestrictedAbility
             gluedWorldPosition = ikTarget.position;
         }
 
-        public void CalculateDisplacementFromBase()
-        {
-            distanceFromBase = Vector3.Distance(ikTarget.localPosition, basePosition);
-        }
-
         public void GluePosition()
         {
             if (stepping) return;
             ikTarget.position = gluedWorldPosition;
+            distanceFromBase = Vector3.Distance(ikTarget.localPosition, localBasePosition);
         }
     }
 }
