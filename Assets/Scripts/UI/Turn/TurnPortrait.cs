@@ -8,10 +8,22 @@ public class TurnPortrait : MonoBehaviour
 
     [SerializeField] Button selectButton;
     [SerializeField] Image cardPortrait;
+    [SerializeField] Image frame;
+    [SerializeField] Color allyColor;
+    [SerializeField] Color enemyColor;
+    [SerializeField] Color neutralColor;
     public void Become(TinyBot bot)
     {
         gameObject.SetActive(true);
-        selectButton.onClick.AddListener(() => PrimaryCursor.SelectBot(bot));
+        if (bot.allegiance == Allegiance.PLAYER)
+        {
+            frame.color = allyColor;
+            selectButton.onClick.AddListener(() => PrimaryCursor.SelectBot(bot));
+        }
+        else if(bot.allegiance == Allegiance.ENEMY)
+        {
+            frame.color = enemyColor;
+        }
         cardPortrait.sprite = bot.portrait;
     }
 

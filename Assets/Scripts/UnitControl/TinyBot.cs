@@ -4,6 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+public enum Allegiance
+{
+    PLAYER,
+    ALLIED,
+    ENEMY
+}
 public class TinyBot : MonoBehaviour
 {
     public TreeNode<GameObject> componentParts;
@@ -14,7 +20,9 @@ public class TinyBot : MonoBehaviour
     public Transform headshotPosition;
 
     [HideInInspector] public Sprite portrait;
-   
+    [HideInInspector] public Allegiance allegiance;
+    public bool availableForTurn;
+
     int maxHealth;
     int currentHealth;
 
@@ -50,6 +58,7 @@ public class TinyBot : MonoBehaviour
         eulerLook.z = 0;
         transform.rotation = Quaternion.Euler(eulerLook);
     }
+
 
     public void BecomeActiveUnit(bool active)
     {

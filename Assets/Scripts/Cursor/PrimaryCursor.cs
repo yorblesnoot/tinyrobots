@@ -55,6 +55,7 @@ public class PrimaryCursor : MonoBehaviour
 
     public static void SelectBot(TinyBot bot)
     {
+        if (!bot.availableForTurn) return;
         if (SelectedBot != null) SelectedBot.BecomeActiveUnit(false);
         SelectedBot = bot;
         SelectedBot.BecomeActiveUnit(true);

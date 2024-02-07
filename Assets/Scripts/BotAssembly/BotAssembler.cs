@@ -1,15 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class BotAssembler : MonoBehaviour
 {
     [SerializeField] GameObject spawnPoint;
     [SerializeField] AbilityUI abilityUI;
-    [SerializeField] TurnUI turnUI;
     [SerializeField] PortraitGenerator portraitGenerator;
-    public void BuildBotFromTree(TreeNode<CraftablePart> tree)
+    public TinyBot BuildBotFromPartTree(TreeNode<CraftablePart> tree)
     {
         GameObject bot = DeployOrigin(tree, out var objectTree);
         //bot.transform.position = ProceduralNoiseVoxelGenerator.mapGrid.FindUnoccupiedCoordinate().ToWorldVector();
@@ -18,8 +15,8 @@ public class BotAssembler : MonoBehaviour
 
         botUnit.Initialize(objectTree);
         portraitGenerator.AttachPortrait(botUnit);
-        
-        turnUI.AddTurnDisplay(botUnit);
+
+        return botUnit;
 
         GameObject DeployOrigin(TreeNode<CraftablePart> tree, out TreeNode<GameObject> oTree)
         {

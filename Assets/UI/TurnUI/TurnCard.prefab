@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &579770704522891052
 RectTransform:
   m_ObjectHideFlags: 0
@@ -94,6 +94,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectButton: {fileID: 2864235246571181826}
   cardPortrait: {fileID: 3924905900616456835}
+  frame: {fileID: 3191979235199569633}
+  allyColor: {r: 0.2783019, g: 1, b: 0.51886785, a: 1}
+  enemyColor: {r: 1, g: 0.22140875, b: 0.033018887, a: 1}
+  neutralColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &2864235246571181826
 MonoBehaviour:
   m_ObjectHideFlags: 0

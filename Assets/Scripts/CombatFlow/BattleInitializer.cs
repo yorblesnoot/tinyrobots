@@ -14,21 +14,23 @@ public class BattleInitializer : MonoBehaviour
 
     [SerializeField] TreeRenderer treeRenderer;
 
+    [SerializeField] TurnManager turnManager;
+
     [SerializeField] bool testing = true;
     private void Start()
     {
         mapGenerators[generatorIndex].GenerateCoreMap();
         mapGenerators[generatorIndex].PlaceSecondaries();
 
-
         if (testing) return;
         byte[,,] mapGrid = mapGenerators[generatorIndex].GetByteMap();
         marchingCubesRenderer.RenderIntoCubes(mapGrid);
         
-
         Pathfinder3D.Initialize(mapGrid);
         //Pathfinder3D.lineRenderer = lineRenderer;
 
         botPlacer.PlaceBots();
+        turnManager.BeginTurnSequence();
+        
     }
 }
