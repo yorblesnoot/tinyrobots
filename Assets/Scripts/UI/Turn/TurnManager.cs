@@ -10,7 +10,6 @@ public class TurnManager : MonoBehaviour
     float cardWidth;
     float cardHeight;
 
-    int activeTurnIndex = 0;
     List<TurnTaker> turnTakers = new();
     private void Awake()
     {
