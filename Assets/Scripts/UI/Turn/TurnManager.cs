@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TurnManager : MonoBehaviour
@@ -10,7 +11,10 @@ public class TurnManager : MonoBehaviour
     float cardWidth;
     float cardHeight;
 
+    int activeIndex = 0;
+
     List<TurnTaker> turnTakers = new();
+    HashSet<TurnTaker> currentlyActive = new();
     private void Awake()
     {
         RectTransform rectTransform = turnPortraitList[0].GetComponent<RectTransform>();
@@ -29,20 +33,31 @@ public class TurnManager : MonoBehaviour
 
     public void BeginTurnSequence()
     {
-        GetActiveBots(0);
+        GetActiveBots();
     }
 
-    void GetActiveBots(int index)
+    void GetActiveBots()
     {
-        HashSet<TurnTaker> active = new();
-        Allegiance sequenceAllegiance = turnTakers[index].Bot.allegiance;
-        while (turnTakers[index].Bot.allegiance == sequenceAllegiance)
+        Allegiance sequenceAllegiance = turnTakers[activeIndex].Bot.allegiance;
+        while (turnTakers[activeIndex].Bot.allegiance == sequenceAllegiance)
         {
-            turnTakers[index].Bot.availableForTurn = true;
-            active.Add(turnTakers[index]);
-            index++;
+            turnTakers[activeIndex].Bot.availableForTurn = true;
+            currentlyActive.Add(turnTakers[activeIndex]);
+            activeIndex++;
         }
-        ArrangePortraits(active);
+        ArrangePortraits(currentlyActive);
+    }
+
+    public void EndTurn(TinyBot bot)
+    {
+        TurnTaker botTurn = turnTakers.Where(taker => taker.Bot == bot).FirstOrDefault();
+        currentlyActive.Remove(botTurn);
+        bot.availableForTurn = false;
+        if(currentlyActive.Count == 0)
+        {
+            if(activeIndex == turnTakers.Count) activeIndex = 0;
+            GetActiveBots();
+        }
     }
 
     void ArrangePortraits(HashSet<TurnTaker> active)

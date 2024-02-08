@@ -20,12 +20,16 @@ public class PrimaryCursor : MonoBehaviour
     public static CursorState State;
     public static TinyBot TargetedBot;
 
-    [SerializeField] AbilityUI abilityUI;
-    static AbilityUI AbilityUI;
+    [SerializeField] UnitControl abilityUI;
+    [SerializeField] StatDisplay statDisplay;
+
+    static StatDisplay StatDisplay;
+    static UnitControl AbilityUI;
     private void Awake()
     {
         Transform = transform;
         AbilityUI = abilityUI;
+        StatDisplay = statDisplay;
         activeCursorIndex = 0;
     }
     private void Update()
@@ -34,10 +38,10 @@ public class PrimaryCursor : MonoBehaviour
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
         if (Input.GetMouseButtonDown(0))
         {
-            if (AbilityUI.Active != null)
+            if (UnitControl.ActiveSkill != null)
             {
-                AbilityUI.Active.ExecuteAbility(SelectedBot, transform.position);
-                AbilityUI.Active = null;
+                UnitControl.ActiveSkill.ExecuteAbility(SelectedBot, transform.position);
+                UnitControl.ActiveSkill = null;
                 ClickableAbility.clearActive.Invoke();
                 return;
             }
@@ -60,6 +64,7 @@ public class PrimaryCursor : MonoBehaviour
         SelectedBot = bot;
         SelectedBot.BecomeActiveUnit(true);
         AbilityUI.ShowControlForUnit(bot);
+        StatDisplay.SyncStatDisplay(bot);
     }
 
     void CycleCursorMode()

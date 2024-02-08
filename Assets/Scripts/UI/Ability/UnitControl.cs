@@ -4,29 +4,44 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AbilityUI : MonoBehaviour
+public class UnitControl : MonoBehaviour
 {
     [SerializeField] ClickableAbility[] clickableAbilities;
     [SerializeField] Image unitPortrait;
+    [SerializeField] Button turnEnd;
+
+    [SerializeField] TurnManager turnManager;
 
     List<ClickableAbility> deployedAbilities;
-    public static Ability Active;
+    public static Ability ActiveSkill;
+    static TinyBot ActiveBot;
     private void Awake()
     {
-        Active = null;
+        ActiveSkill = null;
+        turnEnd.onClick.AddListener(EndActiveTurn);
     }
 
     readonly static KeyCode[] keyCodes = {KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9 };
 
     public void ShowControlForUnit(TinyBot bot)
     {
+        gameObject.SetActive(true);
         VisualizeAbilityList(bot);
         unitPortrait.sprite = bot.portrait;
+        ActiveBot = bot;
+    }
+
+    void EndActiveTurn()
+    {
+        gameObject.SetActive(false);
+        turnManager.EndTurn(ActiveBot);
+        ActiveSkill = null;
+        ActiveBot = null;
     }
 
     void VisualizeAbilityList(TinyBot bot)
     {
-        Active = null;
+        ActiveSkill = null;
         ClickableAbility.clearActive?.Invoke();
         deployedAbilities = new();
         List<Ability> abilityList = bot.Abilities.Where(a => a != null).ToList();

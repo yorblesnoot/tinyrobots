@@ -47,7 +47,7 @@ public class ClickableAbility : MonoBehaviour
     {
         clearActive.Invoke();
         
-        AbilityUI.Active = thisAbility;
+        UnitControl.ActiveSkill = thisAbility;
         thisAbility.ToggleTargetLine(true);
         image.color = Color.red;
     }
