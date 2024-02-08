@@ -33,6 +33,13 @@ public class TinyBot : MonoBehaviour
         GenerateAbilityList();
     }
 
+    public bool SpendAbilityPoints(Ability ability)
+    {
+        if (ability.cost > Stats.Current[StatType.ACTION]) return false;
+        Stats.Current[StatType.ACTION] -= ability.cost;
+        return true;
+    }
+
     public void BeginTurn()
     {
         Stats.SetToMax(StatType.ACTION);

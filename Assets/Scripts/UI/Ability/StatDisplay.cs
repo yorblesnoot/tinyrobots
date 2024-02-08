@@ -18,7 +18,7 @@ public class StatDisplay : MonoBehaviour
     {
         for(int i = 0; i < abilityPoints.Count; i++)
         {
-            abilityPoints[i].gameObject.SetActive(i <= bot.Stats.Current[StatType.ACTION]);
+            abilityPoints[i].gameObject.SetActive(i < bot.Stats.Current[StatType.ACTION]);
         }
         abilityCount.text = Mathf.RoundToInt(bot.Stats.Current[StatType.ACTION]).ToString();
 

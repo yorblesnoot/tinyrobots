@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public abstract class Ability : MonoBehaviour
 {
@@ -10,6 +7,8 @@ public abstract class Ability : MonoBehaviour
 
     [SerializeField] protected int maxRange;
     [SerializeField] protected GameObject emissionPoint;
+
+    public int cost;
 
 
     public abstract void ExecuteAbility(TinyBot user, Vector3 target);

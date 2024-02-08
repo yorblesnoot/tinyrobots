@@ -40,6 +40,7 @@ public class PrimaryCursor : MonoBehaviour
         {
             if (UnitControl.ActiveSkill != null)
             {
+                if (!SelectedBot.SpendAbilityPoints(UnitControl.ActiveSkill)) return; 
                 UnitControl.ActiveSkill.ExecuteAbility(SelectedBot, transform.position);
                 UnitControl.ActiveSkill = null;
                 ClickableAbility.clearActive.Invoke();
