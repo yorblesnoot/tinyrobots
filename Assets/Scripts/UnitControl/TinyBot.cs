@@ -41,12 +41,14 @@ public class TinyBot : MonoBehaviour
 
     public void BeginTurn()
     {
+        availableForTurn = true;
         Stats.SetToMax(StatType.ACTION);
         Stats.SetToMax(StatType.MOVEMENT);
     }
 
     public void BecomeActiveUnit()
     {
+        selectBrackets.SetActive(true);
         UnitControl.ActiveBot = this;
         gameObject.layer = 6;
     }

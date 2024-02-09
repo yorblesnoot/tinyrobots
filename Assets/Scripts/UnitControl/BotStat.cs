@@ -27,7 +27,7 @@ public class BotStats
     void SetSampleStats()
     {
         Max[StatType.ACTION] = 3f;
-        Max[StatType.MOVEMENT] = 10f;
+        Max[StatType.MOVEMENT] = 30f;
         Max[StatType.HEALTH] = 100f;
 
         Current[StatType.ACTION] = 3f;

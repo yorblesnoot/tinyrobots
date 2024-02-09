@@ -6,7 +6,7 @@ public class AirCursor : CursorBehaviour
 {
     [SerializeField] float scrollRate;
     int layerMask;
-    private void Awake()
+    protected override void Initialize()
     {
         layerMask = LayerMask.GetMask("Ignore Raycast");
     }

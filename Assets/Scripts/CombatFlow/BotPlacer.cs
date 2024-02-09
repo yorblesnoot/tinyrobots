@@ -23,11 +23,9 @@ public class BotPlacer : MonoBehaviour
         Dictionary<MoveStyle, List<Vector3>> styleNodes = Pathfinder3D.GetStyleNodes();
         foreach(var bot in bots)
         {
-            Debug.Log(bot);
-            Debug.Log(bot.PrimaryMovement);
-            Debug.Log(bot.PrimaryMovement.MoveStyle);
             MoveStyle style = bot.PrimaryMovement.MoveStyle;
             bot.transform.position = styleNodes[style].GrabRandomly();
+            bot.PrimaryMovement.SpawnOrientation(bot.transform);
         }
 
         void SpawnBotList(List<BotRecord> botRecords, Allegiance allegiance)

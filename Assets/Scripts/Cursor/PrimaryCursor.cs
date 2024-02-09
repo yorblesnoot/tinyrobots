@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using static UnitControl;
 using UnityEngine;
+using TMPro;
 
 public enum CursorState
 {
@@ -9,11 +10,18 @@ public enum CursorState
     SPACELOCKED,
     UNITSNAPPED,
 }
+
+public enum CursorType
+{
+    AIR,
+    GROUND
+}
 public class PrimaryCursor : MonoBehaviour
 {
+    [SerializeField] CursorMapping[] mappings;
 
-    [SerializeField] CursorBehaviour[] cursorBehaviours;
-    int activeCursorIndex;
+    static Dictionary<CursorType, CursorBehaviour> behaviours;
+    static CursorBehaviour ActiveBehaviour;
     
     public static Transform Transform;
     public static CursorState State;
@@ -22,15 +30,21 @@ public class PrimaryCursor : MonoBehaviour
     [SerializeField] UnitControl abilityUI;
     [SerializeField] StatDisplay statDisplay;
     [SerializeField] LineRenderer pathingLine;
+    [SerializeField] GameObject numRotator;
+    [SerializeField] TMP_Text moveCostPreview;
 
     static StatDisplay StatDisplay;
     static UnitControl AbilityUI;
-    private void Awake()
+
+    static bool pathing = false;
+    private void Start()
     {
+        behaviours = new();
         Transform = transform;
         AbilityUI = abilityUI;
         StatDisplay = statDisplay;
-        activeCursorIndex = 0;
+        foreach(var mapping in mappings) behaviours.Add(mapping.type, mapping.behaviour);
+        SetCursorMode(CursorType.AIR);
     }
 
     Vector3Int lastPosition;
@@ -56,14 +70,12 @@ public class PrimaryCursor : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.G)) CycleCursorMode();
-
         if (State != CursorState.FREE) return;
-        cursorBehaviours[activeCursorIndex].ControlCursor();
+        ActiveBehaviour.ControlCursor();
 
         if (ActiveBot == null) return;
 
-        if (ActiveSkill == null)
+        if (ActiveSkill == null && !pathing)
         {
             Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
             if (currentPosition != lastPosition)
@@ -73,20 +85,35 @@ public class PrimaryCursor : MonoBehaviour
                 if (currentPath == null) return;
                 pathingLine.positionCount = currentPath.Count;
                 pathingLine.SetPositions(currentPath.ToArray());
+                
             }
         }
-        if (Input.GetMouseButtonDown(1) && currentPath != null)
+        if(currentPath == null)
+        {
+            numRotator.SetActive(false);
+            return;
+        }
+        ShowMovePreview();
+        if (Input.GetMouseButtonDown(1))
         {
             if (!ActiveBot.AttemptToSpendResource(currentDistance, StatType.MOVEMENT)) return;
             StartCoroutine(TraversePath());
         }
     }
 
+    void ShowMovePreview()
+    {
+        numRotator.SetActive(true);
+        moveCostPreview.text = Mathf.RoundToInt(currentDistance).ToString() + " ft";
+    }
+
     private IEnumerator TraversePath()
     {
+        pathing = true;
         yield return StartCoroutine(ActiveBot.PrimaryMovement.PathToPoint(ActiveBot, currentPath));
         StatDisplay.SyncStatDisplay(ActiveBot);
         Pathfinder3D.GeneratePathingTree(ActiveBot.PrimaryMovement.MoveStyle, Vector3Int.RoundToInt(ActiveBot.transform.position));
+        pathing = false;
     }
 
     public static void SelectBot(TinyBot bot)
@@ -94,17 +121,17 @@ public class PrimaryCursor : MonoBehaviour
         if (!bot.availableForTurn) return;
         if (ActiveBot != null) ActiveBot.ClearActiveUnit();
         bot.BecomeActiveUnit();
+        SetCursorMode(bot.PrimaryMovement.PreferredCursor);
         Pathfinder3D.GeneratePathingTree(bot.PrimaryMovement.MoveStyle, Vector3Int.RoundToInt(bot.transform.position));
         AbilityUI.ShowControlForUnit(bot);
         StatDisplay.SyncStatDisplay(bot);
     }
 
-    void CycleCursorMode()
+    public static void SetCursorMode(CursorType type)
     {
-        cursorBehaviours[activeCursorIndex].ToggleCursor();
-        activeCursorIndex++;
-        if(activeCursorIndex == cursorBehaviours.Length) activeCursorIndex = 0;
-        cursorBehaviours[activeCursorIndex].ToggleCursor();
+        CursorBehaviour.Reset.Invoke();
+        ActiveBehaviour = behaviours[type];
+        ActiveBehaviour.ActivateCursor();
     }
 
     static bool canUnitSnap = true;
@@ -125,5 +152,10 @@ public class PrimaryCursor : MonoBehaviour
         }
     }
 
-
+    [System.Serializable]
+    class CursorMapping
+    {
+        public CursorType type;
+        public CursorBehaviour behaviour;
+    }
 }

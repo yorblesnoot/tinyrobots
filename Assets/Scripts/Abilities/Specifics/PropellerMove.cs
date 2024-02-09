@@ -6,6 +6,7 @@ public class PropellerMove : PrimaryMovement
 {
     private void Awake()
     {
+        PreferredCursor = CursorType.AIR;
         MoveStyle = MoveStyle.FLY;
     }
     public override IEnumerator PathToPoint(TinyBot user, List<Vector3> path)
@@ -17,5 +18,15 @@ public class PropellerMove : PrimaryMovement
             user.transform.LookAt(flatPosition);
             yield return StartCoroutine(user.gameObject.LerpTo(target, .1f));
         }
+    }
+
+    public override void SpawnOrientation(Transform unit)
+    {
+        
+    }
+
+    public override IEnumerator RotateInPlace()
+    {
+        yield return null;
     }
 }

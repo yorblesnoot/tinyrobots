@@ -41,7 +41,7 @@ public class TurnManager : MonoBehaviour
         Allegiance sequenceAllegiance = turnTakers[activeIndex].Bot.allegiance;
         while (turnTakers[activeIndex].Bot.allegiance == sequenceAllegiance)
         {
-            turnTakers[activeIndex].Bot.availableForTurn = true;
+            turnTakers[activeIndex].Bot.BeginTurn();
             currentlyActive.Add(turnTakers[activeIndex]);
             activeIndex++;
         }

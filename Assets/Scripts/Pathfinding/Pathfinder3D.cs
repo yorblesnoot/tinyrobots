@@ -59,12 +59,12 @@ public static class Pathfinder3D
         {
             node.modeAccess.Add(style, false);
         }
-        if (value == 1) { node.blocked = true;}
-        else if (NeighborIsTerrain(x, y - 1, z)) {node.modeAccess[MoveStyle.WALK] = true; node.modeAccess[MoveStyle.CRAWL] = true; }
-        else if (NeighborIsTerrain(x, y + 1, z) || NeighborIsTerrain(x-1, y, z) 
-            || NeighborIsTerrain(x + 1, y, z) || NeighborIsTerrain(x, y, z + 1) 
-            || NeighborIsTerrain(x, y, z-1)) node.modeAccess[MoveStyle.CRAWL] = true;
-        else node.modeAccess[MoveStyle.FLY] = true;
+        if (value == 1) { node.blocked = true; }
+        else if (NeighborIsTerrain(x, y - 1, z)) { node.modeAccess[MoveStyle.WALK] = true; node.modeAccess[MoveStyle.CRAWL] = true; }
+        else if (NeighborIsTerrain(x, y + 1, z) || NeighborIsTerrain(x - 1, y, z)
+            || NeighborIsTerrain(x + 1, y, z) || NeighborIsTerrain(x, y, z + 1)
+            || NeighborIsTerrain(x, y, z - 1)) node.modeAccess[MoveStyle.CRAWL] = true;
+        else if (!NeighborIsTerrain(x, y + 2, z)) node.modeAccess[MoveStyle.FLY] = true;
         nodeMap.Add(location, node);
 
         static bool NeighborIsTerrain(int x, int y, int z)

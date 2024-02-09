@@ -7,6 +7,7 @@ public abstract class Ability : MonoBehaviour
 
     [SerializeField] protected int maxRange;
     [SerializeField] protected GameObject emissionPoint;
+    [SerializeField] CursorMode PreferredCursor;
 
     public int cost;
 

@@ -19,6 +19,7 @@ public class SpiderCrawl : PrimaryMovement
     bool stepping;
     private void Awake()
     {
+        PreferredCursor = CursorType.GROUND;
         MoveStyle = MoveStyle.CRAWL;
         InitializeAnchors();
     }
@@ -34,36 +35,49 @@ public class SpiderCrawl : PrimaryMovement
     {
         foreach (var target in path)
         {
-            Collider[] colliders = Physics.OverlapSphere(target, 1f, LayerMask.GetMask("Terrain"));
-            detector.transform.SetParent(null);
-            detector.transform.position = target;
-            CheckSphereExtra(colliders[0], detector, out Vector3 closestPoint, out Vector3 surfaceNormal);
+            Vector3 surfaceNormal = GetMeshFacingAt(target);
             yield return StartCoroutine(InterpolatePositionAndRotation(user.transform, target, surfaceNormal));
         }
 
-        foreach(var anchor in anchors)
+        foreach (var anchor in anchors)
         {
             yield return StartCoroutine(StepToBase(anchor, true));
         }
     }
 
+    private Vector3 GetMeshFacingAt(Vector3 target)
+    {
+        Collider[] colliders = Physics.OverlapSphere(target, 1f, LayerMask.GetMask("Terrain"));
+        detector.transform.SetParent(null);
+        detector.transform.position = target;
+        CheckSphereExtra(colliders[0], detector, out Vector3 closestPoint, out Vector3 surfaceNormal);
+        return surfaceNormal;
+    }
+
     IEnumerator InterpolatePositionAndRotation(Transform unit, Vector3 target, Vector3 targetNormal)
     {
         Quaternion startRotation = transform.rotation;
+        Quaternion targetRotation = GetRotationForMeshPosition(target, targetNormal);
+
         Vector3 startPosition = unit.position;
-        Vector3 lookTarget = target + targetNormal * lookHeightModifier;
-        Quaternion targetRotation = Quaternion.LookRotation(lookTarget - transform.position, targetNormal);
         float timeElapsed = 0;
-        while(timeElapsed < pathStepDuration)
+        while (timeElapsed < pathStepDuration)
         {
-            unit.SetPositionAndRotation(Vector3.Lerp(startPosition, target, timeElapsed/pathStepDuration), 
-                Quaternion.Slerp(startRotation, targetRotation, timeElapsed/pathStepDuration));
+            unit.SetPositionAndRotation(Vector3.Lerp(startPosition, target, timeElapsed / pathStepDuration),
+                Quaternion.Slerp(startRotation, targetRotation, timeElapsed / pathStepDuration));
             timeElapsed += Time.deltaTime;
 
 
             CheckAnchorPositions();
             yield return null;
         }
+    }
+
+    private Quaternion GetRotationForMeshPosition(Vector3 moveTarget, Vector3 targetNormal)
+    {
+        Vector3 lookTarget = moveTarget + targetNormal * lookHeightModifier;
+        Quaternion targetRotation = Quaternion.LookRotation(lookTarget - transform.position, targetNormal);
+        return targetRotation;
     }
 
     private void CheckAnchorPositions()
@@ -81,7 +95,6 @@ public class SpiderCrawl : PrimaryMovement
             StartCoroutine(StepToBase(farthestFromBase));
         }
     }
-
     IEnumerator StepToBase(Anchor anchor, bool goToNeutral = false)
     {
         stepping = true;
@@ -117,8 +130,7 @@ public class SpiderCrawl : PrimaryMovement
         stepping = false;
         anchor.stepping = false;
     }
-
-    public static bool CheckSphereExtra(Collider target_collider, SphereCollider sphere_collider, out Vector3 closestPoint, out Vector3 surfaceNormal)
+    static bool CheckSphereExtra(Collider target_collider, SphereCollider sphere_collider, out Vector3 closestPoint, out Vector3 surfaceNormal)
     {
         closestPoint = Vector3.zero;
         Vector3 sphere_pos = sphere_collider.transform.position;
@@ -131,6 +143,23 @@ public class SpiderCrawl : PrimaryMovement
             return true;
         }
         return false;
+    }
+    public override void SpawnOrientation(Transform unit)
+    {
+        
+        Vector3 normal = GetMeshFacingAt(unit.position);
+        Vector3 displace = Vector3.Cross(normal, Vector3.up);
+        //look position and normal cant be the same?
+        unit.rotation = GetRotationForMeshPosition(unit.position + displace, normal);
+        foreach (var anchor in anchors)
+        {
+            StartCoroutine(StepToBase(anchor, true));
+        }
+    }
+
+    public override IEnumerator RotateInPlace()
+    {
+        yield return null;
     }
 
     [Serializable]

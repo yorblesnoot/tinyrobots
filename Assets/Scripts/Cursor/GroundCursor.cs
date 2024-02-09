@@ -9,4 +9,9 @@ public class GroundCursor : CursorBehaviour
         if (hit.point == default) transform.position = new Vector3(-1000, -1000, -1000);
         transform.position = hit.point;
     }
+
+    protected override void Initialize()
+    {
+        
+    }
 }
