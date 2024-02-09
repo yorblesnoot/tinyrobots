@@ -78,6 +78,17 @@ public static class Pathfinder3D
         if (x >= xSize || y >= ySize || z >= zSize) return true;
         return false;
     }
+    
+    public static Dictionary<MoveStyle, List<Vector3>> GetStyleNodes()
+    {
+        Dictionary<MoveStyle, List<Vector3>> styleSpots = new();
+        foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle))) styleSpots.Add(style, new());
+        foreach(var node in nodeMap.Values)
+        {
+            foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle))) if (node.modeAccess[style]) styleSpots[style].Add(node.location);
+        }
+        return styleSpots;
+    }
 
     public static List<Vector3> FindVectorPath(Vector3Int end)
     {
@@ -104,6 +115,7 @@ public static class Pathfinder3D
             unvisited.Add(node);
         }
         PriorityQueue<PathfindingNode, float> frontier = new();
+        frontier.EnsureCapacity(xSize * ySize * zSize/4);
 
         start.G = 0;
 

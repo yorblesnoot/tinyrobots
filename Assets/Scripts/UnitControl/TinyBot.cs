@@ -12,8 +12,6 @@ public enum Allegiance
 }
 public class TinyBot : MonoBehaviour
 {
-    public TreeNode<GameObject> componentParts;
-    List<GameObject> flatParts;
 
     [SerializeField] GameObject selectBrackets;
     [SerializeField] BotStateFeedback feedback;
@@ -23,22 +21,21 @@ public class TinyBot : MonoBehaviour
     [HideInInspector] public Allegiance allegiance;
     public bool availableForTurn;
 
-    public MoveStyle MoveStyle;
+    public PrimaryMovement PrimaryMovement;
 
     public BotStats Stats = new();
 
     public List<Ability> Abilities { get; private set; }
-    public void Initialize(TreeNode<GameObject> tree)
+    public void Initialize(List<Ability> abilities, PrimaryMovement primaryMovement)
     {
-        componentParts = tree;
-        flatParts = componentParts.Flatten().ToList();
-        GenerateAbilityList();
+        Abilities = abilities;
+        PrimaryMovement = primaryMovement;
     }
 
-    public bool SpendAbilityPoints(Ability ability)
+    public bool AttemptToSpendResource(float resource, StatType statType)
     {
-        if (ability.cost > Stats.Current[StatType.ACTION]) return false;
-        Stats.Current[StatType.ACTION] -= ability.cost;
+        if (resource > Stats.Current[statType]) return false;
+        Stats.Current[statType] -= resource;
         return true;
     }
 
@@ -46,16 +43,6 @@ public class TinyBot : MonoBehaviour
     {
         Stats.SetToMax(StatType.ACTION);
         Stats.SetToMax(StatType.MOVEMENT);
-    }
-
-    void GenerateAbilityList()
-    {
-        Abilities = new();
-        foreach (var componentPart in flatParts)
-        {
-            Ability ability = componentPart.GetComponent<Ability>();
-            Abilities.Add(componentPart.GetComponent<Ability>());
-        }
     }
 
     public void BecomeActiveUnit(bool active)

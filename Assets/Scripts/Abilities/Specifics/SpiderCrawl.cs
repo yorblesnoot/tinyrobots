@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpiderCrawl : UnrestrictedAbility
+public class SpiderCrawl : PrimaryMovement
 {
     [SerializeField] SphereCollider detector;
     [SerializeField] float pathStepDuration = .2f;
@@ -15,9 +15,11 @@ public class SpiderCrawl : UnrestrictedAbility
 
     [SerializeField] Transform legModel;
 
+
     bool stepping;
     private void Awake()
     {
+        MoveStyle = MoveStyle.CRAWL;
         InitializeAnchors();
     }
     private void InitializeAnchors()
@@ -28,14 +30,7 @@ public class SpiderCrawl : UnrestrictedAbility
         }
     }
 
-    public override void ExecuteAbility(TinyBot user, Vector3 target)
-    {
-        var path = Pathfinder3D.FindVectorPath(Vector3Int.RoundToInt(target));
-        if (path == null) return;
-        StartCoroutine(CrawlPath(user, path));
-    }
-
-    IEnumerator CrawlPath(TinyBot user, List<Vector3> path)
+    public override IEnumerator PathToPoint(TinyBot user, List<Vector3> path)
     {
         foreach (var target in path)
         {

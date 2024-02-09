@@ -15,19 +15,31 @@ public class BotPlacer : MonoBehaviour
 
     public void PlaceBots()
     {
+        List<TinyBot> bots = new();
         botConverter.Initialize();
         SpawnBotList(playerBots, Allegiance.PLAYER);
         SpawnBotList(enemyBots, Allegiance.ENEMY);
-    }
-    public void SpawnBotList(List<BotRecord> botRecords, Allegiance allegiance)
-    {
-        foreach (var botRecord in botRecords)
+
+        Dictionary<MoveStyle, List<Vector3>> styleNodes = Pathfinder3D.GetStyleNodes();
+        foreach(var bot in bots)
         {
-            var tree = botConverter.StringToBot(botRecord.record);
-            TinyBot botUnit = botAssembler.BuildBotFromPartTree(tree);
-            botUnit.allegiance = allegiance;
-            turnManager.AddTurnTaker(botUnit);
+            MoveStyle style = bot.PrimaryMovement.MoveStyle;
+            bot.transform.position = styleNodes[style].GrabRandomly();
         }
 
+        void SpawnBotList(List<BotRecord> botRecords, Allegiance allegiance)
+        {
+            
+            foreach (var botRecord in botRecords)
+            {
+                var tree = botConverter.StringToBot(botRecord.record);
+                TinyBot botUnit = botAssembler.BuildBotFromPartTree(tree);
+                botUnit.allegiance = allegiance;
+                bots.Add(botUnit);
+                turnManager.AddTurnTaker(botUnit);
+            }
+
+        }
     }
+    
 }

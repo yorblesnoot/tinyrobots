@@ -2,16 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PropellerMove : UnrestrictedAbility
+public class PropellerMove : PrimaryMovement
 {
-    public override void ExecuteAbility(TinyBot user, Vector3 target)
+    private void Awake()
     {
-        var path = Pathfinder3D.FindVectorPath(Vector3Int.RoundToInt(target));
-        if(path == null) return;
-        StartCoroutine(FlyPath(user, path));
+        MoveStyle = MoveStyle.FLY;
     }
-
-    IEnumerator FlyPath(TinyBot user, List<Vector3> path)
+    public override IEnumerator PathToPoint(TinyBot user, List<Vector3> path)
     {
         foreach (var target in path)
         {
