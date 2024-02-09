@@ -45,11 +45,17 @@ public class TinyBot : MonoBehaviour
         Stats.SetToMax(StatType.MOVEMENT);
     }
 
-    public void BecomeActiveUnit(bool active)
+    public void BecomeActiveUnit()
     {
-        selectBrackets.SetActive(active);
-        if (active) gameObject.layer = 6;
-        else gameObject.layer = 0;
+        UnitControl.ActiveBot = this;
+        gameObject.layer = 6;
+    }
+
+    public void ClearActiveUnit()
+    {
+        UnitControl.ActiveBot = null;
+        selectBrackets.SetActive(false);
+        gameObject.layer = 0;
     }
     
 

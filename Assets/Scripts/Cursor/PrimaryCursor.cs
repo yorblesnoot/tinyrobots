@@ -1,5 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using static UnitControl;
 using UnityEngine;
 
 public enum CursorState
@@ -10,7 +11,6 @@ public enum CursorState
 }
 public class PrimaryCursor : MonoBehaviour
 {
-    public static TinyBot SelectedBot;
 
     [SerializeField] CursorBehaviour[] cursorBehaviours;
     int activeCursorIndex;
@@ -35,17 +35,18 @@ public class PrimaryCursor : MonoBehaviour
 
     Vector3Int lastPosition;
     List<Vector3> currentPath;
+    float currentDistance;
     private void Update()
     {
 
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
         if (Input.GetMouseButtonDown(0))
         {
-            if (UnitControl.ActiveSkill != null)
+            if (ActiveSkill != null)
             {
-                if (!SelectedBot.AttemptToSpendResource(UnitControl.ActiveSkill.cost, StatType.ACTION)) return;
-                UnitControl.ActiveSkill.ExecuteAbility(SelectedBot, transform.position);
-                UnitControl.ActiveSkill = null;
+                if (!ActiveBot.AttemptToSpendResource(ActiveSkill.cost, StatType.ACTION)) return;
+                ActiveSkill.ExecuteAbility(ActiveBot, transform.position);
+                ActiveSkill = null;
                 ClickableAbility.clearActive.Invoke();
                 return;
             }
@@ -60,34 +61,39 @@ public class PrimaryCursor : MonoBehaviour
         if (State != CursorState.FREE) return;
         cursorBehaviours[activeCursorIndex].ControlCursor();
 
-        if (SelectedBot == null) return;
+        if (ActiveBot == null) return;
 
-        if (UnitControl.ActiveSkill == null)
+        if (ActiveSkill == null)
         {
             Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
             if (currentPosition != lastPosition)
             {
                 lastPosition = currentPosition;
-                currentPath = Pathfinder3D.FindVectorPath(currentPosition);
+                currentPath = Pathfinder3D.FindVectorPath(currentPosition, out currentDistance);
                 if (currentPath == null) return;
                 pathingLine.positionCount = currentPath.Count;
                 pathingLine.SetPositions(currentPath.ToArray());
             }
-            
         }
         if (Input.GetMouseButtonDown(1) && currentPath != null)
         {
-            if (!SelectedBot.AttemptToSpendResource(UnitControl.ActiveSkill.cost, StatType.MOVEMENT)) return;
-            StartCoroutine(SelectedBot.PrimaryMovement.PathToPoint(SelectedBot, currentPath));
+            if (!ActiveBot.AttemptToSpendResource(currentDistance, StatType.MOVEMENT)) return;
+            StartCoroutine(TraversePath());
         }
+    }
+
+    private IEnumerator TraversePath()
+    {
+        yield return StartCoroutine(ActiveBot.PrimaryMovement.PathToPoint(ActiveBot, currentPath));
+        StatDisplay.SyncStatDisplay(ActiveBot);
+        Pathfinder3D.GeneratePathingTree(ActiveBot.PrimaryMovement.MoveStyle, Vector3Int.RoundToInt(ActiveBot.transform.position));
     }
 
     public static void SelectBot(TinyBot bot)
     {
         if (!bot.availableForTurn) return;
-        if (SelectedBot != null) SelectedBot.BecomeActiveUnit(false);
-        SelectedBot = bot;
-        SelectedBot.BecomeActiveUnit(true);
+        if (ActiveBot != null) ActiveBot.ClearActiveUnit();
+        bot.BecomeActiveUnit();
         Pathfinder3D.GeneratePathingTree(bot.PrimaryMovement.MoveStyle, Vector3Int.RoundToInt(bot.transform.position));
         AbilityUI.ShowControlForUnit(bot);
         StatDisplay.SyncStatDisplay(bot);

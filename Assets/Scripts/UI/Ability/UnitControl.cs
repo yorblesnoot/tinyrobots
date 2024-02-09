@@ -14,7 +14,7 @@ public class UnitControl : MonoBehaviour
 
     List<ClickableAbility> deployedAbilities;
     public static Ability ActiveSkill;
-    static TinyBot ActiveBot;
+    public static TinyBot ActiveBot;
     private void Awake()
     {
         ActiveSkill = null;
@@ -28,7 +28,6 @@ public class UnitControl : MonoBehaviour
         gameObject.SetActive(true);
         VisualizeAbilityList(bot);
         unitPortrait.sprite = bot.portrait;
-        ActiveBot = bot;
     }
 
     void EndActiveTurn()

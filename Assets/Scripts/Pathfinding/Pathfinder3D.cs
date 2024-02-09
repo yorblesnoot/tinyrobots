@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
+using Unity.Jobs;
 using UnityEngine;
 
 public enum MoveStyle
@@ -10,10 +10,11 @@ public enum MoveStyle
     CRAWL,
     WALK
 }
+
+
 public static class Pathfinder3D
 {
     static Dictionary<Vector3Int, PathfindingNode> nodeMap = new();
-    public static LineRenderer lineRenderer;
     static int xSize, ySize, zSize;
 
     static byte[,,] coreMap;
@@ -90,16 +91,13 @@ public static class Pathfinder3D
         return styleSpots;
     }
 
-    public static List<Vector3> FindVectorPath(Vector3Int end)
+    public static List<Vector3> FindVectorPath(Vector3Int end, out float distance)
     {
+        distance = 0;
         List<PathfindingNode> path = FindPath(end);
         if (path == null || path.Count == 0) return null;
         List<Vector3> worldPath = path.Select(x => x.location.ToWorldVector()).ToList();
-        if (lineRenderer != null)
-        {
-            lineRenderer.positionCount = worldPath.Count;
-            lineRenderer.SetPositions(worldPath.ToArray());
-        }
+        distance = nodeMap[end].G;
         return worldPath;
     }
 
@@ -123,6 +121,7 @@ public static class Pathfinder3D
 
         while (unvisited.Count > 0)
         {
+            if (frontier.Count == 0) return;
             PathfindingNode current = frontier.Dequeue();
             unvisited.Remove(current);
             if (current.G == float.PositiveInfinity) return;
@@ -140,6 +139,19 @@ public static class Pathfinder3D
                     frontier.Enqueue(neighbor, neighbor.G);
                 }
             }
+        }
+    }
+
+    public static void GeneratePathingTreeWithJob()
+    {
+        var job = new PathmapJob();
+        job.Schedule();
+    }
+    public struct PathmapJob : IJob
+    {
+        public void Execute()
+        {
+            throw new NotImplementedException();
         }
     }
     static List<PathfindingNode> FindPath(Vector3Int endCoords)
