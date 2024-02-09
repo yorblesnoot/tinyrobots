@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public enum CursorState
@@ -22,6 +19,7 @@ public class PrimaryCursor : MonoBehaviour
 
     [SerializeField] UnitControl abilityUI;
     [SerializeField] StatDisplay statDisplay;
+    [SerializeField] LineRenderer pathingLine;
 
     static StatDisplay StatDisplay;
     static UnitControl AbilityUI;
@@ -32,6 +30,8 @@ public class PrimaryCursor : MonoBehaviour
         StatDisplay = statDisplay;
         activeCursorIndex = 0;
     }
+
+    Vector3Int lastPosition;
     private void Update()
     {
         
@@ -56,6 +56,18 @@ public class PrimaryCursor : MonoBehaviour
 
         if (State != CursorState.FREE) return;
         cursorBehaviours[activeCursorIndex].ControlCursor();
+
+        if(UnitControl.ActiveSkill == null && SelectedBot != null)
+        {
+            Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
+            if(currentPosition != lastPosition)
+            {
+                Vector3[] path = Pathfinder3D.FindVectorPath(currentPosition).ToArray();
+                pathingLine.positionCount = path.Length;
+                pathingLine.SetPositions(path);
+            }
+            lastPosition = currentPosition;
+        }
     }
 
     public static void SelectBot(TinyBot bot)
@@ -64,6 +76,7 @@ public class PrimaryCursor : MonoBehaviour
         if (SelectedBot != null) SelectedBot.BecomeActiveUnit(false);
         SelectedBot = bot;
         SelectedBot.BecomeActiveUnit(true);
+        Pathfinder3D.GeneratePathingTree(bot.MoveStyle, Vector3Int.RoundToInt(bot.transform.position));
         AbilityUI.ShowControlForUnit(bot);
         StatDisplay.SyncStatDisplay(bot);
     }

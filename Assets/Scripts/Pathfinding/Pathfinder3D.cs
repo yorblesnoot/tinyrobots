@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public enum MoveStyle
@@ -32,9 +33,15 @@ public static class Pathfinder3D
                 }
             }
         }
-        foreach(PathfindingNode node in nodeMap.Values)
+        directionMagnitudes = new float[directions.Length];
+        for (int i = 0; i < directions.Length; i++)
         {
-            node.neighbors = GetNeighbors(node);
+            directionMagnitudes[i] = directions[i].magnitude;
+        }
+
+        foreach (PathfindingNode node in nodeMap.Values)
+        {
+            SetNeighbors(node);
         }
     }
 
@@ -72,9 +79,9 @@ public static class Pathfinder3D
         return false;
     }
 
-    public static List<Vector3> FindVectorPath(MoveStyle style, Vector3Int start, Vector3Int end)
+    public static List<Vector3> FindVectorPath(Vector3Int end)
     {
-        List<PathfindingNode> path = FindPath(style, start, end);
+        List<PathfindingNode> path = FindPath(end);
         if (path == null || path.Count == 0) return null;
         List<Vector3> worldPath = path.Select(x => x.location.ToWorldVector()).ToList();
         if (lineRenderer != null)
@@ -85,82 +92,72 @@ public static class Pathfinder3D
         return worldPath;
     }
 
-    static List<PathfindingNode> FindPath(MoveStyle style, Vector3Int startCoords, Vector3Int endCoords)
+    public static void GeneratePathingTree(MoveStyle style, Vector3Int startCoords)
     {
-        if (!nodeMap.TryGetValue(startCoords, out PathfindingNode start) || !nodeMap.TryGetValue(endCoords, out PathfindingNode end)) return null;
-        if(end.blocked) return null;
-        PriorityQueue<PathfindingNode, float> openList = new();
-        HashSet<PathfindingNode> openHash = new();
-        HashSet<PathfindingNode> closeList = new();
+        if (!nodeMap.TryGetValue(startCoords, out PathfindingNode start)) return;
+
+        HashSet<PathfindingNode> unvisited = new();
+        foreach (PathfindingNode node in nodeMap.Values)
+        {
+            node.G = float.PositiveInfinity;
+            node.parent = null;
+            unvisited.Add(node);
+        }
+        PriorityQueue<PathfindingNode, float> frontier = new();
 
         start.G = 0;
 
-        openList.Enqueue(start, start.G);
-        openHash.Add(start);
+        frontier.Enqueue(start, start.G);
 
-        while (openList.Count > 0)
+        while (unvisited.Count > 0)
         {
-            PathfindingNode current = openList.Dequeue();
-            closeList.Add(current);
+            PathfindingNode current = frontier.Dequeue();
+            unvisited.Remove(current);
+            if (current.G == float.PositiveInfinity) return;
+            //if (current.G > maxDistance) continue;
 
-            if (current == end)
+            foreach (PathfindingNode.Edge edge in current.neighbors)
             {
-                //finalize our path.
-                return GetFinishedRoute(start, end);
-            }
-
-            foreach (PathfindingNode neighbor in current.neighbors)
-            {
-                if (neighbor.blocked || neighbor.modeAccess[style] == false || closeList.Contains(neighbor))
-                {
-                    continue;
-                }
-                neighbor.H = Vector3.Distance(neighbor.location, end.location);
-                float possibleG = current.G + 1;
+                PathfindingNode neighbor = edge.neighbor;
+                if (neighbor.blocked || neighbor.modeAccess[style] == false || !unvisited.Contains(neighbor)) continue;
+                float possibleG = current.G + edge.magnitude;
                 if (possibleG < neighbor.G)
-
-
-                neighbor.G = possibleG;
-                neighbor.previous = current;
-
-
-                if (!openHash.Contains(neighbor))
                 {
-                    openHash.Add(neighbor);
-                    openList.Enqueue(neighbor, neighbor.F);
+                    neighbor.G = possibleG;
+                    neighbor.parent = current;
+                    frontier.Enqueue(neighbor, neighbor.G);
                 }
             }
         }
-
-        return new List<PathfindingNode>();
     }
-
-    static List<PathfindingNode> GetFinishedRoute(PathfindingNode start, PathfindingNode end)
+    static List<PathfindingNode> FindPath(Vector3Int endCoords)
     {
         List<PathfindingNode> finishedList = new();
+        if (!nodeMap.TryGetValue(endCoords, out var currentNode)) return null;
 
-        PathfindingNode current = end;
 
-        while (current != start)
+        while (currentNode.parent != null)
         {
-            finishedList.Add(current);
-            current = current.previous;
+            finishedList.Add(currentNode);
+            currentNode = currentNode.parent;
         }
 
         finishedList.Reverse();
         return finishedList;
     }
 
-    static List<PathfindingNode> GetNeighbors(PathfindingNode current)
+    static void SetNeighbors(PathfindingNode current)
     {
-        List<PathfindingNode> neighbors = new();
+        current.neighbors = new();
         for (int i = 0; i < directions.Length; i++)
         {
             Vector3Int direction = directions[i];
             Vector3Int locationCheck = direction + current.location;
-            if (nodeMap.TryGetValue(locationCheck, out PathfindingNode val)) neighbors.Add(val);
+            if (nodeMap.TryGetValue(locationCheck, out PathfindingNode val))
+            {
+                current.neighbors.Add(new() { neighbor = val, magnitude = directionMagnitudes[i] });
+            }
         }
-        return neighbors;
     }
     static Vector3Int[] directions = {
             new Vector3Int(-1, 0, 0), new Vector3Int(1, 0, 0),    // Faces along x-axis
@@ -174,23 +171,26 @@ public static class Pathfinder3D
             new Vector3Int(-1, 1, -1), new Vector3Int(1, 1, -1),    // Corners
             new Vector3Int(-1, -1, 1), new Vector3Int(1, -1, 1),    // Corners
             new Vector3Int(-1, 1, 1), new Vector3Int(1, 1, 1)        // Corners
-        };
+    };
+    static float[] directionMagnitudes;
 }
-
 
 
 class PathfindingNode
 {
     public float G = float.PositiveInfinity;
-    public float H;
-    public float F { get { return G+H; } }
 
     public Vector3Int location;
 
     public bool blocked;
     public Dictionary<MoveStyle, bool> modeAccess;
 
-    public PathfindingNode previous;
+    public PathfindingNode parent;
 
-    public List<PathfindingNode> neighbors;
+    public class Edge
+    {
+        public PathfindingNode neighbor;
+        public float magnitude;
+    }
+    public List<Edge> neighbors;
 }

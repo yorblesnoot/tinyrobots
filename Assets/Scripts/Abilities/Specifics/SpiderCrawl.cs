@@ -30,7 +30,7 @@ public class SpiderCrawl : UnrestrictedAbility
 
     public override void ExecuteAbility(TinyBot user, Vector3 target)
     {
-        var path = Pathfinder3D.FindVectorPath(MoveStyle.CRAWL, Vector3Int.RoundToInt(user.transform.position), Vector3Int.RoundToInt(target));
+        var path = Pathfinder3D.FindVectorPath(Vector3Int.RoundToInt(target));
         if (path == null) return;
         StartCoroutine(CrawlPath(user, path));
     }

@@ -23,6 +23,8 @@ public class TinyBot : MonoBehaviour
     [HideInInspector] public Allegiance allegiance;
     public bool availableForTurn;
 
+    public MoveStyle MoveStyle;
+
     public BotStats Stats = new();
 
     public List<Ability> Abilities { get; private set; }
@@ -51,6 +53,7 @@ public class TinyBot : MonoBehaviour
         Abilities = new();
         foreach (var componentPart in flatParts)
         {
+            Ability ability = componentPart.GetComponent<Ability>();
             Abilities.Add(componentPart.GetComponent<Ability>());
         }
     }

@@ -14,6 +14,8 @@ public enum PartType
 public class CraftablePart : SOWithGUID
 {
     public GameObject attachableObject;
+
+    public bool primaryLocomotion;
     [HideInInspector] public AttachmentPoint[] attachmentPoints;
     [HideInInspector] public Vector3[] slotPositions;
     //placement logic

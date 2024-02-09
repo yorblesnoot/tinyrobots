@@ -6,7 +6,7 @@ public class PropellerMove : UnrestrictedAbility
 {
     public override void ExecuteAbility(TinyBot user, Vector3 target)
     {
-        var path = Pathfinder3D.FindVectorPath(MoveStyle.FLY, Vector3Int.RoundToInt(user.transform.position), Vector3Int.RoundToInt(target));
+        var path = Pathfinder3D.FindVectorPath(Vector3Int.RoundToInt(target));
         if(path == null) return;
         StartCoroutine(FlyPath(user, path));
     }
