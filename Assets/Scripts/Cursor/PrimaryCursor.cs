@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using static UnitControl;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UIElements;
 
 public enum CursorState
 {
@@ -37,6 +38,10 @@ public class PrimaryCursor : MonoBehaviour
     static UnitControl AbilityUI;
 
     static bool pathing = false;
+    private void Awake()
+    {
+        TinyBot.ClearActiveBot.AddListener(() => pathingLine.positionCount = 0);
+    }
     private void Start()
     {
         behaviours = new();
@@ -59,6 +64,7 @@ public class PrimaryCursor : MonoBehaviour
             if (ActiveSkill != null)
             {
                 if (!ActiveBot.AttemptToSpendResource(ActiveSkill.cost, StatType.ACTION)) return;
+                StatDisplay.SyncStatDisplay(ActiveBot);
                 ActiveSkill.ExecuteAbility(ActiveBot, transform.position);
                 ActiveSkill = null;
                 ClickableAbility.clearActive.Invoke();
@@ -119,7 +125,7 @@ public class PrimaryCursor : MonoBehaviour
     public static void SelectBot(TinyBot bot)
     {
         if (!bot.availableForTurn) return;
-        if (ActiveBot != null) ActiveBot.ClearActiveUnit();
+        TinyBot.ClearActiveBot.Invoke();
         bot.BecomeActiveUnit();
         SetCursorMode(bot.PrimaryMovement.PreferredCursor);
         Pathfinder3D.GeneratePathingTree(bot.PrimaryMovement.MoveStyle, Vector3Int.RoundToInt(bot.transform.position));

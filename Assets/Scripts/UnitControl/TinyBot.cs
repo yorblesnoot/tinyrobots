@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum Allegiance
 {
@@ -25,11 +26,14 @@ public class TinyBot : MonoBehaviour
 
     public BotStats Stats = new();
 
+    public static UnityEvent ClearActiveBot = new();
+
     public List<Ability> Abilities { get; private set; }
     public void Initialize(List<Ability> abilities, PrimaryMovement primaryMovement)
     {
         Abilities = abilities;
         PrimaryMovement = primaryMovement;
+        ClearActiveBot.AddListener(ClearActiveUnit);
     }
 
     public bool AttemptToSpendResource(float resource, StatType statType)

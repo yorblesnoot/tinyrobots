@@ -2643,6 +2643,14 @@ MonoBehaviour:
   playerData: {fileID: 11400000, guid: ecd93be42b3c6b041ba1697eca59d1e5, type: 2}
   botAssembler: {fileID: 468739834}
   turnManager: {fileID: 1202214817}
+  colorMaps:
+    entries:
+    - key: 0
+      value: {r: 0, g: 1, b: 0.2532153, a: 0.74509805}
+    - key: 1
+      value: {r: 0.05900679, g: 0.6511882, b: 0.9622642, a: 0.6745098}
+    - key: 2
+      value: {r: 1, g: 0.13217431, b: 0, a: 0.6156863}
 --- !u!114 &468739838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8742,12 +8750,7 @@ LineRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Positions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 1, y: 1, z: 1}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
+  m_Positions: []
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1

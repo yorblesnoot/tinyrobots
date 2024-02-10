@@ -53,6 +53,7 @@ public class TurnManager : MonoBehaviour
         TurnTaker botTurn = turnTakers.Where(taker => taker.Bot == bot).FirstOrDefault();
         currentlyActive.Remove(botTurn);
         bot.availableForTurn = false;
+        TinyBot.ClearActiveBot.Invoke();
         if(currentlyActive.Count == 0)
         {
             if(activeIndex == turnTakers.Count) activeIndex = 0;

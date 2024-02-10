@@ -60,6 +60,7 @@ public class ClickableAbility : MonoBehaviour
 
     public void Clear()
     {
+        PrimaryCursor.SetCursorMode(UnitControl.ActiveBot == null ? CursorType.AIR : UnitControl.ActiveBot.PrimaryMovement.PreferredCursor);
         thisAbility = null;
         button.onClick.RemoveAllListeners();
         gameObject.SetActive(false);
@@ -68,7 +69,7 @@ public class ClickableAbility : MonoBehaviour
     public void Activate()
     {
         clearActive.Invoke();
-        
+        PrimaryCursor.SetCursorMode(thisAbility.PreferredCursor);
         UnitControl.ActiveSkill = thisAbility;
         thisAbility.ToggleTargetLine(true);
         image.color = Color.red;
