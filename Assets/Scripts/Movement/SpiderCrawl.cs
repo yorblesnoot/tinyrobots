@@ -12,6 +12,9 @@ public class SpiderCrawl : PrimaryMovement
 
     [SerializeField] Anchor[] anchors;
     [SerializeField] float anchorZoneRadius = .1f;
+    [SerializeField] float downwardExtensionLength = 3f;
+    [SerializeField][Range(0f, 1f)] float raycastInTilt;
+
 
     [SerializeField] Transform legModel;
 
@@ -31,14 +34,19 @@ public class SpiderCrawl : PrimaryMovement
         }
     }
 
-    public override IEnumerator PathToPoint(TinyBot user, List<Vector3> path)
+    public override IEnumerator PathToPoint(List<Vector3> path)
     {
         foreach (var target in path)
         {
             Vector3 surfaceNormal = GetMeshFacingAt(target);
-            yield return StartCoroutine(InterpolatePositionAndRotation(user.transform, target, surfaceNormal));
+            yield return StartCoroutine(InterpolatePositionAndRotation(Owner.transform, target, surfaceNormal));
         }
+        StartCoroutine(NeutralStance());
+        
+    }
 
+    public override IEnumerator NeutralStance()
+    {
         foreach (var anchor in anchors)
         {
             yield return StartCoroutine(StepToBase(anchor, true));
@@ -102,22 +110,30 @@ public class SpiderCrawl : PrimaryMovement
         Vector3 localStartPosition = anchor.ikTarget.localPosition;
         Vector3 direction =  anchor.localBasePosition - localStartPosition;
         direction.Normalize();
-
         Vector3 initialPosition = anchor.localBasePosition + (goToNeutral ? Vector3.zero : direction * anchorZoneRadius);
         Vector3 rayPosition = initialPosition;
+
+        
         rayPosition.y += 2;
+        Vector3 secondaryRayPosition = rayPosition;
+
         rayPosition = legModel.TransformPoint(rayPosition);
-        Ray ray = new(rayPosition, -transform.up);
-        Vector3 finalPosition;
-        if (Physics.Raycast(ray, out var hitInfo, 3f, LayerMask.GetMask("Terrain")))
+        secondaryRayPosition = legModel.TransformPoint(secondaryRayPosition);
+        Vector3 centerDirection = transform.position - secondaryRayPosition;
+        centerDirection.Normalize();
+        Vector3 finalDirection = Vector3.Slerp(-transform.up, centerDirection, raycastInTilt);
+
+        Ray ray = new(rayPosition, finalDirection);
+        Ray secondRay = new(secondaryRayPosition, centerDirection);
+        Vector3 finalPosition = initialPosition;
+        if (Physics.Raycast(ray, out var hitInfo, downwardExtensionLength, LayerMask.GetMask("Terrain")) 
+            || Physics.Raycast(secondRay, out hitInfo, downwardExtensionLength, LayerMask.GetMask("Terrain")))
         {
             finalPosition = hitInfo.point;
             finalPosition = legModel.InverseTransformPoint(finalPosition);
         }
-        else
-        {
-            finalPosition = initialPosition;
-        }
+
+        
 
         float timeElapsed = 0;
         while (timeElapsed < legStepDuration)
@@ -144,22 +160,22 @@ public class SpiderCrawl : PrimaryMovement
         }
         return false;
     }
-    public override void SpawnOrientation(Transform unit)
+    public override void SpawnOrientation()
     {
-        
-        Vector3 normal = GetMeshFacingAt(unit.position);
+        Vector3 normal = GetMeshFacingAt(Owner.transform.position);
         Vector3 displace = Vector3.Cross(normal, Vector3.up);
         //look position and normal cant be the same?
-        unit.rotation = GetRotationForMeshPosition(unit.position + displace, normal);
+        Owner.transform.rotation = GetRotationForMeshPosition(Owner.transform.position + displace, normal);
         foreach (var anchor in anchors)
         {
             StartCoroutine(StepToBase(anchor, true));
         }
     }
 
-    public override IEnumerator RotateInPlace()
+    public override void TrackEntity(GameObject trackingTarget)
     {
-        yield return null;
+        base.TrackEntity(trackingTarget);
+        CheckAnchorPositions();
     }
 
     [Serializable]

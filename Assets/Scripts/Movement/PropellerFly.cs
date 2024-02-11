@@ -9,23 +9,23 @@ public class PropellerFly : PrimaryMovement
         PreferredCursor = CursorType.AIR;
         MoveStyle = MoveStyle.FLY;
     }
-    public override IEnumerator PathToPoint(TinyBot user, List<Vector3> path)
+    public override IEnumerator PathToPoint(List<Vector3> path)
     {
         foreach (var target in path)
         {
             Vector3 flatPosition = target;
-            flatPosition.y = user.transform.position.y;
-            user.transform.LookAt(flatPosition);
-            yield return StartCoroutine(user.gameObject.LerpTo(target, .1f));
+            flatPosition.y = Owner.transform.position.y;
+            Owner.transform.LookAt(flatPosition);
+            yield return StartCoroutine(Owner.gameObject.LerpTo(target, .1f));
         }
     }
 
-    public override void SpawnOrientation(Transform unit)
+    public override void SpawnOrientation()
     {
         
     }
 
-    public override IEnumerator RotateInPlace()
+    public override IEnumerator NeutralStance()
     {
         yield return null;
     }

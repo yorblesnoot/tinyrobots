@@ -13,11 +13,10 @@ public class UnitControl : MonoBehaviour
     [SerializeField] TurnManager turnManager;
 
     List<ClickableAbility> deployedAbilities;
-    public static Ability ActiveSkill;
     public static TinyBot ActiveBot;
     private void Awake()
     {
-        ActiveSkill = null;
+        ClickableAbility.Active = null;
         turnEnd.onClick.AddListener(EndActiveTurn);
     }
 
@@ -34,14 +33,14 @@ public class UnitControl : MonoBehaviour
     {
         gameObject.SetActive(false);
         turnManager.EndTurn(ActiveBot);
-        ActiveSkill = null;
+        ClickableAbility.Deactivate();
         ActiveBot = null;
     }
 
     void VisualizeAbilityList(TinyBot bot)
     {
-        ActiveSkill = null;
-        ClickableAbility.clearActive?.Invoke();
+        
+        ClickableAbility.Deactivate();
         deployedAbilities = new();
         List<Ability> abilityList = bot.Abilities.Where(a => a != null).ToList();
         for(int i = 0; i < clickableAbilities.Count(); i++)

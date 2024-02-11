@@ -6,12 +6,20 @@ public class LaserShot : LinearAbility
 {
     [SerializeField] GameObject laser;
     [SerializeField] float shotSpeed;
-    public override void ExecuteAbility(TinyBot user, Vector3 target)
+    [SerializeField] TurretTracker turretTracker;
+    public override void ExecuteAbility(Vector3 target)
     {
-        Vector3 direction = (target - user.transform.position).normalized;
+        Vector3 direction = (target - owner.transform.position).normalized;
         GameObject shot = Instantiate(laser, emissionPoint.transform);
         shot.transform.SetParent(null);
         Rigidbody rigidbody = shot.GetComponent<Rigidbody>();
         rigidbody.velocity = direction * shotSpeed;
+    }
+
+    public override void ToggleSkillTargeting(bool on)
+    {
+        base.ToggleSkillTargeting(on);
+        if (on) turretTracker.TrackObject(PrimaryCursor.Transform.gameObject);
+        else turretTracker.TrackObject();
     }
 }

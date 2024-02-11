@@ -804,6 +804,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f78e08383587b4479562d08c05d172d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Owner: {fileID: 0}
+  lookPivotSlowness: 50
   detector: {fileID: 730318562603061130}
   pathStepDuration: 0.4
   legStepDuration: 0.1
@@ -826,6 +828,8 @@ MonoBehaviour:
     localBasePosition: {x: 0, y: 0, z: 0}
     distanceFromBase: 0
   anchorZoneRadius: 1.1
+  downwardExtensionLength: 3
+  raycastInTilt: 0.15
   legModel: {fileID: 6062594318300677067}
 --- !u!4 &5740287581094643054 stripped
 Transform:

@@ -11,7 +11,7 @@ public class ClickableAbility : MonoBehaviour
     [SerializeField] Image image;
     [SerializeField] Button button;
     [SerializeField] TMP_Text letter;
-    Ability thisAbility;
+    public Ability Skill;
 
     
     [SerializeField] Transform pipHolder;
@@ -20,25 +20,27 @@ public class ClickableAbility : MonoBehaviour
     [SerializeField] float dislacementModifier;
     float pointWidth;
 
-    public static UnityEvent clearActive = new();
+    public static ClickableAbility Active;
     private void Awake()
     {
-        clearActive.AddListener(Deactivate);
         pointWidth = actionPoints[0].GetComponent<RectTransform>().rect.width;
         pointWidth *= dislacementModifier;
     }
 
-    private void Deactivate()
+    public static void Deactivate()
     {
-        image.color = Color.white;
-        if (thisAbility == null) return;
-        thisAbility.ToggleTargetLine(false);
+        if (Active == null) return;
+        
+        Active.image.color = Color.white;
+        PrimaryCursor.SetCursorMode(UnitControl.ActiveBot == null ? CursorType.GROUND : UnitControl.ActiveBot.PrimaryMovement.PreferredCursor);
+        Active.Skill.ToggleSkillTargeting(false);
+        Active = null;
     }
 
     public void Become(Ability ability, KeyCode key)
     {
         gameObject.SetActive(true);
-        thisAbility = ability;
+        Skill = ability;
         image.sprite = ability.icon;
         letter.text = key.ToString();
         button.onClick.RemoveAllListeners();
@@ -60,18 +62,17 @@ public class ClickableAbility : MonoBehaviour
 
     public void Clear()
     {
-        PrimaryCursor.SetCursorMode(UnitControl.ActiveBot == null ? CursorType.AIR : UnitControl.ActiveBot.PrimaryMovement.PreferredCursor);
-        thisAbility = null;
+        Skill = null;
         button.onClick.RemoveAllListeners();
         gameObject.SetActive(false);
     }
 
     public void Activate()
     {
-        clearActive.Invoke();
-        PrimaryCursor.SetCursorMode(thisAbility.PreferredCursor);
-        UnitControl.ActiveSkill = thisAbility;
-        thisAbility.ToggleTargetLine(true);
+        Deactivate();
+        Active = this;
+        PrimaryCursor.SetCursorMode(Skill.PreferredCursor);
+        Skill.ToggleSkillTargeting(true);
         image.color = Color.red;
     }
 }

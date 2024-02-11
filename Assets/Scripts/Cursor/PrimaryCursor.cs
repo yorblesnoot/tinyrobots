@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using static UnitControl;
 using UnityEngine;
 using TMPro;
-using UnityEngine.UIElements;
 
 public enum CursorState
 {
@@ -61,13 +60,12 @@ public class PrimaryCursor : MonoBehaviour
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
         if (Input.GetMouseButtonDown(0))
         {
-            if (ActiveSkill != null)
+            if (ClickableAbility.Active != null)
             {
-                if (!ActiveBot.AttemptToSpendResource(ActiveSkill.cost, StatType.ACTION)) return;
+                if (!ActiveBot.AttemptToSpendResource(ClickableAbility.Active.Skill.cost, StatType.ACTION)) return;
                 StatDisplay.SyncStatDisplay(ActiveBot);
-                ActiveSkill.ExecuteAbility(ActiveBot, transform.position);
-                ActiveSkill = null;
-                ClickableAbility.clearActive.Invoke();
+                ClickableAbility.Active.Skill.ExecuteAbility(transform.position);
+                ClickableAbility.Deactivate();
                 return;
             }
             else if (TargetedBot != null)
@@ -79,9 +77,9 @@ public class PrimaryCursor : MonoBehaviour
         if (State != CursorState.FREE) return;
         ActiveBehaviour.ControlCursor();
 
-        if (ActiveBot == null) return;
 
-        if (ActiveSkill == null && !pathing)
+        if (ActiveBot == null) return;
+        if (ClickableAbility.Active == null && !pathing)
         {
             Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
             if (currentPosition != lastPosition)
@@ -116,7 +114,7 @@ public class PrimaryCursor : MonoBehaviour
     private IEnumerator TraversePath()
     {
         pathing = true;
-        yield return StartCoroutine(ActiveBot.PrimaryMovement.PathToPoint(ActiveBot, currentPath));
+        yield return StartCoroutine(ActiveBot.PrimaryMovement.PathToPoint(currentPath));
         StatDisplay.SyncStatDisplay(ActiveBot);
         Pathfinder3D.GeneratePathingTree(ActiveBot.PrimaryMovement.MoveStyle, Vector3Int.RoundToInt(ActiveBot.transform.position));
         pathing = false;

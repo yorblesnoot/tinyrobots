@@ -29,7 +29,7 @@ public class BotPlacer : MonoBehaviour
         {
             MoveStyle style = bot.PrimaryMovement.MoveStyle;
             bot.transform.position = styleNodes[style].GrabRandomly();
-            bot.PrimaryMovement.SpawnOrientation(bot.transform);
+            bot.PrimaryMovement.SpawnOrientation();
         }
 
         void SpawnBotList(List<BotRecord> botRecords, Allegiance allegiance)

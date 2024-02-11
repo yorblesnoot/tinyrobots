@@ -33,6 +33,7 @@ public class TinyBot : MonoBehaviour
     {
         Abilities = abilities;
         PrimaryMovement = primaryMovement;
+        PrimaryMovement.Owner = this;
         ClearActiveBot.AddListener(ClearActiveUnit);
     }
 
@@ -76,11 +77,11 @@ public class TinyBot : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        PrimaryCursor.ToggleUnitSnap(this);
+        if(UnitControl.ActiveBot != this) PrimaryCursor.ToggleUnitSnap(this);
     }
 
     private void OnMouseExit()
     {
-        PrimaryCursor.ToggleUnitSnap();
+        if(PrimaryCursor.TargetedBot == this) PrimaryCursor.ToggleUnitSnap();
     }
 }
