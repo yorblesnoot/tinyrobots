@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PropellerMove : PrimaryMovement
+public class PropellerFly : PrimaryMovement
 {
     private void Awake()
     {
