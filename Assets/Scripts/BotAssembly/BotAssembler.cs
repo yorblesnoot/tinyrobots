@@ -18,7 +18,7 @@ public class BotAssembler : MonoBehaviour
 
         TinyBot botUnit = bot.GetComponent<TinyBot>();
         List<Ability> abilities = GetAbilityList(spawnedParts, botUnit);
-        botUnit.Initialize(abilities, locomotion.GetComponent<PrimaryMovement>());
+        botUnit.Initialize(abilities, spawnedParts, locomotion.GetComponent<PrimaryMovement>());
         portraitGenerator.AttachPortrait(botUnit);
 
         return botUnit;

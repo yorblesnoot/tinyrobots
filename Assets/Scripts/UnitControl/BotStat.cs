@@ -28,11 +28,11 @@ public class BotStats
     {
         Max[StatType.ACTION] = 3f;
         Max[StatType.MOVEMENT] = 30f;
-        Max[StatType.HEALTH] = 100f;
+        Max[StatType.HEALTH] = 10f;
 
         Current[StatType.ACTION] = 3f;
         Current[StatType.MOVEMENT] = 10f;
-        Current[StatType.HEALTH] = 100f;
+        Current[StatType.HEALTH] = 10f;
     }
 
     public void SetToMax(StatType type)

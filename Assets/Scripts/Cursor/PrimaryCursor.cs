@@ -56,59 +56,56 @@ public class PrimaryCursor : MonoBehaviour
     float currentDistance;
     private void Update()
     {
-
-        //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (ClickableAbility.Active != null)
-            {
-                if (!ActiveBot.AttemptToSpendResource(ClickableAbility.Active.Skill.cost, StatType.ACTION)) return;
-                StatDisplay.SyncStatDisplay(ActiveBot);
-                ClickableAbility.Active.Skill.ExecuteAbility(transform.position);
-                ClickableAbility.Deactivate();
-                return;
-            }
-            else if (TargetedBot != null)
-            {
-                SelectBot(TargetedBot);
-            }
-        }
-
-        if (State != CursorState.FREE) return;
-        ActiveBehaviour.ControlCursor();
-
-
-        if (ActiveBot == null) return;
-        if (ClickableAbility.Active == null && !pathing)
+        bool anAbilityIsActive = ClickableAbility.Active != null;
+        if (State == CursorState.FREE) ActiveBehaviour.ControlCursor();
+        if (!anAbilityIsActive && !pathing)
         {
             Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
             if (currentPosition != lastPosition)
             {
                 lastPosition = currentPosition;
                 currentPath = Pathfinder3D.FindVectorPath(currentPosition, out currentDistance);
-                if (currentPath == null) return;
-                pathingLine.positionCount = currentPath.Count;
-                pathingLine.SetPositions(currentPath.ToArray());
-                
             }
         }
-        if(currentPath == null)
+
+        if (currentPath == null || anAbilityIsActive)
         {
-            numRotator.SetActive(false);
-            return;
+            HideMovePreview();
         }
-        ShowMovePreview();
-        if (Input.GetMouseButtonDown(1))
+        else
         {
-            if (!ActiveBot.AttemptToSpendResource(currentDistance, StatType.MOVEMENT)) return;
-            StartCoroutine(TraversePath());
+            ShowMovePreview();
         }
+
+        //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (anAbilityIsActive && ActiveBot.AttemptToSpendResource(ClickableAbility.Active.Skill.cost, StatType.ACTION))
+            {
+                StatDisplay.SyncStatDisplay(ActiveBot);
+                StartCoroutine(ClickableAbility.Active.Skill.ExecuteAbility(transform.position));
+                ClickableAbility.Deactivate();
+            }
+            else if (currentPath != null && ActiveBot.AttemptToSpendResource(currentDistance, StatType.MOVEMENT)) StartCoroutine(TraversePath());
+            else if (TargetedBot != null)
+            {
+                SelectBot(TargetedBot);
+            }
+        }
+        else if (Input.GetMouseButtonDown(1)) ClickableAbility.Deactivate();
     }
 
     void ShowMovePreview()
     {
         numRotator.SetActive(true);
         moveCostPreview.text = Mathf.RoundToInt(currentDistance).ToString() + " ft";
+        pathingLine.positionCount = currentPath.Count;
+        pathingLine.SetPositions(currentPath.ToArray());
+    }
+    void HideMovePreview()
+    {
+        numRotator.SetActive(false);
+        pathingLine.positionCount = 0;
     }
 
     private IEnumerator TraversePath()
@@ -116,7 +113,7 @@ public class PrimaryCursor : MonoBehaviour
         pathing = true;
         yield return StartCoroutine(ActiveBot.PrimaryMovement.PathToPoint(currentPath));
         StatDisplay.SyncStatDisplay(ActiveBot);
-        Pathfinder3D.GeneratePathingTree(ActiveBot.PrimaryMovement.MoveStyle, Vector3Int.RoundToInt(ActiveBot.transform.position));
+        Pathfinder3D.GeneratePathingTree(ActiveBot.PrimaryMovement.Style, Vector3Int.RoundToInt(ActiveBot.transform.position));
         pathing = false;
     }
 
@@ -126,7 +123,7 @@ public class PrimaryCursor : MonoBehaviour
         TinyBot.ClearActiveBot.Invoke();
         bot.BecomeActiveUnit();
         SetCursorMode(bot.PrimaryMovement.PreferredCursor);
-        Pathfinder3D.GeneratePathingTree(bot.PrimaryMovement.MoveStyle, Vector3Int.RoundToInt(bot.transform.position));
+        Pathfinder3D.GeneratePathingTree(bot.PrimaryMovement.Style, Vector3Int.RoundToInt(bot.transform.position));
         AbilityUI.ShowControlForUnit(bot);
         StatDisplay.SyncStatDisplay(bot);
     }
@@ -137,24 +134,20 @@ public class PrimaryCursor : MonoBehaviour
         ActiveBehaviour = behaviours[type];
         ActiveBehaviour.ActivateCursor();
     }
-
-    static bool canUnitSnap = true;
-    public static void ToggleUnitSnap(TinyBot unit = null)
+    public static void SnapToUnit(TinyBot unit)
     {
-        if (!canUnitSnap) return;
+        if(State != CursorState.FREE) return;
         TargetedBot = unit;
-        if(unit == null && State == CursorState.UNITSNAPPED)
-        {
-            Transform.SetParent(null, true);
-            State = CursorState.FREE;
-        }
-        else if(State == CursorState.FREE)
-        {
-            State = CursorState.UNITSNAPPED;
-            Transform.SetParent(unit.transform, false);
-            Transform.localPosition = Vector3.zero;
-        }
+        State = CursorState.UNITSNAPPED;
+        Transform.position = unit.transform.position;
     }
+
+    public static void Unsnap()
+    {
+        if (State != CursorState.UNITSNAPPED) return;
+        State = CursorState.FREE;
+    }
+
 
     [System.Serializable]
     class CursorMapping

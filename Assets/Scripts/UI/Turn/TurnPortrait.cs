@@ -12,9 +12,13 @@ public class TurnPortrait : MonoBehaviour
     [SerializeField] Color allyColor;
     [SerializeField] Color enemyColor;
     [SerializeField] Color neutralColor;
+
+    [SerializeField] Animator animator;
     public void Become(TinyBot bot)
     {
         gameObject.SetActive(true);
+        //animator.Play("Idle");
+        
         if (bot.allegiance == Allegiance.PLAYER)
         {
             frame.color = allyColor;
@@ -31,5 +35,10 @@ public class TurnPortrait : MonoBehaviour
     {
         selectButton.onClick.RemoveAllListeners();
         gameObject.SetActive(false);
+    }
+
+    public void Die()
+    {
+        animator.Play("DropAway");
     }
 }

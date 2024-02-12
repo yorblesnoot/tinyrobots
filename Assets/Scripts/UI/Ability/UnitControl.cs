@@ -17,7 +17,7 @@ public class UnitControl : MonoBehaviour
     private void Awake()
     {
         ClickableAbility.Active = null;
-        turnEnd.onClick.AddListener(EndActiveTurn);
+        turnEnd.onClick.AddListener(EndPlayerTurn);
     }
 
     readonly static KeyCode[] keyCodes = {KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9 };
@@ -29,10 +29,10 @@ public class UnitControl : MonoBehaviour
         unitPortrait.sprite = bot.portrait;
     }
 
-    void EndActiveTurn()
+    void EndPlayerTurn()
     {
         gameObject.SetActive(false);
-        turnManager.EndTurn(ActiveBot);
+        TurnManager.EndTurn(ActiveBot);
         ClickableAbility.Deactivate();
         ActiveBot = null;
     }

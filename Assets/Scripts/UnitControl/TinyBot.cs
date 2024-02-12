@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 public enum Allegiance
 {
@@ -13,24 +14,29 @@ public enum Allegiance
 }
 public class TinyBot : MonoBehaviour
 {
-
+    [SerializeField] float deathExplodeMaxForce;
     [SerializeField] GameObject selectBrackets;
     [SerializeField] BotStateFeedback feedback;
+    
     public Transform headshotPosition;
 
     [HideInInspector] public Sprite portrait;
     [HideInInspector] public Allegiance allegiance;
-    public bool availableForTurn;
+    [HideInInspector] public bool availableForTurn;
 
-    public PrimaryMovement PrimaryMovement;
+    [HideInInspector] public PrimaryMovement PrimaryMovement;
 
     public BotStats Stats = new();
 
     public static UnityEvent ClearActiveBot = new();
 
+    BotAI botAI;
+
     public List<Ability> Abilities { get; private set; }
-    public void Initialize(List<Ability> abilities, PrimaryMovement primaryMovement)
+    List<GameObject> Parts;
+    public void Initialize(List<Ability> abilities, List<GameObject> parts, PrimaryMovement primaryMovement)
     {
+        Parts = parts;
         Abilities = abilities;
         PrimaryMovement = primaryMovement;
         PrimaryMovement.Owner = this;
@@ -46,9 +52,15 @@ public class TinyBot : MonoBehaviour
 
     public void BeginTurn()
     {
-        availableForTurn = true;
+        
         Stats.SetToMax(StatType.ACTION);
         Stats.SetToMax(StatType.MOVEMENT);
+        if (allegiance == Allegiance.PLAYER) availableForTurn = true;
+        else
+        {
+            botAI ??= new(this);
+            StartCoroutine(botAI.TakeTurn());
+        }
     }
 
     public void BecomeActiveUnit()
@@ -64,9 +76,21 @@ public class TinyBot : MonoBehaviour
         selectBrackets.SetActive(false);
         gameObject.layer = 0;
     }
-    
 
-    void Die() { }
+    readonly float minForce = .1f;
+    void Die()
+    {
+        foreach(var part in Parts)
+        {
+            Rigidbody rigidPart = part.AddComponent<Rigidbody>();
+            Vector3 explodeForce = new(Random.Range(minForce, deathExplodeMaxForce), 
+                Random.Range(minForce, deathExplodeMaxForce), 
+                Random.Range(minForce, deathExplodeMaxForce));
+            rigidPart.velocity = explodeForce;
+        }
+        TurnManager.RemoveTurnTaker(this);
+        Destroy(gameObject, 5f);
+    }
 
     public void ReceiveDamage(int damage)
     {
@@ -77,11 +101,11 @@ public class TinyBot : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if(UnitControl.ActiveBot != this) PrimaryCursor.ToggleUnitSnap(this);
+        if(UnitControl.ActiveBot != this) PrimaryCursor.SnapToUnit(this);
     }
 
     private void OnMouseExit()
     {
-        if(PrimaryCursor.TargetedBot == this) PrimaryCursor.ToggleUnitSnap();
+        if(PrimaryCursor.TargetedBot == this) PrimaryCursor.Unsnap();
     }
 }

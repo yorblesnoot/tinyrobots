@@ -15,24 +15,8 @@ public class SpiderCrawl : PrimaryMovement
     [SerializeField] float downwardExtensionLength = 3f;
     [SerializeField][Range(0f, 1f)] float raycastInTilt;
 
-
     [SerializeField] Transform legModel;
-
-
     bool stepping;
-    private void Awake()
-    {
-        PreferredCursor = CursorType.GROUND;
-        MoveStyle = MoveStyle.CRAWL;
-        InitializeAnchors();
-    }
-    private void InitializeAnchors()
-    {
-        foreach (var anchor in anchors)
-        {
-            anchor.Initialize();
-        }
-    }
 
     public override IEnumerator PathToPoint(List<Vector3> path)
     {
@@ -44,7 +28,6 @@ public class SpiderCrawl : PrimaryMovement
         StartCoroutine(NeutralStance());
         
     }
-
     public override IEnumerator NeutralStance()
     {
         foreach (var anchor in anchors)
@@ -52,7 +35,36 @@ public class SpiderCrawl : PrimaryMovement
             yield return StartCoroutine(StepToBase(anchor, true));
         }
     }
+    public override void SpawnOrientation()
+    {
+        Vector3 normal = GetMeshFacingAt(Owner.transform.position);
+        Vector3 displace = Vector3.Cross(normal, Vector3.up);
+        //look position and normal cant be the same?
+        Owner.transform.rotation = GetRotationForMeshPosition(Owner.transform.position + displace, normal);
+        foreach (var anchor in anchors)
+        {
+            StartCoroutine(StepToBase(anchor, true));
+        }
+    }
+    public override void TrackEntity(GameObject trackingTarget)
+    {
+        base.TrackEntity(trackingTarget);
+        CheckAnchorPositions();
+    }
 
+    private void Awake()
+    {
+        PreferredCursor = CursorType.GROUND;
+        Style = MoveStyle.CRAWL;
+        InitializeAnchors();
+    }
+    private void InitializeAnchors()
+    {
+        foreach (var anchor in anchors)
+        {
+            anchor.Initialize();
+        }
+    }
     private Vector3 GetMeshFacingAt(Vector3 target)
     {
         Collider[] colliders = Physics.OverlapSphere(target, 1f, LayerMask.GetMask("Terrain"));
@@ -160,24 +172,7 @@ public class SpiderCrawl : PrimaryMovement
         }
         return false;
     }
-    public override void SpawnOrientation()
-    {
-        Vector3 normal = GetMeshFacingAt(Owner.transform.position);
-        Vector3 displace = Vector3.Cross(normal, Vector3.up);
-        //look position and normal cant be the same?
-        Owner.transform.rotation = GetRotationForMeshPosition(Owner.transform.position + displace, normal);
-        foreach (var anchor in anchors)
-        {
-            StartCoroutine(StepToBase(anchor, true));
-        }
-    }
-
-    public override void TrackEntity(GameObject trackingTarget)
-    {
-        base.TrackEntity(trackingTarget);
-        CheckAnchorPositions();
-    }
-
+    
     [Serializable]
     class Anchor
     {

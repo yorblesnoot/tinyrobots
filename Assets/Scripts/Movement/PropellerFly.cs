@@ -7,7 +7,7 @@ public class PropellerFly : PrimaryMovement
     private void Awake()
     {
         PreferredCursor = CursorType.AIR;
-        MoveStyle = MoveStyle.FLY;
+        Style = MoveStyle.FLY;
     }
     public override IEnumerator PathToPoint(List<Vector3> path)
     {

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public abstract class Ability : MonoBehaviour
@@ -11,9 +12,10 @@ public abstract class Ability : MonoBehaviour
     [HideInInspector] public TinyBot owner;
 
     public int cost;
+    public int range;
 
 
-    public abstract void ExecuteAbility(Vector3 target);
+    public abstract IEnumerator ExecuteAbility(Vector3 target);
     public abstract void ControlTargetLine();
 
     public virtual void ToggleSkillTargeting(bool on)

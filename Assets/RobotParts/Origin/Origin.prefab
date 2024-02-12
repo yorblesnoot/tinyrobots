@@ -316,12 +316,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d984b4955c72af649843d79cabd90679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deathExplodeMaxForce: 5
   selectBrackets: {fileID: 3748868292360106338}
   feedback: {fileID: 3745691473234048856}
+  botAI: {fileID: 0}
   headshotPosition: {fileID: 1977403559975929643}
   portrait: {fileID: 0}
   allegiance: 0
   availableForTurn: 0
+  PrimaryMovement: {fileID: 0}
+--- !u!114 &1287232362072448152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9120402016229796176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e22427b9b038d449a9d908d3a2f67d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &7754414055999811402
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 579770704522891043}
   - component: {fileID: 6359356575619685291}
   - component: {fileID: 2864235246571181826}
+  - component: {fileID: 5913003678320053133}
   m_Layer: 5
   m_Name: TurnCard
   m_TagString: Untagged
@@ -98,6 +99,7 @@ MonoBehaviour:
   allyColor: {r: 0.2783019, g: 1, b: 0.51886785, a: 1}
   enemyColor: {r: 1, g: 0.22140875, b: 0.033018887, a: 1}
   neutralColor: {r: 0, g: 0, b: 0, a: 0}
+  animator: {fileID: 5913003678320053133}
 --- !u!114 &2864235246571181826
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,6 +144,27 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!95 &5913003678320053133
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579770704522891053}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6549f0b407d4adf408f33e852f93850e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5878393067717877660
 GameObject:
   m_ObjectHideFlags: 0

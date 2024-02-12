@@ -91,6 +91,11 @@ public static class Pathfinder3D
         return styleSpots;
     }
 
+    public static List<Vector3Int> GetPathableLocations(int moveBudget)
+    {
+        return nodeMap.Values.Where(node => node.G <= moveBudget).OrderBy(node => node.G).Select(node => node.location).ToList();
+    }
+
     public static List<Vector3> FindVectorPath(Vector3Int end, out float distance)
     {
         distance = 0;
@@ -169,7 +174,6 @@ public static class Pathfinder3D
         finishedList.Reverse();
         return finishedList;
     }
-
     static void SetNeighbors(PathfindingNode current)
     {
         current.neighbors = new();
