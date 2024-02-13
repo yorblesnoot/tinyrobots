@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public class TurnManager : MonoBehaviour
@@ -45,6 +47,7 @@ public class TurnManager : MonoBehaviour
     public static void RemoveTurnTaker(TinyBot bot)
     {
         currentlyActive.Remove(bot);
+        if (TurnTakers.IndexOf(bot) < activeIndex) activeIndex--;
         TurnTakers.Remove(bot);
         TurnPortrait removed = activePortraits[bot];
         removed.Die();
@@ -90,11 +93,39 @@ public class TurnManager : MonoBehaviour
         currentlyActive.Remove(bot);
         bot.availableForTurn = false;
         TinyBot.ClearActiveBot.Invoke();
-        if(currentlyActive.Count == 0)
+
+        if (MetEndCondition()) return;
+
+        if (currentlyActive.Count == 0)
         {
             if(activeIndex == TurnTakers.Count) activeIndex = 0;
             GetActiveBots();
         }
+    }
+
+    static bool MetEndCondition()
+    {
+        if (TurnTakers.Where(bot => bot.allegiance == Allegiance.PLAYER).Count() == 0)
+        {
+            GameOver();
+            return true;
+        }
+        else if (TurnTakers.Where(bot => bot.allegiance == Allegiance.ENEMY).Count() == 0)
+        {
+            PlayerWin();
+            return true;
+        }
+        return false;
+    }
+
+    private static void PlayerWin()
+    {
+        throw new NotImplementedException();
+    }
+
+    static void GameOver()
+    {
+
     }
 
     static void ArrangePortraits(HashSet<TinyBot> active)

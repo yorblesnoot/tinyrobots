@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class UnrestrictedAbility : Ability
 {
-    public override void ControlTargetLine()
+    protected override void TargetEntity(GameObject target)
     {
         return;
     }

@@ -139,7 +139,7 @@ public class PrimaryCursor : MonoBehaviour
         if(State != CursorState.FREE) return;
         TargetedBot = unit;
         State = CursorState.UNITSNAPPED;
-        Transform.position = unit.transform.position;
+        Transform.position = unit.ChassisPoint.position;
     }
 
     public static void Unsnap()

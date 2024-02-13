@@ -12,6 +12,7 @@ public class BotAI
         thisBot = bot;
     }
 
+    readonly float lockTime = 1f;
     public IEnumerator TakeTurn()
     {
         thisBot.ToggleActiveLayer(true);
@@ -34,31 +35,33 @@ public class BotAI
             List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations(Mathf.FloorToInt(thisBot.Stats.Current[StatType.MOVEMENT]));
             foreach(Vector3Int location in pathableLocations)
             {
-                if(AbilityHasTarget(ability, enemies, location, out Vector3 target))
+                if(AbilityHasTarget(ability, enemies, location, out TinyBot target))
                 {
                     //move to location
                     if (Vector3Int.RoundToInt(thisBot.transform.position) != location) 
                         yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.PathToPoint(Pathfinder3D.FindVectorPath(location, out _)));
-                    //use ability on target
+                    ability.LockOnTo(target.ChassisPoint.gameObject);
+                    yield return new WaitForSeconds(lockTime);
                     thisBot.AttemptToSpendResource(ability.cost, StatType.ACTION);
-                    yield return thisBot.StartCoroutine(ability.ExecuteAbility(target));
+                    yield return thisBot.StartCoroutine(ability.ExecuteAbility(target.ChassisPoint.position));
+                    ability.ReleaseLock();
                     yield break;
                 }
             }
             possibleAbilities.Remove(ability);
         }
-        static bool AbilityHasTarget(Ability ability, List<TinyBot> enemies, Vector3Int location, out Vector3 finalLocation)
+        static bool AbilityHasTarget(Ability ability, List<TinyBot> enemies, Vector3Int location, out TinyBot target)
         {
-            finalLocation = default;
-            foreach (var unit in enemies)
+            target = default;
+            foreach (var enemy in enemies)
             {
-                if (Vector3.Distance(unit.transform.position, location) <= ability.range)
+                if (Vector3.Distance(enemy.ChassisPoint.position, location) <= ability.range)
                 {
-                    Vector3 direction = unit.transform.position - location;
+                    Vector3 direction = enemy.ChassisPoint.position - location;
                     Ray testRay = new(location, direction);
                     if (!Physics.Raycast(testRay, out RaycastHit hitInfo, ability.range)) continue;
                     if (!hitInfo.collider.TryGetComponent(out TinyBot bot)) continue;
-                    finalLocation = unit.transform.position;
+                    target = enemy;
                     return true;
                 }
             }

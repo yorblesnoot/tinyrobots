@@ -30,7 +30,7 @@ public class ClickableAbility : MonoBehaviour
         
         Active.image.color = Color.white;
         PrimaryCursor.SetCursorMode(UnitControl.ActiveBot == null ? CursorType.GROUND : UnitControl.ActiveBot.PrimaryMovement.PreferredCursor);
-        Active.Skill.ToggleSkillTargeting(false);
+        Active.Skill.ReleaseLock();
         Active = null;
     }
 
@@ -69,7 +69,7 @@ public class ClickableAbility : MonoBehaviour
         Deactivate();
         Active = this;
         PrimaryCursor.SetCursorMode(Skill.PreferredCursor);
-        Skill.ToggleSkillTargeting(true);
+        Skill.LockOnTo(PrimaryCursor.Transform.gameObject);
         image.color = Color.red;
     }
 }

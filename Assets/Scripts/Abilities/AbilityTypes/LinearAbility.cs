@@ -4,10 +4,10 @@ using UnityEngine;
 
 public abstract class LinearAbility : Ability
 {
-    public override void ControlTargetLine()
+    protected override void TargetEntity(GameObject target)
     {
-        Vector3 direction = (PrimaryCursor.Transform.position - emissionPoint.transform.position).normalized;
-        Vector3 endPoint = emissionPoint.transform.position + direction * maxRange;
+        Vector3 direction = (target.transform.position - emissionPoint.transform.position).normalized;
+        Vector3 endPoint = emissionPoint.transform.position + direction * range;
         LineMaker.DrawLine(emissionPoint.transform.position, endPoint);
     }
 }

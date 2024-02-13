@@ -9,7 +9,7 @@ public class LaserShot : LinearAbility
     [SerializeField] TurretTracker turretTracker;
     public override IEnumerator ExecuteAbility(Vector3 target)
     {
-        Vector3 direction = (target - owner.transform.position).normalized;
+        Vector3 direction = (target - owner.ChassisPoint.position).normalized;
         GameObject shot = Instantiate(laser, emissionPoint.transform);
         shot.transform.SetParent(null);
         Rigidbody rigidbody = shot.GetComponent<Rigidbody>();
@@ -17,10 +17,9 @@ public class LaserShot : LinearAbility
         yield break;
     }
 
-    public override void ToggleSkillTargeting(bool on)
+    protected override void TargetEntity(GameObject target)
     {
-        base.ToggleSkillTargeting(on);
-        if (on) turretTracker.TrackObject(PrimaryCursor.Transform.gameObject);
-        else turretTracker.TrackObject();
+        base.TargetEntity(target);
+        turretTracker.TrackTarget(target);
     }
 }

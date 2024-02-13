@@ -29,6 +29,8 @@ public class TinyBot : MonoBehaviour
 
     public BotStats Stats = new();
 
+    public Transform ChassisPoint;
+
     public static UnityEvent ClearActiveBot = new();
 
     BotAI botAI;

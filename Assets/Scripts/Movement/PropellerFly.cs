@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PropellerFly : PrimaryMovement
 {
+    [SerializeField] float intervalDuration = .2f;
     private void Awake()
     {
         PreferredCursor = CursorType.AIR;
@@ -16,7 +17,7 @@ public class PropellerFly : PrimaryMovement
             Vector3 flatPosition = target;
             flatPosition.y = Owner.transform.position.y;
             Owner.transform.LookAt(flatPosition);
-            yield return StartCoroutine(Owner.gameObject.LerpTo(target, .1f));
+            yield return StartCoroutine(Owner.gameObject.LerpTo(target, intervalDuration));
         }
     }
 

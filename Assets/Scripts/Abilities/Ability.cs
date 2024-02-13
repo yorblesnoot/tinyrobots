@@ -4,9 +4,7 @@ using UnityEngine;
 public abstract class Ability : MonoBehaviour
 {
     public Sprite icon;
-    protected bool targeting;
 
-    [SerializeField] protected int maxRange;
     [SerializeField] protected GameObject emissionPoint;
     public CursorType PreferredCursor;
     [HideInInspector] public TinyBot owner;
@@ -14,25 +12,29 @@ public abstract class Ability : MonoBehaviour
     public int cost;
     public int range;
 
+    GameObject trackedTarget;
+
 
     public abstract IEnumerator ExecuteAbility(Vector3 target);
-    public abstract void ControlTargetLine();
+    protected abstract void TargetEntity(GameObject target);
 
-    public virtual void ToggleSkillTargeting(bool on)
+    public virtual void LockOnTo(GameObject target)
     {
-        targeting = on;
-        if (on == false)
-        {
-            StartCoroutine(owner.PrimaryMovement.NeutralStance());
-            LineMaker.HideLine();
-        }
+        trackedTarget = target;
+    }
+
+    public virtual void ReleaseLock()
+    {
+        trackedTarget = null;
+        StartCoroutine(owner.PrimaryMovement.NeutralStance());
+        LineMaker.HideLine();
     }
 
     private void Update()
     {
-        if (!targeting) return;
-        ControlTargetLine();
-        owner.PrimaryMovement.TrackEntity(PrimaryCursor.Transform.gameObject);
+        if (trackedTarget == null) return;
+        TargetEntity(trackedTarget);
+        owner.PrimaryMovement.TrackEntity(trackedTarget);
     }
 
     
