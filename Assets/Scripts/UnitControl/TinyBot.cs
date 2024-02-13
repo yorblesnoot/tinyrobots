@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -67,14 +68,20 @@ public class TinyBot : MonoBehaviour
     {
         selectBrackets.SetActive(true);
         UnitControl.ActiveBot = this;
-        gameObject.layer = 6;
+        ToggleActiveLayer(true);
+    }
+
+    public void ToggleActiveLayer(bool active)
+    {
+        if(active) gameObject.layer = 6;
+        else gameObject.layer = 0;
     }
 
     public void ClearActiveUnit()
     {
         UnitControl.ActiveBot = null;
         selectBrackets.SetActive(false);
-        gameObject.layer = 0;
+        ToggleActiveLayer(false);
     }
 
     readonly float minForce = .1f;

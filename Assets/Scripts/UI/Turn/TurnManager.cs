@@ -24,6 +24,7 @@ public class TurnManager : MonoBehaviour
     static HashSet<TinyBot> currentlyActive;
     private void Awake()
     {
+        activeIndex = 0;
         ActiveUnitScaleFactor = activeUnitScaleFactor;
         TurnTakers = new(); activePortraits = new(); currentlyActive = new();
         PortraitStock = turnPortraitList;
@@ -66,17 +67,21 @@ public class TurnManager : MonoBehaviour
     static void GetActiveBots()
     {
         AddActiveUnit();
-        while (TurnTakers[activeIndex].allegiance == Allegiance.PLAYER)
-        {
-            AddActiveUnit();
-        }
         ArrangePortraits(currentlyActive);
 
         static void AddActiveUnit()
         {
-            TurnTakers[activeIndex].BeginTurn();
+            TinyBot turnTaker = TurnTakers[activeIndex];
+            Debug.Log("adding " + turnTaker.allegiance);
             currentlyActive.Add(TurnTakers[activeIndex]);
+            turnTaker.BeginTurn();
             activeIndex++;
+            if (turnTaker.allegiance == Allegiance.PLAYER 
+                && TurnTakers[activeIndex].allegiance == Allegiance.PLAYER 
+                && activeIndex < TurnTakers.Count)
+            {
+                AddActiveUnit();
+            }
         }
     }
 

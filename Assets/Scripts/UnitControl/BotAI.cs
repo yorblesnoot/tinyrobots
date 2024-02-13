@@ -14,6 +14,7 @@ public class BotAI
 
     public IEnumerator TakeTurn()
     {
+        thisBot.ToggleActiveLayer(true);
         List<Ability> possibleAbilities = new(thisBot.Abilities);
         List<TinyBot> enemies = TurnManager.TurnTakers.Where(x => x.allegiance != thisBot.allegiance).ToList();
         
@@ -24,6 +25,7 @@ public class BotAI
             possibleAbilities = possibleAbilities.Where(ability => ability.cost <= thisBot.Stats.Current[StatType.ACTION]).ToList();
         }
 
+        thisBot.ToggleActiveLayer(false);
         TurnManager.EndTurn(thisBot);
 
         IEnumerator MoveAndUseAbility(Ability ability)
