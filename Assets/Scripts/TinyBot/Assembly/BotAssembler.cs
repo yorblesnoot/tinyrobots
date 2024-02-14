@@ -13,10 +13,12 @@ public class BotAssembler : MonoBehaviour
         AttachmentPoint initialAttachmentPoint;
         List<GameObject> spawnedParts;
         GameObject bot = DeployOrigin(tree);
+        TinyBot botUnit = bot.GetComponent<TinyBot>();
+        SetBotTallness(locomotion, initialAttachmentPoint, botUnit);
 
         RestructureHierarchy(locomotion, initialAttachmentPoint, bot);
 
-        TinyBot botUnit = bot.GetComponent<TinyBot>();
+        
         List<Ability> abilities = GetAbilityList(spawnedParts, botUnit);
         botUnit.Initialize(abilities, spawnedParts, locomotion);
         portraitGenerator.AttachPortrait(botUnit);
@@ -65,6 +67,14 @@ public class BotAssembler : MonoBehaviour
             locomotion.transform.SetParent(bot.transform, true);
             initialAttachmentPoint.transform.SetParent(locomotion.sourceBone, true);
         }
+    }
+
+    private static void SetBotTallness(PrimaryMovement locomotion, AttachmentPoint initialAttachmentPoint, TinyBot bot)
+    {
+        Vector3 chassisPosition = initialAttachmentPoint.transform.localPosition;
+        chassisPosition.y = locomotion.chassisHeight;
+        initialAttachmentPoint.transform.localPosition = chassisPosition;
+        bot.GetComponent<CapsuleCollider>().center = chassisPosition;
     }
 
     private static List<Ability> GetAbilityList(List<GameObject> spawnedParts, TinyBot botUnit)

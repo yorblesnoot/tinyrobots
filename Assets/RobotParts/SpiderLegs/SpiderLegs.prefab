@@ -745,6 +745,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Owner: {fileID: 0}
   lookSpeed: 1
+  chassisHeight: 1.35
   sourceBone: {fileID: 1649306643557042191}
   pathStepDuration: 0.4
   legStepDuration: 0.1
@@ -768,7 +769,8 @@ MonoBehaviour:
     distanceFromBase: 0
   anchorZoneRadius: 1.1
   legModel: {fileID: 6062594318300677067}
-  downwardExtensionLength: 3
+  anchorUpwardLimit: 2
+  anchorDownwardLength: 3
   detector: {fileID: 730318562603061130}
   raycastInTilt: 0.15
 --- !u!4 &5740287581094643054 stripped

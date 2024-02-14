@@ -39,6 +39,7 @@ public class PrimaryCursor : MonoBehaviour
     static bool pathing = false;
     private void Awake()
     {
+        pathing = false;
         TinyBot.ClearActiveBot.AddListener(() => pathingLine.positionCount = 0);
     }
     private void Start()
