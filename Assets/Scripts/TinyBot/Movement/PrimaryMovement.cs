@@ -9,6 +9,7 @@ public abstract class PrimaryMovement : MonoBehaviour
     [HideInInspector] public TinyBot Owner;
 
     [SerializeField] float lookSpeed = 1f;
+    public Transform sourceBone;
 
     public abstract IEnumerator PathToPoint(List<Vector3> path);
     public abstract void SpawnOrientation();

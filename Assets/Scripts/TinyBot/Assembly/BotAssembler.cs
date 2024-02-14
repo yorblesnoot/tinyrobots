@@ -9,7 +9,7 @@ public class BotAssembler : MonoBehaviour
     [SerializeField] PortraitGenerator portraitGenerator;
     public TinyBot BuildBotFromPartTree(TreeNode<CraftablePart> tree)
     {
-        GameObject locomotion = null;
+        PrimaryMovement locomotion = null;
         AttachmentPoint initialAttachmentPoint;
         List<GameObject> spawnedParts;
         GameObject bot = DeployOrigin(tree);
@@ -18,7 +18,7 @@ public class BotAssembler : MonoBehaviour
 
         TinyBot botUnit = bot.GetComponent<TinyBot>();
         List<Ability> abilities = GetAbilityList(spawnedParts, botUnit);
-        botUnit.Initialize(abilities, spawnedParts, locomotion.GetComponent<PrimaryMovement>());
+        botUnit.Initialize(abilities, spawnedParts, locomotion);
         portraitGenerator.AttachPortrait(botUnit);
 
         return botUnit;
@@ -40,7 +40,7 @@ public class BotAssembler : MonoBehaviour
             GameObject spawned = Instantiate(currentNode.Value.attachableObject);
 
             //if we've placed the primary movement part, flag it for rearrangement
-            if (currentNode.Value.primaryLocomotion) locomotion = spawned;
+            if (currentNode.Value.primaryLocomotion) locomotion = spawned.GetComponent<PrimaryMovement>();
             else spawnedParts.Add(spawned);
 
             spawned.transform.SetParent(attachmentPoint.transform, false);
@@ -59,12 +59,11 @@ public class BotAssembler : MonoBehaviour
             return;
         }
 
-        static void RestructureHierarchy(GameObject locomotion, AttachmentPoint initialAttachmentPoint, GameObject bot)
+        static void RestructureHierarchy(PrimaryMovement locomotion, AttachmentPoint initialAttachmentPoint, GameObject bot)
         {
             if (locomotion == null) Debug.LogError("Failed to find primary locomotion.");
             locomotion.transform.SetParent(bot.transform, true);
-            SourceBone bodyPoint = locomotion.GetComponent<SourceBone>();
-            initialAttachmentPoint.transform.SetParent(bodyPoint.bone, true);
+            initialAttachmentPoint.transform.SetParent(locomotion.sourceBone, true);
         }
     }
 

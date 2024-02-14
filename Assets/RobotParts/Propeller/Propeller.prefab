@@ -367,20 +367,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Owner: {fileID: 0}
   lookSpeed: 5
-  debugger: {fileID: 0}
---- !u!114 &6465195245373589286
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1705641769814217670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b376da81c5fea2843a66f5b0ff0903ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bone: {fileID: 78257769200593260}
+  sourceBone: {fileID: 78257769200593260}
+  intervalDuration: 0.2
 --- !u!4 &8367349245771871145 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5192667463394062400, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
