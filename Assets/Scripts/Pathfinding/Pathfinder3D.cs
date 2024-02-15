@@ -91,6 +91,21 @@ public static class Pathfinder3D
         return styleSpots;
     }
 
+    public static bool GetLandingPointBy(Vector3 target, MoveStyle style, out Vector3Int coords)
+    {
+        coords = Vector3Int.RoundToInt(target);
+        if (nodeMap[coords].modeAccess[style]) return true;
+        else
+        {
+            foreach(var edge in nodeMap[coords].edges)
+            {
+                if (!nodeMap[coords].modeAccess[style]) continue;
+                coords = edge.neighbor.location;
+                return true;
+            }
+            return false;
+        }
+    }
     public static List<Vector3Int> GetPathableLocations(int moveBudget)
     {
         return nodeMap.Values.Where(node => node.G <= moveBudget).OrderBy(node => node.G).Select(node => node.location).ToList();
@@ -132,7 +147,7 @@ public static class Pathfinder3D
             if (current.G == float.PositiveInfinity) return;
             //if (current.G > maxDistance) continue;
 
-            foreach (PathfindingNode.Edge edge in current.neighbors)
+            foreach (PathfindingNode.Edge edge in current.edges)
             {
                 PathfindingNode neighbor = edge.neighbor;
                 if (neighbor.blocked || neighbor.modeAccess[style] == false || !unvisited.Contains(neighbor)) continue;
@@ -176,14 +191,14 @@ public static class Pathfinder3D
     }
     static void SetNeighbors(PathfindingNode current)
     {
-        current.neighbors = new();
+        current.edges = new();
         for (int i = 0; i < directions.Length; i++)
         {
             Vector3Int direction = directions[i];
             Vector3Int locationCheck = direction + current.location;
             if (nodeMap.TryGetValue(locationCheck, out PathfindingNode val))
             {
-                current.neighbors.Add(new() { neighbor = val, magnitude = directionMagnitudes[i] });
+                current.edges.Add(new() { neighbor = val, magnitude = directionMagnitudes[i] });
             }
         }
     }
@@ -220,5 +235,5 @@ class PathfindingNode
         public PathfindingNode neighbor;
         public float magnitude;
     }
-    public List<Edge> neighbors;
+    public List<Edge> edges;
 }

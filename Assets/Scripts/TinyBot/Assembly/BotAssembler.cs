@@ -43,7 +43,7 @@ public class BotAssembler : MonoBehaviour
 
             //if we've placed the primary movement part, flag it for rearrangement
             if (currentNode.Value.primaryLocomotion) locomotion = spawned.GetComponent<PrimaryMovement>();
-            else spawnedParts.Add(spawned);
+            spawnedParts.Add(spawned);
 
             spawned.transform.SetParent(attachmentPoint.transform, false);
             spawned.transform.localRotation = Quaternion.identity;

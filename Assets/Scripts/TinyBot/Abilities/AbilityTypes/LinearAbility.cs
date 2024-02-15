@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class LinearAbility : Ability
 {
-    protected override void TargetEntity(GameObject target)
+    protected override void FollowEntity(GameObject target)
     {
         Vector3 direction = (target.transform.position - emissionPoint.transform.position).normalized;
         Vector3 endPoint = emissionPoint.transform.position + direction * range;

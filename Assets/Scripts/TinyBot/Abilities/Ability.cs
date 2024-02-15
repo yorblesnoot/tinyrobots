@@ -3,20 +3,23 @@ using UnityEngine;
 
 public abstract class Ability : MonoBehaviour
 {
-    public Sprite icon;
-
     [SerializeField] protected GameObject emissionPoint;
     public CursorType PreferredCursor;
-    [HideInInspector] public TinyBot owner;
-
     public int cost;
     public int range;
+    public Sprite icon;
 
     GameObject trackedTarget;
-
+    
+    [HideInInspector] public TinyBot owner;
 
     public abstract IEnumerator ExecuteAbility(Vector3 target);
-    protected abstract void TargetEntity(GameObject target);
+    protected abstract void FollowEntity(GameObject target);
+    public virtual bool ConfirmAbility(Vector3 target, out Vector3 confirmedTarget)
+    {
+        confirmedTarget = target;
+        return true;
+    }
 
     public virtual void LockOnTo(GameObject target)
     {
@@ -30,13 +33,11 @@ public abstract class Ability : MonoBehaviour
         LineMaker.HideLine();
     }
 
-    private void Update()
+    void Update()
     {
         if (trackedTarget == null) return;
-        TargetEntity(trackedTarget);
+        FollowEntity(trackedTarget);
         owner.PrimaryMovement.TrackEntity(trackedTarget);
     }
-
-    
 
 } 

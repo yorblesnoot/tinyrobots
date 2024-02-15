@@ -81,11 +81,15 @@ public class PrimaryCursor : MonoBehaviour
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
         if (Input.GetMouseButtonDown(0))
         {
-            if (anAbilityIsActive && ActiveBot.AttemptToSpendResource(ClickableAbility.Active.Skill.cost, StatType.ACTION))
+            if (anAbilityIsActive)
             {
-                StatDisplay.SyncStatDisplay(ActiveBot);
-                StartCoroutine(ClickableAbility.Active.Skill.ExecuteAbility(transform.position));
-                ClickableAbility.Deactivate();
+                if(ClickableAbility.Active.Skill.ConfirmAbility(Transform.position, out var confirmedTarget)
+                && ActiveBot.AttemptToSpendResource(ClickableAbility.Active.Skill.cost, StatType.ACTION))
+                {
+                    StatDisplay.SyncStatDisplay(ActiveBot);
+                    StartCoroutine(ClickableAbility.Active.Skill.ExecuteAbility(confirmedTarget));
+                    ClickableAbility.Deactivate();
+                }
             }
             else if (currentPath != null && ActiveBot.AttemptToSpendResource(currentDistance, StatType.MOVEMENT)) StartCoroutine(TraversePath());
             else if (TargetedBot != null)

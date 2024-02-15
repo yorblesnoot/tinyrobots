@@ -398,6 +398,11 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: -2934401055209829618, guid: c2625f0d9f8225f42bc27754fa7e7d1f,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 45736949c1a91314c8e85b8de38ccdfd, type: 2}
     - target: {fileID: -2639638324218457063, guid: c2625f0d9f8225f42bc27754fa7e7d1f,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -675,7 +680,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: d0abed84aa6f5489fb1695cbcafffef0, type: 3}
-  maxRange: 50
   emissionPoint: {fileID: 646414412058972572}
   PreferredCursor: 0
   owner: {fileID: 0}

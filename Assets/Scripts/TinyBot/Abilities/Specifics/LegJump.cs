@@ -1,0 +1,36 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+public class LegJump : ParabolicAbility
+{
+    [SerializeField] float intervalTime = .2f;
+    public override IEnumerator ExecuteAbility(Vector3 target)
+    {
+        Vector3[] parabola = GenerateParabola(transform.position, target, parabolaPoints);
+        foreach (Vector3 point in parabola)
+        {
+            yield return StartCoroutine(owner.gameObject.LerpTo(point, intervalTime));
+        }
+        Pathfinder3D.GeneratePathingTree(MoveStyle.WALK, Vector3Int.RoundToInt(target));
+    }
+
+    public override bool ConfirmAbility(Vector3 target, out Vector3 confirmedTarget)
+    {
+        confirmedTarget = target;
+        Vector3[] parabola = GenerateParabola(transform.position, target, parabolaPoints);
+        List<Vector3> scannedParabola = CastAlongParabola(parabola);
+        if (scannedParabola.Count < parabola.Length)
+        {
+            return false;
+        }
+        Vector3 finalTarget = scannedParabola.Last();
+        if (Pathfinder3D.GetLandingPointBy(finalTarget, MoveStyle.WALK, out Vector3Int nodeTarget))
+        {
+            confirmedTarget = nodeTarget;
+            return true;
+        }
+        return false;
+    }
+}
