@@ -14,7 +14,7 @@ public abstract class Ability : MonoBehaviour
     [HideInInspector] public TinyBot owner;
 
     public abstract IEnumerator ExecuteAbility(Vector3 target);
-    protected abstract void FollowEntity(GameObject target);
+    protected abstract void AimAt(GameObject target);
     public virtual bool ConfirmAbility(Vector3 target, out Vector3 confirmedTarget)
     {
         confirmedTarget = target;
@@ -36,8 +36,8 @@ public abstract class Ability : MonoBehaviour
     void Update()
     {
         if (trackedTarget == null) return;
-        FollowEntity(trackedTarget);
-        owner.PrimaryMovement.TrackEntity(trackedTarget);
+        AimAt(trackedTarget);
+        owner.PrimaryMovement.RotateToTrackEntity(trackedTarget);
     }
 
 } 

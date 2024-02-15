@@ -16,7 +16,7 @@ public abstract class PrimaryMovement : MonoBehaviour
     public abstract void SpawnOrientation();
     public abstract IEnumerator NeutralStance();
 
-    public virtual void TrackEntity(GameObject trackingTarget)
+    public virtual void RotateToTrackEntity(GameObject trackingTarget)
     {
         Vector3 worldTarget = trackingTarget.transform.position;
         Vector3 localTarget = Owner.transform.InverseTransformPoint(worldTarget);

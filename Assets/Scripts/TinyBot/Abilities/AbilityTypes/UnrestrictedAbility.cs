@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class UnrestrictedAbility : Ability
 {
-    protected override void FollowEntity(GameObject target)
+    protected override void AimAt(GameObject target)
     {
         return;
     }

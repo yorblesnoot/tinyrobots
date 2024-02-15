@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class LinearAbility : Ability
 {
-    protected override void FollowEntity(GameObject target)
+    protected override void AimAt(GameObject target)
     {
         Vector3 direction = (target.transform.position - emissionPoint.transform.position).normalized;
         Vector3 endPoint = emissionPoint.transform.position + direction * range;

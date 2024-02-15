@@ -30,9 +30,9 @@ public abstract class LegMovement : PrimaryMovement
         }
     }
 
-    public override void TrackEntity(GameObject trackingTarget)
+    public override void RotateToTrackEntity(GameObject trackingTarget)
     {
-        base.TrackEntity(trackingTarget);
+        base.RotateToTrackEntity(trackingTarget);
         CheckAnchorPositions();
     }
 

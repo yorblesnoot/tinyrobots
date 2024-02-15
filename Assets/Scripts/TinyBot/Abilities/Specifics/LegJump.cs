@@ -6,13 +6,21 @@ using UnityEngine;
 public class LegJump : ParabolicAbility
 {
     [SerializeField] float intervalTime = .2f;
+    [SerializeField] Animator animator;
     public override IEnumerator ExecuteAbility(Vector3 target)
     {
         Vector3[] parabola = GenerateParabola(transform.position, target, parabolaPoints);
+        Vector3 lookTarget = target;
+        lookTarget.y = transform.position.y;
+        animator.Play("Hop");
+        yield return new WaitForSeconds(.4f);
+
         foreach (Vector3 point in parabola)
         {
             yield return StartCoroutine(owner.gameObject.LerpTo(point, intervalTime));
         }
+        animator.Play("Idle");
+        yield return StartCoroutine(owner.PrimaryMovement.NeutralStance());
         Pathfinder3D.GeneratePathingTree(MoveStyle.WALK, Vector3Int.RoundToInt(target));
     }
 

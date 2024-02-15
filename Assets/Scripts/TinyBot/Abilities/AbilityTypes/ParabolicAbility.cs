@@ -10,7 +10,7 @@ public abstract class ParabolicAbility : Ability
     {
         terrainMask = LayerMask.GetMask("Terrain");
     }
-    protected override void FollowEntity(GameObject target)
+    protected override void AimAt(GameObject target)
     {
         Vector3[] points = GenerateParabola(emissionPoint.transform.position, target.transform.position, parabolaPoints);
         points = CastAlongParabola(points).ToArray();

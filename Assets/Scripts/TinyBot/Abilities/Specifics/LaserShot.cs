@@ -17,9 +17,9 @@ public class LaserShot : LinearAbility
         yield break;
     }
 
-    protected override void FollowEntity(GameObject target)
+    protected override void AimAt(GameObject target)
     {
-        base.FollowEntity(target);
+        base.AimAt(target);
         turretTracker.TrackTarget(target);
     }
 }
