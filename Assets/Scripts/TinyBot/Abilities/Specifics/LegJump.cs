@@ -9,7 +9,7 @@ public class LegJump : ParabolicAbility
     [SerializeField] Animator animator;
     public override IEnumerator ExecuteAbility(Vector3 target)
     {
-        Vector3[] parabola = GenerateParabola(transform.position, target, parabolaPoints);
+        Vector3[] parabola = GetTrajectory(transform.position, target);
         Vector3 lookTarget = target;
         lookTarget.y = transform.position.y;
         animator.Play("Hop");
@@ -27,8 +27,8 @@ public class LegJump : ParabolicAbility
     public override bool ConfirmAbility(Vector3 target, out Vector3 confirmedTarget)
     {
         confirmedTarget = target;
-        Vector3[] parabola = GenerateParabola(transform.position, target, parabolaPoints);
-        List<Vector3> scannedParabola = CastAlongParabola(parabola);
+        Vector3[] parabola = GetTrajectory(transform.position, target);
+        List<Vector3> scannedParabola = CastAlongPoints(parabola, LayerMask.GetMask("Terrain"), out _);
         if (scannedParabola.Count < parabola.Length)
         {
             return false;

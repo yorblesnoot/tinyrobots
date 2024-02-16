@@ -246,37 +246,37 @@ PrefabInstance:
     - target: {fileID: 2492069091629794176, guid: 7720e2096f975f944b47c6983c6d88da,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.00756056
+      value: 0.0075723175
       objectReference: {fileID: 0}
     - target: {fileID: 2492069091629794176, guid: 7720e2096f975f944b47c6983c6d88da,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.752
+      value: 0.7519796
       objectReference: {fileID: 0}
     - target: {fileID: 2492069091629794176, guid: 7720e2096f975f944b47c6983c6d88da,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.271
+      value: -1.2709872
       objectReference: {fileID: 0}
     - target: {fileID: 2492069091629794176, guid: 7720e2096f975f944b47c6983c6d88da,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2492069091629794176, guid: 7720e2096f975f944b47c6983c6d88da,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2492069091629794176, guid: 7720e2096f975f944b47c6983c6d88da,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2492069091629794176, guid: 7720e2096f975f944b47c6983c6d88da,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2492069091629794176, guid: 7720e2096f975f944b47c6983c6d88da,
         type: 3}
@@ -286,7 +286,7 @@ PrefabInstance:
     - target: {fileID: 2492069091629794176, guid: 7720e2096f975f944b47c6983c6d88da,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 2492069091629794176, guid: 7720e2096f975f944b47c6983c6d88da,
         type: 3}
@@ -679,15 +679,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c12129b0a81664a9b683fa6f45e7bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: d0abed84aa6f5489fb1695cbcafffef0, type: 3}
   emissionPoint: {fileID: 646414412058972572}
   PreferredCursor: 0
-  owner: {fileID: 0}
   cost: 1
-  range: 10
+  range: 15
+  icon: {fileID: 21300000, guid: d0abed84aa6f5489fb1695cbcafffef0, type: 3}
+  blockingLayers:
+  - Terrain
+  - Shield
+  - Default
+  owner: {fileID: 0}
   laser: {fileID: 4700887371249141454, guid: 96e320672d3da51439a874f0e20d154a, type: 3}
-  shotSpeed: 60
+  travelTime: 0.3
   turretTracker: {fileID: 6848633858222717607}
+  damage: 10
 --- !u!114 &6848633858222717607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -701,4 +706,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aimTarget: {fileID: 6737096417228275589}
-  slowness: 0
+  slowness: 30

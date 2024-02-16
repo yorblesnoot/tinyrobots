@@ -58,32 +58,15 @@ public class PrimaryCursor : MonoBehaviour
     private void Update()
     {
         bool anAbilityIsActive = ClickableAbility.Active != null;
-        if (State == CursorState.FREE) ActiveBehaviour.ControlCursor();
-        if (!anAbilityIsActive && !pathing)
-        {
-            Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
-            if (currentPosition != lastPosition)
-            {
-                lastPosition = currentPosition;
-                currentPath = Pathfinder3D.FindVectorPath(currentPosition, out currentDistance);
-            }
-        }
-
-        if (currentPath == null || anAbilityIsActive)
-        {
-            HideMovePreview();
-        }
-        else
-        {
-            ShowMovePreview();
-        }
 
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
+        if (State == CursorState.FREE) ActiveBehaviour.ControlCursor();
+
         if (Input.GetMouseButtonDown(0))
         {
             if (anAbilityIsActive)
             {
-                if(ClickableAbility.Active.Skill.ConfirmAbility(Transform.position, out var confirmedTarget)
+                if (ClickableAbility.Active.Skill.ConfirmAbility(Transform.position, out var confirmedTarget)
                 && ActiveBot.AttemptToSpendResource(ClickableAbility.Active.Skill.cost, StatType.ACTION))
                 {
                     StatDisplay.SyncStatDisplay(ActiveBot);
@@ -91,13 +74,33 @@ public class PrimaryCursor : MonoBehaviour
                     ClickableAbility.Deactivate();
                 }
             }
-            else if (currentPath != null && ActiveBot.AttemptToSpendResource(currentDistance, StatType.MOVEMENT)) StartCoroutine(TraversePath());
+            else if (currentPath != null && ActiveBot != null && ActiveBot.AttemptToSpendResource(currentDistance, StatType.MOVEMENT)) StartCoroutine(TraversePath());
             else if (TargetedBot != null)
             {
                 SelectBot(TargetedBot);
             }
         }
         else if (Input.GetMouseButtonDown(1)) ClickableAbility.Deactivate();
+
+        
+        if (!pathing && ActiveBot != null)
+        {
+            Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
+            if (currentPosition != lastPosition)
+            {
+                lastPosition = currentPosition;
+                currentPath = Pathfinder3D.FindVectorPath(currentPosition, out currentDistance);
+                
+            }
+        }
+        if (ActiveBot == null || currentPath == null || anAbilityIsActive)
+        {
+            HideMovePreview();
+        }
+        else
+        {
+            ShowMovePreview();
+        }
     }
 
     void ShowMovePreview()

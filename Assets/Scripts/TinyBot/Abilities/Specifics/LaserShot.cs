@@ -5,16 +5,20 @@ using UnityEngine;
 public class LaserShot : LinearAbility
 {
     [SerializeField] GameObject laser;
-    [SerializeField] float shotSpeed;
+    [SerializeField] float travelTime;
     [SerializeField] TurretTracker turretTracker;
+    [SerializeField] int damage;
     public override IEnumerator ExecuteAbility(Vector3 target)
     {
-        Vector3 direction = (target - owner.ChassisPoint.position).normalized;
-        GameObject shot = Instantiate(laser, emissionPoint.transform);
-        shot.transform.SetParent(null);
-        Rigidbody rigidbody = shot.GetComponent<Rigidbody>();
-        rigidbody.velocity = direction * shotSpeed;
-        yield break;
+        Vector3[] trajectory = GetTrajectory(emissionPoint.transform.position, target);
+        List<Vector3> points = CastAlongPoints(trajectory, blockingLayerMask, out var hit);
+        yield return StartCoroutine(LaunchAlongLine(laser, points, travelTime, hit));
+    }
+
+    protected override void CompleteTrajectory(Vector3 position, GameObject launched, GameObject hit)
+    {
+        Destroy(launched);
+        if (hit != null && hit.TryGetComponent(out TinyBot bot)) bot.ReceiveDamage(damage);
     }
 
     protected override void AimAt(GameObject target)
