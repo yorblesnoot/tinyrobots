@@ -18,7 +18,7 @@ public abstract class CursorBehaviour : MonoBehaviour
 
     public abstract void ControlCursor();
 
-    public void ActivateCursor()
+    public virtual void ActivateCursor()
     {
         if (cursorLoadout == null) return;
         cursorLoadout.SetActive(true);

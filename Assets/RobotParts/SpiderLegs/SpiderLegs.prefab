@@ -771,6 +771,30 @@ MonoBehaviour:
   legModel: {fileID: 6062594318300677067}
   anchorUpwardLimit: 2
   anchorDownwardLength: 3
+  legRaise:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.0005493164
+      inSlope: 0.18093187
+      outSlope: 0.18093187
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.061389297
+    - serializedVersion: 3
+      time: 1.0011597
+      value: 0.0005607605
+      inSlope: -0.22157127
+      outSlope: -0.22157127
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.050078016
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   detector: {fileID: 730318562603061130}
   raycastInTilt: 0.15
 --- !u!4 &5740287581094643054 stripped
@@ -1055,7 +1079,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[2]
       value: 
-      objectReference: {fileID: 2100000, guid: b2a89bf7c617eb1458ca72a656711a6c, type: 2}
+      objectReference: {fileID: 2100000, guid: 1b7f71c98895cf84fb34991024a05d05, type: 2}
     - target: {fileID: -4349783323897330468, guid: 3e9188ff44dd3104b85a548d7ddef933,
         type: 3}
       propertyPath: m_LocalPosition.x

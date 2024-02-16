@@ -25,9 +25,9 @@ public class BipedalWalk : LegMovement
     }
     protected override Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral, Vector3 localStartPosition)
     {
-        Vector3 direction = anchor.localBasePosition - localStartPosition;
+        Vector3 direction = transform.forward;
         direction.Normalize();
-        Vector3 initialPosition = anchor.localBasePosition + (goToNeutral ? Vector3.zero : direction * anchorZoneRadius);
+        Vector3 initialPosition = anchor.localBasePosition + (goToNeutral ? Vector3.zero : direction * anchorZoneRadius * 2);
         Vector3 rayPosition = initialPosition;
 
         rayPosition.y += anchorUpwardLimit;

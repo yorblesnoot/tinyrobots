@@ -14,6 +14,7 @@ public abstract class LegMovement : PrimaryMovement
     [SerializeField] protected Transform legModel;
     [SerializeField] protected float anchorUpwardLimit = 2f;
     [SerializeField] protected float anchorDownwardLength = 3f;
+    [SerializeField] AnimationCurve legRaise;
 
     protected bool stepping;
 
@@ -81,7 +82,10 @@ public abstract class LegMovement : PrimaryMovement
         float timeElapsed = 0;
         while (timeElapsed < legStepDuration)
         {
-            anchor.ikTarget.localPosition = Vector3.Lerp(localStartPosition, finalPosition, timeElapsed / legStepDuration);
+            float interpolator = timeElapsed / legStepDuration;
+            Vector3 targetPosition = Vector3.Lerp(localStartPosition, finalPosition, interpolator);
+            targetPosition.y += legRaise.Evaluate(interpolator);
+            anchor.ikTarget.localPosition = targetPosition;
             timeElapsed += Time.deltaTime;
             yield return null;
         }

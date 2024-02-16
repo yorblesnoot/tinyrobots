@@ -11,6 +11,12 @@ public class AirCursor : CursorBehaviour
         layerMask = LayerMask.GetMask("Ignore Raycast");
     }
 
+    public override void ActivateCursor()
+    {
+        base.ActivateCursor();
+        cursorLoadout.transform.position = PrimaryCursor.Transform.position;
+    }
+
     public override void ControlCursor()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
