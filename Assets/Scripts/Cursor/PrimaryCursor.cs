@@ -66,11 +66,11 @@ public class PrimaryCursor : MonoBehaviour
         {
             if (anAbilityIsActive)
             {
-                if (ClickableAbility.Active.Skill.ConfirmAbility(Transform.position, out var confirmedTarget)
+                if (ClickableAbility.Active.Skill.AbilityUsableAtCurrentTarget()
                 && ActiveBot.AttemptToSpendResource(ClickableAbility.Active.Skill.cost, StatType.ACTION))
                 {
                     StatDisplay.SyncStatDisplay(ActiveBot);
-                    StartCoroutine(ClickableAbility.Active.Skill.ExecuteAbility(confirmedTarget));
+                    StartCoroutine(ClickableAbility.Active.Skill.ExecuteAbility());
                     ClickableAbility.Deactivate();
                 }
             }

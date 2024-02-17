@@ -27,6 +27,6 @@ public abstract class CursorBehaviour : MonoBehaviour
     public void DeactivateCursor()
     {
         if (cursorLoadout == null) return;
-        cursorLoadout.SetActive(true);
+        cursorLoadout.SetActive(false);
     }
 }

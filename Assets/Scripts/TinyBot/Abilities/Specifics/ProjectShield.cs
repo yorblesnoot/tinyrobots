@@ -6,10 +6,10 @@ public class ProjectShield : LinearAbility
 {
     [SerializeField] GameObject ikTarget;
     [SerializeField] float shieldDistance = 1f;
-    [SerializeField] string aniBool = "shieldUp";
-    [SerializeField] float slowness = 100f;
+    [SerializeField] float slowness = 50f;
     [SerializeField] Animator animator;
-    public override IEnumerator ExecuteAbility(Vector3 target)
+    Vector3 basePosition;
+    public override IEnumerator ExecuteAbility()
     {
         animator.SetBool("barrierUp", true);
         yield break;
@@ -17,7 +17,7 @@ public class ProjectShield : LinearAbility
 
     private void Start()
     {
-        //ikTarget.transform.position -= owner.transform.up;
+        basePosition = ikTarget.transform.localPosition;
     }
 
     protected override void AimAt(GameObject target)

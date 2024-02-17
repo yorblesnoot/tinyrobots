@@ -15,6 +15,7 @@ public abstract class Ability : MonoBehaviour
     protected int blockingLayerMask;
 
     GameObject trackedTarget;
+    protected Vector3 targetedPosition;
     
     [HideInInspector] public TinyBot owner;
 
@@ -22,18 +23,22 @@ public abstract class Ability : MonoBehaviour
     {
         blockingLayerMask = LayerMask.GetMask(blockingLayers);
     }
-    public abstract IEnumerator ExecuteAbility(Vector3 target);
+    public abstract IEnumerator ExecuteAbility();
     protected virtual void AimAt(GameObject target)
     {
-        Vector3[] targets = GetTrajectory(emissionPoint.transform.position, target.transform.position);
+        Vector3 sourcePosition = emissionPoint.transform.position;
+        Vector3 targetPosition = target.transform.position;
+        Vector3 direction = (targetPosition - sourcePosition).normalized;
+        Vector3 modifiedTarget = sourcePosition + direction * range;
+        targetedPosition = modifiedTarget;
+        Vector3[] targets = GetTrajectory(sourcePosition, modifiedTarget);
         List<Vector3> points = CastAlongPoints(targets, blockingLayerMask, out _);
         LineMaker.DrawLine(points.ToArray());
     }
 
     protected abstract Vector3[] GetTrajectory(Vector3 source, Vector3 target);
-    public virtual bool ConfirmAbility(Vector3 target, out Vector3 confirmedTarget)
+    public virtual bool AbilityUsableAtCurrentTarget()
     {
-        confirmedTarget = target;
         return true;
     }
 

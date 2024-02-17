@@ -8,9 +8,9 @@ public class LaserShot : LinearAbility
     [SerializeField] float travelTime;
     [SerializeField] TurretTracker turretTracker;
     [SerializeField] int damage;
-    public override IEnumerator ExecuteAbility(Vector3 target)
+    public override IEnumerator ExecuteAbility()
     {
-        Vector3[] trajectory = GetTrajectory(emissionPoint.transform.position, target);
+        Vector3[] trajectory = GetTrajectory(emissionPoint.transform.position, targetedPosition);
         List<Vector3> points = CastAlongPoints(trajectory, blockingLayerMask, out var hit);
         yield return StartCoroutine(LaunchAlongLine(laser, points, travelTime, hit));
     }

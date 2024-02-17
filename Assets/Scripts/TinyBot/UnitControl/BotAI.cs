@@ -43,7 +43,7 @@ public class BotAI
                     ability.LockOnTo(target.ChassisPoint.gameObject);
                     yield return new WaitForSeconds(lockTime);
                     thisBot.AttemptToSpendResource(ability.cost, StatType.ACTION);
-                    yield return thisBot.StartCoroutine(ability.ExecuteAbility(location));
+                    yield return thisBot.StartCoroutine(ability.ExecuteAbility());
                     ability.ReleaseLock();
                     yield break;
                 }
