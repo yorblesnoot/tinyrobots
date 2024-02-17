@@ -7,35 +7,27 @@ public class LegJump : ParabolicAbility
 {
     [SerializeField] float intervalTime = .2f;
     [SerializeField] Animator animator;
-    public override IEnumerator ExecuteAbility()
+    protected override IEnumerator PerformEffects()
     {
-        Vector3[] parabola = GetTrajectory(transform.position, targetedPosition);
-        Vector3 lookTarget = targetedPosition;
+        Vector3 lookTarget = targetTrajectory.Last();
         lookTarget.y = transform.position.y;
         animator.Play("Hop");
         yield return new WaitForSeconds(.4f);
 
-        foreach (Vector3 point in parabola)
+        foreach (Vector3 point in targetTrajectory)
         {
             yield return StartCoroutine(owner.gameObject.LerpTo(point, intervalTime));
         }
         animator.Play("Idle");
         yield return StartCoroutine(owner.PrimaryMovement.NeutralStance());
-        Pathfinder3D.GeneratePathingTree(MoveStyle.WALK, Vector3Int.RoundToInt(targetedPosition));
+        Pathfinder3D.GeneratePathingTree(MoveStyle.WALK, Vector3Int.RoundToInt(owner.transform.position));
     }
 
-    public override bool AbilityUsableAtCurrentTarget()
+    public override bool IsUsable(Vector3 sourcePosition)
     {
-        Vector3[] parabola = GetTrajectory(transform.position, targetedPosition);
-        List<Vector3> scannedParabola = CastAlongPoints(parabola, LayerMask.GetMask("Terrain"), out _);
-        if (scannedParabola.Count < parabola.Length)
+        if (Pathfinder3D.GetLandingPointBy(targetTrajectory[^1], MoveStyle.WALK, out Vector3Int nodeTarget))
         {
-            return false;
-        }
-        Vector3 finalTarget = scannedParabola.Last();
-        if (Pathfinder3D.GetLandingPointBy(finalTarget, MoveStyle.WALK, out Vector3Int nodeTarget))
-        {
-            targetedPosition = nodeTarget;
+            targetTrajectory[^1] = nodeTarget;
             return true;
         }
         return false;

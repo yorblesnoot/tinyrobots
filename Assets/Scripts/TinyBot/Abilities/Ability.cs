@@ -9,44 +9,41 @@ public abstract class Ability : MonoBehaviour
     public CursorType PreferredCursor;
     public int cost;
     public int range;
+    public int cooldown;
     public Sprite icon;
 
     public string[] blockingLayers;
     protected int blockingLayerMask;
 
     GameObject trackedTarget;
-    protected Vector3 targetedPosition;
+    protected List<Vector3> targetTrajectory;
     
     [HideInInspector] public TinyBot owner;
 
-    private void Awake()
+    public IEnumerator Execute()
     {
-        blockingLayerMask = LayerMask.GetMask(blockingLayers);
+        PrimaryCursor.actionInProgress = true;
+        yield return StartCoroutine(PerformEffects());
+        PrimaryCursor.actionInProgress = false;
     }
-    public abstract IEnumerator ExecuteAbility();
-    protected virtual void AimAt(GameObject target)
+    public GameObject GhostAimAt(GameObject target, Vector3 sourcePosition)
     {
-        Vector3 sourcePosition = emissionPoint.transform.position;
         Vector3 targetPosition = target.transform.position;
+        float distance = Vector3.Distance(sourcePosition, targetPosition);
         Vector3 direction = (targetPosition - sourcePosition).normalized;
-        Vector3 modifiedTarget = sourcePosition + direction * range;
-        targetedPosition = modifiedTarget;
+        Vector3 modifiedTarget = sourcePosition + direction * Mathf.Min(distance, range);
         Vector3[] targets = GetTrajectory(sourcePosition, modifiedTarget);
-        List<Vector3> points = CastAlongPoints(targets, blockingLayerMask, out _);
-        LineMaker.DrawLine(points.ToArray());
+        targetTrajectory = CastAlongPoints(targets, blockingLayerMask, out var hit);
+        return hit;
     }
-
-    protected abstract Vector3[] GetTrajectory(Vector3 source, Vector3 target);
-    public virtual bool AbilityUsableAtCurrentTarget()
+    public virtual bool IsUsable(Vector3 sourcePosition)
     {
         return true;
     }
-
     public virtual void LockOnTo(GameObject target)
     {
         trackedTarget = target;
     }
-
     public virtual void ReleaseLock()
     {
         trackedTarget = null;
@@ -55,6 +52,10 @@ public abstract class Ability : MonoBehaviour
     }
 
     readonly float overlapLength = .1f;
+    private void Awake()
+    {
+        blockingLayerMask = LayerMask.GetMask(blockingLayers);
+    }
     protected virtual List<Vector3> CastAlongPoints(Vector3[] castTargets, int mask, out GameObject hit)
     {
         hit = null;
@@ -102,7 +103,19 @@ public abstract class Ability : MonoBehaviour
         }
         CompleteTrajectory(trajectory.Last(), spawned, hit);
     }
-
+    protected abstract Vector3[] GetTrajectory(Vector3 source, Vector3 target);
+    protected abstract IEnumerator PerformEffects();
+    protected virtual void AimAt(GameObject target)
+    {
+        Vector3 sourcePosition = emissionPoint.transform.position;
+        Vector3 targetPosition = target.transform.position;
+        float distance = Vector3.Distance(sourcePosition, targetPosition);
+        Vector3 direction = (targetPosition - sourcePosition).normalized;
+        Vector3 modifiedTarget = sourcePosition + direction * Mathf.Min(distance, range);
+        Vector3[] targets = GetTrajectory(sourcePosition, modifiedTarget);
+        targetTrajectory = CastAlongPoints(targets, blockingLayerMask, out _);
+        LineMaker.DrawLine(targetTrajectory.ToArray());
+    }
     protected virtual void CompleteTrajectory(Vector3 position, GameObject launched, GameObject hit) { }
     void Update()
     {

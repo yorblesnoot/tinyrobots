@@ -43,7 +43,7 @@ public class BotAI
                     ability.LockOnTo(target.ChassisPoint.gameObject);
                     yield return new WaitForSeconds(lockTime);
                     thisBot.AttemptToSpendResource(ability.cost, StatType.ACTION);
-                    yield return thisBot.StartCoroutine(ability.ExecuteAbility());
+                    yield return thisBot.StartCoroutine(ability.Execute());
                     ability.ReleaseLock();
                     yield break;
                 }
@@ -59,8 +59,8 @@ public class BotAI
                 {
                     Vector3 direction = enemy.ChassisPoint.position - location;
                     Ray testRay = new(location, direction);
-                    if (!Physics.Raycast(testRay, out RaycastHit hitInfo, ability.range)) continue;
-                    if (!hitInfo.collider.TryGetComponent(out TinyBot bot)) continue;
+                    GameObject hit = ability.GhostAimAt(enemy.ChassisPoint.gameObject, location);
+                    if (hit == null || !hit.TryGetComponent<TinyBot>(out _)) continue;
                     target = enemy;
                     return true;
                 }

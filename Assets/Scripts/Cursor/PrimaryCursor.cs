@@ -36,10 +36,10 @@ public class PrimaryCursor : MonoBehaviour
     static StatDisplay StatDisplay;
     static UnitControl AbilityUI;
 
-    static bool pathing = false;
+    public static bool actionInProgress = false;
     private void Awake()
     {
-        pathing = false;
+        actionInProgress = false;
         TinyBot.ClearActiveBot.AddListener(() => pathingLine.positionCount = 0);
     }
     private void Start()
@@ -66,11 +66,12 @@ public class PrimaryCursor : MonoBehaviour
         {
             if (anAbilityIsActive)
             {
-                if (ClickableAbility.Active.Skill.AbilityUsableAtCurrentTarget()
-                && ActiveBot.AttemptToSpendResource(ClickableAbility.Active.Skill.cost, StatType.ACTION))
+                Ability skill = ClickableAbility.Active.Skill;
+                if (skill.IsUsable(ActiveBot.transform.position)
+                && ActiveBot.AttemptToSpendResource(skill.cost, StatType.ACTION))
                 {
                     StatDisplay.SyncStatDisplay(ActiveBot);
-                    StartCoroutine(ClickableAbility.Active.Skill.ExecuteAbility());
+                    StartCoroutine(skill.Execute());
                     ClickableAbility.Deactivate();
                 }
             }
@@ -83,7 +84,7 @@ public class PrimaryCursor : MonoBehaviour
         else if (Input.GetMouseButtonDown(1)) ClickableAbility.Deactivate();
 
         
-        if (!pathing && ActiveBot != null)
+        if (!actionInProgress && ActiveBot != null)
         {
             Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
             if (currentPosition != lastPosition)
@@ -93,7 +94,7 @@ public class PrimaryCursor : MonoBehaviour
                 
             }
         }
-        if (ActiveBot == null || currentPath == null || anAbilityIsActive)
+        if (ActiveBot == null || currentPath == null || actionInProgress || anAbilityIsActive)
         {
             HideMovePreview();
         }
@@ -110,6 +111,7 @@ public class PrimaryCursor : MonoBehaviour
         pathingLine.positionCount = currentPath.Count;
         pathingLine.SetPositions(currentPath.ToArray());
     }
+
     void HideMovePreview()
     {
         numRotator.SetActive(false);
@@ -118,11 +120,11 @@ public class PrimaryCursor : MonoBehaviour
 
     private IEnumerator TraversePath()
     {
-        pathing = true;
+        actionInProgress = true;
         yield return StartCoroutine(ActiveBot.PrimaryMovement.PathToPoint(currentPath));
         StatDisplay.SyncStatDisplay(ActiveBot);
         Pathfinder3D.GeneratePathingTree(ActiveBot.PrimaryMovement.Style, Vector3Int.RoundToInt(ActiveBot.transform.position));
-        pathing = false;
+        actionInProgress = false;
     }
 
     public static void SelectBot(TinyBot bot)
@@ -149,13 +151,11 @@ public class PrimaryCursor : MonoBehaviour
         State = CursorState.UNITSNAPPED;
         Transform.position = unit.ChassisPoint.position;
     }
-
     public static void Unsnap()
     {
         if (State != CursorState.UNITSNAPPED) return;
         State = CursorState.FREE;
     }
-
 
     [System.Serializable]
     class CursorMapping

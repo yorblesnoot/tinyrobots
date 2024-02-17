@@ -9,10 +9,24 @@ public class ProjectShield : LinearAbility
     [SerializeField] float slowness = 50f;
     [SerializeField] Animator animator;
     Vector3 basePosition;
-    public override IEnumerator ExecuteAbility()
+    protected override IEnumerator PerformEffects()
     {
         animator.SetBool("barrierUp", true);
+        owner.beganTurn.AddListener(BeginLowerShield);
         yield break;
+    }
+
+    void BeginLowerShield()
+    {
+        StartCoroutine(LowerShield());
+    }
+
+    IEnumerator LowerShield()
+    {
+        owner.beganTurn.RemoveListener(BeginLowerShield);
+        animator.SetBool("barrierUp", false);
+        yield return new WaitForSeconds(1f);
+        StartCoroutine(ikTarget.LerpTo(basePosition, 1f, true));
     }
 
     private void Start()

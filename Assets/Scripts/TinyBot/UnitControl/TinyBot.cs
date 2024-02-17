@@ -32,6 +32,7 @@ public class TinyBot : MonoBehaviour
     public Transform ChassisPoint;
 
     public static UnityEvent ClearActiveBot = new();
+    public UnityEvent beganTurn;
 
     BotAI botAI;
 
@@ -39,6 +40,7 @@ public class TinyBot : MonoBehaviour
     List<GameObject> Parts;
     public void Initialize(List<Ability> abilities, List<GameObject> parts, PrimaryMovement primaryMovement)
     {
+        beganTurn = new();
         Parts = parts;
         Abilities = abilities;
         PrimaryMovement = primaryMovement;
@@ -55,7 +57,7 @@ public class TinyBot : MonoBehaviour
 
     public void BeginTurn()
     {
-        
+        beganTurn?.Invoke();
         Stats.SetToMax(StatType.ACTION);
         Stats.SetToMax(StatType.MOVEMENT);
         if (allegiance == Allegiance.PLAYER) availableForTurn = true;
