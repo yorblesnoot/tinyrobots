@@ -25,7 +25,7 @@ public abstract class PrimaryMovement : MonoBehaviour
 
         Vector3 direction = worldTarget - Owner.transform.position;
 
-        Quaternion toRotation = Quaternion.LookRotation(direction, transform.up);
+        Quaternion toRotation = Quaternion.LookRotation(direction, Owner.transform.up);
         Owner.transform.rotation = Quaternion.Slerp(Owner.transform.rotation, toRotation, lookSpeed * Time.deltaTime);
     }
 }

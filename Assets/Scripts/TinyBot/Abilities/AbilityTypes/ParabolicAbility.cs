@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ParabolicAbility : Ability
+public abstract class ParabolicAbility : ProjectileAbility
 {
     [SerializeField] protected int parabolaPoints = 10;
     [SerializeField] float gravityAccel = -.98f;

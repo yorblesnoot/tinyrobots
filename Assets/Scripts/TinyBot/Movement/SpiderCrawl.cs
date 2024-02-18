@@ -37,7 +37,7 @@ public class SpiderCrawl : LegMovement
         Vector3 rayPosition = initialPosition;
 
 
-        rayPosition.y += anchorUpwardLimit;
+        rayPosition.y -= anchorUpwardLimit;
         Vector3 secondaryRayPosition = rayPosition;
 
         rayPosition = legModel.TransformPoint(rayPosition);

@@ -18,12 +18,12 @@ public class ProjectShield : LinearAbility
 
     void BeginLowerShield()
     {
+        owner.beganTurn.RemoveListener(BeginLowerShield);
         StartCoroutine(LowerShield());
     }
 
     IEnumerator LowerShield()
     {
-        owner.beganTurn.RemoveListener(BeginLowerShield);
         animator.SetBool("barrierUp", false);
         yield return new WaitForSeconds(1f);
         StartCoroutine(ikTarget.LerpTo(basePosition, 1f, true));

@@ -55,7 +55,7 @@ public abstract class LegMovement : PrimaryMovement
     }
     protected IEnumerator InterpolatePositionAndRotation(Transform unit, Vector3 target)
     {
-        Quaternion startRotation = transform.rotation;
+        Quaternion startRotation = unit.rotation;
         Quaternion targetRotation = GetRotationAtPosition(target);
 
         Vector3 startPosition = unit.position;

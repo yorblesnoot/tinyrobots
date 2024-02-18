@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class LinearAbility : Ability
+public abstract class LinearAbility : ProjectileAbility
 {
     protected override Vector3[] GetTrajectory(Vector3 source, Vector3 target)
     {

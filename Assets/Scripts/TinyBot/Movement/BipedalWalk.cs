@@ -29,9 +29,9 @@ public class BipedalWalk : LegMovement
         direction.Normalize();
         Vector3 initialPosition = anchor.localBasePosition + (goToNeutral ? Vector3.zero : direction * anchorZoneRadius * 2);
         Vector3 rayPosition = initialPosition;
-
-        rayPosition.y += anchorUpwardLimit;
         rayPosition = legModel.TransformPoint(rayPosition);
+        rayPosition.y += anchorUpwardLimit;
+        
         Ray ray = new(rayPosition, Vector3.down);
         Vector3 finalPosition = initialPosition;
         if (Physics.Raycast(ray, out var hitInfo, anchorDownwardLength, LayerMask.GetMask("Terrain")))
