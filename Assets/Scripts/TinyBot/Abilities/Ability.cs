@@ -10,6 +10,7 @@ public abstract class Ability : MonoBehaviour
     public int cost;
     public int range;
     public int cooldown;
+    public int damage;
     public Sprite icon;
 
     public string[] blockingLayers;
@@ -22,9 +23,11 @@ public abstract class Ability : MonoBehaviour
         blockingLayerMask = LayerMask.GetMask(blockingLayers);
     }
 
+    readonly float skillDelay = .5f;
     public IEnumerator Execute()
     {
         PrimaryCursor.actionInProgress = true;
+        yield return new WaitForSeconds(skillDelay);
         yield return StartCoroutine(PerformEffects());
         PrimaryCursor.actionInProgress = false;
     }

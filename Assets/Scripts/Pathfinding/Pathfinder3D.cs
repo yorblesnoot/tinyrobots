@@ -111,15 +111,21 @@ public static class Pathfinder3D
         return nodeMap.Values.Where(node => node.G <= moveBudget).OrderBy(node => node.G).Select(node => node.location).ToList();
     }
 
-    public static List<Vector3> FindVectorPath(Vector3Int end, out float distance)
+    public static List<Vector3> FindVectorPath(Vector3Int end, out List<float> gValues)
     {
-        distance = 0;
+        gValues = new();
+        List<Vector3> worldPath = new();
         List<PathfindingNode> path = FindPath(end);
         if (path == null || path.Count == 0) return null;
-        List<Vector3> worldPath = path.Select(x => x.location.ToWorldVector()).ToList();
-        distance = nodeMap[end].G;
+        foreach(var node in path)
+        {
+            worldPath.Add(node.location.ToWorldVector());
+            gValues.Add(node.G);
+        }
         return worldPath;
     }
+
+
 
     public static void GeneratePathingTree(MoveStyle style, Vector3Int startCoords)
     {

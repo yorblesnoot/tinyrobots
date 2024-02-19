@@ -7,6 +7,7 @@ public class SpiderCrawl : LegMovement
 {
     [SerializeField] SphereCollider detector;
     [SerializeField][Range(0f, 1f)] float raycastInTilt;
+    [SerializeField] float anchorInwardLength;
 
     public override IEnumerator PathToPoint(List<Vector3> path)
     {
@@ -37,20 +38,20 @@ public class SpiderCrawl : LegMovement
         Vector3 rayPosition = initialPosition;
 
 
-        rayPosition.y -= anchorUpwardLimit;
+        rayPosition.y += anchorUpwardLimit;
         Vector3 secondaryRayPosition = rayPosition;
 
         rayPosition = legModel.TransformPoint(rayPosition);
         secondaryRayPosition = legModel.TransformPoint(secondaryRayPosition);
         Vector3 centerDirection = transform.position - secondaryRayPosition;
         centerDirection.Normalize();
-        Vector3 finalDirection = Vector3.Slerp(-transform.up, centerDirection, raycastInTilt);
+        Vector3 finalDirection = Vector3.Slerp(-Owner.transform.up, centerDirection, raycastInTilt);
 
         Ray ray = new(rayPosition, finalDirection);
         Ray secondRay = new(secondaryRayPosition, centerDirection);
         Vector3 finalPosition = initialPosition;
         if (Physics.Raycast(ray, out var hitInfo, anchorDownwardLength, LayerMask.GetMask("Terrain"))
-            || Physics.Raycast(secondRay, out hitInfo, anchorDownwardLength, LayerMask.GetMask("Terrain")))
+            || Physics.Raycast(secondRay, out hitInfo, anchorInwardLength, LayerMask.GetMask("Terrain")))
         {
             finalPosition = hitInfo.point;
             finalPosition = legModel.InverseTransformPoint(finalPosition);

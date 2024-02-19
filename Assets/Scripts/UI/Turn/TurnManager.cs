@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TurnManager : MonoBehaviour
 {
@@ -120,12 +121,12 @@ public class TurnManager : MonoBehaviour
 
     private static void PlayerWin()
     {
-        throw new NotImplementedException();
+        SceneManager.LoadScene(1);
     }
 
     static void GameOver()
     {
-
+        SceneManager.LoadScene(0);
     }
 
     static void ArrangePortraits(HashSet<TinyBot> active)

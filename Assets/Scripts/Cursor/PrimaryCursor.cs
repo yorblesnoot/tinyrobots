@@ -30,6 +30,7 @@ public class PrimaryCursor : MonoBehaviour
     [SerializeField] UnitControl abilityUI;
     [SerializeField] StatDisplay statDisplay;
     [SerializeField] LineRenderer pathingLine;
+    [SerializeField] LineRenderer redLine;
     [SerializeField] GameObject numRotator;
     [SerializeField] TMP_Text moveCostPreview;
 
@@ -54,7 +55,7 @@ public class PrimaryCursor : MonoBehaviour
 
     Vector3Int lastPosition;
     List<Vector3> currentPath;
-    float currentDistance;
+    int currentPathCost;
     private void Update()
     {
         bool anAbilityIsActive = ClickableAbility.Active != null;
@@ -62,8 +63,10 @@ public class PrimaryCursor : MonoBehaviour
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
         if (State == CursorState.FREE) ActiveBehaviour.ControlCursor();
 
+        
         if (Input.GetMouseButtonDown(0))
         {
+            //ability use
             if (anAbilityIsActive)
             {
                 Ability skill = ClickableAbility.Active.Skill;
@@ -75,47 +78,76 @@ public class PrimaryCursor : MonoBehaviour
                     ClickableAbility.Deactivate();
                 }
             }
-            else if (currentPath != null && ActiveBot != null && ActiveBot.AttemptToSpendResource(currentDistance, StatType.MOVEMENT)) StartCoroutine(TraversePath());
             else if (TargetedBot != null)
             {
                 SelectBot(TargetedBot);
+                HideMovePreview();
             }
+            //traverse a confirmed path
+            else if (currentPath != null && ActiveBot != null 
+                && currentPathCost <= ActiveBot.Stats.Current[StatType.MOVEMENT] 
+                && ActiveBot.AttemptToSpendResource(currentPathCost, StatType.MOVEMENT)) 
+                StartCoroutine(TraversePath());
+            
         }
         else if (Input.GetMouseButtonDown(1)) ClickableAbility.Deactivate();
 
-        
+        //generate new path
         if (!actionInProgress && ActiveBot != null)
         {
             Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
             if (currentPosition != lastPosition)
             {
                 lastPosition = currentPosition;
-                currentPath = Pathfinder3D.FindVectorPath(currentPosition, out currentDistance);
-                
+                List<Vector3> possiblePath = Pathfinder3D.FindVectorPath(currentPosition, out List<float> distances);
+                if(possiblePath != null && possiblePath.Count > 0)
+                {
+                    ProcessAndPreviewPath(possiblePath, distances);
+                }                
             }
         }
-        if (ActiveBot == null || currentPath == null || actionInProgress || anAbilityIsActive)
+        //toggle path preview
+        if (ActiveBot == null || actionInProgress || anAbilityIsActive)
         {
             HideMovePreview();
         }
-        else
-        {
-            ShowMovePreview();
-        }
     }
 
-    void ShowMovePreview()
+    void ProcessAndPreviewPath(List<Vector3> possiblePath, List<float> distances)
     {
         numRotator.SetActive(true);
-        moveCostPreview.text = Mathf.RoundToInt(currentDistance).ToString() + " ft";
+        numRotator.transform.SetParent(null);
+        numRotator.transform.position = possiblePath[^1];
+        moveCostPreview.text = Mathf.RoundToInt(distances[^1]).ToString() + " ft";
+        currentPath = new();
+        List<Vector3> redPath = new();
+        int pathIndex = 0;
+        float currentMove = ActiveBot.Stats.Current[StatType.MOVEMENT];
+        while (pathIndex < possiblePath.Count)
+        {
+            float distance = distances[pathIndex];
+            
+            if (distance <= currentMove + 1)
+                currentPath.Add(possiblePath[pathIndex]);
+            if (distance >= currentMove - 1)
+                redPath.Add(possiblePath[pathIndex]);
+            pathIndex++;
+        }
+        
         pathingLine.positionCount = currentPath.Count;
         pathingLine.SetPositions(currentPath.ToArray());
+        
+        currentPathCost = currentPath.Count > 0 ? Mathf.RoundToInt(distances[currentPath.Count-1]) : 0;
+        redLine.positionCount = redPath.Count;
+        redLine.SetPositions(redPath.ToArray());
+        moveCostPreview.color = redPath.Count > 0 ? Color.red : Color.white;
     }
 
     void HideMovePreview()
     {
         numRotator.SetActive(false);
         pathingLine.positionCount = 0;
+        redLine.positionCount = 0;
     }
 
     private IEnumerator TraversePath()
@@ -154,6 +186,7 @@ public class PrimaryCursor : MonoBehaviour
     public static void Unsnap()
     {
         if (State != CursorState.UNITSNAPPED) return;
+        TargetedBot = null;
         State = CursorState.FREE;
     }
 

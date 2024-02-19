@@ -48,7 +48,7 @@ public class TinyBot : MonoBehaviour
         ClearActiveBot.AddListener(ClearActiveUnit);
     }
 
-    public bool AttemptToSpendResource(float resource, StatType statType)
+    public bool AttemptToSpendResource(int resource, StatType statType)
     {
         if (resource > Stats.Current[statType]) return false;
         Stats.Current[statType] -= resource;

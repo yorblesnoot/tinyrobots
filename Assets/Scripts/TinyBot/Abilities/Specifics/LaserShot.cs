@@ -7,7 +7,6 @@ public class LaserShot : LinearAbility
     [SerializeField] GameObject laser;
     [SerializeField] float travelTime;
     [SerializeField] TurretTracker turretTracker;
-    [SerializeField] int damage;
     protected override IEnumerator PerformEffects()
     {
         List<Vector3> points = CastAlongPoints(targetTrajectory.ToArray(), blockingLayerMask, out var hit);

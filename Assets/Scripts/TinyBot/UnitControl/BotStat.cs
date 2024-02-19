@@ -9,8 +9,8 @@ public enum StatType
 }
 public class BotStats
 {
-    public Dictionary<StatType, float> Max;
-    public Dictionary<StatType, float> Current;
+    public Dictionary<StatType, int> Max;
+    public Dictionary<StatType, int> Current;
 
     public BotStats()
     {
@@ -18,21 +18,21 @@ public class BotStats
         Current = new();
         foreach(StatType type in Enum.GetValues(typeof(StatType)))
         {
-            Max.Add(type, 0f);
-            Current.Add(type, 0f);
+            Max.Add(type, 0);
+            Current.Add(type, 0);
         }
         SetSampleStats();
     }
 
     void SetSampleStats()
     {
-        Max[StatType.ACTION] = 3f;
-        Max[StatType.MOVEMENT] = 15f;
-        Max[StatType.HEALTH] = 50f;
+        Max[StatType.ACTION] = 3;
+        Max[StatType.MOVEMENT] = 15;
+        Max[StatType.HEALTH] = 50;
 
-        Current[StatType.ACTION] = 3f;
-        Current[StatType.MOVEMENT] = 10f;
-        Current[StatType.HEALTH] = 50f;
+        Current[StatType.ACTION] = 3;
+        Current[StatType.MOVEMENT] = 10;
+        Current[StatType.HEALTH] = 50;
     }
 
     public void SetToMax(StatType type)
