@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,15 +12,18 @@ public class TurnPortrait : MonoBehaviour
     [SerializeField] Color neutralColor;
 
     [SerializeField] Animator animator;
+
+    TinyBot thisBot;
     public void Become(TinyBot bot)
     {
+        thisBot = bot;
         gameObject.SetActive(true);
         //animator.Play("Idle");
         
         if (bot.allegiance == Allegiance.PLAYER)
         {
             frame.color = allyColor;
-            selectButton.onClick.AddListener(() => PrimaryCursor.SelectBot(bot));
+            selectButton.onClick.AddListener(SelectThroughPortrait);
         }
         else if(bot.allegiance == Allegiance.ENEMY)
         {
@@ -31,8 +32,15 @@ public class TurnPortrait : MonoBehaviour
         cardPortrait.sprite = bot.portrait;
     }
 
+    void SelectThroughPortrait()
+    {
+        PrimaryCursor.SelectBot(thisBot);
+        MainCameraControl.CutToUnit(thisBot);
+    }
+
     public void Clear()
     {
+        thisBot = null;
         selectButton.onClick.RemoveAllListeners();
         gameObject.SetActive(false);
     }

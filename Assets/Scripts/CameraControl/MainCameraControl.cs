@@ -1,8 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class CameraControl : MonoBehaviour
+public class MainCameraControl : MonoBehaviour
 {
-    [SerializeField] Transform focusPoint;
     [SerializeField] float rotationSpeed = .1f;
     [SerializeField] float scrollSpeed = 1f;
     [SerializeField] float scrollZoneX;
@@ -18,6 +20,15 @@ public class CameraControl : MonoBehaviour
 
     Quaternion startRotation;
     Vector3 initialClick;
+
+    Vector3 mapCorner;
+
+    static Transform focalPoint;
+    public void Initialize(byte[,,] map)
+    {
+        mapCorner = new(map.GetLength(0), map.GetLength(1), map.GetLength(2));
+        focalPoint = transform;
+    }
 
     private void Update()
     {
@@ -42,10 +53,10 @@ public class CameraControl : MonoBehaviour
 
         if (Input.GetMouseButtonDown(2))
         {
-            startRotation = focusPoint.rotation;
+            startRotation = transform.rotation;
             initialClick = Input.mousePosition;
             PrimaryCursor.State = CursorState.SPACELOCKED;
-            StartCoroutine(focusPoint.gameObject.LerpTo(PrimaryCursor.Transform.position, originReturnTime));
+            StartCoroutine(gameObject.LerpTo(PrimaryCursor.Transform.position, originReturnTime));
         }
         else if(Input.GetMouseButtonUp(2)) PrimaryCursor.State = CursorState.FREE;
         else if (Input.GetMouseButton(2))
@@ -60,7 +71,7 @@ public class CameraControl : MonoBehaviour
             
             if (invertedAngle) finalEulerRotation.x = Mathf.Clamp(finalEulerRotation.x, -maxTiltAngle, 0);
             else finalEulerRotation.x = Mathf.Clamp(finalEulerRotation.x, 360-maxTiltAngle, 360);
-            focusPoint.rotation = Quaternion.Euler(finalEulerRotation);
+            transform.rotation = Quaternion.Euler(finalEulerRotation);
         }
         else
         {
@@ -85,7 +96,10 @@ public class CameraControl : MonoBehaviour
         Quaternion yRotation = Quaternion.Euler(eulerRotation);
 
         moveOffset *= scrollSpeed;
-        transform.position += yRotation * moveOffset;
+        Vector3 slidPosition = transform.position + yRotation * moveOffset;
+        //clamp focus point within map bounds
+        slidPosition = slidPosition.Clamp(Vector3.zero, mapCorner);
+        transform.position = slidPosition;
     }
 
     private void Zoom(float factor)
@@ -93,5 +107,33 @@ public class CameraControl : MonoBehaviour
         Vector3 cameraPosition = Camera.main.transform.localPosition;
         cameraPosition.z = Mathf.Clamp(cameraPosition.z + factor, minZoom, maxZoom);
         Camera.main.transform.localPosition = cameraPosition;
+    }
+    static Vector3Int[] directions = {
+            new Vector3Int(-1, -1, 0), new Vector3Int(1, -1, 0),  // Edges along xy-plane
+            new Vector3Int(-1, 1, 0), new Vector3Int(1, 1, 0),    // Edges along xy-plane
+            new Vector3Int(-1, 0, -1), new Vector3Int(1, 0, -1),  // Edges along xz-plane
+            new Vector3Int(0, -1, -1), new Vector3Int(0, 1, -1),  // Edges along yz-plane
+            new Vector3Int(-1, -1, -1), new Vector3Int(1, -1, -1),  // Corners
+            new Vector3Int(-1, 1, -1), new Vector3Int(1, 1, -1),    // Corners
+            new Vector3Int(-1, -1, 1), new Vector3Int(1, -1, 1),    // Corners
+            new Vector3Int(-1, 1, 1), new Vector3Int(1, 1, 1)        // Corners
+    };
+    public static void CutToUnit(TinyBot bot)
+    {
+        focalPoint.position = bot.transform.position;
+        Vector3 startDirection = Camera.main.transform.position - focalPoint.position;
+        float camDistance = startDirection.magnitude;
+        Ray ray = new(bot.transform.position, startDirection);
+        if (!Physics.Raycast(ray, camDistance, LayerMask.GetMask("Terrain"))) return;
+
+        List<Vector3> openDirections = new();
+        foreach(var direction in directions)
+        {
+            Ray secondRay = new(bot.transform.position, direction);
+            if (!Physics.Raycast(secondRay, camDistance, LayerMask.GetMask("Terrain"))) openDirections.Add(direction);
+        }
+        Vector3 finalDirection = openDirections.OrderByDescending(x => Vector3.Dot(x, startDirection)).FirstOrDefault();
+        Quaternion finalRotation = Quaternion.LookRotation(finalDirection);
+        focalPoint.rotation = finalRotation;
     }
 }

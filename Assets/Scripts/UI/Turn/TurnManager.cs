@@ -65,6 +65,7 @@ public class TurnManager : MonoBehaviour
 
     public void BeginTurnSequence()
     {
+        TurnTakers.Shuffle();
         GetActiveBots();
     }
 
@@ -80,9 +81,9 @@ public class TurnManager : MonoBehaviour
             currentlyActive.Add(TurnTakers[activeIndex]);
             turnTaker.BeginTurn();
             activeIndex++;
-            if (turnTaker.allegiance == Allegiance.PLAYER 
-                && TurnTakers[activeIndex].allegiance == Allegiance.PLAYER 
-                && activeIndex < TurnTakers.Count)
+            if (turnTaker.allegiance == Allegiance.PLAYER
+                && activeIndex < TurnTakers.Count
+                && TurnTakers[activeIndex].allegiance == Allegiance.PLAYER)
             {
                 AddActiveUnit();
             }

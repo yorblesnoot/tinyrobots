@@ -8,6 +8,8 @@ public class BattleInitializer : MonoBehaviour
     [SerializeField] MapGenerator[] mapGenerators;
     [SerializeField] int generatorIndex;
 
+    [SerializeField] MainCameraControl mainCameraControl;
+
     [SerializeField] MarchingCubes marchingCubesRenderer;
     [SerializeField] LineRenderer lineRenderer;
     [SerializeField] BotPlacer botPlacer;
@@ -27,7 +29,7 @@ public class BattleInitializer : MonoBehaviour
         marchingCubesRenderer.RenderIntoCubes(mapGrid);
         
         Pathfinder3D.Initialize(mapGrid);
-        //Pathfinder3D.lineRenderer = lineRenderer;
+        mainCameraControl.Initialize(mapGrid);
 
         botPlacer.PlaceBots();
         turnManager.BeginTurnSequence();

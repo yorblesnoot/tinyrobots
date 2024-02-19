@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using static UnitControl;
 using UnityEngine;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public enum CursorState
 {
@@ -84,8 +85,9 @@ public class PrimaryCursor : MonoBehaviour
                 HideMovePreview();
             }
             //traverse a confirmed path
-            else if (currentPath != null && ActiveBot != null 
-                && currentPathCost <= ActiveBot.Stats.Current[StatType.MOVEMENT] 
+            else if (currentPath != null && ActiveBot != null
+                && currentPathCost <= ActiveBot.Stats.Current[StatType.MOVEMENT]
+                && !EventSystem.current.IsPointerOverGameObject()
                 && ActiveBot.AttemptToSpendResource(currentPathCost, StatType.MOVEMENT)) 
                 StartCoroutine(TraversePath());
             

@@ -64,6 +64,7 @@ public class TinyBot : MonoBehaviour
         else
         {
             botAI ??= new(this);
+            MainCameraControl.CutToUnit(this);
             StartCoroutine(botAI.TakeTurn());
         }
     }

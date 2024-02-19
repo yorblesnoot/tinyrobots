@@ -125,8 +125,6 @@ public static class Pathfinder3D
         return worldPath;
     }
 
-
-
     public static void GeneratePathingTree(MoveStyle style, Vector3Int startCoords)
     {
         if (!nodeMap.TryGetValue(startCoords, out PathfindingNode start)) return;
