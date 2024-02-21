@@ -32,7 +32,7 @@ public class TinyBot : MonoBehaviour
     public Transform ChassisPoint;
 
     public static UnityEvent ClearActiveBot = new();
-    public UnityEvent beganTurn;
+    public UnityEvent beganTurn = new();
 
     BotAI botAI;
 
@@ -40,7 +40,6 @@ public class TinyBot : MonoBehaviour
     List<GameObject> Parts;
     public void Initialize(List<Ability> abilities, List<GameObject> parts, PrimaryMovement primaryMovement)
     {
-        beganTurn = new();
         Parts = parts;
         Abilities = abilities;
         PrimaryMovement = primaryMovement;

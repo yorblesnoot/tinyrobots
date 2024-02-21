@@ -5567,7 +5567,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f25e4a46bd14d284ebefe9cd4694d5e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  generator: {fileID: 0}
   dot: {fileID: 7046006132780434542, guid: e788cd60c17ad0f44800b067b6c34406, type: 3}
 --- !u!4 &1110564610
 Transform:
@@ -5692,11 +5691,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b864d97e2083f5d418e66d4e4f43b0e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSize: 30
-  solidThreshold: 0.539
-  frequency: 0.144
+  xSize: 60
+  ySize: 30
+  zSize: 60
+  bottomSolidThreshold: 0.4
+  topSolidThreshold: 0.663
+  frequency: 0.107
   scale: 1
-  spherize: 1
+  sizeBuffer: 1
 --- !u!1 &1113871614
 GameObject:
   m_ObjectHideFlags: 0

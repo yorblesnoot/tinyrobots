@@ -25,6 +25,7 @@ public class LegJump : ParabolicAbility
 
     public override bool IsUsable(Vector3 sourcePosition)
     {
+        if(!base.IsUsable(sourcePosition)) return false;
         if (Pathfinder3D.GetLandingPointBy(targetTrajectory[^1], MoveStyle.WALK, out Vector3Int nodeTarget))
         {
             targetTrajectory[^1] = nodeTarget;

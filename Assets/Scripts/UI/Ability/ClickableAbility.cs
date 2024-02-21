@@ -7,8 +7,9 @@ public class ClickableAbility : MonoBehaviour
 {
     [SerializeField] Image image;
     [SerializeField] Button button;
-    [SerializeField] TMP_Text letter;
-    public Ability Skill;
+    [SerializeField] TMP_Text cooldown;
+    [SerializeField] Image cooldownPanel;
+    [HideInInspector] public Ability Skill;
 
     
     [SerializeField] Transform pipHolder;
@@ -36,13 +37,20 @@ public class ClickableAbility : MonoBehaviour
 
     public void Become(Ability ability, KeyCode key)
     {
+        ability.owner.beganTurn.AddListener(UpdateCooldowns);
         gameObject.SetActive(true);
         Skill = ability;
         image.sprite = ability.icon;
-        letter.text = key.ToString();
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(Activate);
         SetPips(ability.cost);
+        UpdateCooldowns();
+    }
+
+    public void UpdateCooldowns()
+    {
+        cooldownPanel.gameObject.SetActive(Skill.currentCooldown > 0);
+        cooldown.text = Skill.currentCooldown.ToString();
     }
 
     void SetPips(int pips)
@@ -66,6 +74,7 @@ public class ClickableAbility : MonoBehaviour
 
     public void Activate()
     {
+        if (Skill.currentCooldown > 0) return;
         Deactivate();
         Active = this;
         PrimaryCursor.SetCursorMode(Skill.PreferredCursor);

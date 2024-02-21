@@ -83,7 +83,7 @@ public class BotAssembler : MonoBehaviour
         foreach (var part in spawnedParts)
         {
             if(!part.TryGetComponent(out Ability ability)) continue;
-            ability.owner = botUnit;
+            ability.Initialize(botUnit);
             abilities.Add(ability);
         }
 

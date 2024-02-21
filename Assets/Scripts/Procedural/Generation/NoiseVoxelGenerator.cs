@@ -2,8 +2,13 @@ using UnityEngine;
 
 public class NoiseVoxelGenerator : MapGenerator
 {
-    [SerializeField] int mapSize;
-    [SerializeField][Range(.4f, .6f)] float solidThreshold = .5f;
+    [SerializeField] int xSize;
+    [SerializeField] int ySize;
+    [SerializeField] int zSize;
+
+
+    [SerializeField][Range(0, 1f)] float bottomSolidThreshold = .5f;
+    [SerializeField][Range(0, 1f)] float topSolidThreshold = .5f;
 
     int seed1;
     int seed2;
@@ -12,7 +17,7 @@ public class NoiseVoxelGenerator : MapGenerator
     [SerializeField] [Range(0, 1)] float frequency;
     [SerializeField] float scale = 1;
     public static float Scale;
-    [SerializeField] bool spherize;
+    [SerializeField] int sizeBuffer = 1;
 
     public static byte[,,] mapGrid;
     private void Awake()
@@ -30,21 +35,24 @@ public class NoiseVoxelGenerator : MapGenerator
     }
     public override void GenerateCoreMap()
     {
-        int bufferedSize = mapSize + 2;
-        mapGrid = new byte[bufferedSize, bufferedSize, bufferedSize];
-        Vector3 cubeCenter = new(bufferedSize /2, bufferedSize /2, bufferedSize /2);
-        for (int x = 1; x < mapSize - 1; x++)
+        mapGrid = new byte[xSize + sizeBuffer * 2, ySize + sizeBuffer * 2, zSize + sizeBuffer * 2];
+        for (int x = sizeBuffer; x < xSize - sizeBuffer; x++)
         {
-            for(int y = 1; y < mapSize - 1; y++)
+            for(int y = sizeBuffer; y < ySize - sizeBuffer; y++)
             {
-                for(int z = 1; z < mapSize - 1; z++)
+                for(int z = sizeBuffer; z < zSize - sizeBuffer; z++)
                 {
-                    if (spherize && (cubeCenter - new Vector3(x, y, z)).magnitude > mapSize/2) continue;
                     float noise = Perlin3D(Modify(x, seed1), Modify(y, seed2), Modify(z, seed3));
-                    if (noise > solidThreshold) mapGrid[x, y, z] = 1;
+                    if (noise > GetSolidThreshold(x,y,z)) mapGrid[x, y, z] = 1;
                 }
             }
         }
+    }
+
+    float GetSolidThreshold(int x, int y, int z)
+    {
+        float interpolator = (float)y / ySize;
+        return Mathf.Lerp(bottomSolidThreshold, topSolidThreshold, interpolator);
     }
 
 

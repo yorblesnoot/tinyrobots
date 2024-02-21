@@ -9,9 +9,11 @@ public abstract class Ability : MonoBehaviour
     public CursorType PreferredCursor;
     public int cost;
     public int range;
-    public int cooldown;
+    public int cooldown = 1;
     public int damage;
     public Sprite icon;
+
+    [HideInInspector] public int currentCooldown;
 
     public string[] blockingLayers;
     protected int blockingLayerMask;
@@ -23,9 +25,21 @@ public abstract class Ability : MonoBehaviour
         blockingLayerMask = LayerMask.GetMask(blockingLayers);
     }
 
+    public void Initialize(TinyBot botUnit)
+    {
+        owner = botUnit;
+        owner.beganTurn.AddListener(LapseCooldown);
+    }
+
+    void LapseCooldown()
+    {
+        currentCooldown = Mathf.Clamp(currentCooldown - 1, 0, currentCooldown); 
+    }
+
     readonly float skillDelay = .5f;
     public IEnumerator Execute()
     {
+        currentCooldown = cooldown;
         PrimaryCursor.actionInProgress = true;
         yield return new WaitForSeconds(skillDelay);
         yield return StartCoroutine(PerformEffects());
@@ -37,7 +51,8 @@ public abstract class Ability : MonoBehaviour
 
     public virtual bool IsUsable(Vector3 sourcePosition)
     {
-        return true;
+        if (currentCooldown == 0) return true;
+        return false;
     }
     public virtual void LockOnTo(GameObject target)
     {

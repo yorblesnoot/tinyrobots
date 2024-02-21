@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class MarchingCubes : MonoBehaviour
 {
-    [SerializeField] NoiseVoxelGenerator generator;
     [SerializeField] GameObject dot;
     public void RenderIntoCubes(byte[,,] mapGrid)
     {
+        Dictionary<Vector3, int> vertexNums = new();
         var mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         List<Vector3> vertices = new();
@@ -20,7 +20,7 @@ public class MarchingCubes : MonoBehaviour
             {
                 for (int z = 0; z < mapGrid.GetLength(2) - 1; z++)
                 {
-                    MarchCube(mapGrid, x, y, z, vertices, triangles);
+                    MarchCube(x, y, z);
                     //Instantiate(dot, new Vector3Int(x,y,z).ToWorldVector(), Quaternion.identity);
                 }
             }
@@ -29,66 +29,81 @@ public class MarchingCubes : MonoBehaviour
         mesh.triangles = triangles.ToArray();
         mesh.RecalculateNormals();
         GetComponent<MeshCollider>().sharedMesh = mesh;
-    }
 
-    private void MarchCube(byte[,,] mapGrid, int x, int y, int z, List<Vector3> vertices, List<int> triangles)
-    {
-        Vector3[] vertexInitial = new Vector3[12];
-        //get the 8 relevant points on the grid
-        byte[] cube = new byte[8];
-
-        cube[0] = mapGrid[x + 0, y + 0, z + 0];
-        cube[1] = mapGrid[x + 1, y + 0, z + 0];
-        cube[2] = mapGrid[x + 1, y + 1, z + 0];
-        cube[3] = mapGrid[x + 0, y + 1, z + 0];
-        cube[4] = mapGrid[x + 0, y + 0, z + 1];
-        cube[5] = mapGrid[x + 1, y + 0, z + 1];
-        cube[6] = mapGrid[x + 1, y + 1, z + 1];
-        cube[7] = mapGrid[x + 0, y + 1, z + 1];
-
-
-        //convert 8 points to edges
-        int flagIndex = 0;
-        for (int i = 0; i < 8; i++) if (cube[i] == 1) { flagIndex |= 1 << i; }
-        int edgeFlags = CubeEdgeFlags[flagIndex];
-        if (edgeFlags == 0) return;
-
-        for (int i = 0; i < 12; i++)
+        void MarchCube(int x, int y, int z)
         {
-            //if there is an intersection on this edge...
-            if ((edgeFlags & (1 << i)) != 0)
-            {
-                float offset = GetOffset(cube[EdgeConnection[i, 0]], cube[EdgeConnection[i, 1]]);
+            Vector3[] vertexInitial = new Vector3[12];
+            //get the 8 relevant points on the grid
+            byte[] cube = new byte[8];
 
-                vertexInitial[i].x = x + (VertexOffset[EdgeDefinitions[i, 0], 0] + offset * EdgeDirection[i, 0]);
-                vertexInitial[i].y = y + (VertexOffset[EdgeDefinitions[i, 0], 1] + offset * EdgeDirection[i, 1]);
-                vertexInitial[i].z = z + (VertexOffset[EdgeDefinitions[i, 0], 2] + offset * EdgeDirection[i, 2]);
+            cube[0] = mapGrid[x + 0, y + 0, z + 0];
+            cube[1] = mapGrid[x + 1, y + 0, z + 0];
+            cube[2] = mapGrid[x + 1, y + 1, z + 0];
+            cube[3] = mapGrid[x + 0, y + 1, z + 0];
+            cube[4] = mapGrid[x + 0, y + 0, z + 1];
+            cube[5] = mapGrid[x + 1, y + 0, z + 1];
+            cube[6] = mapGrid[x + 1, y + 1, z + 1];
+            cube[7] = mapGrid[x + 0, y + 1, z + 1];
+
+
+            //convert 8 points to edges
+            int flagIndex = 0;
+            for (int i = 0; i < 8; i++) if (cube[i] == 1) { flagIndex |= 1 << i; }
+            int edgeFlags = CubeEdgeFlags[flagIndex];
+            if (edgeFlags == 0) return;
+
+            for (int i = 0; i < 12; i++)
+            {
+                //if there is an intersection on this edge...
+                if ((edgeFlags & (1 << i)) != 0)
+                {
+                    float offset = GetOffset(cube[EdgeConnection[i, 0]], cube[EdgeConnection[i, 1]]);
+
+                    vertexInitial[i].x = x + (VertexOffset[EdgeDefinitions[i, 0], 0] + offset * EdgeDirection[i, 0]);
+                    vertexInitial[i].y = y + (VertexOffset[EdgeDefinitions[i, 0], 1] + offset * EdgeDirection[i, 1]);
+                    vertexInitial[i].z = z + (VertexOffset[EdgeDefinitions[i, 0], 2] + offset * EdgeDirection[i, 2]);
+                }
+            }
+
+            int vertexCount = vertices.Count;
+            //use the table to find the required triangles re: vertices
+            for (int i = 0; i < 5; i++)
+            {
+                if (TriangleConnectionTable[flagIndex, 3 * i] < 0) break;
+
+                
+                List<int> mappedVertices = new();
+
+                for (int j = 0; j < 3; j++)
+                {
+                    var vert = TriangleConnectionTable[flagIndex, 3 * i + j];
+                    Vector3 possibleVertex = vertexInitial[vert];
+                    if(vertexNums.TryGetValue(possibleVertex, out int oldVertex))
+                    {
+                        mappedVertices.Add(oldVertex);
+                    }
+                    else
+                    {
+                        vertices.Add(possibleVertex);
+                        vertexNums.Add(possibleVertex, vertexCount);
+                        mappedVertices.Add(vertexCount);
+                        vertexCount++;
+                    }
+                }
+                mappedVertices.Reverse();
+
+                triangles.AddRange(mappedVertices);
             }
         }
-
-        //use the table to find the required triangles re: vertices
-        for (int i = 0; i < 5; i++)
-        {
-            if (TriangleConnectionTable[flagIndex, 3 * i] < 0) break;
-
-            int idx = vertices.Count;
-
-            for (int j = 0; j < 3; j++)
-            {
-                var vert = TriangleConnectionTable[flagIndex, 3 * i + j];
-                triangles.Add(idx + ReverseWind[j]);
-                vertices.Add(vertexInitial[vert]);
-            }
-        }
     }
+
+    
 
     protected virtual float GetOffset(float v1, float v2)
     {
         float delta = v2 - v1;
         return (delta == 0.0f) ? 0f : (0f - v1) / delta;
     }
-
-    static readonly int[] ReverseWind = { 2, 1, 0 };
 
     private static readonly int[,] EdgeConnection = new int[,]
         {

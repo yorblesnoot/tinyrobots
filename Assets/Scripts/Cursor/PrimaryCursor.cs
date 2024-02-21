@@ -75,7 +75,9 @@ public class PrimaryCursor : MonoBehaviour
                 && ActiveBot.AttemptToSpendResource(skill.cost, StatType.ACTION))
                 {
                     StatDisplay.SyncStatDisplay(ActiveBot);
+                    
                     StartCoroutine(skill.Execute());
+                    ClickableAbility.Active.UpdateCooldowns();
                     ClickableAbility.Deactivate();
                 }
             }
