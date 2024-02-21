@@ -85,6 +85,7 @@ public class PrimaryCursor : MonoBehaviour
             {
                 SelectBot(TargetedBot);
                 HideMovePreview();
+                Unsnap();
             }
             //traverse a confirmed path
             else if (currentPath != null && ActiveBot != null

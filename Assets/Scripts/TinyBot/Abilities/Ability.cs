@@ -12,6 +12,7 @@ public abstract class Ability : MonoBehaviour
     public int cooldown = 1;
     public int damage;
     public Sprite icon;
+    
 
     [HideInInspector] public int currentCooldown;
 

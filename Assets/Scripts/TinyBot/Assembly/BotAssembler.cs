@@ -7,7 +7,8 @@ public class BotAssembler : MonoBehaviour
     [SerializeField] GameObject spawnPoint;
     [SerializeField] UnitControl abilityUI;
     [SerializeField] PortraitGenerator portraitGenerator;
-    public TinyBot BuildBotFromPartTree(TreeNode<CraftablePart> tree)
+    [SerializeField] BotPalette palette;
+    public TinyBot BuildBotFromPartTree(TreeNode<CraftablePart> tree, Allegiance allegiance)
     {
         PrimaryMovement locomotion = null;
         AttachmentPoint initialAttachmentPoint;
@@ -40,6 +41,9 @@ public class BotAssembler : MonoBehaviour
         void RecursiveConstruction(TreeNode<CraftablePart> currentNode, AttachmentPoint attachmentPoint)
         {
             GameObject spawned = Instantiate(currentNode.Value.attachableObject);
+            PartModifier modifier = spawned.GetComponent<PartModifier>();
+            if(modifier.mainRenderer != null) palette.RecolorPart(modifier.mainRenderer, allegiance);
+
 
             //if we've placed the primary movement part, flag it for rearrangement
             if (currentNode.Value.primaryLocomotion) locomotion = spawned.GetComponent<PrimaryMovement>();

@@ -1962,6 +1962,11 @@ MonoBehaviour:
   _enableSpeedAcceleration: 1
   _speedAccelerationFactor: 1.5
   _initPositonButton: 114
+  _wantedMode: 0
+  _currentIncrease: 1
+  _currentIncreaseMem: 0
+  _initPosition: {x: 0, y: 0, z: 0}
+  _initRotation: {x: 0, y: 0, z: 0}
 --- !u!1 &357767840
 GameObject:
   m_ObjectHideFlags: 0
@@ -2584,6 +2589,7 @@ MonoBehaviour:
   spawnPoint: {fileID: 1329150488}
   abilityUI: {fileID: 731169584}
   portraitGenerator: {fileID: 468739839}
+  palette: {fileID: 11400000, guid: 55d5961420d9960419564510536d2377, type: 2}
 --- !u!4 &468739835
 Transform:
   m_ObjectHideFlags: 0
@@ -2612,14 +2618,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapGenerators:
-  - {fileID: 1110564615}
   - {fileID: 1110564617}
-  generatorIndex: 1
+  generatorIndex: 0
   mainCameraControl: {fileID: 1329150493}
   marchingCubesRenderer: {fileID: 1110564608}
   lineRenderer: {fileID: 1599781106}
   botPlacer: {fileID: 468739837}
-  treeRenderer: {fileID: 1110564616}
+  treeRenderer: {fileID: 0}
   turnManager: {fileID: 1202214817}
   testing: 0
 --- !u!114 &468739837
@@ -5545,8 +5550,6 @@ GameObject:
   - component: {fileID: 1110564612}
   - component: {fileID: 1110564611}
   - component: {fileID: 1110564613}
-  - component: {fileID: 1110564615}
-  - component: {fileID: 1110564616}
   - component: {fileID: 1110564617}
   m_Layer: 8
   m_Name: BattleMap
@@ -5611,7 +5614,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 13664fea4e5ec4a4c92fd708d4eb51d3, type: 2}
+  - {fileID: 2100000, guid: c782857ff8ff2b241b6d6ab810601b18, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5647,38 +5650,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
---- !u!114 &1110564615
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1110564607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60af11ec5d0aef54ab5212f41d3c2682, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tp: {fileID: 11400000, guid: 2832d8fec23962843a6719bfd187451b, type: 2}
-  ground: {fileID: 0}
-  treeRenderer: {fileID: 1110564616}
-  debugger: {fileID: 0}
---- !u!114 &1110564616
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1110564607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d10e98e4459cf2045b6e2ea7a21c5be0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  tp: {fileID: 11400000, guid: 6765bd0186560694399f28a30e4b1723, type: 2}
-  meshSource: {fileID: 1429851821537814884, guid: 6db660b9a5e373f4faf62971982ba983,
-    type: 3}
-  leaf: {fileID: 391888610882693444, guid: 819f38158885cf84abf839ca470bbcc9, type: 3}
 --- !u!114 &1110564617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5691,14 +5662,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b864d97e2083f5d418e66d4e4f43b0e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xSize: 60
-  ySize: 30
-  zSize: 60
-  bottomSolidThreshold: 0.4
-  topSolidThreshold: 0.663
-  frequency: 0.107
-  scale: 1
-  sizeBuffer: 1
+  np: {fileID: 11400000, guid: 0613f93faf2b5d74ca31dacb17572fd4, type: 2}
 --- !u!1 &1113871614
 GameObject:
   m_ObjectHideFlags: 0
@@ -7752,7 +7716,6 @@ MonoBehaviour:
   assembler: {fileID: 468739834}
   originPart: {fileID: 11400000, guid: 071766b68be52664f849c34d5d8bca7d, type: 2}
   originSlot: {fileID: 415250581}
-  flyCamera: {fileID: 330585549}
   playerData: {fileID: 11400000, guid: ecd93be42b3c6b041ba1697eca59d1e5, type: 2}
   partDisplays:
   - {fileID: 7003806303359846126}

@@ -38,23 +38,13 @@ public class BotPlacer : MonoBehaviour
             foreach (var botRecord in botRecords)
             {
                 var tree = botConverter.StringToBot(botRecord.record);
-                TinyBot botUnit = botAssembler.BuildBotFromPartTree(tree);
+                TinyBot botUnit = botAssembler.BuildBotFromPartTree(tree, allegiance);
                 botUnit.allegiance = allegiance;
                 //RecolorOutlines(botUnit, allegiance);
                 bots.Add(botUnit);
                 turnManager.AddTurnTaker(botUnit);
             }
 
-        }
-    }
-
-    private void RecolorOutlines(TinyBot botUnit, Allegiance allegiance)
-    {
-        Renderer[] renderers = botUnit.GetComponentsInChildren<Renderer>();
-        Color newColor = colorMaps[allegiance];
-        foreach (Renderer renderer in renderers)
-        {
-            renderer.material.SetColor(Shader.PropertyToID("_OutlineColor"), newColor);
         }
     }
 }

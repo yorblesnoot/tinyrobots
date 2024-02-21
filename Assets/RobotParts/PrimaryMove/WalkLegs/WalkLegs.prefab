@@ -203,6 +203,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
+        type: 3}
+      propertyPath: mainRenderer
+      value: 
+      objectReference: {fileID: 8258692073192867603}
     - target: {fileID: 3145039084063412271, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: m_Name
@@ -542,12 +547,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 45736949c1a91314c8e85b8de38ccdfd, type: 2}
+      objectReference: {fileID: 2100000, guid: 0aa32adada4dcac4897e1649a033f407, type: 2}
     - target: {fileID: -6547223059409353530, guid: 7eb1de0fd8e5f8944bd9d64f55c5afd7,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 0aa32adada4dcac4897e1649a033f407, type: 2}
+      objectReference: {fileID: 2100000, guid: 45736949c1a91314c8e85b8de38ccdfd, type: 2}
     - target: {fileID: -2821410939877767244, guid: 7eb1de0fd8e5f8944bd9d64f55c5afd7,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1091,6 +1096,12 @@ MonoBehaviour:
 --- !u!4 &6976415059386761410 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3994243681954104087, guid: 7eb1de0fd8e5f8944bd9d64f55c5afd7,
+    type: 3}
+  m_PrefabInstance: {fileID: 6322864759978197973}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &8258692073192867603 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -6547223059409353530, guid: 7eb1de0fd8e5f8944bd9d64f55c5afd7,
     type: 3}
   m_PrefabInstance: {fileID: 6322864759978197973}
   m_PrefabAsset: {fileID: 0}

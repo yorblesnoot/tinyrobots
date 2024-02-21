@@ -200,7 +200,7 @@ Transform:
   m_Children:
   - {fileID: 8891516396659468901}
   m_Father: {fileID: 4617968656050150570}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3319631621441679756
 MonoBehaviour:
@@ -462,12 +462,12 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 45736949c1a91314c8e85b8de38ccdfd, type: 2}
+      objectReference: {fileID: 2100000, guid: 0aa32adada4dcac4897e1649a033f407, type: 2}
     - target: {fileID: 1818887364682035894, guid: c2625f0d9f8225f42bc27754fa7e7d1f,
         type: 3}
       propertyPath: m_Materials.Array.data[1]
       value: 
-      objectReference: {fileID: 2100000, guid: 0aa32adada4dcac4897e1649a033f407, type: 2}
+      objectReference: {fileID: 2100000, guid: 45736949c1a91314c8e85b8de38ccdfd, type: 2}
     - target: {fileID: 1818887364682035894, guid: c2625f0d9f8225f42bc27754fa7e7d1f,
         type: 3}
       propertyPath: m_Materials.Array.data[2]
@@ -556,6 +556,12 @@ MonoBehaviour:
   m_Transforms:
   - {fileID: 0}
   - {fileID: 0}
+--- !u!137 &6818756669026929143 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 1818887364682035894, guid: c2625f0d9f8225f42bc27754fa7e7d1f,
+    type: 3}
+  m_PrefabInstance: {fileID: 5160258190624734017}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5470794904844470252
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -583,6 +589,11 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -1.253
       objectReference: {fileID: 0}
+    - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
+        type: 3}
+      propertyPath: mainRenderer
+      value: 
+      objectReference: {fileID: 6818756669026929143}
     - target: {fileID: 3145039084063412271, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: m_Name
@@ -683,7 +694,10 @@ MonoBehaviour:
   PreferredCursor: 0
   cost: 1
   range: 15
+  cooldown: 1
+  damage: 10
   icon: {fileID: 21300000, guid: d0abed84aa6f5489fb1695cbcafffef0, type: 3}
+  currentCooldown: 0
   blockingLayers:
   - Terrain
   - Shield
@@ -692,7 +706,6 @@ MonoBehaviour:
   laser: {fileID: 4700887371249141454, guid: 96e320672d3da51439a874f0e20d154a, type: 3}
   travelTime: 0.3
   turretTracker: {fileID: 6848633858222717607}
-  damage: 10
 --- !u!114 &6848633858222717607
 MonoBehaviour:
   m_ObjectHideFlags: 0
