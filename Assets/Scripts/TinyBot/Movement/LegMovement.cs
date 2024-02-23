@@ -15,6 +15,7 @@ public abstract class LegMovement : PrimaryMovement
     [SerializeField] protected float anchorUpwardLimit = 2f;
     [SerializeField] protected float anchorDownwardLength = 3f;
     [SerializeField] AnimationCurve legRaise;
+    [SerializeField] SphereCollider detector;
 
     protected bool stepping;
 
@@ -104,6 +105,29 @@ public abstract class LegMovement : PrimaryMovement
         {
             yield return StartCoroutine(StepToBase(anchor, true));
         }
+    }
+
+    protected Vector3 GetMeshFacingAt(Vector3 target)
+    {
+        Collider[] colliders = Physics.OverlapSphere(target, 1f, LayerMask.GetMask("Terrain"));
+        detector.transform.SetParent(null);
+        detector.transform.position = target;
+        CheckSphereExtra(colliders[0], detector, out Vector3 closestPoint, out Vector3 surfaceNormal);
+        return surfaceNormal;
+    }
+    protected static bool CheckSphereExtra(Collider target_collider, SphereCollider sphere_collider, out Vector3 closestPoint, out Vector3 surfaceNormal)
+    {
+        closestPoint = Vector3.zero;
+        Vector3 sphere_pos = sphere_collider.transform.position;
+        if (Physics.ComputePenetration(target_collider, target_collider.transform.position, target_collider.transform.rotation, sphere_collider, sphere_pos, Quaternion.identity, out surfaceNormal, out float surfacePenetrationDepth))
+        {
+            closestPoint = sphere_pos + (surfaceNormal * (sphere_collider.radius - surfacePenetrationDepth));
+
+            surfaceNormal = -surfaceNormal;
+
+            return true;
+        }
+        return false;
     }
     [Serializable]
     protected class Anchor

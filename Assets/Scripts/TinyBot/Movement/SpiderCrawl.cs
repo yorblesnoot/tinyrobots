@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class SpiderCrawl : LegMovement
 {
-    [SerializeField] SphereCollider detector;
     [SerializeField][Range(0f, 1f)] float raycastInTilt;
     [SerializeField] float anchorInwardLength;
 
@@ -59,14 +58,7 @@ public class SpiderCrawl : LegMovement
 
         return finalPosition;
     }
-    private Vector3 GetMeshFacingAt(Vector3 target)
-    {
-        Collider[] colliders = Physics.OverlapSphere(target, 1f, LayerMask.GetMask("Terrain"));
-        detector.transform.SetParent(null);
-        detector.transform.position = target;
-        CheckSphereExtra(colliders[0], detector, out Vector3 closestPoint, out Vector3 surfaceNormal);
-        return surfaceNormal;
-    }
+    
     
     protected override Quaternion GetRotationAtPosition(Vector3 moveTarget)
     {
@@ -75,18 +67,5 @@ public class SpiderCrawl : LegMovement
         Quaternion targetRotation = Quaternion.LookRotation(lookTarget - transform.position, targetNormal);
         return targetRotation;
     }
-    static bool CheckSphereExtra(Collider target_collider, SphereCollider sphere_collider, out Vector3 closestPoint, out Vector3 surfaceNormal)
-    {
-        closestPoint = Vector3.zero;
-        Vector3 sphere_pos = sphere_collider.transform.position;
-        if (Physics.ComputePenetration(target_collider, target_collider.transform.position, target_collider.transform.rotation, sphere_collider, sphere_pos, Quaternion.identity, out surfaceNormal, out float surfacePenetrationDepth))
-        {
-            closestPoint = sphere_pos + (surfaceNormal * (sphere_collider.radius - surfacePenetrationDepth));
-
-            surfaceNormal = -surfaceNormal;
-
-            return true;
-        }
-        return false;
-    }
+    
 }

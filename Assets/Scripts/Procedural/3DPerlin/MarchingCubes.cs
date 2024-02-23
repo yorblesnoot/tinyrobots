@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class MarchingCubes : MonoBehaviour
 {
-    [SerializeField] GameObject dot;
     public void RenderIntoCubes(byte[,,] mapGrid)
     {
         Dictionary<Vector3, int> vertexNums = new();

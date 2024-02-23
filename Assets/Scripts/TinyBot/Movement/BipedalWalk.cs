@@ -49,4 +49,13 @@ public class BipedalWalk : LegMovement
         Quaternion targetRotation = Quaternion.LookRotation(moveTarget - transform.position);
         return targetRotation;
     }
+
+    /*protected override Quaternion GetRotationAtPosition(Vector3 moveTarget)
+    {
+        Vector3 targetNormal = GetMeshFacingAt(moveTarget);
+        targetNormal = Vector3.Slerp(targetNormal, Vector3.up, .9f);
+        Vector3 lookTarget = moveTarget + targetNormal * lookHeightModifier;
+        Quaternion targetRotation = Quaternion.LookRotation(lookTarget - transform.position, targetNormal);
+        return targetRotation;
+    }*/
 }
