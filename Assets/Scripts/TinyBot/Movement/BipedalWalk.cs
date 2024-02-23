@@ -23,11 +23,12 @@ public class BipedalWalk : LegMovement
         PreferredCursor = CursorType.GROUND;
         Style = MoveStyle.WALK;
     }
+    [SerializeField] float forwardStep = 2f;
     protected override Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral, Vector3 localStartPosition)
     {
-        Vector3 direction = transform.forward;
+        Vector3 direction = Owner.transform.forward;
         direction.Normalize();
-        Vector3 initialPosition = anchor.localBasePosition + (goToNeutral ? Vector3.zero : direction * anchorZoneRadius * 2);
+        Vector3 initialPosition = anchor.localBasePosition + (goToNeutral ? Vector3.zero : forwardStep * direction);
         Vector3 rayPosition = initialPosition;
         rayPosition = legModel.TransformPoint(rayPosition);
         rayPosition.y += anchorUpwardLimit;
@@ -41,6 +42,14 @@ public class BipedalWalk : LegMovement
         }
 
         return finalPosition;
+    }
+
+    protected override void GluePosition(Anchor anchor)
+    {
+        if (anchor.stepping) return;
+        anchor.ikTarget.position = anchor.gluedWorldPosition;
+        anchor.distanceFromBase = anchor.localBasePosition.z - anchor.ikTarget.localPosition.z;
+        Debug.Log(anchor.distanceFromBase);
     }
 
     protected override Quaternion GetRotationAtPosition(Vector3 moveTarget)

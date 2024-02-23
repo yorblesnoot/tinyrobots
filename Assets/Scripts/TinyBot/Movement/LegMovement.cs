@@ -45,7 +45,7 @@ public abstract class LegMovement : PrimaryMovement
         foreach (var anchor in anchors)
         {
             farthestFromBase ??= anchor;
-            anchor.GluePosition();
+            GluePosition(anchor);
             if (anchor.distanceFromBase > farthestFromBase.distanceFromBase) farthestFromBase = anchor;
         }
 
@@ -53,6 +53,13 @@ public abstract class LegMovement : PrimaryMovement
         {
             StartCoroutine(StepToBase(farthestFromBase));
         }
+    }
+
+    protected virtual void GluePosition(Anchor anchor)
+    {
+        if (anchor.stepping) return;
+        anchor.ikTarget.position = anchor.gluedWorldPosition;
+        anchor.distanceFromBase = Vector3.Distance(anchor.ikTarget.localPosition, anchor.localBasePosition);
     }
     protected IEnumerator InterpolatePositionAndRotation(Transform unit, Vector3 target)
     {
@@ -137,7 +144,7 @@ public abstract class LegMovement : PrimaryMovement
         [HideInInspector] public Vector3 localBasePosition;
         [HideInInspector] public float distanceFromBase;
 
-        Vector3 gluedWorldPosition;
+        [HideInInspector] public Vector3 gluedWorldPosition;
         public void Initialize()
         {
             localBasePosition = ikTarget.localPosition;
@@ -146,13 +153,6 @@ public abstract class LegMovement : PrimaryMovement
         public void UpdateGluedPosition()
         {
             gluedWorldPosition = ikTarget.position;
-        }
-
-        public void GluePosition()
-        {
-            if (stepping) return;
-            ikTarget.position = gluedWorldPosition;
-            distanceFromBase = Vector3.Distance(ikTarget.localPosition, localBasePosition);
         }
     }
 }
