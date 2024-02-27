@@ -5,7 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 8367349245771871145}
+    m_TransformParent: {fileID: 1433022894077755423}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 18be81e74e645754a82b8b7f8300374d,
         type: 3}
@@ -175,6 +175,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Propeller
       objectReference: {fileID: 0}
+    - target: {fileID: 3453657280514900982, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5192667463394062400, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: m_RootOrder
@@ -252,6 +257,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: efe31d825ac3a73448c7a58c0e7e6f7f, type: 3}
+--- !u!4 &1433022894077755423 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3453657280514900982, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
+    type: 3}
+  m_PrefabInstance: {fileID: 4327612094083597289}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1705641769814217670 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3145039084063412271, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
@@ -275,9 +286,3 @@ MonoBehaviour:
   chassisHeight: 0.5
   sourceBone: {fileID: 3669441972692277604}
   intervalDuration: 0.2
---- !u!4 &8367349245771871145 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5192667463394062400, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
-    type: 3}
-  m_PrefabInstance: {fileID: 4327612094083597289}
-  m_PrefabAsset: {fileID: 0}

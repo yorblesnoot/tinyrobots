@@ -576,6 +576,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpiderLegs
       objectReference: {fileID: 0}
+    - target: {fileID: 3453657280514900982, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5192667463394062400, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: m_RootOrder
@@ -638,6 +643,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: efe31d825ac3a73448c7a58c0e7e6f7f, type: 3}
+--- !u!4 &2906031566560376536 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3453657280514900982, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
+    type: 3}
+  m_PrefabInstance: {fileID: 556641709668136238}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3178691198776681729 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3145039084063412271, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
@@ -811,7 +822,7 @@ PrefabInstance:
     - target: {fileID: 5966230316796867696, guid: bf93bd5919da8654f98a239681348ebf,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5966230316796867696, guid: bf93bd5919da8654f98a239681348ebf,
         type: 3}
@@ -876,17 +887,17 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 5740287581094643054}
+    m_TransformParent: {fileID: 2906031566560376536}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 3e9188ff44dd3104b85a548d7ddef933,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3e9188ff44dd3104b85a548d7ddef933,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.4
+      value: 0.40000004
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3e9188ff44dd3104b85a548d7ddef933,
         type: 3}

@@ -551,7 +551,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 9131089776044354634}
+    m_TransformParent: {fileID: 1821126269690945532}
     m_Modifications:
     - target: {fileID: -8746058855735016753, guid: 24a2503ec5ee9a7469fce43d1442d12c,
         type: 3}
@@ -566,7 +566,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 24a2503ec5ee9a7469fce43d1442d12c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 24a2503ec5ee9a7469fce43d1442d12c,
         type: 3}
@@ -840,6 +840,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SwordArm
       objectReference: {fileID: 0}
+    - target: {fileID: 3453657280514900982, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5192667463394062400, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: m_RootOrder
@@ -897,6 +902,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: efe31d825ac3a73448c7a58c0e7e6f7f, type: 3}
+--- !u!4 &1821126269690945532 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3453657280514900982, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
+    type: 3}
+  m_PrefabInstance: {fileID: 3938444389051259914}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2093406558122019877 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3145039084063412271, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
@@ -937,12 +948,6 @@ MonoBehaviour:
   slashTime: 0.1
   returnTime: 0.4
   aimLag: 30
---- !u!4 &9131089776044354634 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5192667463394062400, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
-    type: 3}
-  m_PrefabInstance: {fileID: 3938444389051259914}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6133005183326228880
 PrefabInstance:
   m_ObjectHideFlags: 0
