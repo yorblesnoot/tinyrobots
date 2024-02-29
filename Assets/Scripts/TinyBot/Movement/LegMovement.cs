@@ -92,7 +92,7 @@ public abstract class LegMovement : PrimaryMovement
         {
             float interpolator = timeElapsed / legStepDuration;
             Vector3 targetPosition = Vector3.Lerp(localStartPosition, finalPosition, interpolator);
-            targetPosition.y += legRaise.Evaluate(interpolator);
+            //targetPosition.y += legRaise.Evaluate(interpolator);
             anchor.ikTarget.localPosition = targetPosition;
             timeElapsed += Time.deltaTime;
             yield return null;

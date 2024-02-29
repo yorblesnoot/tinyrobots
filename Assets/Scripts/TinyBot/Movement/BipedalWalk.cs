@@ -27,10 +27,10 @@ public class BipedalWalk : LegMovement
     protected override Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral, Vector3 localStartPosition)
     {
         Vector3 direction = Owner.transform.forward;
-        direction.Normalize();
+        direction = Owner.transform.InverseTransformDirection(direction);
         Vector3 initialPosition = anchor.localBasePosition + (goToNeutral ? Vector3.zero : forwardStep * direction);
         Vector3 rayPosition = initialPosition;
-        rayPosition = legModel.TransformPoint(rayPosition);
+        rayPosition = legModel.transform.TransformPoint(rayPosition);
         rayPosition.y += anchorUpwardLimit;
         
         Ray ray = new(rayPosition, Vector3.down);
@@ -49,7 +49,6 @@ public class BipedalWalk : LegMovement
         if (anchor.stepping) return;
         anchor.ikTarget.position = anchor.gluedWorldPosition;
         anchor.distanceFromBase = anchor.localBasePosition.z - anchor.ikTarget.localPosition.z;
-        Debug.Log(anchor.distanceFromBase);
     }
 
     protected override Quaternion GetRotationAtPosition(Vector3 moveTarget)
