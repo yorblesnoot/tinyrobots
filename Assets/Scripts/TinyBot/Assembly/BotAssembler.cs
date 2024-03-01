@@ -13,6 +13,7 @@ public class BotAssembler : MonoBehaviour
         PrimaryMovement locomotion = null;
         AttachmentPoint initialAttachmentPoint;
         List<GameObject> spawnedParts;
+        //this function sets the above variables
         GameObject bot = DeployOrigin(tree);
         TinyBot botUnit = bot.GetComponent<TinyBot>();
         SetBotTallness(locomotion, initialAttachmentPoint, botUnit);
@@ -77,6 +78,7 @@ public class BotAssembler : MonoBehaviour
     {
         Vector3 chassisPosition = initialAttachmentPoint.transform.localPosition;
         chassisPosition.y = locomotion.chassisHeight;
+        Debug.Log(chassisPosition + " " + locomotion.name);
         initialAttachmentPoint.transform.localPosition = chassisPosition;
         bot.GetComponent<CapsuleCollider>().center = chassisPosition;
     }

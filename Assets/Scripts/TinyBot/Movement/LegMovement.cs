@@ -114,7 +114,7 @@ public abstract class LegMovement : PrimaryMovement
         }
     }
 
-    protected Vector3 GetMeshFacingAt(Vector3 target)
+    protected Vector3 GetMeshNormalAt(Vector3 target)
     {
         Collider[] colliders = Physics.OverlapSphere(target, 1f, LayerMask.GetMask("Terrain"));
         detector.transform.SetParent(null);

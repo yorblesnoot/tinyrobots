@@ -97,6 +97,8 @@ public class PrimaryCursor : MonoBehaviour
         }
         else if (Input.GetMouseButtonDown(1)) ClickableAbility.Deactivate();
 
+        //Debug.Log($"active {ActiveBot}, action {actionInProgress}, ability {anAbilityIsActive}");
+
         //generate new path
         if (!actionInProgress && ActiveBot != null)
         {

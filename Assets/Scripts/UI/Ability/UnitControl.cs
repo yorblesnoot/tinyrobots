@@ -34,7 +34,6 @@ public class UnitControl : MonoBehaviour
         gameObject.SetActive(false);
         TurnManager.EndTurn(ActiveBot);
         ClickableAbility.Deactivate();
-        ActiveBot = null;
     }
 
     void VisualizeAbilityList(TinyBot bot)

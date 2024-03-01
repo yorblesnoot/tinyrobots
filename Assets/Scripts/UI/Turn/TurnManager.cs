@@ -24,7 +24,7 @@ public class TurnManager : MonoBehaviour
 
     public static List<TinyBot> TurnTakers;
     static Dictionary<TinyBot, TurnPortrait> activePortraits;
-    static HashSet<TinyBot> currentlyActive;
+    static List<TinyBot> currentlyActive;
     private void Awake()
     {
         activeIndex = 0;
@@ -103,6 +103,10 @@ public class TurnManager : MonoBehaviour
             if(activeIndex == TurnTakers.Count) activeIndex = 0;
             GetActiveBots();
         }
+
+        TinyBot next = currentlyActive.First();
+        MainCameraControl.CutToUnit(next);
+        PrimaryCursor.SelectBot(next);
     }
 
     static bool MetEndCondition()
@@ -130,7 +134,7 @@ public class TurnManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    static void ArrangePortraits(HashSet<TinyBot> active)
+    static void ArrangePortraits(List<TinyBot> active)
     {
         float currentX = 0f;
         foreach (TinyBot turnTaker in TurnTakers)

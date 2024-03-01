@@ -16,6 +16,7 @@ public class BipedalWalk : LegMovement
     }
     public override void SpawnOrientation()
     {
+        Owner.transform.LookAt(GetCenterColumn());
         StartCoroutine(NeutralStance());
     }
     protected override void InitializeParameters()

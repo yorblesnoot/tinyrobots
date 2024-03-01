@@ -15,7 +15,7 @@ public enum MoveStyle
 public static class Pathfinder3D
 {
     static Dictionary<Vector3Int, PathfindingNode> nodeMap = new();
-    static int xSize, ySize, zSize;
+    public static int xSize, ySize, zSize;
 
     static byte[,,] coreMap;
 
@@ -62,8 +62,9 @@ public static class Pathfinder3D
         if (value == 1) { node.blocked = true; }
         else
         {
-            if (NeighborIsTerrain(x, y - 1, z) && !NeighborIsTerrain(x, y + 1, z)) node.modeAccess[MoveStyle.WALK] = true;
-            else if (NeighborIsTerrain(x, y - 1, z) 
+            if (NeighborIsTerrain(x, y - 1, z) && !NeighborIsTerrain(x, y + 1, z)) 
+            { node.modeAccess[MoveStyle.WALK] = true; node.modeAccess[MoveStyle.CRAWL] = true; }
+            else if (NeighborIsTerrain(x, y - 1, z)
                 || NeighborIsTerrain(x, y + 1, z) || NeighborIsTerrain(x - 1, y, z)
                 || NeighborIsTerrain(x + 1, y, z) || NeighborIsTerrain(x, y, z + 1)
                 || NeighborIsTerrain(x, y, z - 1)) node.modeAccess[MoveStyle.CRAWL] = true;

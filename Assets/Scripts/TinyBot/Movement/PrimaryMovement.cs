@@ -14,6 +14,10 @@ public abstract class PrimaryMovement : MonoBehaviour
 
     public abstract IEnumerator PathToPoint(List<Vector3> path);
     public abstract void SpawnOrientation();
+    protected Vector3 GetCenterColumn()
+    {
+        return new(Pathfinder3D.xSize / 2, transform.position.y, Pathfinder3D.zSize / 2);
+    }
     public abstract IEnumerator NeutralStance();
 
     public virtual void RotateToTrackEntity(GameObject trackingTarget)

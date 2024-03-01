@@ -37,7 +37,7 @@ public class ProjectShield : LinearAbility
     protected override void AimAt(GameObject target)
     {
         base.AimAt(target);
-        Vector3 ownerPosition = owner.ChassisPoint.transform.position;
+        Vector3 ownerPosition = transform.position;
         Vector3 direction = target.transform.position - ownerPosition;
         direction.Normalize();
         direction *= shieldDistance;

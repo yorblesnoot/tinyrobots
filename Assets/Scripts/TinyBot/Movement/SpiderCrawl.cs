@@ -18,10 +18,11 @@ public class SpiderCrawl : LegMovement
     }
     public override void SpawnOrientation()
     {
-        Vector3 normal = GetMeshFacingAt(Owner.transform.position);
-        Vector3 displace = Vector3.Cross(normal, Vector3.up);
+        Vector3 normal = GetMeshNormalAt(Owner.transform.position);
+        Vector3 centerDirection = GetCenterColumn() - transform.position;
+        Vector3 facing = Vector3.Cross(normal, centerDirection);
         //look position and normal cant be the same?
-        Owner.transform.rotation = GetRotationAtPosition(Owner.transform.position + displace);
+        Owner.transform.rotation = Quaternion.LookRotation(facing, normal);
         StartCoroutine(NeutralStance());
     }
     protected override void InitializeParameters()
@@ -62,7 +63,7 @@ public class SpiderCrawl : LegMovement
     
     protected override Quaternion GetRotationAtPosition(Vector3 moveTarget)
     {
-        Vector3 targetNormal = GetMeshFacingAt(moveTarget);
+        Vector3 targetNormal = GetMeshNormalAt(moveTarget);
         Vector3 lookTarget = moveTarget + targetNormal * lookHeightModifier;
         Quaternion targetRotation = Quaternion.LookRotation(lookTarget - transform.position, targetNormal);
         return targetRotation;

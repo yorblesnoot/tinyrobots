@@ -23,7 +23,7 @@ public class PropellerFly : PrimaryMovement
 
     public override void SpawnOrientation()
     {
-        
+        Owner.transform.LookAt(GetCenterColumn());
     }
 
     public override IEnumerator NeutralStance()
