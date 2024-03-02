@@ -107,6 +107,7 @@ public class TinyBot : MonoBehaviour
     {
         feedback.QueuePopup(damage, Color.red);
         Stats.Current[StatType.HEALTH] = Math.Clamp(Stats.Current[StatType.HEALTH] - damage, 0, Stats.Max[StatType.HEALTH]);
+        TurnManager.UpdateHealth(this);
         if(Stats.Current[StatType.HEALTH] == 0) Die();
     }
 

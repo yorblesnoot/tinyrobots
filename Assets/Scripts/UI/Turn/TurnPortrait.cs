@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,13 +13,14 @@ public class TurnPortrait : MonoBehaviour
     [SerializeField] Color neutralColor;
 
     [SerializeField] Animator animator;
+    [SerializeField] GameObject grayOut;
+    [SerializeField] HealthOverlay healthOverlay;
 
     TinyBot thisBot;
     public void Become(TinyBot bot)
     {
         thisBot = bot;
         gameObject.SetActive(true);
-        //animator.Play("Idle");
         
         if (bot.allegiance == Allegiance.PLAYER)
         {
@@ -30,6 +32,7 @@ public class TurnPortrait : MonoBehaviour
             frame.color = enemyColor;
         }
         cardPortrait.sprite = bot.portrait;
+        healthOverlay.UpdateHealth(thisBot);
     }
 
     void SelectThroughPortrait()
@@ -45,8 +48,20 @@ public class TurnPortrait : MonoBehaviour
         gameObject.SetActive(false);
     }
 
+    public void ToggleGrayOut(bool on)
+    {
+        grayOut.SetActive(on);
+    }
+
+    
+
     public void Die()
     {
         animator.Play("DropAway");
+    }
+
+    internal void UpdateHealth()
+    {
+        healthOverlay.UpdateHealth(thisBot);
     }
 }

@@ -69,6 +69,11 @@ public class TurnManager : MonoBehaviour
         GetActiveBots();
     }
 
+    public static void UpdateHealth(TinyBot bot)
+    {
+        activePortraits[bot].UpdateHealth();
+    }
+
     static void GetActiveBots()
     {
         AddActiveUnit();
@@ -93,6 +98,7 @@ public class TurnManager : MonoBehaviour
     public static void EndTurn(TinyBot bot)
     {
         currentlyActive.Remove(bot);
+        activePortraits[bot].ToggleGrayOut(true);
         bot.availableForTurn = false;
         TinyBot.ClearActiveBot.Invoke();
 
@@ -100,13 +106,22 @@ public class TurnManager : MonoBehaviour
 
         if (currentlyActive.Count == 0)
         {
-            if(activeIndex == TurnTakers.Count) activeIndex = 0;
+            if (activeIndex == TurnTakers.Count) ResetTurnOrder();
             GetActiveBots();
         }
 
         TinyBot next = currentlyActive.First();
         MainCameraControl.CutToUnit(next);
         PrimaryCursor.SelectBot(next);
+    }
+
+    private static void ResetTurnOrder()
+    {
+        activeIndex = 0;
+        foreach(var portrait in activePortraits.Values)
+        {
+            portrait.ToggleGrayOut(false);
+        }
     }
 
     static bool MetEndCondition()

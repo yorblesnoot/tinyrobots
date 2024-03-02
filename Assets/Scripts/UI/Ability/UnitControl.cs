@@ -12,6 +12,8 @@ public class UnitControl : MonoBehaviour
 
     [SerializeField] TurnManager turnManager;
 
+    [SerializeField] HealthOverlay healthOverlay;
+
     List<ClickableAbility> deployedAbilities;
     public static TinyBot ActiveBot;
     private void Awake()
@@ -27,6 +29,7 @@ public class UnitControl : MonoBehaviour
         gameObject.SetActive(true);
         VisualizeAbilityList(bot);
         unitPortrait.sprite = bot.portrait;
+        healthOverlay.UpdateHealth(bot);
     }
 
     void EndPlayerTurn()

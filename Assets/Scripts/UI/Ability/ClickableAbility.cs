@@ -49,6 +49,8 @@ public class ClickableAbility : MonoBehaviour
 
     public void UpdateCooldowns()
     {
+        if (Skill == null) return;
+        //Debug.Log(cooldownPanel + " panel " + Skill + " skill");
         cooldownPanel.gameObject.SetActive(Skill.currentCooldown > 0);
         cooldown.text = Skill.currentCooldown.ToString();
     }

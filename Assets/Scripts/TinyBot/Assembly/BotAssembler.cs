@@ -78,7 +78,6 @@ public class BotAssembler : MonoBehaviour
     {
         Vector3 chassisPosition = initialAttachmentPoint.transform.localPosition;
         chassisPosition.y = locomotion.chassisHeight;
-        Debug.Log(chassisPosition + " " + locomotion.name);
         initialAttachmentPoint.transform.localPosition = chassisPosition;
         bot.GetComponent<CapsuleCollider>().center = chassisPosition;
     }
