@@ -123,7 +123,7 @@ public class TinyBot : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if(UnitControl.ActiveBot != this && ClickableAbility.Active == null) PrimaryCursor.SnapToUnit(this);
+        if(UnitControl.ActiveBot != this /*&& ClickableAbility.Active == null*/) PrimaryCursor.SnapToUnit(this);
     }
 
     private void OnMouseExit()

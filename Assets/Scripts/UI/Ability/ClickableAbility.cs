@@ -80,7 +80,7 @@ public class ClickableAbility : MonoBehaviour
         Deactivate();
         Active = this;
         PrimaryCursor.SetCursorMode(Skill.PreferredCursor);
-        Skill.LockOnTo(PrimaryCursor.Transform.gameObject);
+        Skill.LockOnTo(PrimaryCursor.Transform.gameObject, true);
         image.color = Color.red;
     }
 }

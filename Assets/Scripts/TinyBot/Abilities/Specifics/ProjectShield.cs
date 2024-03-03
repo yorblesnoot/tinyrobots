@@ -34,9 +34,9 @@ public class ProjectShield : LinearAbility
         basePosition = ikTarget.transform.localPosition;
     }
 
-    protected override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool drawLine)
+    protected override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition)
     {
-        base.AimAt(target, sourcePosition, true);
+        base.AimAt(target, sourcePosition);
         Vector3 ownerPosition = transform.position;
         Vector3 direction = target.transform.position - ownerPosition;
         direction.Normalize();
@@ -46,8 +46,8 @@ public class ProjectShield : LinearAbility
         return new();
     }
 
-    public override void LockOnTo(GameObject target)
+    public override void LockOnTo(GameObject target, bool draw)
     {
-        base.LockOnTo(target);
+        base.LockOnTo(target, true);
     }
 }

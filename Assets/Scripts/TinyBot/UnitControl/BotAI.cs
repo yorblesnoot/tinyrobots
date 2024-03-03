@@ -40,7 +40,7 @@ public class BotAI
                     //move to location
                     if (Vector3Int.RoundToInt(thisBot.transform.position) != location) 
                         yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.PathToPoint(Pathfinder3D.FindVectorPath(location, out _)));
-                    ability.LockOnTo(target.ChassisPoint.gameObject);
+                    ability.LockOnTo(target.ChassisPoint.gameObject, false);
                     yield return new WaitForSeconds(lockTime);
                     thisBot.AttemptToSpendResource(ability.cost, StatType.ACTION);
                     yield return thisBot.StartCoroutine(ability.Execute());

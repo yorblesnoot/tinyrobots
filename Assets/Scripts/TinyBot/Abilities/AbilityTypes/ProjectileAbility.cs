@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class ProjectileAbility : Ability
 {
     protected List<Vector3> targetTrajectory;
-    protected override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool drawLine)
+    protected override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition)
     {
         List<TinyBot> hitBots = new();
         Vector3 targetPosition = target.transform.position;
@@ -16,7 +16,7 @@ public abstract class ProjectileAbility : Ability
         Vector3[] targets = GetTrajectory(sourcePosition, modifiedTarget);
         targetTrajectory = CastAlongPoints(targets, blockingLayerMask, out var hit);
         if(hit != null && hit.TryGetComponent(out TinyBot bot)) hitBots.Add(bot);
-        if(drawLine) LineMaker.DrawLine(targetTrajectory.ToArray());
+        if(drawTargeting) LineMaker.DrawLine(targetTrajectory.ToArray());
         return hitBots;
     }
 

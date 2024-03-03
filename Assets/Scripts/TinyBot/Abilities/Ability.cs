@@ -22,6 +22,7 @@ public abstract class Ability : MonoBehaviour
 
     GameObject trackedTarget;
     [HideInInspector] public TinyBot owner;
+    protected bool drawTargeting;
     private void Awake()
     {
         blockingLayerMask = LayerMask.GetMask(blockingLayers);
@@ -48,10 +49,10 @@ public abstract class Ability : MonoBehaviour
         PrimaryCursor.actionInProgress = false;
     }
     List<TinyBot> currentTargets = new();
-    protected abstract List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool drawLine);
+    protected abstract List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition);
     public virtual List<TinyBot> GhostAimAt(GameObject target, Vector3 sourcePosition)
     {
-        return AimAt(target, sourcePosition, false);
+        return AimAt(target, sourcePosition);
     }
 
     public virtual bool IsUsable(Vector3 sourcePosition)
@@ -59,9 +60,10 @@ public abstract class Ability : MonoBehaviour
         if (currentCooldown == 0) return true;
         return false;
     }
-    public virtual void LockOnTo(GameObject target)
+    public virtual void LockOnTo(GameObject target, bool draw)
     {
         trackedTarget = target;
+        drawTargeting = draw;
     }
     public virtual void ReleaseLock()
     {
@@ -74,9 +76,8 @@ public abstract class Ability : MonoBehaviour
     void Update()
     {
         if (trackedTarget == null) return;
-        List<TinyBot> newTargets = AimAt(trackedTarget, emissionPoint.transform.position, true);
-        Debug.Log(newTargets.Count);
-        HighlightAffectedTargets(newTargets);
+        List<TinyBot> newTargets = AimAt(trackedTarget, emissionPoint.transform.position);
+        if(drawTargeting) HighlightAffectedTargets(newTargets);
         owner.PrimaryMovement.RotateToTrackEntity(trackedTarget);
     }
 

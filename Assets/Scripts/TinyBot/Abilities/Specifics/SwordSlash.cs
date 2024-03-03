@@ -28,16 +28,16 @@ public class SwordSlash : SpatialAbility
         neutralPosition = ikTarget.transform.localPosition;
     }
 
-    protected override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool drawLine)
+    protected override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition)
     {
         aimer.transform.LookAt(target.transform);
         ikTarget.position = Vector3.Lerp(ikTarget.position, readyPosition.position, 1/aimLag);
         return indicator.GetIntersectingBots();
     }
 
-    public override void LockOnTo(GameObject target)
+    public override void LockOnTo(GameObject target, bool draw)
     {
-        base.LockOnTo(target);
+        base.LockOnTo(target, true);
         indicator.gameObject.SetActive(true);
         animator.SetBool("bladeOut", true);
     }
