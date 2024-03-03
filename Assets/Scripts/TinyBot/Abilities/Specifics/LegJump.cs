@@ -16,11 +16,11 @@ public class LegJump : ParabolicAbility
 
         foreach (Vector3 point in targetTrajectory)
         {
-            yield return StartCoroutine(owner.gameObject.LerpTo(point, intervalTime));
+            yield return StartCoroutine(Owner.gameObject.LerpTo(point, intervalTime));
         }
         animator.Play("Idle");
-        yield return StartCoroutine(owner.PrimaryMovement.NeutralStance());
-        Pathfinder3D.GeneratePathingTree(MoveStyle.WALK, Vector3Int.RoundToInt(owner.transform.position));
+        yield return StartCoroutine(Owner.PrimaryMovement.NeutralStance());
+        Pathfinder3D.GeneratePathingTree(MoveStyle.WALK, Vector3Int.RoundToInt(Owner.transform.position));
     }
 
     public override bool IsUsable(Vector3 sourcePosition)

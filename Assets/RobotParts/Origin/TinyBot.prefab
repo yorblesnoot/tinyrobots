@@ -204,7 +204,7 @@ PrefabInstance:
     - target: {fileID: 3145039084063412271, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: m_Name
-      value: Origin
+      value: TinyBot
       objectReference: {fileID: 0}
     - target: {fileID: 5192667463394062400, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
@@ -320,8 +320,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 1.5
+  m_Radius: 0.7
+  m_Height: 1.7
   m_Direction: 1
   m_Center: {x: 0, y: 1.4, z: 0}
 --- !u!114 &3745691473234048856
@@ -351,8 +351,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   deathExplodeMaxForce: 5
+  hitRecoilTime: 0.1
+  hitReturnTime: 0.5
+  recoilDistancePerDamage: 0.03
   selectBrackets: {fileID: 3748868292360106338}
   feedback: {fileID: 3745691473234048856}
+  hitSpark: {fileID: 2635817547006723021, guid: 4779673784276bd41b3e7f295ad79d19,
+    type: 3}
   headshotPosition: {fileID: 1977403559975929643}
   portrait: {fileID: 0}
   allegiance: 0

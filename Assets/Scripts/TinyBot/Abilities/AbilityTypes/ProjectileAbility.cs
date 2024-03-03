@@ -15,12 +15,12 @@ public abstract class ProjectileAbility : Ability
         Vector3 modifiedTarget = sourcePosition + direction * Mathf.Min(distance, range);
         Vector3[] targets = GetTrajectory(sourcePosition, modifiedTarget);
         targetTrajectory = CastAlongPoints(targets, blockingLayerMask, out var hit);
-        if(hit != null && hit.TryGetComponent(out TinyBot bot)) hitBots.Add(bot);
+        if(hit.collider != null && hit.collider.TryGetComponent(out TinyBot bot)) hitBots.Add(bot);
         if(drawTargeting) LineMaker.DrawLine(targetTrajectory.ToArray());
         return hitBots;
     }
 
-    protected IEnumerator LaunchAlongLine(GameObject launched, List<Vector3> trajectory, float travelTime, GameObject hit)
+    protected IEnumerator LaunchAlongLine(GameObject launched, List<Vector3> trajectory, float travelTime, RaycastHit hit)
     {
         GameObject spawned = Instantiate(launched);
         float intervalTime = travelTime / trajectory.Count;
@@ -46,9 +46,9 @@ public abstract class ProjectileAbility : Ability
     protected abstract Vector3[] GetTrajectory(Vector3 source, Vector3 target);
 
     readonly float overlapLength = .1f;
-    protected List<Vector3> CastAlongPoints(Vector3[] castTargets, int mask, out GameObject hit)
+    protected List<Vector3> CastAlongPoints(Vector3[] castTargets, int mask, out RaycastHit hit)
     {
-        hit = null;
+        hit = default;
         List<Vector3> modifiedTargets = new()
         {
             castTargets[0]
@@ -60,7 +60,7 @@ public abstract class ProjectileAbility : Ability
             if (Physics.Raycast(ray, out var hitInfo, direction.magnitude + overlapLength, mask))
             {
                 modifiedTargets.Add(hitInfo.point);
-                hit = hitInfo.collider.gameObject;
+                hit = hitInfo;
                 break;
             }
             else
@@ -71,5 +71,5 @@ public abstract class ProjectileAbility : Ability
         return modifiedTargets;
     }
 
-    protected virtual void CompleteTrajectory(Vector3 position, GameObject launched, GameObject hit) { }
+    protected virtual void CompleteTrajectory(Vector3 position, GameObject launched, RaycastHit hit) { }
 }

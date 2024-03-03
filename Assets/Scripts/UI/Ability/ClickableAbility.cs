@@ -28,7 +28,6 @@ public class ClickableAbility : MonoBehaviour
     public static void Deactivate()
     {
         if (Active == null) return;
-        
         Active.image.color = Color.white;
         PrimaryCursor.SetCursorMode(UnitControl.ActiveBot == null ? CursorType.GROUND : UnitControl.ActiveBot.PrimaryMovement.PreferredCursor);
         Active.Skill.ReleaseLock();
@@ -37,7 +36,7 @@ public class ClickableAbility : MonoBehaviour
 
     public void Become(Ability ability, KeyCode key)
     {
-        ability.owner.beganTurn.AddListener(UpdateCooldowns);
+        ability.Owner.beganTurn.AddListener(UpdateCooldowns);
         gameObject.SetActive(true);
         Skill = ability;
         image.sprite = ability.icon;

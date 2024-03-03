@@ -21,7 +21,7 @@ public abstract class Ability : MonoBehaviour
     protected int blockingLayerMask;
 
     GameObject trackedTarget;
-    [HideInInspector] public TinyBot owner;
+    [HideInInspector] public TinyBot Owner;
     protected bool drawTargeting;
     private void Awake()
     {
@@ -30,8 +30,8 @@ public abstract class Ability : MonoBehaviour
 
     public void Initialize(TinyBot botUnit)
     {
-        owner = botUnit;
-        owner.beganTurn.AddListener(LapseCooldown);
+        Owner = botUnit;
+        Owner.beganTurn.AddListener(LapseCooldown);
     }
 
     void LapseCooldown()
@@ -68,7 +68,7 @@ public abstract class Ability : MonoBehaviour
     public virtual void ReleaseLock()
     {
         trackedTarget = null;
-        StartCoroutine(owner.PrimaryMovement.NeutralStance());
+        StartCoroutine(Owner.PrimaryMovement.NeutralStance());
         LineMaker.HideLine();
         HighlightAffectedTargets(null);
     }
@@ -78,7 +78,7 @@ public abstract class Ability : MonoBehaviour
         if (trackedTarget == null) return;
         List<TinyBot> newTargets = AimAt(trackedTarget, emissionPoint.transform.position);
         if(drawTargeting) HighlightAffectedTargets(newTargets);
-        owner.PrimaryMovement.RotateToTrackEntity(trackedTarget);
+        Owner.PrimaryMovement.RotateToTrackEntity(trackedTarget);
     }
 
     private void HighlightAffectedTargets(List<TinyBot> newTargets)

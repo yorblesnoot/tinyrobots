@@ -32,4 +32,35 @@ public abstract class PrimaryMovement : MonoBehaviour
         Quaternion toRotation = Quaternion.LookRotation(direction, Owner.transform.up);
         Owner.transform.rotation = Quaternion.Slerp(Owner.transform.rotation, toRotation, lookSpeed * Time.deltaTime);
     }
+
+    public IEnumerator ApplyImpulseToBody(Vector3 source, float distance, float snapTime, float returnTime)
+    {
+        Vector3 direction = Owner.transform.position - source;
+        direction.Normalize();
+        
+        Vector3 neutralPosition = Owner.transform.position;
+        Vector3 snapPosition = neutralPosition + direction * distance;
+
+        float timeElapsed = 0;
+        while (timeElapsed < snapTime)
+        {
+            Owner.transform.position = Vector3.Lerp(neutralPosition, snapPosition, timeElapsed / snapTime);
+            timeElapsed += Time.deltaTime;
+            HandleImpulse();
+            yield return null;
+        }
+        timeElapsed = 0;
+        while (timeElapsed < returnTime)
+        {
+            Owner.transform.position = Vector3.Lerp(snapPosition, neutralPosition, timeElapsed / returnTime);
+            timeElapsed += Time.deltaTime;
+            HandleImpulse();
+            yield return null;
+        }
+        
+    }
+
+    protected virtual void HandleImpulse()
+    {
+    }
 }

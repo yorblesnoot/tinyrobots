@@ -22,10 +22,6 @@ public abstract class LegMovement : PrimaryMovement
     private void Awake()
     {
         InitializeParameters();
-        InitializeAnchors();
-    }
-    void InitializeAnchors()
-    {
         foreach (var anchor in anchors)
         {
             anchor.Initialize();
@@ -36,6 +32,15 @@ public abstract class LegMovement : PrimaryMovement
     {
         base.RotateToTrackEntity(trackingTarget);
         CheckAnchorPositions();
+    }
+
+    protected override void HandleImpulse()
+    {
+        foreach(var anchor in anchors)
+        {
+            Debug.Log("impulse glued");
+            GluePosition(anchor);
+        }
     }
 
     protected abstract void InitializeParameters();
@@ -73,7 +78,6 @@ public abstract class LegMovement : PrimaryMovement
             unit.SetPositionAndRotation(Vector3.Lerp(startPosition, target, timeElapsed / pathStepDuration),
                 Quaternion.Slerp(startRotation, targetRotation, timeElapsed / pathStepDuration));
             timeElapsed += Time.deltaTime;
-
 
             CheckAnchorPositions();
             yield return null;

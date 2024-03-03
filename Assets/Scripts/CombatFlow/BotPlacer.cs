@@ -50,6 +50,7 @@ public class BotPlacer : MonoBehaviour
             MoveStyle style = bot.PrimaryMovement.Style;
             bot.transform.position = spawnSlots[bot.allegiance][style].GrabRandomly();
             bot.PrimaryMovement.SpawnOrientation();
+            StartCoroutine(bot.PrimaryMovement.NeutralStance());
         }
 
         void SpawnBotList(List<BotRecord> botRecords, Allegiance allegiance)

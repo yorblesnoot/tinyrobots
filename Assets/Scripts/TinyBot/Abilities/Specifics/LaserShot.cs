@@ -13,10 +13,10 @@ public class LaserShot : LinearAbility
         yield return StartCoroutine(LaunchAlongLine(laser, points, travelTime, hit));
     }
 
-    protected override void CompleteTrajectory(Vector3 position, GameObject launched, GameObject hit)
+    protected override void CompleteTrajectory(Vector3 position, GameObject launched, RaycastHit hit)
     {
         Destroy(launched);
-        if (hit != null && hit.TryGetComponent(out TinyBot bot)) bot.ReceiveDamage(damage);
+        if (hit.collider != null && hit.collider.TryGetComponent(out TinyBot bot)) bot.ReceiveDamage(damage, Owner.transform.position, hit.point);
     }
 
     public override List<TinyBot> GhostAimAt(GameObject target, Vector3 sourcePosition)

@@ -13,8 +13,12 @@ public enum Allegiance
 public class TinyBot : MonoBehaviour
 {
     [SerializeField] float deathExplodeMaxForce;
+    [SerializeField] float hitRecoilTime;
+    [SerializeField] float hitReturnTime;
+    [SerializeField] float recoilDistancePerDamage;
     [SerializeField] GameObject selectBrackets;
     [SerializeField] BotStateFeedback feedback;
+    [SerializeField] GameObject hitSpark;
     
     public Transform headshotPosition;
 
@@ -113,9 +117,13 @@ public class TinyBot : MonoBehaviour
         Destroy(gameObject, 5f);
     }
 
-    public void ReceiveDamage(int damage)
+    public void ReceiveDamage(int damage, Vector3 source, Vector3 hitPoint)
     {
         feedback.QueuePopup(damage, Color.red);
+        StartCoroutine(PrimaryMovement.ApplyImpulseToBody(source, recoilDistancePerDamage * damage, hitRecoilTime, hitReturnTime));
+        GameObject spark = Instantiate(hitSpark, hitPoint, Quaternion.identity);
+        spark.transform.LookAt(source);
+        Destroy(spark, 1f);
         Stats.Current[StatType.HEALTH] = Math.Clamp(Stats.Current[StatType.HEALTH] - damage, 0, Stats.Max[StatType.HEALTH]);
         TurnManager.UpdateHealth(this);
         if(Stats.Current[StatType.HEALTH] == 0) Die();

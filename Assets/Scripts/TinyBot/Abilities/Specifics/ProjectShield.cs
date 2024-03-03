@@ -12,13 +12,13 @@ public class ProjectShield : LinearAbility
     protected override IEnumerator PerformEffects()
     {
         animator.SetBool("barrierUp", true);
-        owner.beganTurn.AddListener(BeginLowerShield);
+        Owner.beganTurn.AddListener(BeginLowerShield);
         yield break;
     }
 
     void BeginLowerShield()
     {
-        owner.beganTurn.RemoveListener(BeginLowerShield);
+        Owner.beganTurn.RemoveListener(BeginLowerShield);
         StartCoroutine(LowerShield());
     }
 

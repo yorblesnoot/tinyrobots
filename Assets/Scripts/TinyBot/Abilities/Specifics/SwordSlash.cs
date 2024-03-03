@@ -50,7 +50,7 @@ public class SwordSlash : SpatialAbility
 
     protected override IEnumerator PerformEffects()
     {
-        List<TinyBot> hitTargets = indicator.GetIntersectingBots().Where(bot => bot != owner).ToList();
+        List<TinyBot> hitTargets = indicator.GetIntersectingBots().Where(bot => bot != Owner).ToList();
         indicator.ResetIntersecting();
         ReleaseLock();
         Vector3[] slashPoints = GetSlashPoints();
@@ -59,7 +59,7 @@ public class SwordSlash : SpatialAbility
         yield return StartCoroutine(SlashThroughPoints(slashPoints, slashTime));
         foreach (TinyBot bot in hitTargets)
         {
-            bot.ReceiveDamage(damage);
+            bot.ReceiveDamage(damage, Owner.transform.position, bot.ChassisPoint.position);
         }
         yield return new WaitForSeconds(returnTime);
         yield return StartCoroutine(ikTarget.gameObject.LerpTo(neutralPosition, returnTime, true));
@@ -69,13 +69,13 @@ public class SwordSlash : SpatialAbility
     IEnumerator SlashThroughPoints(Vector3[] points, float duration)
     {
         float timeElapsed = 0;
-        Vector3 startPosition = owner.transform.InverseTransformPoint(points[0]);
-        Vector3 endPosition = owner.transform.InverseTransformPoint(points[1]);
+        Vector3 startPosition = Owner.transform.InverseTransformPoint(points[0]);
+        Vector3 endPosition = Owner.transform.InverseTransformPoint(points[1]);
         while (timeElapsed < duration)
         {
-            owner.PrimaryMovement.RotateToTrackEntity(ikTarget.gameObject);
+            Owner.PrimaryMovement.RotateToTrackEntity(ikTarget.gameObject);
             Vector3 localPosition = Vector3.Slerp(startPosition, endPosition, timeElapsed / duration);
-            ikTarget.transform.position = owner.transform.TransformPoint(localPosition);
+            ikTarget.transform.position = Owner.transform.TransformPoint(localPosition);
             timeElapsed += Time.deltaTime;
             yield return null;
         }
@@ -84,7 +84,7 @@ public class SwordSlash : SpatialAbility
 
     Vector3[] GetSlashPoints()
     {
-        Vector3 awayFromBody = (transform.position - owner.ChassisPoint.position).normalized;
+        Vector3 awayFromBody = (transform.position - Owner.ChassisPoint.position).normalized;
         Vector3 startPosition = slashPosition.position + Vector3.up * slashHeight + awayFromBody * slashWidth;
         Vector3 direction = (slashPosition.position - startPosition).normalized;
         Vector3 lastPosition = startPosition + direction * slashLength;
