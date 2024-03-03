@@ -27,15 +27,12 @@ public class SwordSlash : SpatialAbility
     {
         neutralPosition = ikTarget.transform.localPosition;
     }
-    public override GameObject GhostAimAt(GameObject target, Vector3 sourcePosition)
-    {
-        throw new System.NotImplementedException();
-    }
 
-    protected override void AimAt(GameObject target)
+    protected override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool drawLine)
     {
         aimer.transform.LookAt(target.transform);
         ikTarget.position = Vector3.Lerp(ikTarget.position, readyPosition.position, 1/aimLag);
+        return indicator.GetIntersectingBots();
     }
 
     public override void LockOnTo(GameObject target)
@@ -54,7 +51,7 @@ public class SwordSlash : SpatialAbility
     protected override IEnumerator PerformEffects()
     {
         List<TinyBot> hitTargets = indicator.GetIntersectingBots().Where(bot => bot != owner).ToList();
-        
+        indicator.ResetIntersecting();
         ReleaseLock();
         Vector3[] slashPoints = GetSlashPoints();
         

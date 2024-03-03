@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -38,6 +35,7 @@ public class TinyBot : MonoBehaviour
 
     public List<Ability> Abilities { get; private set; }
     List<GameObject> Parts;
+    Renderer[] partRenderers;
     public void Initialize(List<Ability> abilities, List<GameObject> parts, PrimaryMovement primaryMovement)
     {
         Parts = parts;
@@ -45,6 +43,18 @@ public class TinyBot : MonoBehaviour
         PrimaryMovement = primaryMovement;
         PrimaryMovement.Owner = this;
         ClearActiveBot.AddListener(ClearActiveUnit);
+        partRenderers = GetComponentsInChildren<Renderer>();
+    }
+
+    public void SetOutlineColor(Color color)
+    {
+        foreach (Renderer r in partRenderers)
+        {
+            foreach(var m in r.materials)
+            {
+                m.SetColor("_OutlineColor", color);
+            }
+        }
     }
 
     public bool AttemptToSpendResource(int resource, StatType statType)
@@ -113,7 +123,7 @@ public class TinyBot : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if(UnitControl.ActiveBot != this) PrimaryCursor.SnapToUnit(this);
+        if(UnitControl.ActiveBot != this && ClickableAbility.Active == null) PrimaryCursor.SnapToUnit(this);
     }
 
     private void OnMouseExit()

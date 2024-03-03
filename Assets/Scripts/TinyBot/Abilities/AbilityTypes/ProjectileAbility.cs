@@ -6,27 +6,18 @@ using UnityEngine;
 public abstract class ProjectileAbility : Ability
 {
     protected List<Vector3> targetTrajectory;
-    public override GameObject GhostAimAt(GameObject target, Vector3 sourcePosition)
+    protected override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool drawLine)
     {
+        List<TinyBot> hitBots = new();
         Vector3 targetPosition = target.transform.position;
         float distance = Vector3.Distance(sourcePosition, targetPosition);
         Vector3 direction = (targetPosition - sourcePosition).normalized;
         Vector3 modifiedTarget = sourcePosition + direction * Mathf.Min(distance, range);
         Vector3[] targets = GetTrajectory(sourcePosition, modifiedTarget);
         targetTrajectory = CastAlongPoints(targets, blockingLayerMask, out var hit);
-        return hit;
-    }
-
-    protected override void AimAt(GameObject target)
-    {
-        Vector3 sourcePosition = emissionPoint.transform.position;
-        Vector3 targetPosition = target.transform.position;
-        float distance = Vector3.Distance(sourcePosition, targetPosition);
-        Vector3 direction = (targetPosition - sourcePosition).normalized;
-        Vector3 modifiedTarget = sourcePosition + direction * Mathf.Min(distance, range);
-        Vector3[] targets = GetTrajectory(sourcePosition, modifiedTarget);
-        targetTrajectory = CastAlongPoints(targets, blockingLayerMask, out _);
-        LineMaker.DrawLine(targetTrajectory.ToArray());
+        if(hit != null && hit.TryGetComponent(out TinyBot bot)) hitBots.Add(bot);
+        if(drawLine) LineMaker.DrawLine(targetTrajectory.ToArray());
+        return hitBots;
     }
 
     protected IEnumerator LaunchAlongLine(GameObject launched, List<Vector3> trajectory, float travelTime, GameObject hit)

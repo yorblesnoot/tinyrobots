@@ -19,9 +19,9 @@ public class LaserShot : LinearAbility
         if (hit != null && hit.TryGetComponent(out TinyBot bot)) bot.ReceiveDamage(damage);
     }
 
-    protected override void AimAt(GameObject target)
+    protected override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool drawLine)
     {
-        base.AimAt(target);
         turretTracker.TrackTarget(target);
+        return base.AimAt(target, emissionPoint.transform.position, true);
     }
 }

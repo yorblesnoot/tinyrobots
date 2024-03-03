@@ -5,16 +5,14 @@ using UnityEngine;
 public class SpatialTargeter : MonoBehaviour
 {
     [HideInInspector] public List<TinyBot> intersectingBots = new();
-    private void OnDisable()
+    public void ResetIntersecting()
     {
-        //intersectingBots = new();
+        intersectingBots = new();
     }
 
     public List<TinyBot> GetIntersectingBots()
     {
-        List<TinyBot> output = new(intersectingBots);
-        intersectingBots = new();
-        return output;
+        return new(intersectingBots);
     }
     private void OnTriggerEnter(Collider other)
     {

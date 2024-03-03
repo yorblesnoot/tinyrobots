@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,9 +47,12 @@ public abstract class Ability : MonoBehaviour
         yield return StartCoroutine(PerformEffects());
         PrimaryCursor.actionInProgress = false;
     }
-
-    protected abstract void AimAt(GameObject target);
-    public abstract GameObject GhostAimAt(GameObject target, Vector3 sourcePosition);
+    List<TinyBot> currentTargets = new();
+    protected abstract List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool drawLine);
+    public virtual List<TinyBot> GhostAimAt(GameObject target, Vector3 sourcePosition)
+    {
+        return AimAt(target, sourcePosition, false);
+    }
 
     public virtual bool IsUsable(Vector3 sourcePosition)
     {
@@ -64,13 +68,29 @@ public abstract class Ability : MonoBehaviour
         trackedTarget = null;
         StartCoroutine(owner.PrimaryMovement.NeutralStance());
         LineMaker.HideLine();
+        HighlightAffectedTargets(null);
     }
     protected abstract IEnumerator PerformEffects();
     void Update()
     {
         if (trackedTarget == null) return;
-        AimAt(trackedTarget);
+        List<TinyBot> newTargets = AimAt(trackedTarget, emissionPoint.transform.position, true);
+        Debug.Log(newTargets.Count);
+        HighlightAffectedTargets(newTargets);
         owner.PrimaryMovement.RotateToTrackEntity(trackedTarget);
     }
 
+    private void HighlightAffectedTargets(List<TinyBot> newTargets)
+    {
+        newTargets ??= new();
+        foreach(TinyBot bot in newTargets)
+        {
+            if(!currentTargets.Contains(bot)) bot.SetOutlineColor(Color.red);
+        }
+        foreach(TinyBot bot in currentTargets)
+        {
+            if(!newTargets.Contains(bot)) bot.SetOutlineColor(Color.white);
+        }
+        currentTargets = new(newTargets);
+    }
 } 

@@ -54,6 +54,7 @@ public class TurnManager : MonoBehaviour
         removed.Die();
         activePortraits.Remove(bot);
         Singleton.StartCoroutine(RecyclePortrait(removed, 1.5f));
+        
     }
 
     static IEnumerator RecyclePortrait(TurnPortrait removed, float wait)
@@ -61,6 +62,7 @@ public class TurnManager : MonoBehaviour
         yield return new WaitForSeconds(wait);
         removed.Clear();
         PortraitStock.Add(removed);
+        ArrangePortraits(currentlyActive);
     }
 
     public void BeginTurnSequence()

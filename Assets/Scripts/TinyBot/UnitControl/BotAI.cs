@@ -53,15 +53,15 @@ public class BotAI
         static bool AbilityHasTarget(Ability ability, List<TinyBot> enemies, Vector3Int location, out TinyBot target)
         {
             target = default;
-            foreach (var enemy in enemies)
+            foreach (var playerUnit in enemies)
             {
-                if (Vector3.Distance(enemy.ChassisPoint.position, location) <= ability.range)
+                if (Vector3.Distance(playerUnit.ChassisPoint.position, location) <= ability.range)
                 {
-                    Vector3 direction = enemy.ChassisPoint.position - location;
+                    Vector3 direction = playerUnit.ChassisPoint.position - location;
                     Ray testRay = new(location, direction);
-                    GameObject hit = ability.GhostAimAt(enemy.ChassisPoint.gameObject, location);
-                    if (hit == null || !hit.TryGetComponent<TinyBot>(out _)) continue;
-                    target = enemy;
+                    List<TinyBot> hits = ability.GhostAimAt(playerUnit.ChassisPoint.gameObject, location);
+                    if (hits == null || hits.Count == 0) continue;
+                    target = playerUnit;
                     return true;
                 }
             }
