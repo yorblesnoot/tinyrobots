@@ -22,10 +22,21 @@ public class SwordSlash : SpatialAbility
 
     [SerializeField] float aimLag = 30;
 
+    float indicatorRange;
+
     Vector3 neutralPosition;
     private void Start()
     {
         neutralPosition = ikTarget.transform.localPosition;
+        indicatorRange = indicator.GetComponent<Renderer>().bounds.size.magnitude/2;
+    }
+
+    public override List<TinyBot> AIAimAt(GameObject target, Vector3 sourcePosition)
+    {
+        List<TinyBot> targets = new();
+        if (Vector3.Distance(target.transform.position, sourcePosition) <= indicatorRange && target.TryGetComponent(out TinyBot bot)) 
+            targets.Add(bot);
+        return targets;
     }
 
     protected override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition)
@@ -37,7 +48,8 @@ public class SwordSlash : SpatialAbility
 
     public override void LockOnTo(GameObject target, bool draw)
     {
-        base.LockOnTo(target, true);
+        base.LockOnTo(target, draw);
+        if (!draw) return;
         indicator.gameObject.SetActive(true);
         animator.SetBool("bladeOut", true);
     }

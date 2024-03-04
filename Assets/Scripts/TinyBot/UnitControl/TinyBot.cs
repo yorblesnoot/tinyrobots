@@ -103,15 +103,17 @@ public class TinyBot : MonoBehaviour
     }
 
     readonly float minForce = .1f;
-    void Die()
+    [SerializeField] float deathPushMulti = 1;
+    void Die(Vector3 hitSource)
     {
+        Vector3 hitPush = (transform.position - hitSource).normalized * deathPushMulti;
         foreach(var part in Parts)
         {
             Rigidbody rigidPart = part.AddComponent<Rigidbody>();
             Vector3 explodeForce = new(Random.Range(minForce, deathExplodeMaxForce), 
                 Random.Range(minForce, deathExplodeMaxForce), 
                 Random.Range(minForce, deathExplodeMaxForce));
-            rigidPart.velocity = explodeForce;
+            rigidPart.velocity = explodeForce + hitPush;
         }
         TurnManager.RemoveTurnTaker(this);
         Destroy(gameObject, 5f);
@@ -126,7 +128,7 @@ public class TinyBot : MonoBehaviour
         Destroy(spark, 1f);
         Stats.Current[StatType.HEALTH] = Math.Clamp(Stats.Current[StatType.HEALTH] - damage, 0, Stats.Max[StatType.HEALTH]);
         TurnManager.UpdateHealth(this);
-        if(Stats.Current[StatType.HEALTH] == 0) Die();
+        if(Stats.Current[StatType.HEALTH] == 0) Die(source);
     }
 
     private void OnMouseEnter()

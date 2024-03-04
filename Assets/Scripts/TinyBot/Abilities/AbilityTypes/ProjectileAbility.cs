@@ -25,7 +25,7 @@ public abstract class ProjectileAbility : Ability
         GameObject spawned = Instantiate(launched);
         float intervalTime = travelTime / trajectory.Count;
         float timeElapsed;
-        spawned.transform.rotation = emissionPoint.transform.rotation;
+        spawned.transform.rotation = Quaternion.LookRotation(trajectory[1] - trajectory[0]);
         for (int i = 0; i < trajectory.Count - 1; i++)
         {
             Quaternion startRotation = spawned.transform.rotation;

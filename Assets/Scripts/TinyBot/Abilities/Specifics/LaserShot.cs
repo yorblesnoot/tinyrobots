@@ -19,7 +19,7 @@ public class LaserShot : LinearAbility
         if (hit.collider != null && hit.collider.TryGetComponent(out TinyBot bot)) bot.ReceiveDamage(damage, Owner.transform.position, hit.point);
     }
 
-    public override List<TinyBot> GhostAimAt(GameObject target, Vector3 sourcePosition)
+    public override List<TinyBot> AIAimAt(GameObject target, Vector3 sourcePosition)
     {
         return base.AimAt(target, sourcePosition);
     }

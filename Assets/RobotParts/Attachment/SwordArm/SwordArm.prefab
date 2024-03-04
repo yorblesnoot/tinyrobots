@@ -407,17 +407,17 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 54fe99835a0f7514aaf8b4abc2b32a81,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 5
+      value: 9.596
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 54fe99835a0f7514aaf8b4abc2b32a81,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 5
+      value: 9.596
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 54fe99835a0f7514aaf8b4abc2b32a81,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 5
+      value: 9.596
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 54fe99835a0f7514aaf8b4abc2b32a81,
         type: 3}
@@ -931,11 +931,11 @@ MonoBehaviour:
   cost: 1
   range: 5
   cooldown: 1
-  damage: 15
+  damage: 20
   icon: {fileID: 21300000, guid: 77fb1396afd204cba852e21347033826, type: 3}
   currentCooldown: 0
   blockingLayers: []
-  owner: {fileID: 0}
+  Owner: {fileID: 0}
   aimer: {fileID: 4748042984077318378}
   indicator: {fileID: 6266359645399084355}
   animator: {fileID: 3797603778250042775}
@@ -945,7 +945,7 @@ MonoBehaviour:
   slashHeight: 2
   slashWidth: 1.5
   slashLength: 4
-  slashTime: 0.1
+  slashTime: 0.07
   returnTime: 0.4
   aimLag: 30
 --- !u!1001 &6133005183326228880

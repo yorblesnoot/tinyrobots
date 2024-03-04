@@ -50,7 +50,7 @@ public abstract class Ability : MonoBehaviour
     }
     List<TinyBot> currentTargets = new();
     protected abstract List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition);
-    public virtual List<TinyBot> GhostAimAt(GameObject target, Vector3 sourcePosition)
+    public virtual List<TinyBot> AIAimAt(GameObject target, Vector3 sourcePosition)
     {
         return AimAt(target, sourcePosition);
     }

@@ -320,8 +320,8 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.7
-  m_Height: 1.7
+  m_Radius: 0.6
+  m_Height: 1.6
   m_Direction: 1
   m_Center: {x: 0, y: 1.4, z: 0}
 --- !u!114 &3745691473234048856
@@ -350,7 +350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d984b4955c72af649843d79cabd90679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathExplodeMaxForce: 5
+  deathExplodeMaxForce: 3
   hitRecoilTime: 0.1
   hitReturnTime: 0.5
   recoilDistancePerDamage: 0.03
@@ -367,6 +367,7 @@ MonoBehaviour:
   beganTurn:
     m_PersistentCalls:
       m_Calls: []
+  deathPushMulti: 1
 --- !u!1001 &7754414055999811402
 PrefabInstance:
   m_ObjectHideFlags: 0
