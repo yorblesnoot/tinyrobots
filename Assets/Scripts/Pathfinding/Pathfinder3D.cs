@@ -136,10 +136,12 @@ public static class Pathfinder3D
         return worldPath;
     }
 
-    public static void GeneratePathingTree(MoveStyle style, Vector3Int startCoords)
+    public static void GeneratePathingTree(TinyBot owner)
     {
+        MoveStyle style = owner.PrimaryMovement.Style;
+        Vector3Int startCoords = Vector3Int.RoundToInt(owner.transform.position);
         if (!nodeMap.TryGetValue(startCoords, out PathfindingNode start)) return;
-        GetNodeOccupancy();
+        GetNodeOccupancy(owner);
 
         HashSet<PathfindingNode> unvisited = new();
         foreach (PathfindingNode node in nodeMap.Values)
@@ -161,7 +163,6 @@ public static class Pathfinder3D
             PathfindingNode current = frontier.Dequeue();
             unvisited.Remove(current);
             if (current.G == float.PositiveInfinity) return;
-            //if (current.G > maxDistance) continue;
 
             foreach (PathfindingNode.Edge edge in current.edges)
             {
@@ -179,7 +180,7 @@ public static class Pathfinder3D
     }
 
     static List<Vector3Int> lastOccupied = new();
-    private static void GetNodeOccupancy()
+    private static void GetNodeOccupancy(TinyBot owner)
     {
         if(lastOccupied.Count > 0)
         {
@@ -191,20 +192,20 @@ public static class Pathfinder3D
         lastOccupied = new();
         foreach(var bot in TurnManager.TurnTakers)
         {
+            if(bot == owner) continue;
             Vector3Int cleanPosition = Vector3Int.RoundToInt(bot.transform.position);
             lastOccupied.Add(cleanPosition);
             SetNodeOccupancy(cleanPosition, true);
         }
     }
 
-    static readonly int unitHeight = 2;
     static void SetNodeOccupancy(Vector3Int position, bool status)
     {
-        for(int i = 0; i < unitHeight; i++)
+        PathfindingNode node = nodeMap[position];
+        node.occupied = status;
+        foreach(var edge in node.edges)
         {
-            Vector3Int finalPos = position;
-            finalPos.y += i;
-            nodeMap[finalPos].occupied = status;
+            edge.neighbor.occupied = status;
         }
     }
 

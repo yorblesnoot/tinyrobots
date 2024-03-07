@@ -21,7 +21,7 @@ public class BotAI
         thisBot.ToggleActiveLayer(true);
         List<Ability> possibleAbilities = new(thisBot.Abilities);
         List<TinyBot> enemies = TurnManager.TurnTakers.Where(x => x.allegiance != thisBot.allegiance).ToList();
-        Pathfinder3D.GeneratePathingTree(thisBot.PrimaryMovement.Style, Vector3Int.RoundToInt(thisBot.transform.position));
+        Pathfinder3D.GeneratePathingTree(thisBot);
 
         while (possibleAbilities.Count > 0)
         {
@@ -58,7 +58,7 @@ public class BotAI
                     thisBot.AttemptToSpendResource(ability.cost, StatType.ACTION);
                     yield return thisBot.StartCoroutine(ability.Execute());
                     ability.ReleaseLock();
-                    Pathfinder3D.GeneratePathingTree(thisBot.PrimaryMovement.Style, Vector3Int.RoundToInt(thisBot.transform.position));
+                    Pathfinder3D.GeneratePathingTree(thisBot);
                     yield break;
                 }
             }

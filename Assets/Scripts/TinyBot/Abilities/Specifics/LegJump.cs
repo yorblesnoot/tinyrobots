@@ -20,7 +20,7 @@ public class LegJump : ParabolicAbility
         }
         animator.Play("Idle");
         yield return StartCoroutine(Owner.PrimaryMovement.NeutralStance());
-        Pathfinder3D.GeneratePathingTree(MoveStyle.WALK, Vector3Int.RoundToInt(Owner.transform.position));
+        Pathfinder3D.GeneratePathingTree(Owner);
     }
 
     public override bool IsUsable(Vector3 sourcePosition)

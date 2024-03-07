@@ -71,6 +71,7 @@ public class PrimaryCursor : MonoBehaviour
         
         if (Input.GetMouseButtonDown(0))
         {
+            Debug.Log(EventSystem.current.IsPointerOverGameObject());
             //ability use
             if (anAbilityIsActive)
             {
@@ -169,7 +170,7 @@ public class PrimaryCursor : MonoBehaviour
         actionInProgress = true;
         yield return StartCoroutine(ActiveBot.PrimaryMovement.TraversePath(currentPath));
         StatDisplay.SyncStatDisplay(ActiveBot);
-        Pathfinder3D.GeneratePathingTree(ActiveBot.PrimaryMovement.Style, Vector3Int.RoundToInt(ActiveBot.transform.position));
+        Pathfinder3D.GeneratePathingTree(ActiveBot);
         actionInProgress = false;
     }
 
@@ -179,7 +180,7 @@ public class PrimaryCursor : MonoBehaviour
         TinyBot.ClearActiveBot.Invoke();
         bot.BecomeActiveUnit();
         SetCursorMode(bot.PrimaryMovement.PreferredCursor);
-        Pathfinder3D.GeneratePathingTree(bot.PrimaryMovement.Style, Vector3Int.RoundToInt(bot.transform.position));
+        Pathfinder3D.GeneratePathingTree(bot);
         AbilityUI.ShowControlForUnit(bot);
         StatDisplay.SyncStatDisplay(bot);
     }
