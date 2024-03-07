@@ -63,7 +63,11 @@ public class PrimaryCursor : MonoBehaviour
 
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
         if (State == CursorState.FREE) ActiveBehaviour.ControlCursor();
-
+        if (actionInProgress) 
+        {
+            HideMovePreview();
+            return; 
+        }
         
         if (Input.GetMouseButtonDown(0))
         {
@@ -91,8 +95,11 @@ public class PrimaryCursor : MonoBehaviour
             else if (currentPath != null && ActiveBot != null
                 && currentPathCost <= ActiveBot.Stats.Current[StatType.MOVEMENT]
                 && !EventSystem.current.IsPointerOverGameObject()
-                && ActiveBot.AttemptToSpendResource(currentPathCost, StatType.MOVEMENT)) 
+                && ActiveBot.AttemptToSpendResource(currentPathCost, StatType.MOVEMENT))
+            {
                 StartCoroutine(TraversePath());
+            }
+                
             
         }
         else if (Input.GetMouseButtonDown(1)) ClickableAbility.Deactivate();
@@ -100,7 +107,7 @@ public class PrimaryCursor : MonoBehaviour
         //Debug.Log($"active {ActiveBot}, action {actionInProgress}, ability {anAbilityIsActive}");
 
         //generate new path
-        if (!actionInProgress && ActiveBot != null)
+        if (ActiveBot != null)
         {
             Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
             if (currentPosition != lastPosition)
@@ -114,7 +121,7 @@ public class PrimaryCursor : MonoBehaviour
             }
         }
         //toggle path preview
-        if (ActiveBot == null || actionInProgress || anAbilityIsActive)
+        if (ActiveBot == null || anAbilityIsActive)
         {
             HideMovePreview();
         }
@@ -160,7 +167,7 @@ public class PrimaryCursor : MonoBehaviour
     private IEnumerator TraversePath()
     {
         actionInProgress = true;
-        yield return StartCoroutine(ActiveBot.PrimaryMovement.PathToPoint(currentPath));
+        yield return StartCoroutine(ActiveBot.PrimaryMovement.TraversePath(currentPath));
         StatDisplay.SyncStatDisplay(ActiveBot);
         Pathfinder3D.GeneratePathingTree(ActiveBot.PrimaryMovement.Style, Vector3Int.RoundToInt(ActiveBot.transform.position));
         actionInProgress = false;

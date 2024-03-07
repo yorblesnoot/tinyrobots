@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Jobs;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public enum MoveStyle
@@ -116,6 +117,10 @@ public static class Pathfinder3D
     {
         return nodeMap.Values.Where(node => node.G <= moveBudget).OrderBy(node => node.G).Select(node => node.location).ToList();
     }
+    public static List<Vector3Int> GetPathableLocations()
+    {
+        return nodeMap.Values.Where(node => node.G < float.PositiveInfinity).Select(node => node.location).ToList();
+    }
 
     public static List<Vector3> FindVectorPath(Vector3Int end, out List<float> gValues)
     {
@@ -134,6 +139,7 @@ public static class Pathfinder3D
     public static void GeneratePathingTree(MoveStyle style, Vector3Int startCoords)
     {
         if (!nodeMap.TryGetValue(startCoords, out PathfindingNode start)) return;
+        GetNodeOccupancy();
 
         HashSet<PathfindingNode> unvisited = new();
         foreach (PathfindingNode node in nodeMap.Values)
@@ -160,7 +166,7 @@ public static class Pathfinder3D
             foreach (PathfindingNode.Edge edge in current.edges)
             {
                 PathfindingNode neighbor = edge.neighbor;
-                if (neighbor.blocked || neighbor.modeAccess[style] == false || !unvisited.Contains(neighbor)) continue;
+                if (neighbor.blocked || neighbor.occupied || neighbor.modeAccess[style] == false || !unvisited.Contains(neighbor)) continue;
                 float possibleG = current.G + edge.magnitude;
                 if (possibleG < neighbor.G)
                 {
@@ -169,6 +175,36 @@ public static class Pathfinder3D
                     frontier.Enqueue(neighbor, neighbor.G);
                 }
             }
+        }
+    }
+
+    static List<Vector3Int> lastOccupied = new();
+    private static void GetNodeOccupancy()
+    {
+        if(lastOccupied.Count > 0)
+        {
+            foreach (var node in lastOccupied)
+            {
+                SetNodeOccupancy(node, false);
+            }
+        }
+        lastOccupied = new();
+        foreach(var bot in TurnManager.TurnTakers)
+        {
+            Vector3Int cleanPosition = Vector3Int.RoundToInt(bot.transform.position);
+            lastOccupied.Add(cleanPosition);
+            SetNodeOccupancy(cleanPosition, true);
+        }
+    }
+
+    static readonly int unitHeight = 2;
+    static void SetNodeOccupancy(Vector3Int position, bool status)
+    {
+        for(int i = 0; i < unitHeight; i++)
+        {
+            Vector3Int finalPos = position;
+            finalPos.y += i;
+            nodeMap[finalPos].occupied = status;
         }
     }
 
@@ -236,6 +272,7 @@ class PathfindingNode
     public Vector3Int location;
 
     public bool blocked;
+    public bool occupied;
     public Dictionary<MoveStyle, bool> modeAccess;
 
     public PathfindingNode parent;

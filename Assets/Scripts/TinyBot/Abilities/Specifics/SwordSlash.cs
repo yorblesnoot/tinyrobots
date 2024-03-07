@@ -31,19 +31,22 @@ public class SwordSlash : SpatialAbility
         indicatorRange = indicator.GetComponent<Renderer>().bounds.size.magnitude/2;
     }
 
-    public override List<TinyBot> AIAimAt(GameObject target, Vector3 sourcePosition)
+    public override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
-        List<TinyBot> targets = new();
-        if (Vector3.Distance(target.transform.position, sourcePosition) <= indicatorRange && target.TryGetComponent(out TinyBot bot)) 
-            targets.Add(bot);
-        return targets;
-    }
-
-    protected override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition)
-    {
-        aimer.transform.LookAt(target.transform);
-        ikTarget.position = Vector3.Lerp(ikTarget.position, readyPosition.position, 1/aimLag);
-        return indicator.GetIntersectingBots();
+        if (aiMode)
+        {
+            List<TinyBot> targets = new();
+            if (Vector3.Distance(target.transform.position, sourcePosition) <= indicatorRange && target.TryGetComponent(out TinyBot bot))
+                targets.Add(bot);
+            return targets;
+        }
+        else
+        {
+            aimer.transform.LookAt(target.transform);
+            ikTarget.position = Vector3.Lerp(ikTarget.position, readyPosition.position, 1 / aimLag);
+            return indicator.GetIntersectingBots();
+        }
+        
     }
 
     public override void LockOnTo(GameObject target, bool draw)

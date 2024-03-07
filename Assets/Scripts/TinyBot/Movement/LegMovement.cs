@@ -5,7 +5,7 @@ using UnityEngine;
 
 public abstract class LegMovement : PrimaryMovement
 {
-    [SerializeField] protected float pathStepDuration = .4f;
+    
     [SerializeField] protected float legStepDuration = .1f;
     [SerializeField] protected float lookHeightModifier = 1f;
 
@@ -31,20 +31,19 @@ public abstract class LegMovement : PrimaryMovement
     public override void RotateToTrackEntity(GameObject trackingTarget)
     {
         base.RotateToTrackEntity(trackingTarget);
-        CheckAnchorPositions();
+        AnimateToOrientation();
     }
 
     protected override void HandleImpulse()
     {
         foreach(var anchor in anchors)
         {
-            Debug.Log("impulse glued");
             GluePosition(anchor);
         }
     }
 
     protected abstract void InitializeParameters();
-    protected void CheckAnchorPositions()
+    protected override void AnimateToOrientation()
     {
         Anchor farthestFromBase = null;
         foreach (var anchor in anchors)
@@ -66,23 +65,7 @@ public abstract class LegMovement : PrimaryMovement
         anchor.ikTarget.position = anchor.gluedWorldPosition;
         anchor.distanceFromBase = Vector3.Distance(anchor.ikTarget.localPosition, anchor.localBasePosition);
     }
-    protected IEnumerator InterpolatePositionAndRotation(Transform unit, Vector3 target)
-    {
-        Quaternion startRotation = unit.rotation;
-        Quaternion targetRotation = GetRotationAtPosition(target);
-
-        Vector3 startPosition = unit.position;
-        float timeElapsed = 0;
-        while (timeElapsed < pathStepDuration)
-        {
-            unit.SetPositionAndRotation(Vector3.Lerp(startPosition, target, timeElapsed / pathStepDuration),
-                Quaternion.Slerp(startRotation, targetRotation, timeElapsed / pathStepDuration));
-            timeElapsed += Time.deltaTime;
-
-            CheckAnchorPositions();
-            yield return null;
-        }
-    }
+    
     protected IEnumerator StepToBase(Anchor anchor, bool goToNeutral = false)
     {
         stepping = true;
@@ -106,7 +89,7 @@ public abstract class LegMovement : PrimaryMovement
         anchor.stepping = false;
     }
 
-    protected abstract Quaternion GetRotationAtPosition(Vector3 moveTarget);
+    
 
     protected abstract Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral, Vector3 localStartPosition);
 

@@ -12,8 +12,46 @@ public abstract class PrimaryMovement : MonoBehaviour
     public float chassisHeight;
     public Transform sourceBone;
 
-    public abstract IEnumerator PathToPoint(List<Vector3> path);
-    public abstract void SpawnOrientation();
+    [SerializeField] protected float pathStepDuration = .4f;
+
+    public IEnumerator TraversePath(List<Vector3> path)
+    {
+        foreach (var target in path)
+        {
+            yield return StartCoroutine(InterpolatePositionAndRotation(Owner.transform, target));
+        }
+        StartCoroutine(NeutralStance());
+    }
+
+    protected IEnumerator InterpolatePositionAndRotation(Transform unit, Vector3 target)
+    {
+        Quaternion startRotation = unit.rotation;
+        Quaternion targetRotation = GetRotationAtPosition(target);
+
+        Vector3 startPosition = unit.position;
+        float timeElapsed = 0;
+        while (timeElapsed < pathStepDuration)
+        {
+            unit.SetPositionAndRotation(Vector3.Lerp(startPosition, target, timeElapsed / pathStepDuration),
+                Quaternion.Slerp(startRotation, targetRotation, timeElapsed / pathStepDuration));
+            timeElapsed += Time.deltaTime;
+
+            AnimateToOrientation();
+            yield return null;
+        }
+    }
+    protected virtual void AnimateToOrientation() { }
+    public virtual Quaternion GetRotationAtPosition(Vector3 moveTarget)
+    {
+        moveTarget.y = transform.position.y;
+        Quaternion targetRotation = Quaternion.LookRotation(moveTarget - transform.position);
+        return targetRotation;
+    }
+    public virtual void SpawnOrientation()
+    {
+        Owner.transform.LookAt(GetCenterColumn());
+        StartCoroutine(NeutralStance());
+    }
     protected Vector3 GetCenterColumn()
     {
         return new(Pathfinder3D.xSize / 2, transform.position.y, Pathfinder3D.zSize / 2);

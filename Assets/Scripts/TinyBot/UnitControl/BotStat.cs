@@ -30,7 +30,7 @@ public class BotStats
         Max[StatType.MOVEMENT] = 15;
         Max[StatType.HEALTH] = 30;
 
-        Current[StatType.HEALTH] = 50;
+        Current[StatType.HEALTH] = 30;
     }
 
     public void SetToMax(StatType type)

@@ -34,6 +34,7 @@ public class UnitControl : MonoBehaviour
 
     void EndPlayerTurn()
     {
+        if (PrimaryCursor.actionInProgress) return;
         gameObject.SetActive(false);
         TurnManager.EndTurn(ActiveBot);
         ClickableAbility.Deactivate();

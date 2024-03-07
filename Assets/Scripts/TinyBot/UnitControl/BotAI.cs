@@ -2,18 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static UnityEditor.FilePathAttribute;
 
 public class BotAI
 {
     readonly TinyBot thisBot;
+    int terrainMask;
 
     public BotAI(TinyBot bot)
     {
         thisBot = bot;
+        terrainMask = LayerMask.GetMask("Terrain");
     }
 
     readonly float lockTime = 1f;
+    public static readonly float terrainCheckSize = 1.1f;
     public IEnumerator TakeTurn()
     {
         thisBot.ToggleActiveLayer(true);
@@ -44,8 +46,13 @@ public class BotAI
                 if(AbilityHasTarget(ability, enemies, location, out TinyBot target))
                 {
                     //move to location
-                    if (Vector3Int.RoundToInt(thisBot.transform.position) != location) 
-                        yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.PathToPoint(Pathfinder3D.FindVectorPath(location, out _)));
+                    if (Vector3Int.RoundToInt(thisBot.transform.position) != location)
+                    {
+                        List<Vector3> path = Pathfinder3D.FindVectorPath(location, out var moveCosts);
+                        thisBot.AttemptToSpendResource(Mathf.RoundToInt(moveCosts[^1]), StatType.MOVEMENT);
+                        yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.TraversePath(path));
+                    }
+                        
                     ability.LockOnTo(target.ChassisPoint.gameObject, false);
                     yield return new WaitForSeconds(lockTime);
                     thisBot.AttemptToSpendResource(ability.cost, StatType.ACTION);
@@ -57,35 +64,56 @@ public class BotAI
             }
             possibleAbilities.Remove(ability);
         }
-        static bool AbilityHasTarget(Ability ability, List<TinyBot> targets, Vector3Int location, out TinyBot target)
+
+        
+        bool AbilityHasTarget(Ability ability, List<TinyBot> targets, Vector3Int baseLocation, out TinyBot target)
         {
             target = default;
+            Vector3 location = GunPositionAt(ability, baseLocation);
+            if(Physics.CheckSphere(location, terrainCheckSize, terrainMask)) return false;
+            Debug.DrawRay(location, Vector3.down, Color.blue, 5f);
+            
             foreach (var playerUnit in targets)
             {
-                if (Vector3.Distance(playerUnit.ChassisPoint.position, location) <= ability.range)
+                Transform targetPoint = playerUnit.ChassisPoint;
+                if (Vector3.Distance(targetPoint.position, location) <= ability.range)
                 {
-                    Vector3 direction = playerUnit.ChassisPoint.position - location;
-                    Ray testRay = new(location, direction);
-                    List<TinyBot> hits = ability.AIAimAt(playerUnit.ChassisPoint.gameObject, location);
+                    Vector3 direction = targetPoint.position - location;
+                    List<TinyBot> hits = ability.AimAt(targetPoint.gameObject, location, true);
                     if (hits == null || hits.Count == 0) continue;
                     target = playerUnit;
+                    Debug.DrawRay(location, Vector3.up, Color.yellow, 5f);
                     return true;
                 }
             }
             return false;
         }
+
+
         IEnumerator MoveFreely()
         {
             enemies.OrderBy(unit => Vector3.Distance(unit.transform.position, thisBot.transform.position)).ToList();
             Vector3 closestEnemyPosition = enemies[0].transform.position;
-            List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations(Mathf.FloorToInt(thisBot.Stats.Current[StatType.MOVEMENT]));
+            List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations();
             pathableLocations = pathableLocations.OrderBy(location => Vector3.Distance(location, closestEnemyPosition)).ToList();
+            List<Vector3> path = Pathfinder3D.FindVectorPath(pathableLocations[0], out var moveCosts);
+            int endIndex = 0;
+            Debug.Log(thisBot.Stats.Current[StatType.MOVEMENT]);
+            while (moveCosts[endIndex] < thisBot.Stats.Current[StatType.MOVEMENT]) endIndex++;
 
-            Debug.Log(Vector3.Distance(pathableLocations[0], closestEnemyPosition));
-            Debug.Log(pathableLocations[0] + " path " + thisBot.transform.position + " me");
-            List<Vector3> path = Pathfinder3D.FindVectorPath(pathableLocations[0], out _);
-            Debug.Log(path);
-            yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.PathToPoint(path));
+            path = path.Take(endIndex).ToList();
+            thisBot.AttemptToSpendResource(Mathf.RoundToInt(moveCosts[endIndex]), StatType.MOVEMENT);
+
+            yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.TraversePath(path));
         }
+    }
+
+    Vector3 GunPositionAt(Ability ability, Vector3 position)
+    {
+        Quaternion locationRotation = thisBot.PrimaryMovement.GetRotationAtPosition(position);
+        Vector3 gunPosition = ability.emissionPoint.transform.position;
+        Vector3 localGun = thisBot.transform.InverseTransformPoint(gunPosition);
+        Vector3 rotatedGun = locationRotation * localGun;
+        return position + rotatedGun;
     }
 }

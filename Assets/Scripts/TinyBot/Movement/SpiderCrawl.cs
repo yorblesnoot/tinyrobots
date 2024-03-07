@@ -1,21 +1,11 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SpiderCrawl : LegMovement
 {
     [SerializeField][Range(0f, 1f)] float raycastInTilt;
     [SerializeField] float anchorInwardLength;
-
-    public override IEnumerator PathToPoint(List<Vector3> path)
-    {
-        foreach (var target in path)
-        {
-            yield return StartCoroutine(InterpolatePositionAndRotation(Owner.transform, target));
-        }
-        StartCoroutine(NeutralStance()); 
-    }
+    
     public override void SpawnOrientation()
     {
         Vector3 normal = GetMeshNormalAt(Owner.transform.position);
@@ -60,13 +50,11 @@ public class SpiderCrawl : LegMovement
         return finalPosition;
     }
     
-    
-    protected override Quaternion GetRotationAtPosition(Vector3 moveTarget)
+    public override Quaternion GetRotationAtPosition(Vector3 moveTarget)
     {
         Vector3 targetNormal = GetMeshNormalAt(moveTarget);
         Vector3 lookTarget = moveTarget + targetNormal * lookHeightModifier;
         Quaternion targetRotation = Quaternion.LookRotation(lookTarget - transform.position, targetNormal);
         return targetRotation;
     }
-    
 }

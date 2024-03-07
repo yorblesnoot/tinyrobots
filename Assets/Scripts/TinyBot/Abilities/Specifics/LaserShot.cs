@@ -11,6 +11,7 @@ public class LaserShot : LinearAbility
     {
         List<Vector3> points = CastAlongPoints(targetTrajectory.ToArray(), blockingLayerMask, out var hit);
         yield return StartCoroutine(LaunchAlongLine(laser, points, travelTime, hit));
+        turretTracker.ResetTracking();
     }
 
     protected override void CompleteTrajectory(Vector3 position, GameObject launched, RaycastHit hit)
@@ -19,14 +20,9 @@ public class LaserShot : LinearAbility
         if (hit.collider != null && hit.collider.TryGetComponent(out TinyBot bot)) bot.ReceiveDamage(damage, Owner.transform.position, hit.point);
     }
 
-    public override List<TinyBot> AIAimAt(GameObject target, Vector3 sourcePosition)
+    public override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
-        return base.AimAt(target, sourcePosition);
-    }
-
-    protected override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition)
-    {
-        turretTracker.TrackTarget(target);
+        if(!aiMode) turretTracker.TrackTarget(target);
         return base.AimAt(target, sourcePosition);
     }
 }

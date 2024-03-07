@@ -256,7 +256,7 @@ PrefabInstance:
     - target: {fileID: 2492069091629794176, guid: 7720e2096f975f944b47c6983c6d88da,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.2709872
+      value: -0.01
       objectReference: {fileID: 0}
     - target: {fileID: 2492069091629794176, guid: 7720e2096f975f944b47c6983c6d88da,
         type: 3}
@@ -703,7 +703,7 @@ MonoBehaviour:
   emissionPoint: {fileID: 646414412058972572}
   PreferredCursor: 0
   cost: 1
-  range: 15
+  range: 30
   cooldown: 1
   damage: 10
   icon: {fileID: 21300000, guid: d0abed84aa6f5489fb1695cbcafffef0, type: 3}
@@ -712,7 +712,7 @@ MonoBehaviour:
   - Terrain
   - Shield
   - Default
-  owner: {fileID: 0}
+  Owner: {fileID: 0}
   laser: {fileID: 4700887371249141454, guid: 96e320672d3da51439a874f0e20d154a, type: 3}
   travelTime: 0.3
   turretTracker: {fileID: 6848633858222717607}

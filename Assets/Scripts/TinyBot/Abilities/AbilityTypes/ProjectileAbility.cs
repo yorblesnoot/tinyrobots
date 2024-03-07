@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public abstract class ProjectileAbility : Ability
 {
     protected List<Vector3> targetTrajectory;
-    protected override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition)
+    public override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
         List<TinyBot> hitBots = new();
         Vector3 targetPosition = target.transform.position;
@@ -14,9 +15,9 @@ public abstract class ProjectileAbility : Ability
         Vector3 direction = (targetPosition - sourcePosition).normalized;
         Vector3 modifiedTarget = sourcePosition + direction * Mathf.Min(distance, range);
         Vector3[] targets = GetTrajectory(sourcePosition, modifiedTarget);
-        targetTrajectory = CastAlongPoints(targets, blockingLayerMask, out var hit);
-        if(hit.collider != null && hit.collider.TryGetComponent(out TinyBot bot)) hitBots.Add(bot);
-        if(drawTargeting) LineMaker.DrawLine(targetTrajectory.ToArray());
+        targetTrajectory = CastAlongPoints(targets, blockingLayerMask, out RaycastHit hit, aiMode ? BotAI.terrainCheckSize : 0);
+        if (hit.collider != null && hit.collider.TryGetComponent(out TinyBot bot)) hitBots.Add(bot);
+        if(playerTargeting) LineMaker.DrawLine(targetTrajectory.ToArray());
         return hitBots;
     }
 
@@ -46,7 +47,7 @@ public abstract class ProjectileAbility : Ability
     protected abstract Vector3[] GetTrajectory(Vector3 source, Vector3 target);
 
     readonly float overlapLength = .1f;
-    protected List<Vector3> CastAlongPoints(Vector3[] castTargets, int mask, out RaycastHit hit)
+    protected List<Vector3> CastAlongPoints(Vector3[] castTargets, int mask, out RaycastHit hit, float radius = 0)
     {
         hit = default;
         List<Vector3> modifiedTargets = new()
@@ -56,8 +57,10 @@ public abstract class ProjectileAbility : Ability
         for (int i = 0; i < castTargets.Length - 1; i++)
         {
             Vector3 direction = castTargets[i + 1] - castTargets[i];
-            Ray ray = new(castTargets[i], direction);
-            if (Physics.Raycast(ray, out var hitInfo, direction.magnitude + overlapLength, mask))
+            bool castHit;
+            castHit = radius == 0 ? Physics.Raycast(castTargets[i], direction, out RaycastHit hitInfo, direction.magnitude + overlapLength, mask)
+                : Physics.SphereCast(castTargets[i], radius, direction, out hitInfo, direction.magnitude + overlapLength, mask);
+            if (castHit)
             {
                 modifiedTargets.Add(hitInfo.point);
                 hit = hitInfo;

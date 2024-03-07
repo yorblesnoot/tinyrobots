@@ -21,11 +21,10 @@ public class TurnPortrait : MonoBehaviour
     {
         thisBot = bot;
         gameObject.SetActive(true);
-        
+        selectButton.onClick.AddListener(SelectThroughPortrait);
         if (bot.allegiance == Allegiance.PLAYER)
         {
             frame.color = allyColor;
-            selectButton.onClick.AddListener(SelectThroughPortrait);
         }
         else if(bot.allegiance == Allegiance.ENEMY)
         {

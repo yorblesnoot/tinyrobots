@@ -6,7 +6,7 @@ using UnityEngine;
 
 public abstract class Ability : MonoBehaviour
 {
-    [SerializeField] protected GameObject emissionPoint;
+    public GameObject emissionPoint;
     public CursorType PreferredCursor;
     public int cost;
     public int range;
@@ -22,7 +22,7 @@ public abstract class Ability : MonoBehaviour
 
     GameObject trackedTarget;
     [HideInInspector] public TinyBot Owner;
-    protected bool drawTargeting;
+    protected bool playerTargeting;
     private void Awake()
     {
         blockingLayerMask = LayerMask.GetMask(blockingLayers);
@@ -49,11 +49,7 @@ public abstract class Ability : MonoBehaviour
         PrimaryCursor.actionInProgress = false;
     }
     List<TinyBot> currentTargets = new();
-    protected abstract List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition);
-    public virtual List<TinyBot> AIAimAt(GameObject target, Vector3 sourcePosition)
-    {
-        return AimAt(target, sourcePosition);
-    }
+    public abstract List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false);
 
     public virtual bool IsUsable(Vector3 sourcePosition)
     {
@@ -63,7 +59,7 @@ public abstract class Ability : MonoBehaviour
     public virtual void LockOnTo(GameObject target, bool draw)
     {
         trackedTarget = target;
-        drawTargeting = draw;
+        playerTargeting = draw;
     }
     public virtual void ReleaseLock()
     {
@@ -77,7 +73,7 @@ public abstract class Ability : MonoBehaviour
     {
         if (trackedTarget == null) return;
         List<TinyBot> newTargets = AimAt(trackedTarget, emissionPoint.transform.position);
-        if(drawTargeting) HighlightAffectedTargets(newTargets);
+        if(playerTargeting) HighlightAffectedTargets(newTargets);
         Owner.PrimaryMovement.RotateToTrackEntity(trackedTarget);
     }
 

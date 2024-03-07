@@ -5,20 +5,6 @@ using UnityEngine;
 
 public class BipedalWalk : LegMovement
 {
-    public override IEnumerator PathToPoint(List<Vector3> path)
-    {
-        foreach (var target in path)
-        {
-            yield return StartCoroutine(InterpolatePositionAndRotation(Owner.transform, target));
-        }
-        StartCoroutine(NeutralStance());
-
-    }
-    public override void SpawnOrientation()
-    {
-        Owner.transform.LookAt(GetCenterColumn());
-        StartCoroutine(NeutralStance());
-    }
     protected override void InitializeParameters()
     {
         PreferredCursor = CursorType.GROUND;
@@ -51,20 +37,4 @@ public class BipedalWalk : LegMovement
         anchor.ikTarget.position = anchor.gluedWorldPosition;
         anchor.distanceFromBase = anchor.localBasePosition.z - anchor.ikTarget.localPosition.z;
     }
-
-    protected override Quaternion GetRotationAtPosition(Vector3 moveTarget)
-    {
-        moveTarget.y = transform.position.y;
-        Quaternion targetRotation = Quaternion.LookRotation(moveTarget - transform.position);
-        return targetRotation;
-    }
-
-    /*protected override Quaternion GetRotationAtPosition(Vector3 moveTarget)
-    {
-        Vector3 targetNormal = GetMeshFacingAt(moveTarget);
-        targetNormal = Vector3.Slerp(targetNormal, Vector3.up, .9f);
-        Vector3 lookTarget = moveTarget + targetNormal * lookHeightModifier;
-        Quaternion targetRotation = Quaternion.LookRotation(lookTarget - transform.position, targetNormal);
-        return targetRotation;
-    }*/
 }
