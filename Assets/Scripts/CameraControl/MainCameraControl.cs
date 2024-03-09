@@ -1,7 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using Cinemachine;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class MainCameraControl : MonoBehaviour
 {
@@ -14,8 +13,6 @@ public class MainCameraControl : MonoBehaviour
     [SerializeField] int minZoom;
     [SerializeField] float snapSpeed;
 
-    [SerializeField] Transform projector;
-
     [SerializeField] float maxTiltAngle;
 
     Quaternion startRotation;
@@ -23,11 +20,65 @@ public class MainCameraControl : MonoBehaviour
 
     Vector3 mapCorner;
 
+    [SerializeField] CinemachineBrain brain;
+
+
+    [System.Serializable]
+    class CameraSet
+    {
+        public CinemachineVirtualCamera Free;
+        public CinemachineClearShot  Select;
+        public CinemachineVirtualCamera Action;
+        public CinemachineTargetGroup Group;
+    }
+    [SerializeField] CameraSet cams;
+    static CameraSet Cams;
     static Transform focalPoint;
+
+    CinemachineInputProvider orbitalInput;
     public void Initialize(byte[,,] map)
     {
         mapCorner = new(map.GetLength(0), map.GetLength(1), map.GetLength(2));
+        Cams = cams;
         focalPoint = transform;
+    }
+
+    BaseInput playerInput;
+    InputAction rotator;
+    InputAction rotateHold;
+    InputAction rotateOn;
+
+    private void OnEnable()
+    {
+        playerInput = new();
+        rotator = playerInput.Main.RotatePosition;
+        rotator.Enable();
+
+        rotateHold = playerInput.Main.Rotating;
+        rotateHold.Enable();
+        rotateHold.canceled += (InputAction.CallbackContext context) => PrimaryCursor.State = CursorState.FREE;
+
+        rotateOn = playerInput.Main.RotateOn;
+        rotateOn.Enable();
+        rotateOn.performed += BeginFocusRotation;
+    }
+
+    void BeginFocusRotation(InputAction.CallbackContext context)
+    {
+        startRotation = transform.rotation;
+        initialClick = Input.mousePosition;
+        PrimaryCursor.State = CursorState.SPACELOCKED;
+        ChangeToFreeCam();
+    }
+
+    void ChangeToFreeCam()
+    {
+        var activeCam = brain.ActiveVirtualCamera;
+        var transposer = Cams.Free.GetCinemachineComponent<CinemachineTransposer>();
+        Vector3 activePosition = activeCam.VirtualCameraGameObject.transform.position;
+        activePosition = focalPoint.transform.InverseTransformPoint(activePosition);
+        transposer.m_FollowOffset = activePosition;
+        Cams.Free.Priority = 100;
     }
 
     private void Update()
@@ -51,15 +102,7 @@ public class MainCameraControl : MonoBehaviour
             SlideCamera(new Vector3(scrollZoneX / 2, 0f, 0f));
         }
 
-        if (Input.GetMouseButtonDown(2))
-        {
-            startRotation = transform.rotation;
-            initialClick = Input.mousePosition;
-            PrimaryCursor.State = CursorState.SPACELOCKED;
-            StartCoroutine(gameObject.LerpTo(PrimaryCursor.Transform.position, originReturnTime));
-        }
-        else if(Input.GetMouseButtonUp(2)) PrimaryCursor.State = CursorState.FREE;
-        else if (Input.GetMouseButton(2))
+        else if (rotateHold.inProgress)
         {
             //Vector3 rotationCenter = new(Screen.width/2, Screen.height/2);
             Vector3 centerOffset = mouse - initialClick;
@@ -83,13 +126,14 @@ public class MainCameraControl : MonoBehaviour
 
             SlideCamera(moveOffset);
         }
-        
+        brain.ManualUpdate();
     }
 
     [SerializeField] float originReturnTime;
 
     private void SlideCamera(Vector3 moveOffset)
     {
+        return;
         Vector3 eulerRotation = transform.rotation.eulerAngles;
         eulerRotation.x = 0;
         eulerRotation.z = 0;
@@ -108,32 +152,10 @@ public class MainCameraControl : MonoBehaviour
         cameraPosition.z = Mathf.Clamp(cameraPosition.z + factor, minZoom, maxZoom);
         Camera.main.transform.localPosition = cameraPosition;
     }
-    static Vector3Int[] directions = {
-            new Vector3Int(-1, -1, 0), new Vector3Int(1, -1, 0),  // Edges along xy-plane
-            new Vector3Int(-1, 1, 0), new Vector3Int(1, 1, 0),    // Edges along xy-plane
-            new Vector3Int(-1, 0, -1), new Vector3Int(1, 0, -1),  // Edges along xz-plane
-            new Vector3Int(0, -1, -1), new Vector3Int(0, 1, -1),  // Edges along yz-plane
-            new Vector3Int(-1, -1, -1), new Vector3Int(1, -1, -1),  // Corners
-            new Vector3Int(-1, 1, -1), new Vector3Int(1, 1, -1),    // Corners
-            new Vector3Int(-1, -1, 1), new Vector3Int(1, -1, 1),    // Corners
-            new Vector3Int(-1, 1, 1), new Vector3Int(1, 1, 1)        // Corners
-    };
+
     public static void CutToUnit(TinyBot bot)
     {
-        focalPoint.position = bot.transform.position;
-        Vector3 startDirection = Camera.main.transform.position - focalPoint.position;
-        float camDistance = startDirection.magnitude;
-        Ray ray = new(bot.transform.position, startDirection);
-        if (!Physics.Raycast(ray, camDistance, LayerMask.GetMask("Terrain"))) return;
-
-        List<Vector3> openDirections = new();
-        foreach(var direction in directions)
-        {
-            Ray secondRay = new(bot.transform.position, direction);
-            if (!Physics.Raycast(secondRay, camDistance, LayerMask.GetMask("Terrain"))) openDirections.Add(direction);
-        }
-        Vector3 finalDirection = openDirections.OrderByDescending(x => Vector3.Dot(x, startDirection)).FirstOrDefault();
-        Quaternion finalRotation = Quaternion.LookRotation(finalDirection);
-        focalPoint.rotation = finalRotation;
+        Cams.Free.Priority = 0;
+        focalPoint.transform.position = bot.transform.position;
     }
 }

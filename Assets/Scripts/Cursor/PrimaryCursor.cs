@@ -57,7 +57,7 @@ public class PrimaryCursor : MonoBehaviour
     Vector3Int lastPosition;
     List<Vector3> currentPath;
     int currentPathCost;
-    private void Update()
+    private void LateUpdate()
     {
         bool anAbilityIsActive = ClickableAbility.Active != null;
 
@@ -71,7 +71,7 @@ public class PrimaryCursor : MonoBehaviour
         
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log(EventSystem.current.IsPointerOverGameObject());
+            //Debug.Log(EventSystem.current.IsPointerOverGameObject());
             //ability use
             if (anAbilityIsActive)
             {
