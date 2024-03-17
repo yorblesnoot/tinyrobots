@@ -65,19 +65,34 @@ public class MainCameraControl : MonoBehaviour
 
     void BeginFocusRotation(InputAction.CallbackContext context)
     {
+        ChangeToFreeCam();
         startRotation = transform.rotation;
         initialClick = Input.mousePosition;
         PrimaryCursor.State = CursorState.SPACELOCKED;
-        ChangeToFreeCam();
+        
     }
 
     void ChangeToFreeCam()
     {
         var activeCam = brain.ActiveVirtualCamera;
-        var transposer = Cams.Free.GetCinemachineComponent<CinemachineTransposer>();
+#pragma warning disable CS0252 // Possible unintended reference comparison; left hand side needs cast
+        if (activeCam == Cams.Free) return;
+        if (activeCam == Cams.Select) activeCam = Cams.Select.LiveChild;
+#pragma warning restore CS0252
+
+        //var transposer = Cams.Free.GetCinemachineComponent<CinemachineTransposer>();
         Vector3 activePosition = activeCam.VirtualCameraGameObject.transform.position;
-        activePosition = focalPoint.transform.InverseTransformPoint(activePosition);
-        transposer.m_FollowOffset = activePosition;
+        //activePosition = focalPoint.transform.InverseTransformPoint(activePosition);
+        //transposer.m_FollowOffset = activePosition;
+        
+        focalPoint.transform.rotation = Quaternion.identity;
+        float distance = Vector3.Distance(activePosition, focalPoint.position);
+        Vector3 camPosition = new(0, 0, distance);
+
+        Cams.Free.VirtualCameraGameObject.transform.localPosition = camPosition;
+        Debug.Log(activePosition);
+        focalPoint.LookAt(activeCam.VirtualCameraGameObject.transform);
+
         Cams.Free.Priority = 100;
     }
 
@@ -109,11 +124,11 @@ public class MainCameraControl : MonoBehaviour
             Vector3 weightedDirection = (centerOffset * rotationSpeed);
             Vector3 finalEulerRotation = startRotation.eulerAngles;
             bool invertedAngle = finalEulerRotation.x <= 1f;
-            finalEulerRotation.x -= weightedDirection.y;
+            finalEulerRotation.x += weightedDirection.y;
             finalEulerRotation.y += weightedDirection.x;
-            
-            if (invertedAngle) finalEulerRotation.x = Mathf.Clamp(finalEulerRotation.x, -maxTiltAngle, 0);
-            else finalEulerRotation.x = Mathf.Clamp(finalEulerRotation.x, 360-maxTiltAngle, 360);
+
+            if (invertedAngle) finalEulerRotation.x = Mathf.Clamp(finalEulerRotation.x, -maxTiltAngle, maxTiltAngle);
+            else finalEulerRotation.x = Mathf.Clamp(finalEulerRotation.x, 360-maxTiltAngle, 360+maxTiltAngle);
             transform.rotation = Quaternion.Euler(finalEulerRotation);
         }
         else
@@ -133,7 +148,6 @@ public class MainCameraControl : MonoBehaviour
 
     private void SlideCamera(Vector3 moveOffset)
     {
-        return;
         Vector3 eulerRotation = transform.rotation.eulerAngles;
         eulerRotation.x = 0;
         eulerRotation.z = 0;
