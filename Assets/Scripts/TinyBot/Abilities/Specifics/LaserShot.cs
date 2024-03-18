@@ -22,7 +22,8 @@ public class LaserShot : LinearAbility
 
     public override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
-        if(!aiMode) turretTracker.TrackTarget(target);
-        return base.AimAt(target, sourcePosition);
+        List <TinyBot> hits = base.AimAt(target, sourcePosition, aiMode);
+        if (!aiMode) turretTracker.TrackTrajectory(targetTrajectory);
+        return hits;
     }
 }
