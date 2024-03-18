@@ -294,7 +294,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.0004043885}
+  m_AnchoredPosition: {x: 0, y: 0.00030953164}
   m_SizeDelta: {x: 0, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &17609039
@@ -560,8 +560,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1514340295}
-  m_RootOrder: 2
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &94435341
 MonoBehaviour:
@@ -728,8 +728,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 347158988}
-  m_Father: {fileID: 1514340295}
-  m_RootOrder: 1
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &111640312
 MonoBehaviour:
@@ -853,7 +853,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1993126624}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9999536
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3163,8 +3163,7 @@ MonoBehaviour:
   playerBots:
   - {fileID: 11400000, guid: dd7788e3db291e34f8a12eccbb8af141, type: 2}
   - {fileID: 11400000, guid: b0e66556fc97a874c9e41f6ed894baf5, type: 2}
-  - {fileID: 11400000, guid: dd7788e3db291e34f8a12eccbb8af141, type: 2}
-  - {fileID: 11400000, guid: dd7788e3db291e34f8a12eccbb8af141, type: 2}
+  - {fileID: 11400000, guid: 719b099b814c6a7449f8cac5910f9a59, type: 2}
   enemyBots:
   - {fileID: 11400000, guid: dd7788e3db291e34f8a12eccbb8af141, type: 2}
   playerData: {fileID: 11400000, guid: ecd93be42b3c6b041ba1697eca59d1e5, type: 2}
@@ -8539,7 +8538,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1329150488}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -8610,16 +8609,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 496d63d0f1f7cf14bb07bdf49dc3e67d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  brain: {fileID: 1414972263}
   rotationSpeed: 0.2
   scrollSpeed: 0.005
   scrollZoneX: 100
   scrollZoneY: 50
-  zoomSpeed: 1
+  zoomSpeed: 0.2
   maxZoom: 70
   minZoom: 20
   snapSpeed: 0
   maxTiltAngle: 45
-  brain: {fileID: 1414972263}
   cams:
     Free: {fileID: 1605444553}
     Select: {fileID: 1980537371}
@@ -9264,7 +9263,7 @@ MonoBehaviour:
   m_UpdateMethod: 3
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
-    m_Style: 1
+    m_Style: 0
     m_Time: 2
     m_CustomCurve:
       serializedVersion: 2
@@ -9896,40 +9895,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &1514340294
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1514340295}
-  m_Layer: 0
-  m_Name: VirtualCameras
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1514340295
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1514340294}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1980537369}
-  - {fileID: 111640311}
-  - {fileID: 94435340}
-  m_Father: {fileID: 0}
-  m_RootOrder: 11
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &1519519065 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 9119217915258957823, guid: 112a7f78f45dc654ab52dc0975616f36,
@@ -10299,7 +10264,7 @@ MonoBehaviour:
     GateFit: 2
     m_SensorSize: {x: 1, y: 1}
   m_Transitions:
-    m_BlendHint: 0
+    m_BlendHint: 2
     m_InheritPosition: 0
     m_OnCameraLive:
       m_PersistentCalls:
@@ -12159,8 +12124,8 @@ Transform:
   - {fileID: 446614769}
   - {fileID: 635347628}
   - {fileID: 564628412}
-  m_Father: {fileID: 1514340295}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1980537370
 MonoBehaviour:
@@ -12261,7 +12226,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 0.9999536}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}

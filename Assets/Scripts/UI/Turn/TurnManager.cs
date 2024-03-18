@@ -84,7 +84,6 @@ public class TurnManager : MonoBehaviour
         static void AddActiveUnit()
         {
             TinyBot turnTaker = TurnTakers[activeIndex];
-            Debug.Log("adding " + turnTaker.allegiance);
             currentlyActive.Add(TurnTakers[activeIndex]);
             turnTaker.BeginTurn();
             activeIndex++;

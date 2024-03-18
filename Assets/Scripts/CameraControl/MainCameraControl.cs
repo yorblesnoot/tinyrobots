@@ -4,6 +4,8 @@ using UnityEngine.InputSystem;
 
 public class MainCameraControl : MonoBehaviour
 {
+    [SerializeField] CinemachineBrain brain;
+
     [SerializeField] float rotationSpeed = .1f;
     [SerializeField] float scrollSpeed = 1f;
     [SerializeField] float scrollZoneX;
@@ -17,11 +19,7 @@ public class MainCameraControl : MonoBehaviour
 
     Quaternion startRotation;
     Vector3 initialClick;
-
     Vector3 mapCorner;
-
-    [SerializeField] CinemachineBrain brain;
-
 
     [System.Serializable]
     class CameraSet
@@ -35,7 +33,6 @@ public class MainCameraControl : MonoBehaviour
     static CameraSet Cams;
     static Transform focalPoint;
 
-    CinemachineInputProvider orbitalInput;
     public void Initialize(byte[,,] map)
     {
         mapCorner = new(map.GetLength(0), map.GetLength(1), map.GetLength(2));
@@ -75,8 +72,9 @@ public class MainCameraControl : MonoBehaviour
     void ChangeToFreeCam()
     {
         var activeCam = brain.ActiveVirtualCamera;
-#pragma warning disable CS0252 // Possible unintended reference comparison; left hand side needs cast
-        if (activeCam == Cams.Free) return;
+
+#pragma warning disable CS0252
+        if (activeCam == null || activeCam == Cams.Free) return;
         if (activeCam == Cams.Select) activeCam = Cams.Select.LiveChild;
 #pragma warning restore CS0252
 
@@ -85,15 +83,14 @@ public class MainCameraControl : MonoBehaviour
         //activePosition = focalPoint.transform.InverseTransformPoint(activePosition);
         //transposer.m_FollowOffset = activePosition;
         
-        focalPoint.transform.rotation = Quaternion.identity;
         float distance = Vector3.Distance(activePosition, focalPoint.position);
         Vector3 camPosition = new(0, 0, distance);
 
         Cams.Free.VirtualCameraGameObject.transform.localPosition = camPosition;
-        Debug.Log(activePosition);
         focalPoint.LookAt(activeCam.VirtualCameraGameObject.transform);
 
         Cams.Free.Priority = 100;
+        brain.ManualUpdate();
     }
 
     private void Update()
@@ -109,12 +106,12 @@ public class MainCameraControl : MonoBehaviour
             Zoom(-zoomSpeed);
         }
         if (Input.GetKey(KeyCode.A))
-        {
-            SlideCamera(new Vector3(-scrollZoneX / 2, 0f, 0f));
+        {        
+            SlideCamera(new Vector3(scrollZoneX / 2, 0f, 0f));
         }
         if (Input.GetKey(KeyCode.D))
         {
-            SlideCamera(new Vector3(scrollZoneX / 2, 0f, 0f));
+            SlideCamera(new Vector3(-scrollZoneX / 2, 0f, 0f));
         }
 
         else if (rotateHold.inProgress)
@@ -137,9 +134,9 @@ public class MainCameraControl : MonoBehaviour
             float rightScroll = Mathf.Clamp(mouse.x - (Screen.width - scrollZoneX), 0, float.MaxValue);
             float downScroll = Mathf.Clamp(scrollZoneY - mouse.y, 0, float.MaxValue);
             float upScroll = Mathf.Clamp(mouse.y - (Screen.height - scrollZoneY), 0, float.MaxValue);
-            Vector3 moveOffset = new(rightScroll - leftScroll, upScroll - downScroll, 0f);
+            Vector3 moveOffset = new(leftScroll - rightScroll, upScroll - downScroll, 0f);
 
-            SlideCamera(moveOffset);
+            if (moveOffset != Vector3.zero) SlideCamera(moveOffset);
         }
         brain.ManualUpdate();
     }
@@ -148,6 +145,7 @@ public class MainCameraControl : MonoBehaviour
 
     private void SlideCamera(Vector3 moveOffset)
     {
+        ChangeToFreeCam();
         Vector3 eulerRotation = transform.rotation.eulerAngles;
         eulerRotation.x = 0;
         eulerRotation.z = 0;
@@ -162,9 +160,11 @@ public class MainCameraControl : MonoBehaviour
 
     private void Zoom(float factor)
     {
-        Vector3 cameraPosition = Camera.main.transform.localPosition;
-        cameraPosition.z = Mathf.Clamp(cameraPosition.z + factor, minZoom, maxZoom);
-        Camera.main.transform.localPosition = cameraPosition;
+        ChangeToFreeCam();
+        Vector3 direction = focalPoint.position - Camera.main.transform.position;
+        direction.Normalize();
+        direction *= factor;
+        focalPoint.position += direction;
     }
 
     public static void CutToUnit(TinyBot bot)
