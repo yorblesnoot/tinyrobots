@@ -61,6 +61,7 @@ public class SwordSlash : SpatialAbility
     {
         base.ReleaseLock();
         indicator.gameObject.SetActive(false);
+        StartCoroutine(ikTarget.gameObject.LerpTo(neutralPosition, .5f, true));
     }
 
     protected override IEnumerator PerformEffects()

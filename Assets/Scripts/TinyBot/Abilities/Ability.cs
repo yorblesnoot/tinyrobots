@@ -68,6 +68,7 @@ public abstract class Ability : MonoBehaviour
         LineMaker.HideLine();
         HighlightAffectedTargets(null);
     }
+
     protected abstract IEnumerator PerformEffects();
     void Update()
     {

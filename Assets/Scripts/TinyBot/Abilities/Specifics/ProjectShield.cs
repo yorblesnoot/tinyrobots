@@ -16,6 +16,12 @@ public class ProjectShield : LinearAbility
         yield break;
     }
 
+    public override void ReleaseLock()
+    {
+        base.ReleaseLock();
+        StartCoroutine(ikTarget.LerpTo(basePosition, 1f, true));
+    }
+
     void BeginLowerShield()
     {
         Owner.beganTurn.RemoveListener(BeginLowerShield);

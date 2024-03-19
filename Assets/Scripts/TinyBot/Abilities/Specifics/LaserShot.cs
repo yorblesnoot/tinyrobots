@@ -14,6 +14,12 @@ public class LaserShot : LinearAbility
         turretTracker.ResetTracking();
     }
 
+    public override void ReleaseLock()
+    {
+        base.ReleaseLock();
+        turretTracker.ResetTracking();
+    }
+
     protected override void CompleteTrajectory(Vector3 position, GameObject launched, RaycastHit hit)
     {
         Destroy(launched);

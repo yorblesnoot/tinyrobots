@@ -331,12 +331,14 @@ MonoBehaviour:
   damage: 20
   icon: {fileID: 21300000, guid: 04781ddf1640d48e4b784ad7268ba9ad, type: 3}
   currentCooldown: 0
-  blockingLayers: []
+  blockingLayers:
+  - Terrain
+  - Shield
   Owner: {fileID: 0}
   parabolaPoints: 10
   gravityAccel: -0.3
   grenade: {fileID: 892347618474717919, guid: 6b7e9add1c83a534ca9bb5df8c0e48f0, type: 3}
-  travelTime: 0.8
+  travelTime: 0.5
   gunTracker: {fileID: 6621819558174654486}
   explosiveModule: {fileID: 7356990873760933316}
 --- !u!114 &6621819558174654486
@@ -368,6 +370,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseIndicator: {fileID: 8815939225872771427}
   explosionRadius: 2
+  explodeVfx: {fileID: 4153987745759348907, guid: 3376c9ee103331b47ab2c7927d7818f5,
+    type: 3}
+  damageDelay: 0.1
 --- !u!4 &4507714639919336706 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3453657280514900982, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
@@ -703,7 +708,7 @@ PrefabInstance:
     - target: {fileID: 3222229788524741193, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b499e808ee74873419d800fb19e90ae0, type: 3}
@@ -798,7 +803,7 @@ PrefabInstance:
     - target: {fileID: 3222229788524741193, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b499e808ee74873419d800fb19e90ae0, type: 3}
@@ -878,7 +883,7 @@ PrefabInstance:
     - target: {fileID: 3222229788524741193, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b499e808ee74873419d800fb19e90ae0, type: 3}

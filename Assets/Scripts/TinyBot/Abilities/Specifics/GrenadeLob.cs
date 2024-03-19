@@ -25,6 +25,7 @@ public class GrenadeLob : ParabolicAbility
     public override void ReleaseLock()
     {
         base.ReleaseLock();
+        gunTracker.ResetTracking();
         explosiveModule.HideIndicator();
     }
 
