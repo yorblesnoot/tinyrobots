@@ -11,13 +11,7 @@ public class LaserShot : LinearAbility
     {
         List<Vector3> points = CastAlongPoints(targetTrajectory.ToArray(), blockingLayerMask, out var hit);
         yield return StartCoroutine(LaunchAlongLine(laser, points, travelTime, hit));
-        turretTracker.ResetTracking();
-    }
-
-    public override void ReleaseLock()
-    {
-        base.ReleaseLock();
-        turretTracker.ResetTracking();
+        NeutralAim();
     }
 
     protected override void CompleteTrajectory(Vector3 position, GameObject launched, RaycastHit hit)
@@ -31,5 +25,10 @@ public class LaserShot : LinearAbility
         List <TinyBot> hits = base.AimAt(target, sourcePosition, aiMode);
         if (!aiMode) turretTracker.TrackTrajectory(targetTrajectory);
         return hits;
+    }
+
+    public override void NeutralAim()
+    {
+        turretTracker.ResetTracking();
     }
 }

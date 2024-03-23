@@ -61,7 +61,7 @@ public abstract class Ability : MonoBehaviour
         trackedTarget = target;
         playerTargeting = draw;
     }
-    public virtual void ReleaseLock()
+    public virtual void ReleaseLockOn()
     {
         trackedTarget = null;
         StartCoroutine(Owner.PrimaryMovement.NeutralStance());
@@ -70,6 +70,8 @@ public abstract class Ability : MonoBehaviour
     }
 
     protected abstract IEnumerator PerformEffects();
+
+    public abstract void NeutralAim();
     void Update()
     {
         if (trackedTarget == null) return;

@@ -57,7 +57,7 @@ public class BotAI
                     yield return new WaitForSeconds(lockTime);
                     thisBot.AttemptToSpendResource(ability.cost, StatType.ACTION);
                     yield return thisBot.StartCoroutine(ability.Execute());
-                    ability.ReleaseLock();
+                    ability.ReleaseLockOn();
                     Pathfinder3D.GeneratePathingTree(thisBot);
                     yield break;
                 }

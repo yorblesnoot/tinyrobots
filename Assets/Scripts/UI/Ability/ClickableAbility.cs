@@ -25,13 +25,20 @@ public class ClickableAbility : MonoBehaviour
         pointWidth *= dislacementModifier;
     }
 
-    public static void Deactivate()
+    public static void DeactivateSelectedAbility()
     {
         if (Active == null) return;
         Active.image.color = Color.white;
         PrimaryCursor.SetCursorMode(UnitControl.ActiveBot == null ? CursorType.GROUND : UnitControl.ActiveBot.PrimaryMovement.PreferredCursor);
-        Active.Skill.ReleaseLock();
+        Active.Skill.ReleaseLockOn();
         Active = null;
+    }
+
+    public static void CancelAbility()
+    {
+        if(Active == null) return;
+        Active.Skill.NeutralAim();
+        DeactivateSelectedAbility();
     }
 
     public void Become(Ability ability, KeyCode key)
@@ -76,7 +83,7 @@ public class ClickableAbility : MonoBehaviour
     public void Activate()
     {
         if (Skill.currentCooldown > 0) return;
-        Deactivate();
+        DeactivateSelectedAbility();
         Active = this;
         PrimaryCursor.SetCursorMode(Skill.PreferredCursor);
         Skill.LockOnTo(PrimaryCursor.Transform.gameObject, true);

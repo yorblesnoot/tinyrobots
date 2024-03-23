@@ -12,8 +12,7 @@ public class GrenadeLob : ParabolicAbility
     {
         List<Vector3> points = CastAlongPoints(targetTrajectory.ToArray(), blockingLayerMask, out var hit);
         yield return StartCoroutine(LaunchAlongLine(grenade, points, travelTime, hit));
-        gunTracker.ResetTracking();
-        explosiveModule.HideIndicator();
+        NeutralAim();
     }
 
     protected override void CompleteTrajectory(Vector3 position, GameObject launched, RaycastHit hit)
@@ -22,10 +21,9 @@ public class GrenadeLob : ParabolicAbility
         Destroy(launched);
     }
 
-    public override void ReleaseLock()
+    public override void ReleaseLockOn()
     {
-        base.ReleaseLock();
-        gunTracker.ResetTracking();
+        base.ReleaseLockOn();
         explosiveModule.HideIndicator();
     }
 
@@ -40,5 +38,11 @@ public class GrenadeLob : ParabolicAbility
             hits.Add(bot);
         }
         return hits;
+    }
+
+    public override void NeutralAim()
+    {
+        gunTracker.ResetTracking();
+        explosiveModule.HideIndicator();
     }
 }

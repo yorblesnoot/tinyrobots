@@ -12,20 +12,8 @@ public class ProjectShield : LinearAbility
     protected override IEnumerator PerformEffects()
     {
         animator.SetBool("barrierUp", true);
-        Owner.beganTurn.AddListener(BeginLowerShield);
+        Owner.beganTurn.AddListener(NeutralAim);
         yield break;
-    }
-
-    public override void ReleaseLock()
-    {
-        base.ReleaseLock();
-        StartCoroutine(ikTarget.LerpTo(basePosition, 1f, true));
-    }
-
-    void BeginLowerShield()
-    {
-        Owner.beganTurn.RemoveListener(BeginLowerShield);
-        StartCoroutine(LowerShield());
     }
 
     IEnumerator LowerShield()
@@ -55,5 +43,11 @@ public class ProjectShield : LinearAbility
     public override void LockOnTo(GameObject target, bool draw)
     {
         base.LockOnTo(target, true);
+    }
+
+    public override void NeutralAim()
+    {
+        Owner.beganTurn.RemoveListener(NeutralAim);
+        StartCoroutine(LowerShield());
     }
 }

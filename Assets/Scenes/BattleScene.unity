@@ -194,12 +194,12 @@ PrefabInstance:
     - target: {fileID: 1980651565808055460, guid: 635442e7cb572ca49b57c35372911fe8,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.000000015896626
+      value: 0.000000015896624
       objectReference: {fileID: 0}
     - target: {fileID: 1980651565808055460, guid: 635442e7cb572ca49b57c35372911fe8,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.0000000065845973
+      value: 0.000000006584597
       objectReference: {fileID: 0}
     - target: {fileID: 1980651565808055460, guid: 635442e7cb572ca49b57c35372911fe8,
         type: 3}
@@ -3162,6 +3162,7 @@ MonoBehaviour:
   botConverter: {fileID: 11400000, guid: efd80f4536a76904d8f8a1a5b13e844c, type: 2}
   playerBots:
   - {fileID: 11400000, guid: dd7788e3db291e34f8a12eccbb8af141, type: 2}
+  - {fileID: 11400000, guid: b0e66556fc97a874c9e41f6ed894baf5, type: 2}
   - {fileID: 11400000, guid: b0e66556fc97a874c9e41f6ed894baf5, type: 2}
   - {fileID: 11400000, guid: 719b099b814c6a7449f8cac5910f9a59, type: 2}
   enemyBots:
@@ -9579,7 +9580,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1418882854}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 35.473846}
+  m_LocalPosition: {x: 0, y: -0, z: 70.5}
   m_LocalScale: {x: 50, y: 50.00001, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -9808,8 +9809,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 4
-  m_fontSizeBase: 4
+  m_fontSize: 3
+  m_fontSizeBase: 3
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 1

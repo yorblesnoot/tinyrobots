@@ -83,7 +83,7 @@ public class PrimaryCursor : MonoBehaviour
                     
                     StartCoroutine(skill.Execute());
                     ClickableAbility.Active.UpdateCooldowns();
-                    ClickableAbility.Deactivate();
+                    ClickableAbility.DeactivateSelectedAbility();
                 }
             }
             else if (TargetedBot != null)
@@ -103,7 +103,7 @@ public class PrimaryCursor : MonoBehaviour
                 
             
         }
-        else if (Input.GetMouseButtonDown(1)) ClickableAbility.Deactivate();
+        else if (Input.GetMouseButtonDown(1)) ClickableAbility.CancelAbility();
 
         //Debug.Log($"active {ActiveBot}, action {actionInProgress}, ability {anAbilityIsActive}");
 

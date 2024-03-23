@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using UnityEngine;
 
@@ -57,18 +56,17 @@ public class SwordSlash : SpatialAbility
         animator.SetBool("bladeOut", true);
     }
 
-    public override void ReleaseLock()
+    public override void ReleaseLockOn()
     {
-        base.ReleaseLock();
+        base.ReleaseLockOn();
         indicator.gameObject.SetActive(false);
-        StartCoroutine(ikTarget.gameObject.LerpTo(neutralPosition, .5f, true));
     }
 
     protected override IEnumerator PerformEffects()
     {
         List<TinyBot> hitTargets = indicator.GetIntersectingBots().Where(bot => bot != Owner).ToList();
         indicator.ResetIntersecting();
-        ReleaseLock();
+        ReleaseLockOn();
         Vector3[] slashPoints = GetSlashPoints();
         
         yield return StartCoroutine(ikTarget.gameObject.LerpTo(slashPoints[0], returnTime));
@@ -106,5 +104,10 @@ public class SwordSlash : SpatialAbility
         Vector3 lastPosition = startPosition + direction * slashLength;
         return new Vector3[] { startPosition, lastPosition };
 
+    }
+
+    public override void NeutralAim()
+    {
+        StartCoroutine(ikTarget.gameObject.LerpTo(neutralPosition, .5f, true));
     }
 }

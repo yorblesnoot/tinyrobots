@@ -19,7 +19,7 @@ public class LegJump : ParabolicAbility
             yield return StartCoroutine(Owner.gameObject.LerpTo(point, intervalTime));
         }
         animator.Play("Idle");
-        yield return StartCoroutine(Owner.PrimaryMovement.NeutralStance());
+        NeutralAim();
         Pathfinder3D.GeneratePathingTree(Owner);
     }
 
@@ -32,5 +32,10 @@ public class LegJump : ParabolicAbility
             return true;
         }
         return false;
+    }
+
+    public override void NeutralAim()
+    {
+        StartCoroutine(Owner.PrimaryMovement.NeutralStance());
     }
 }

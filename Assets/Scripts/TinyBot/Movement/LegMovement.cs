@@ -50,20 +50,25 @@ public abstract class LegMovement : PrimaryMovement
         {
             farthestFromBase ??= anchor;
             GluePosition(anchor);
-            if (anchor.distanceFromBase > farthestFromBase.distanceFromBase) farthestFromBase = anchor;
+            if (anchor.distanceFromDeadZone > farthestFromBase.distanceFromDeadZone) farthestFromBase = anchor;
         }
 
-        if (farthestFromBase.distanceFromBase >= anchorZoneRadius && !stepping)
+        if (farthestFromBase.distanceFromDeadZone > anchorZoneRadius && !stepping)
         {
             StartCoroutine(StepToBase(farthestFromBase));
         }
     }
 
-    protected virtual void GluePosition(Anchor anchor)
+    protected void GluePosition(Anchor anchor)
     {
         if (anchor.stepping) return;
         anchor.ikTarget.position = anchor.gluedWorldPosition;
-        anchor.distanceFromBase = Vector3.Distance(anchor.ikTarget.localPosition, anchor.localBasePosition);
+        anchor.distanceFromDeadZone = LegDistanceFromDeadZone(anchor);
+    }
+
+    protected virtual float LegDistanceFromDeadZone(Anchor anchor)
+    {
+        return Vector3.Distance(anchor.ikTarget.localPosition, anchor.localBasePosition);
     }
     
     protected IEnumerator StepToBase(Anchor anchor, bool goToNeutral = false)
@@ -88,8 +93,6 @@ public abstract class LegMovement : PrimaryMovement
         stepping = false;
         anchor.stepping = false;
     }
-
-    
 
     protected abstract Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral, Vector3 localStartPosition);
 
@@ -129,8 +132,7 @@ public abstract class LegMovement : PrimaryMovement
         [HideInInspector] public bool stepping;
         public Transform ikTarget;
         [HideInInspector] public Vector3 localBasePosition;
-        [HideInInspector] public float distanceFromBase;
-
+        [HideInInspector] public float distanceFromDeadZone;
         [HideInInspector] public Vector3 gluedWorldPosition;
         public void Initialize()
         {
