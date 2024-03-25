@@ -43,7 +43,13 @@ public class BotAssembler : MonoBehaviour
         {
             GameObject spawned = Instantiate(currentNode.Value.attachableObject);
             PartModifier modifier = spawned.GetComponent<PartModifier>();
-            if(modifier.mainRenderer != null) palette.RecolorPart(modifier.mainRenderer, allegiance);
+            if (modifier.mainRenderers != null)
+            {
+                foreach (Renderer renderer in modifier.mainRenderers)
+                {
+                    palette.RecolorPart(renderer, allegiance);
+                }
+            }
 
 
             //if we've placed the primary movement part, flag it for rearrangement

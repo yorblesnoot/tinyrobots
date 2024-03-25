@@ -1,6 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PartModifier : MonoBehaviour
 {
-    public SkinnedMeshRenderer mainRenderer;
+    public List<Renderer> mainRenderers;
 }

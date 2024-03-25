@@ -4,7 +4,7 @@ using UnityEngine;
 public class BotPalette : ScriptableObject
 {
     [SerializeField] SerializableDictionary<Allegiance, Material[]> palettePicker;
-    public void RecolorPart(SkinnedMeshRenderer renderer, Allegiance allegiance)
+    public void RecolorPart(Renderer renderer, Allegiance allegiance)
     {
         Material[] activePalette = palettePicker[allegiance];
         Material[] modPalette = renderer.materials;
