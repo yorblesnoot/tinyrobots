@@ -102,9 +102,14 @@ public class TurnManager : MonoBehaviour
         activePortraits[bot].ToggleGrayOut(true);
         bot.availableForTurn = false;
         TinyBot.ClearActiveBot.Invoke();
+        bot.endedTurn.Invoke();
 
         if (MetEndCondition()) return;
+        QueueNextTurnTaker();
+    }
 
+    private static void QueueNextTurnTaker()
+    {
         if (currentlyActive.Count == 0)
         {
             if (activeIndex == TurnTakers.Count) ResetTurnOrder();

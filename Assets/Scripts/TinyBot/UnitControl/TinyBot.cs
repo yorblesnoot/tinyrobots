@@ -34,6 +34,7 @@ public class TinyBot : MonoBehaviour
 
     public static UnityEvent ClearActiveBot = new();
     public UnityEvent beganTurn = new();
+    public UnityEvent endedTurn = new();
 
     BotAI botAI;
 

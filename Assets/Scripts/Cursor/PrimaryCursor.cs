@@ -98,6 +98,7 @@ public class PrimaryCursor : MonoBehaviour
                 && !EventSystem.current.IsPointerOverGameObject()
                 && ActiveBot.AttemptToSpendResource(currentPathCost, StatType.MOVEMENT))
             {
+                StatDisplay.Update.Invoke();
                 StartCoroutine(TraversePath());
             }
                 
@@ -152,7 +153,7 @@ public class PrimaryCursor : MonoBehaviour
         pathingLine.positionCount = currentPath.Count;
         pathingLine.SetPositions(currentPath.ToArray());
         
-        currentPathCost = currentPath.Count > 0 ? Mathf.RoundToInt(distances[currentPath.Count-1]) : 0;
+        currentPathCost = currentPath.Count > 0 ? Mathf.RoundToInt(distances[^1]) : 0;
         redLine.positionCount = redPath.Count;
         redLine.SetPositions(redPath.ToArray());
         moveCostPreview.color = redPath.Count > 0 ? Color.red : Color.white;
@@ -169,7 +170,6 @@ public class PrimaryCursor : MonoBehaviour
     {
         actionInProgress = true;
         yield return StartCoroutine(ActiveBot.PrimaryMovement.TraversePath(currentPath));
-        StatDisplay.SyncStatDisplay(ActiveBot);
         Pathfinder3D.GeneratePathingTree(ActiveBot);
         actionInProgress = false;
     }

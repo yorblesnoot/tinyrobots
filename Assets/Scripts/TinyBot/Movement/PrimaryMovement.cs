@@ -12,7 +12,9 @@ public abstract class PrimaryMovement : MonoBehaviour
     public float chassisHeight;
     public Transform sourceBone;
 
-    [SerializeField] protected float pathStepDuration = .4f;
+    [SerializeField] protected float moveSpeed;
+
+    [HideInInspector] public float speedMultiplier = 1;
 
     public IEnumerator TraversePath(List<Vector3> path)
     {
@@ -30,6 +32,8 @@ public abstract class PrimaryMovement : MonoBehaviour
 
         Vector3 startPosition = unit.position;
         float timeElapsed = 0;
+
+        float pathStepDuration = Vector3.Distance(unit.transform.position, target) / (moveSpeed * speedMultiplier);
         while (timeElapsed < pathStepDuration)
         {
             unit.SetPositionAndRotation(Vector3.Lerp(startPosition, target, timeElapsed / pathStepDuration),
