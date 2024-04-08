@@ -19,23 +19,28 @@ public class StatDisplay : MonoBehaviour
 
     private void Awake()
     {
-        Update.AddListener(UpdateMoveBar);
+        Update.AddListener(UpdateResourceDisplays);
     }
 
     public void SyncStatDisplay(TinyBot bot)
     {
         StopAllCoroutines();
         currentBot = bot;
-        for(int i = 0; i < abilityPoints.Count; i++)
-        {
-            abilityPoints[i].gameObject.SetActive(i < bot.Stats.Current[StatType.ACTION]);
-        }
-        abilityCount.text = Mathf.RoundToInt(bot.Stats.Current[StatType.ACTION]).ToString();
+        UpdateAbilityPoints();
 
         moveSlider.gameObject.SetActive(true);
         moveSlider.maxValue = bot.Stats.Max[StatType.MOVEMENT] * 2;
         SetSliderAndNumber(bot.Stats.Current[StatType.MOVEMENT]);
-        
+
+    }
+
+    private void UpdateAbilityPoints()
+    {
+        for (int i = 0; i < abilityPoints.Count; i++)
+        {
+            abilityPoints[i].gameObject.SetActive(i < currentBot.Stats.Current[StatType.ACTION]);
+        }
+        abilityCount.text = Mathf.RoundToInt(currentBot.Stats.Current[StatType.ACTION]).ToString();
     }
 
     void SetSliderAndNumber(float value)
@@ -44,8 +49,9 @@ public class StatDisplay : MonoBehaviour
         moveCount.text = Mathf.RoundToInt(value).ToString();
     }
 
-    public void UpdateMoveBar()
+    public void UpdateResourceDisplays()
     {
+        UpdateAbilityPoints();
         StartCoroutine(AnimateBar());
     }
 
