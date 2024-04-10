@@ -67,10 +67,12 @@ public class ClickableAbility : MonoBehaviour
         {
             actionPoints[i].gameObject.SetActive(i < pips);
         }
+        /*
         float newX = -pips * pointWidth / 2;
         Vector3 pos = pipHolder.transform.localPosition;
         pos.x = newX;
         pipHolder.transform.localPosition = pos;
+        */
     }
 
     public void Clear()
