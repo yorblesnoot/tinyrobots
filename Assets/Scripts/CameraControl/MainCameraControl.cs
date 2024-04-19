@@ -1,4 +1,6 @@
 using Cinemachine;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -28,16 +30,20 @@ public class MainCameraControl : MonoBehaviour
         public CinemachineClearShot  Select;
         public CinemachineVirtualCamera Action;
         public CinemachineTargetGroup Group;
+        public Transform FocalPoint;
+        public Transform ActionBeacon;
+        public float actionRadius;
     }
     [SerializeField] CameraSet cams;
     static CameraSet Cams;
-    static Transform focalPoint;
 
+    public static MainCameraControl Instance;
     public void Initialize(byte[,,] map)
     {
         mapCorner = new(map.GetLength(0), map.GetLength(1), map.GetLength(2));
         Cams = cams;
-        focalPoint = transform;
+        Cams.FocalPoint = transform;
+        Instance = this;
     }
 
     BaseInput playerInput;
@@ -62,11 +68,18 @@ public class MainCameraControl : MonoBehaviour
 
     void BeginFocusRotation(InputAction.CallbackContext context)
     {
+        if (!PlayerControlled) return;
         ChangeToFreeCam();
         startRotation = transform.rotation;
         initialClick = Input.mousePosition;
         PrimaryCursor.State = CursorState.SPACELOCKED;
         
+    }
+
+    static bool PlayerControlled = true;
+    public static void RestrictCamera(bool value)
+    {
+        PlayerControlled = !value;
     }
 
     void ChangeToFreeCam()
@@ -83,11 +96,11 @@ public class MainCameraControl : MonoBehaviour
         //activePosition = focalPoint.transform.InverseTransformPoint(activePosition);
         //transposer.m_FollowOffset = activePosition;
         
-        float distance = Vector3.Distance(activePosition, focalPoint.position);
+        float distance = Vector3.Distance(activePosition, Cams.FocalPoint.position);
         Vector3 camPosition = new(0, 0, distance);
 
         Cams.Free.VirtualCameraGameObject.transform.localPosition = camPosition;
-        focalPoint.LookAt(activeCam.VirtualCameraGameObject.transform);
+        Cams.FocalPoint.LookAt(activeCam.VirtualCameraGameObject.transform);
 
         Cams.Free.Priority = 100;
         brain.ManualUpdate();
@@ -145,6 +158,7 @@ public class MainCameraControl : MonoBehaviour
 
     private void SlideCamera(Vector3 moveOffset)
     {
+        if (!PlayerControlled) return;
         ChangeToFreeCam();
         Vector3 eulerRotation = transform.rotation.eulerAngles;
         eulerRotation.x = 0;
@@ -160,16 +174,60 @@ public class MainCameraControl : MonoBehaviour
 
     private void Zoom(float factor)
     {
+        if (!PlayerControlled) return;
         ChangeToFreeCam();
-        Vector3 direction = focalPoint.position - Camera.main.transform.position;
+        Vector3 direction = Cams.FocalPoint.position - Camera.main.transform.position;
         direction.Normalize();
         direction *= factor;
-        focalPoint.position += direction;
+        Cams.FocalPoint.position += direction;
     }
 
     public static void CutToUnit(TinyBot bot)
     {
         Cams.Free.Priority = 0;
-        focalPoint.transform.position = bot.transform.position;
+        Cams.FocalPoint.transform.position = bot.transform.position;
+    }
+
+    public static void CutToAction(Transform actor, Transform target)
+    {
+        CinemachineTargetGroup.Target[] targets = new CinemachineTargetGroup.Target[2];
+        targets[0] = new() { target = actor, weight = 1, radius = Cams.actionRadius };
+        targets[1] = new() { target = target, weight = 1, radius = Cams.actionRadius };
+        Cams.Group.m_Targets = targets;
+        Cams.Group.DoUpdate();
+        Cams.FocalPoint.transform.position = Cams.Group.Transform.position;
+        Cams.Free.Priority = 0;
+    }
+
+    public static void CutToAction(Transform actor, Vector3 position)
+    {
+        Cams.ActionBeacon.position = position;
+        CutToAction(actor, Cams.ActionBeacon);
+    }
+
+    static Vector3 trackingTarget;
+    static bool tracking;
+
+    public static void TrackTarget(Transform target)
+    {
+        if (!tracking)
+        {
+            tracking = true;
+            Instance.StartCoroutine(TrackTowardsPoint(target));
+        }
+    }
+
+    public static void ReleaseTracking()
+    {
+        tracking = false;
+    }
+
+    static IEnumerator TrackTowardsPoint(Transform target)
+    {
+        while (tracking)
+        {
+            Cams.FocalPoint.transform.position = Vector3.Lerp(Cams.FocalPoint.transform.position, target.position, Time.deltaTime);
+            yield return null;
+        }
     }
 }

@@ -18,6 +18,8 @@ public class BotAI
     public static readonly float terrainCheckSize = 1.1f;
     public IEnumerator TakeTurn()
     {
+        MainCameraControl.RestrictCamera(true);
+        MainCameraControl.TrackTarget(thisBot.transform);
         thisBot.ToggleActiveLayer(true);
         List<Ability> possibleAbilities = new(thisBot.Abilities);
         List<TinyBot> enemies = TurnManager.TurnTakers.Where(x => x.allegiance != thisBot.allegiance).ToList();
@@ -35,7 +37,10 @@ public class BotAI
         yield return thisBot.StartCoroutine(MoveFreely());
 
         thisBot.ToggleActiveLayer(false);
+        MainCameraControl.RestrictCamera(false);
+        MainCameraControl.ReleaseTracking();
         TurnManager.EndTurn(thisBot);
+        
 
         IEnumerator MoveAndUseAbility(Ability ability)
         {

@@ -42,6 +42,7 @@ public abstract class Ability : MonoBehaviour
     readonly float skillDelay = .5f;
     public IEnumerator Execute()
     {
+        //MainCameraControl.CutToAction(Owner.transform, trackedTarget.transform.position);
         currentCooldown = cooldown;
         PrimaryCursor.actionInProgress = true;
         yield return new WaitForSeconds(skillDelay);
