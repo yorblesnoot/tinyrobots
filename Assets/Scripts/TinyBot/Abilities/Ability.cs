@@ -42,13 +42,22 @@ public abstract class Ability : MonoBehaviour
     readonly float skillDelay = .5f;
     public IEnumerator Execute()
     {
-        //MainCameraControl.CutToAction(Owner.transform, trackedTarget.transform.position);
+        MainCameraControl.ActionPanTo(GetFinalAimPoint());
         currentCooldown = cooldown;
         PrimaryCursor.actionInProgress = true;
         yield return new WaitForSeconds(skillDelay);
         yield return StartCoroutine(PerformEffects());
         PrimaryCursor.actionInProgress = false;
     }
+
+    Vector3 GetFinalAimPoint()
+    {
+        Vector3 offset = PrimaryCursor.Transform.position - Owner.transform.position;
+        offset = offset.normalized;
+        offset *= Mathf.Min(range, offset.magnitude);
+        return offset + Owner.transform.position;
+    }
+
     List<TinyBot> currentTargets = new();
     public abstract List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false);
 

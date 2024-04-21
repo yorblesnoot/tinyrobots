@@ -1,5 +1,6 @@
 using Cinemachine;
 using System.Collections;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,24 +16,19 @@ public class MainCameraControl : MonoBehaviour
     [SerializeField] float zoomSpeed;
     [SerializeField] int maxZoom;
     [SerializeField] int minZoom;
-    [SerializeField] float snapSpeed;
-
     [SerializeField] float maxTiltAngle;
+    [SerializeField] float actionCutDuration = 2f;
+    [SerializeField] float actionCutMaxZoom = 5f;
 
-    Quaternion startRotation;
-    Vector3 initialClick;
     Vector3 mapCorner;
 
     [System.Serializable]
     class CameraSet
     {
-        public CinemachineVirtualCamera Free;
-        public CinemachineClearShot  Select;
-        public CinemachineVirtualCamera Action;
-        public CinemachineTargetGroup Group;
+        public CinemachineVirtualCamera Strafe;
+        public CinemachineFreeLook Pivot;
+        public CinemachineClearShot Automatic;
         public Transform FocalPoint;
-        public Transform ActionBeacon;
-        public float actionRadius;
     }
     [SerializeField] CameraSet cams;
     static CameraSet Cams;
@@ -59,7 +55,7 @@ public class MainCameraControl : MonoBehaviour
 
         rotateHold = playerInput.Main.Rotating;
         rotateHold.Enable();
-        rotateHold.canceled += (InputAction.CallbackContext context) => PrimaryCursor.State = CursorState.FREE;
+        rotateHold.canceled += EndFocusRotation;
 
         rotateOn = playerInput.Main.RotateOn;
         rotateOn.Enable();
@@ -68,45 +64,41 @@ public class MainCameraControl : MonoBehaviour
 
     void BeginFocusRotation(InputAction.CallbackContext context)
     {
-        if (!PlayerControlled) return;
-        ChangeToFreeCam();
-        startRotation = transform.rotation;
-        initialClick = Input.mousePosition;
-        PrimaryCursor.State = CursorState.SPACELOCKED;
+        if (!freeCameraAvailable) return;
+        Cams.Pivot.Priority = 3;
+        //PrimaryCursor.State = CursorState.SPACELOCKED;
+
+        float coreRadius = Cams.Pivot.m_Orbits[1].m_Radius;
+        float targetDistance = Vector3.Distance(Camera.main.transform.position, Cams.FocalPoint.position);
+        float scaleFactor = targetDistance/coreRadius;
+
+        for (int i = 0; i < Cams.Pivot.m_Orbits.Count(); i++)
+        {
+            Cams.Pivot.m_Orbits[i].m_Radius *= scaleFactor;
+            Cams.Pivot.m_Orbits[i].m_Height *= scaleFactor;
+        }
         
     }
 
-    static bool PlayerControlled = true;
+    void EndFocusRotation(InputAction.CallbackContext context)
+    {
+        Cams.Pivot.Priority = 0;
+        Cams.Strafe.Priority = 3;
+    }
+
+    static bool freeCameraAvailable = true;
     public static void RestrictCamera(bool value)
     {
-        PlayerControlled = !value;
-    }
-
-    void ChangeToFreeCam()
-    {
-        var activeCam = brain.ActiveVirtualCamera;
-
-#pragma warning disable CS0252
-        if (activeCam == null || activeCam == Cams.Free) return;
-        if (activeCam == Cams.Select) activeCam = Cams.Select.LiveChild;
-#pragma warning restore CS0252
-
-        //var transposer = Cams.Free.GetCinemachineComponent<CinemachineTransposer>();
-        Vector3 activePosition = activeCam.VirtualCameraGameObject.transform.position;
-        //activePosition = focalPoint.transform.InverseTransformPoint(activePosition);
-        //transposer.m_FollowOffset = activePosition;
-        
-        float distance = Vector3.Distance(activePosition, Cams.FocalPoint.position);
-        Vector3 camPosition = new(0, 0, distance);
-
-        Cams.Free.VirtualCameraGameObject.transform.localPosition = camPosition;
-        Cams.FocalPoint.LookAt(activeCam.VirtualCameraGameObject.transform);
-
-        Cams.Free.Priority = 100;
-        brain.ManualUpdate();
+        freeCameraAvailable = !value;
     }
 
     private void Update()
+    {
+        if(freeCameraAvailable) PlayerControlCamera();
+        brain.ManualUpdate();
+    }
+
+    private void PlayerControlCamera()
     {
         Vector3 mouse = Input.mousePosition;
 
@@ -119,51 +111,44 @@ public class MainCameraControl : MonoBehaviour
             Zoom(-zoomSpeed);
         }
         if (Input.GetKey(KeyCode.A))
-        {        
-            SlideCamera(new Vector3(scrollZoneX / 2, 0f, 0f));
-        }
-        if (Input.GetKey(KeyCode.D))
         {
             SlideCamera(new Vector3(-scrollZoneX / 2, 0f, 0f));
         }
-
+        if (Input.GetKey(KeyCode.D))
+        {
+            SlideCamera(new Vector3(scrollZoneX / 2, 0f, 0f));
+        }
         else if (rotateHold.inProgress)
         {
-            //Vector3 rotationCenter = new(Screen.width/2, Screen.height/2);
-            Vector3 centerOffset = mouse - initialClick;
-            Vector3 weightedDirection = (centerOffset * rotationSpeed);
-            Vector3 finalEulerRotation = startRotation.eulerAngles;
-            bool invertedAngle = finalEulerRotation.x <= 1f;
-            finalEulerRotation.x += weightedDirection.y;
-            finalEulerRotation.y += weightedDirection.x;
-
-            if (invertedAngle) finalEulerRotation.x = Mathf.Clamp(finalEulerRotation.x, -maxTiltAngle, maxTiltAngle);
-            else finalEulerRotation.x = Mathf.Clamp(finalEulerRotation.x, 360-maxTiltAngle, 360+maxTiltAngle);
-            transform.rotation = Quaternion.Euler(finalEulerRotation);
+            //PivotCameraAroundFocus(mouse);
         }
         else
         {
-            float leftScroll = Mathf.Clamp(scrollZoneX - mouse.x, 0, float.MaxValue);
-            float rightScroll = Mathf.Clamp(mouse.x - (Screen.width - scrollZoneX), 0, float.MaxValue);
-            float downScroll = Mathf.Clamp(scrollZoneY - mouse.y, 0, float.MaxValue);
-            float upScroll = Mathf.Clamp(mouse.y - (Screen.height - scrollZoneY), 0, float.MaxValue);
-            Vector3 moveOffset = new(leftScroll - rightScroll, upScroll - downScroll, 0f);
-
-            if (moveOffset != Vector3.zero) SlideCamera(moveOffset);
+            PanCamera(mouse);
         }
-        brain.ManualUpdate();
+    }
+
+    private void PanCamera(Vector3 mouse)
+    {
+        float leftScroll = Mathf.Clamp(scrollZoneX - mouse.x, 0, float.MaxValue);
+        float rightScroll = Mathf.Clamp(mouse.x - (Screen.width - scrollZoneX), 0, float.MaxValue);
+        float downScroll = Mathf.Clamp(scrollZoneY - mouse.y, 0, float.MaxValue);
+        float upScroll = Mathf.Clamp(mouse.y - (Screen.height - scrollZoneY), 0, float.MaxValue);
+        Vector3 moveOffset = new(rightScroll - leftScroll, upScroll - downScroll, 0f);
+
+        if (moveOffset != Vector3.zero) SlideCamera(moveOffset);
     }
 
     [SerializeField] float originReturnTime;
 
     private void SlideCamera(Vector3 moveOffset)
     {
-        if (!PlayerControlled) return;
-        ChangeToFreeCam();
-        Vector3 eulerRotation = transform.rotation.eulerAngles;
-        eulerRotation.x = 0;
-        eulerRotation.z = 0;
-        Quaternion yRotation = Quaternion.Euler(eulerRotation);
+        Vector3 offset = Camera.main.transform.position - Cams.FocalPoint.position;
+        Vector3 slideDirection = Vector3.Cross(offset, Vector3.up);
+
+
+        Cams.Strafe.Priority = 2;
+        Quaternion yRotation = Camera.main.transform.rotation;
 
         moveOffset *= scrollSpeed;
         Vector3 slidPosition = transform.position + yRotation * moveOffset;
@@ -174,8 +159,7 @@ public class MainCameraControl : MonoBehaviour
 
     private void Zoom(float factor)
     {
-        if (!PlayerControlled) return;
-        ChangeToFreeCam();
+        Cams.Strafe.Priority = 2;
         Vector3 direction = Cams.FocalPoint.position - Camera.main.transform.position;
         direction.Normalize();
         direction *= factor;
@@ -184,25 +168,9 @@ public class MainCameraControl : MonoBehaviour
 
     public static void CutToUnit(TinyBot bot)
     {
-        Cams.Free.Priority = 0;
+        Cams.Strafe.Priority = 0;
+        Cams.Pivot.Priority = 0;
         Cams.FocalPoint.transform.position = bot.transform.position;
-    }
-
-    public static void CutToAction(Transform actor, Transform target)
-    {
-        CinemachineTargetGroup.Target[] targets = new CinemachineTargetGroup.Target[2];
-        targets[0] = new() { target = actor, weight = 1, radius = Cams.actionRadius };
-        targets[1] = new() { target = target, weight = 1, radius = Cams.actionRadius };
-        Cams.Group.m_Targets = targets;
-        Cams.Group.DoUpdate();
-        Cams.FocalPoint.transform.position = Cams.Group.Transform.position;
-        Cams.Free.Priority = 0;
-    }
-
-    public static void CutToAction(Transform actor, Vector3 position)
-    {
-        Cams.ActionBeacon.position = position;
-        CutToAction(actor, Cams.ActionBeacon);
     }
 
     static Vector3 trackingTarget;
@@ -210,24 +178,46 @@ public class MainCameraControl : MonoBehaviour
 
     public static void TrackTarget(Transform target)
     {
-        if (!tracking)
-        {
-            tracking = true;
-            Instance.StartCoroutine(TrackTowardsPoint(target));
-        }
+        if (tracking) return;
+        tracking = true;
+        freeCameraAvailable = false;
+        Instance.StartCoroutine(TrackTowardsEntity(target));
     }
 
     public static void ReleaseTracking()
     {
         tracking = false;
+        freeCameraAvailable = true;
     }
 
-    static IEnumerator TrackTowardsPoint(Transform target)
+    static IEnumerator TrackTowardsEntity(Transform target)
     {
         while (tracking)
         {
             Cams.FocalPoint.transform.position = Vector3.Lerp(Cams.FocalPoint.transform.position, target.position, Time.deltaTime);
             yield return null;
         }
+    }
+
+    public static void ActionPanTo(Vector3 target)
+    {
+        freeCameraAvailable = false;
+        Instance.StartCoroutine(ActionCut(target, Instance.actionCutDuration));
+        
+    }
+
+    static IEnumerator ActionCut(Vector3 target, float duration)
+    {
+        Vector3 startPosition = Cams.FocalPoint.position;
+        float timeElapsed = 0;
+        while (timeElapsed < duration)
+        {
+            float progress = timeElapsed / duration;
+            Cams.FocalPoint.transform.position = Vector3.Lerp(startPosition, target, .5f * progress);
+            Instance.Zoom(Mathf.Lerp(0, -Instance.actionCutMaxZoom, progress));
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+        freeCameraAvailable = true;
     }
 }

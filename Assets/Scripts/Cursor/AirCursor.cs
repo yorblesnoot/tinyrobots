@@ -20,6 +20,7 @@ public class AirCursor : CursorBehaviour
     public override void ControlCursor()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
+        Debug.Log(scroll + " scroll");
         Vector3 pos = cursorLoadout.transform.localPosition;
         pos.z += scroll * scrollRate;
         cursorLoadout.transform.localPosition = pos;

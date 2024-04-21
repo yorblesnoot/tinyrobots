@@ -35,6 +35,7 @@ public class BotAI
         }
 
         yield return thisBot.StartCoroutine(MoveFreely());
+        yield return new WaitForSeconds(1);
 
         thisBot.ToggleActiveLayer(false);
         MainCameraControl.RestrictCamera(false);

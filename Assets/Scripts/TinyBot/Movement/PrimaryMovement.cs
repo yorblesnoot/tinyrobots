@@ -18,11 +18,13 @@ public abstract class PrimaryMovement : MonoBehaviour
 
     public IEnumerator TraversePath(List<Vector3> path)
     {
+        MainCameraControl.TrackTarget(Owner.transform);
         foreach (var target in path)
         {
             yield return StartCoroutine(InterpolatePositionAndRotation(Owner.transform, target));
         }
         StartCoroutine(NeutralStance());
+        MainCameraControl.ReleaseTracking();
     }
 
     protected IEnumerator InterpolatePositionAndRotation(Transform unit, Vector3 target)
