@@ -86,7 +86,7 @@ public class TinyBot : MonoBehaviour
     public void BecomeActiveUnit()
     {
         selectBrackets.SetActive(true);
-        UnitControl.ActiveBot = this;
+        UnitControl.PlayerControlledBot = this;
         ToggleActiveLayer(true);
     }
 
@@ -98,7 +98,7 @@ public class TinyBot : MonoBehaviour
 
     public void ClearActiveUnit()
     {
-        UnitControl.ActiveBot = null;
+        UnitControl.PlayerControlledBot = null;
         selectBrackets.SetActive(false);
         ToggleActiveLayer(false);
     }
@@ -135,7 +135,7 @@ public class TinyBot : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if(UnitControl.ActiveBot != this /*&& ClickableAbility.Active == null*/) PrimaryCursor.SnapToUnit(this);
+        if(UnitControl.PlayerControlledBot != this /*&& ClickableAbility.Active == null*/) PrimaryCursor.SnapToUnit(this);
     }
 
     private void OnMouseExit()

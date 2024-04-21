@@ -15,7 +15,7 @@ public class UnitControl : MonoBehaviour
     [SerializeField] HealthOverlay healthOverlay;
 
     List<ClickableAbility> deployedAbilities;
-    public static TinyBot ActiveBot;
+    public static TinyBot PlayerControlledBot;
     private void Awake()
     {
         ClickableAbility.Active = null;
@@ -36,7 +36,7 @@ public class UnitControl : MonoBehaviour
     {
         if (PrimaryCursor.actionInProgress) return;
         gameObject.SetActive(false);
-        TurnManager.EndTurn(ActiveBot);
+        TurnManager.EndTurn(PlayerControlledBot);
         ClickableAbility.DeactivateSelectedAbility();
     }
 

@@ -52,10 +52,23 @@ public abstract class Ability : MonoBehaviour
 
     Vector3 GetFinalAimPoint()
     {
-        Vector3 offset = PrimaryCursor.Transform.position - Owner.transform.position;
-        offset = offset.normalized;
-        offset *= Mathf.Min(range, offset.magnitude);
-        return offset + Owner.transform.position;
+        if(currentTargets != null && currentTargets.Count > 0)
+        {
+            Vector3 average = Vector3.zero;
+            foreach(var target in currentTargets)
+            {
+                average += target.transform.position;
+            }
+            average /= currentTargets.Count;
+            return average;
+        }
+        else
+        {
+            Vector3 offset = PrimaryCursor.Transform.position - Owner.transform.position;
+            offset = offset.normalized;
+            offset *= Mathf.Min(range, offset.magnitude);
+            return offset + Owner.transform.position;
+        }
     }
 
     List<TinyBot> currentTargets = new();

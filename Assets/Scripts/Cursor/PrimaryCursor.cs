@@ -4,6 +4,7 @@ using static UnitControl;
 using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
+using UnityEditor.Experimental.GraphView;
 
 public enum CursorState
 {
@@ -76,12 +77,12 @@ public class PrimaryCursor : MonoBehaviour
             if (anAbilityIsActive)
             {
                 Ability skill = ClickableAbility.Active.Skill;
-                if (skill.IsUsable(ActiveBot.transform.position)
-                && ActiveBot.AttemptToSpendResource(skill.cost, StatType.ACTION))
+                if (skill.IsUsable(PlayerControlledBot.transform.position)
+                && PlayerControlledBot.AttemptToSpendResource(skill.cost, StatType.ACTION))
                 {
-                    StatDisplay.SyncStatDisplay(ActiveBot);
+                    StatDisplay.SyncStatDisplay(PlayerControlledBot);
                     
-                    StartCoroutine(skill.Execute());
+                    StartCoroutine(UseSkill(skill));
                     ClickableAbility.Active.UpdateCooldowns();
                     ClickableAbility.DeactivateSelectedAbility();
                 }
@@ -93,10 +94,10 @@ public class PrimaryCursor : MonoBehaviour
                 Unsnap();
             }
             //traverse a confirmed path
-            else if (currentPath != null && ActiveBot != null
-                && currentPathCost <= ActiveBot.Stats.Current[StatType.MOVEMENT]
+            else if (currentPath != null && PlayerControlledBot != null
+                && currentPathCost <= PlayerControlledBot.Stats.Current[StatType.MOVEMENT]
                 && !EventSystem.current.IsPointerOverGameObject()
-                && ActiveBot.AttemptToSpendResource(currentPathCost, StatType.MOVEMENT))
+                && PlayerControlledBot.AttemptToSpendResource(currentPathCost, StatType.MOVEMENT))
             {
                 StatDisplay.Update.Invoke();
                 StartCoroutine(TraversePath());
@@ -109,7 +110,7 @@ public class PrimaryCursor : MonoBehaviour
         //Debug.Log($"active {ActiveBot}, action {actionInProgress}, ability {anAbilityIsActive}");
 
         //generate new path
-        if (ActiveBot != null)
+        if (PlayerControlledBot != null)
         {
             Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
             if (currentPosition != lastPosition)
@@ -123,10 +124,16 @@ public class PrimaryCursor : MonoBehaviour
             }
         }
         //toggle path preview
-        if (ActiveBot == null || anAbilityIsActive)
+        if (PlayerControlledBot == null || anAbilityIsActive)
         {
             HideMovePreview();
         }
+    }
+
+    IEnumerator UseSkill(Ability ability)
+    {
+        yield return StartCoroutine(ability.Execute());
+        ClickableAbility.playerUsedAbility?.Invoke();
     }
 
     void ProcessAndPreviewPath(List<Vector3> possiblePath, List<float> distances)
@@ -138,7 +145,7 @@ public class PrimaryCursor : MonoBehaviour
         currentPath = new();
         List<Vector3> redPath = new();
         int pathIndex = 0;
-        float currentMove = ActiveBot.Stats.Current[StatType.MOVEMENT];
+        float currentMove = PlayerControlledBot.Stats.Current[StatType.MOVEMENT];
         while (pathIndex < possiblePath.Count)
         {
             float distance = distances[pathIndex];
@@ -169,8 +176,8 @@ public class PrimaryCursor : MonoBehaviour
     private IEnumerator TraversePath()
     {
         actionInProgress = true;
-        yield return StartCoroutine(ActiveBot.PrimaryMovement.TraversePath(currentPath));
-        Pathfinder3D.GeneratePathingTree(ActiveBot);
+        yield return StartCoroutine(PlayerControlledBot.PrimaryMovement.TraversePath(currentPath));
+        Pathfinder3D.GeneratePathingTree(PlayerControlledBot);
         actionInProgress = false;
     }
 

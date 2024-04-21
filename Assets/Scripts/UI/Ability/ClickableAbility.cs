@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class ClickableAbility : MonoBehaviour
 {
+    public static UnityEvent playerUsedAbility = new();
     [SerializeField] Image image;
     [SerializeField] Button button;
     [SerializeField] TMP_Text cooldown;
@@ -23,13 +25,22 @@ public class ClickableAbility : MonoBehaviour
     {
         pointWidth = actionPoints[0].GetComponent<RectTransform>().rect.width;
         pointWidth *= dislacementModifier;
+        playerUsedAbility.AddListener(HideIfTooExpensive);
+    }
+
+    void HideIfTooExpensive()
+    {
+        if (Skill == null || Skill.currentCooldown > 0) return;
+        bool unusuable = Skill.cost > UnitControl.PlayerControlledBot.Stats.Current[StatType.ACTION];
+        cooldownPanel.gameObject.SetActive(unusuable);
+        cooldown.text = "";
     }
 
     public static void DeactivateSelectedAbility()
     {
         if (Active == null) return;
         Active.image.color = Color.white;
-        PrimaryCursor.SetCursorMode(UnitControl.ActiveBot == null ? CursorType.GROUND : UnitControl.ActiveBot.PrimaryMovement.PreferredCursor);
+        PrimaryCursor.SetCursorMode(UnitControl.PlayerControlledBot == null ? CursorType.GROUND : UnitControl.PlayerControlledBot.PrimaryMovement.PreferredCursor);
         Active.Skill.ReleaseLockOn();
         Active = null;
     }
