@@ -68,8 +68,11 @@ public class SwordSlash : SpatialAbility
         indicator.ResetIntersecting();
         ReleaseLockOn();
         Vector3[] slashPoints = GetSlashPoints();
-        
-        yield return StartCoroutine(ikTarget.gameObject.LerpTo(slashPoints[0], returnTime));
+
+        Vector3 thrustTarget = Owner.transform.position - Owner.transform.forward;
+        //yield return StartCoroutine(Owner.PrimaryMovement.ApplyImpulseToBody(thrustTarget, -.5f, returnTime, slashTime/2));
+        yield return StartCoroutine(ikTarget.gameObject.LerpTo(slashPoints[0], slashTime));
+        StartCoroutine(Owner.PrimaryMovement.ApplyImpulseToBody(thrustTarget, 1, slashTime, returnTime * 2));
         yield return StartCoroutine(SlashThroughPoints(slashPoints, slashTime));
         foreach (TinyBot bot in hitTargets)
         {
@@ -87,7 +90,6 @@ public class SwordSlash : SpatialAbility
         Vector3 endPosition = Owner.transform.InverseTransformPoint(points[1]);
         while (timeElapsed < duration)
         {
-            Owner.PrimaryMovement.RotateToTrackEntity(ikTarget.gameObject);
             Vector3 localPosition = Vector3.Slerp(startPosition, endPosition, timeElapsed / duration);
             ikTarget.transform.position = Owner.transform.TransformPoint(localPosition);
             timeElapsed += Time.deltaTime;
@@ -98,10 +100,11 @@ public class SwordSlash : SpatialAbility
 
     Vector3[] GetSlashPoints()
     {
-        Vector3 awayFromBody = (transform.position - Owner.ChassisPoint.position).normalized;
-        Vector3 startPosition = slashPosition.position + Vector3.up * slashHeight + awayFromBody * slashWidth;
-        Vector3 direction = (slashPosition.position - startPosition).normalized;
-        Vector3 lastPosition = startPosition + direction * slashLength;
+        Vector3 awayFromBody = (slashPosition.position - Owner.ChassisPoint.position).normalized;
+        Vector3 startPosition = slashPosition.position + Owner.transform.up * slashHeight + awayFromBody * slashWidth;
+
+        Vector3 lastPosition = Vector3.Reflect(-Owner.ChassisPoint.InverseTransformPoint(startPosition), Vector3.forward);
+        lastPosition = Owner.ChassisPoint.TransformPoint(lastPosition);
         return new Vector3[] { startPosition, lastPosition };
 
     }

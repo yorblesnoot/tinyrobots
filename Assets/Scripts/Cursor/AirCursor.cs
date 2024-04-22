@@ -10,7 +10,7 @@ public class AirCursor : CursorBehaviour
     int layerMask;
     protected override void Initialize()
     {
-        layerMask = LayerMask.GetMask("Ignore Raycast");
+        layerMask = LayerMask.GetMask("CursorPlanes");
     }
 
     public override void ActivateCursor()
