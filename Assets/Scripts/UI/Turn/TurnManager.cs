@@ -73,7 +73,7 @@ public class TurnManager : MonoBehaviour
 
     public static void UpdateHealth(TinyBot bot)
     {
-        activePortraits[bot].UpdateHealth();
+        if(activePortraits.TryGetValue(bot, out var portrait)) portrait.UpdateHealth();
     }
 
     static void GetActiveBots()

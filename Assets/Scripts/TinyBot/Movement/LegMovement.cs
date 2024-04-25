@@ -16,6 +16,7 @@ public abstract class LegMovement : PrimaryMovement
     [SerializeField] protected float anchorDownwardLength = 3f;
     [SerializeField] AnimationCurve legRaise;
     [SerializeField] SphereCollider detector;
+    [SerializeField] protected float forwardBias = .5f;
 
     protected bool stepping;
 
@@ -68,7 +69,9 @@ public abstract class LegMovement : PrimaryMovement
 
     protected virtual float LegDistanceFromDeadZone(Anchor anchor)
     {
-        return Vector3.Distance(anchor.ikTarget.localPosition, anchor.localBasePosition);
+        Vector3 localForward = anchor.ikTarget.parent.InverseTransformPoint(Owner.transform.forward);
+        localForward.Normalize();
+        return Vector3.Distance(anchor.ikTarget.localPosition, anchor.localBasePosition + localForward * forwardBias);
     }
     
     protected IEnumerator StepToBase(Anchor anchor, bool goToNeutral = false)

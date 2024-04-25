@@ -92,7 +92,7 @@ public class MainCameraControl : MonoBehaviour
         freeCameraAvailable = !value;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         if(freeCameraAvailable) PlayerControlCamera();
         brain.ManualUpdate();

@@ -706,7 +706,7 @@ MonoBehaviour:
     localBasePosition: {x: 0, y: 0, z: 0}
     distanceFromDeadZone: 0
     gluedWorldPosition: {x: 0, y: 0, z: 0}
-  anchorZoneRadius: 1.1
+  anchorZoneRadius: 1.3
   legModel: {fileID: 6062594318300677067}
   anchorUpwardLimit: 2
   anchorDownwardLength: 3
@@ -735,6 +735,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   detector: {fileID: 730318562603061130}
+  forwardBias: 0.5
   raycastInTilt: 0.15
   anchorInwardLength: 4
 --- !u!4 &5740287581094643054 stripped

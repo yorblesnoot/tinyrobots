@@ -57,9 +57,8 @@ public abstract class ProjectileAbility : Ability
         for (int i = 0; i < castTargets.Length - 1; i++)
         {
             Vector3 direction = castTargets[i + 1] - castTargets[i];
-            bool castHit;
-            castHit = radius == 0 ? Physics.Raycast(castTargets[i], direction, out RaycastHit hitInfo, direction.magnitude + overlapLength, mask)
-                : Physics.SphereCast(castTargets[i], radius, direction, out hitInfo, direction.magnitude + overlapLength, mask);
+            bool castHit = Physics.Raycast(castTargets[i], direction, out RaycastHit hitInfo, direction.magnitude + overlapLength, mask);
+            if(castHit && radius > 0) castHit = Physics.SphereCast(castTargets[i], radius, direction, out hitInfo, direction.magnitude + overlapLength, mask);
             if (castHit)
             {
                 modifiedTargets.Add(hitInfo.point);

@@ -77,18 +77,18 @@ public class BotAI
             target = default;
             Vector3 location = GunPositionAt(ability, baseLocation);
             if(Physics.CheckSphere(location, terrainCheckSize, terrainMask)) return false;
-            Debug.DrawRay(location, Vector3.down, Color.blue, 5f);
+            Debug.DrawRay(location, Vector3.down, Color.blue, 10f);
             
             foreach (var playerUnit in targets)
             {
                 Transform targetPoint = playerUnit.ChassisPoint;
                 if (Vector3.Distance(targetPoint.position, location) <= ability.range)
                 {
-                    Vector3 direction = targetPoint.position - location;
                     List<TinyBot> hits = ability.AimAt(targetPoint.gameObject, location, true);
-                    if (hits == null || hits.Count == 0) continue;
+                    Debug.Log(hits.Count);
+                    if (hits == null || hits.Count == 0 || !hits.Contains(playerUnit)) continue;
                     target = playerUnit;
-                    Debug.DrawRay(location, Vector3.up, Color.yellow, 5f);
+                    Debug.DrawRay(location, Vector3.up, Color.yellow, 10f);
                     return true;
                 }
             }

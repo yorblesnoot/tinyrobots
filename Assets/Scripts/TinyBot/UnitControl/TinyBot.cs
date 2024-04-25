@@ -122,7 +122,6 @@ public class TinyBot : MonoBehaviour
 
     public void ReceiveDamage(int damage, Vector3 source, Vector3 hitPoint)
     {
-        Debug.Log("damaged to " + Stats.Current[StatType.HEALTH]);
         feedback.QueuePopup(damage, Color.red);
         StartCoroutine(PrimaryMovement.ApplyImpulseToBody(source, recoilDistancePerDamage * damage, hitRecoilTime, hitReturnTime));
         GameObject spark = Instantiate(hitSpark, hitPoint, Quaternion.identity);
