@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class BotPlacer : MonoBehaviour
@@ -14,10 +11,6 @@ public class BotPlacer : MonoBehaviour
     [SerializeField] PlayerData playerData;
     [SerializeField] BotAssembler botAssembler;
     [SerializeField] TurnManager turnManager;
-
-    //Dictionary<Allegiance, Color>
-    [SerializeField] SerializableDictionary<Allegiance, Color> colorMaps;
-
 
     public void PlaceBots()
     {

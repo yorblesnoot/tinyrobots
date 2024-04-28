@@ -5,28 +5,34 @@ using UnityEngine;
 
 public class BattleInitializer : MonoBehaviour
 {
-    [SerializeField] MapGenerator[] mapGenerators;
-    [SerializeField] int generatorIndex;
+    enum MapMode
+    {
+        PERLIN_MARCH,
+        VOXELIZE_PREMADE
+    }
+    [SerializeField] MapMode mapMode;
 
-    [SerializeField] MainCameraControl mainCameraControl;
+    [SerializeField] PhysicsVoxelizer voxelizer;
 
+    [SerializeField] NoiseVoxelGenerator noiseGenerator;
     [SerializeField] MarchingCubes marchingCubesRenderer;
-    [SerializeField] LineRenderer lineRenderer;
+
     [SerializeField] BotPlacer botPlacer;
-
-    [SerializeField] TreeRenderer treeRenderer;
-
+    [SerializeField] MainCameraControl mainCameraControl;
     [SerializeField] TurnManager turnManager;
-
-    [SerializeField] bool testing = true;
     private void Start()
     {
-        mapGenerators[generatorIndex].GenerateCoreMap();
-        mapGenerators[generatorIndex].PlaceSecondaries();
-
-        if (testing) return;
-        byte[,,] mapGrid = mapGenerators[generatorIndex].GetByteMap();
-        marchingCubesRenderer.RenderIntoCubes(mapGrid);
+        byte[,,] mapGrid;
+        if(mapMode == MapMode.PERLIN_MARCH)
+        {
+            noiseGenerator.GenerateCoreMap();
+            mapGrid = noiseGenerator.GetByteMap();
+            marchingCubesRenderer.RenderIntoCubes(mapGrid);
+        }
+        else
+        {
+            mapGrid = voxelizer.GetVoxelGrid();
+        }
         
         Pathfinder3D.Initialize(mapGrid);
         mainCameraControl.Initialize(mapGrid);

@@ -85,7 +85,6 @@ public class BotAI
                 if (Vector3.Distance(targetPoint.position, location) <= ability.range)
                 {
                     List<TinyBot> hits = ability.AimAt(targetPoint.gameObject, location, true);
-                    Debug.Log(hits.Count);
                     if (hits == null || hits.Count == 0 || !hits.Contains(playerUnit)) continue;
                     target = playerUnit;
                     Debug.DrawRay(location, Vector3.up, Color.yellow, 10f);

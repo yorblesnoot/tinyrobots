@@ -110,6 +110,7 @@ public abstract class LegMovement : PrimaryMovement
     protected Vector3 GetMeshNormalAt(Vector3 target)
     {
         Collider[] colliders = Physics.OverlapSphere(target, 1f, LayerMask.GetMask("Terrain"));
+        if (colliders.Length == 0) return Vector3.up;
         detector.transform.SetParent(null);
         detector.transform.position = target;
         CheckSphereExtra(colliders[0], detector, out Vector3 closestPoint, out Vector3 surfaceNormal);
