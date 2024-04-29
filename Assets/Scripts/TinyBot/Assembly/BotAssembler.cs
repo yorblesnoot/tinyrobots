@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class BotAssembler : MonoBehaviour
 {
-    [SerializeField] GameObject spawnPoint;
-    [SerializeField] UnitControl abilityUI;
     [SerializeField] PortraitGenerator portraitGenerator;
     [SerializeField] BotPalette palette;
     public TinyBot BuildBotFromPartTree(TreeNode<CraftablePart> tree, Allegiance allegiance)

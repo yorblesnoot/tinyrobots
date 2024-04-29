@@ -70,10 +70,10 @@ public class SwordSlash : SpatialAbility
         ReleaseLockOn();
         Vector3[] slashPoints = GetSlashPoints();
 
-        Vector3 thrustTarget = Owner.transform.position - Owner.transform.forward;
+        Vector3 thrustTarget = (slashPoints[0] + slashPoints[1])/2;
         //yield return StartCoroutine(Owner.PrimaryMovement.ApplyImpulseToBody(thrustTarget, -.5f, returnTime, slashTime/2));
         yield return StartCoroutine(ikTarget.gameObject.LerpTo(slashPoints[0], slashTime));
-        StartCoroutine(Owner.PrimaryMovement.ApplyImpulseToBody(thrustTarget, 1, slashTime, returnTime * 2));
+        StartCoroutine(Owner.PrimaryMovement.ApplyImpulseToBody(thrustTarget, -1, slashTime, returnTime * 2));
         yield return StartCoroutine(SlashThroughPoints(slashPoints, slashTime));
         foreach (TinyBot bot in hitTargets)
         {

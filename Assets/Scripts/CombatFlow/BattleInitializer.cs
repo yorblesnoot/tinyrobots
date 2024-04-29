@@ -22,8 +22,19 @@ public class BattleInitializer : MonoBehaviour
     [SerializeField] TurnManager turnManager;
     private void Start()
     {
+        byte[,,] mapGrid = GenerateMap();
+        Pathfinder3D.Initialize(mapGrid);
+        mainCameraControl.Initialize(mapGrid);
+
+        botPlacer.PlaceBots();
+        turnManager.BeginTurnSequence();
+
+    }
+
+    private byte[,,] GenerateMap()
+    {
         byte[,,] mapGrid;
-        if(mapMode == MapMode.PERLIN_MARCH)
+        if (mapMode == MapMode.PERLIN_MARCH)
         {
             noiseGenerator.GenerateCoreMap();
             mapGrid = noiseGenerator.GetByteMap();
@@ -33,12 +44,7 @@ public class BattleInitializer : MonoBehaviour
         {
             mapGrid = voxelizer.GetVoxelGrid();
         }
-        
-        Pathfinder3D.Initialize(mapGrid);
-        mainCameraControl.Initialize(mapGrid);
 
-        botPlacer.PlaceBots();
-        turnManager.BeginTurnSequence();
-        
+        return mapGrid;
     }
 }

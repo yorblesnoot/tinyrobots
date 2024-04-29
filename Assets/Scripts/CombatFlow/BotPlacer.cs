@@ -12,10 +12,21 @@ public class BotPlacer : MonoBehaviour
     [SerializeField] BotAssembler botAssembler;
     [SerializeField] TurnManager turnManager;
 
+    [SerializeField] bool useRandomPlacement;
+
     public void PlaceBots()
     {
-        List<TinyBot> bots = new();
         botConverter.Initialize();
+        if(useRandomPlacement) PlaceBotsRandomly();
+        SpawnPoint.ReadyToSpawn?.Invoke(this);
+    }
+
+    [SerializeField] int zoneDivisor = 2;
+    [SerializeField] int spawnLowerCutoff = 5;
+    [SerializeField] int spawnUpperCutoff = 30;
+    private void PlaceBotsRandomly()
+    {
+        List<TinyBot> bots = new();
         SpawnBotList(playerBots, Allegiance.PLAYER);
         SpawnBotList(enemyBots, Allegiance.ENEMY);
 
@@ -38,30 +49,37 @@ public class BotPlacer : MonoBehaviour
             }
         }
 
-        foreach (var bot in bots)
+        foreach (TinyBot bot in bots)
         {
             MoveStyle style = bot.PrimaryMovement.Style;
-            bot.transform.position = spawnSlots[bot.allegiance][style].GrabRandomly();
-            bot.PrimaryMovement.SpawnOrientation();
-            StartCoroutine(bot.PrimaryMovement.NeutralStance());
+            OrientBot(bot, spawnSlots[bot.allegiance][style].GrabRandomly());
         }
 
         void SpawnBotList(List<BotRecord> botRecords, Allegiance allegiance)
         {
-            
             foreach (var botRecord in botRecords)
             {
-                var tree = botConverter.StringToBot(botRecord.record);
-                TinyBot botUnit = botAssembler.BuildBotFromPartTree(tree, allegiance);
-                botUnit.allegiance = allegiance;
+                TinyBot botUnit = SpawnBot(allegiance, botRecord);
                 bots.Add(botUnit);
-                turnManager.AddTurnTaker(botUnit);
             }
-
         }
     }
 
-    [SerializeField] int zoneDivisor = 2;
-    [SerializeField] int spawnLowerCutoff = 5;
-    [SerializeField] int spawnUpperCutoff = 30;
+    public void OrientBot(TinyBot bot, Vector3 position)
+    {
+        bot.transform.position = position;
+        bot.PrimaryMovement.SpawnOrientation();
+        StartCoroutine(bot.PrimaryMovement.NeutralStance());
+    }
+
+    public TinyBot SpawnBot(Allegiance allegiance, BotRecord botRecord)
+    {
+        var tree = botConverter.StringToBot(botRecord.record);
+        TinyBot botUnit = botAssembler.BuildBotFromPartTree(tree, allegiance);
+        botUnit.allegiance = allegiance;
+
+        turnManager.AddTurnTaker(botUnit);
+        return botUnit;
+    }
+
 }

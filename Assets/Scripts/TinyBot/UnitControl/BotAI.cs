@@ -102,10 +102,12 @@ public class BotAI
             List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations();
             pathableLocations = pathableLocations.OrderBy(location => Vector3.Distance(location, closestEnemyPosition)).ToList();
             List<Vector3> path = Pathfinder3D.FindVectorPath(pathableLocations[0], out var moveCosts);
+            
+            //this needs a look
             int endIndex = 0;
             if (moveCosts == null || moveCosts.Count == 0) yield break;
-
-            while (moveCosts[endIndex] < thisBot.Stats.Current[StatType.MOVEMENT]) endIndex++;
+            while (endIndex < moveCosts.Count && moveCosts[endIndex] < thisBot.Stats.Current[StatType.MOVEMENT]) endIndex++;
+            if (endIndex == 0) yield break;
             path = path.Take(endIndex).ToList();
             thisBot.AttemptToSpendResource(Mathf.RoundToInt(moveCosts[endIndex]), StatType.MOVEMENT);
 
