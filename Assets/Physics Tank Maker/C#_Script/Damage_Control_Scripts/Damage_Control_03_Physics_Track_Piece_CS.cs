@@ -45,14 +45,6 @@ namespace ChobiAssets.PTM
             // Remove from the scene in 20 seconds.
             Destroy(this.gameObject, 20.0f);
         }
-
-
-        void OnJointBreak()
-        { // Called when the HingeJoint in this piece has broken physically.
-
-            // Send an infinite damage value to the "Damage_Control_Center_CS".
-            centerScript.Receive_Damage(Mathf.Infinity, 2, Track_Index); // type = 2 (Physics_Track piece), index = Track_Index (0 = Left, 1 = Right).
-        }
     }
 
 }

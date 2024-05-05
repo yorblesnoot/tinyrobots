@@ -8,12 +8,12 @@ namespace ChobiAssets.PTM
     public class Layer_Settings_CS
     {
         const int maxLayersNum = 14;
-        public const int Wheels_Layer = 9; // for wheels.
-        public const int Reinforce_Layer = 10; // for suspension arms and track reinforce objects. (Ignore all the collision)
-        public const int Body_Layer = 11; // for MainBody.
+        public const int Wheels_Layer = 15; // for wheels.
+        public const int Reinforce_Layer = 16; // for suspension arms and track reinforce objects. (Ignore all the collision)
+        public const int Body_Layer = 17; // for MainBody.
         public const int Bullet_Layer = 12; // for bullet.
-        public const int Armor_Collider_Layer = 13; // for "Armor_Collider" and "Track_Collider".
-        public const int Extra_Collider_Layer = 14; // for Extra Collier.
+        public const int Armor_Collider_Layer = 18; // for "Armor_Collider" and "Track_Collider".
+        public const int Extra_Collider_Layer = 19; // for Extra Collier.
 
         // Layer Mask settings.
         public const int Layer_Mask = ~((1 << 2) + (1 << Reinforce_Layer) + (1 << Bullet_Layer) + (1 << Extra_Collider_Layer)); // Ignore "Layer 2(Ignore Ray)", "Reinforce_Layer", "Bullet_Layer", "Extra_Collider_Layer".

@@ -75,7 +75,7 @@ namespace ChobiAssets.PTM
             cannonVerticalScripts = GetComponentsInChildren<Cannon_Vertical_CS>();
 
             // Get the "Camera_Rotation_CS" script in the tank.
-            cameraRotationScript = transform.parent.GetComponentInChildren<Camera_Rotation_CS>();
+            cameraRotationScript = transform.GetComponentInChildren<Camera_Rotation_CS>();
 
             // Set the input script.
             Set_Input_Script(inputType);

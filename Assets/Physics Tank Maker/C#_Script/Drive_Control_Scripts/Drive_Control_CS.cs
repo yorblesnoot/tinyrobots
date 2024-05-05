@@ -179,10 +179,7 @@ namespace ChobiAssets.PTM
 
         void Update()
         {
-            if (isSelected || inputType == 10)
-            { // The tank is selected, or AI.
                 inputScript.Drive_Input();
-            }
 
             // Set the driving values, such as speed rate, brake drag and torque.
             Set_Driving_Values();

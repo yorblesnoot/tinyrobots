@@ -94,19 +94,15 @@ namespace ChobiAssets.PTM
 
         void Update()
         {
-            if (isSelected || inputType == 10)
-            { // The tank is selected, or AI.
-
-                // Stop steering while the tank is stopping.
-                if (driveControlScript.Stop_Flag)
-                {
-                    return;
-                }
-
-                inputScript.Get_Input();
-
-                Steer();
+            // Stop steering while the tank is stopping.
+            if (driveControlScript.Stop_Flag)
+            {
+                return;
             }
+
+            inputScript.Get_Input();
+
+            Steer();
         }
 
 
