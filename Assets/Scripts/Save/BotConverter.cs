@@ -37,7 +37,7 @@ public class BotConverter : ScriptableObject
     {
         if (partMap == null) Initialize();
         string guid = input[..guidSkip];
-        
+
         TreeNode<CraftablePart> output = new(partMap[guid]);
         TreeNode<CraftablePart> last = output;
 

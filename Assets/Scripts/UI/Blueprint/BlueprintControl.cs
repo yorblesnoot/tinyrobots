@@ -10,9 +10,8 @@ public class BlueprintControl : MonoBehaviour
 
     [SerializeField] public static GameObject NewSlot;
     [SerializeField] GameObject newSlot;
-    [SerializeField] BotAssembler assembler;
     [SerializeField] CraftablePart originPart;
-    [SerializeField] PartSlot originSlot;
+    public PartSlot OriginSlot;
 
     public static void SetActivePart(CraftablePart part)
     {
@@ -38,14 +37,13 @@ public class BlueprintControl : MonoBehaviour
         partDisplays[i].InitializeDisplay(playerData.partInventory[i]);
     }
 
-    public TreeNode<CraftablePart> partTree;
-    public void BuildBot()
+    public TreeNode<CraftablePart> BuildBot()
     {
-        partTree = new(originPart);
-        originSlot.BuildTree(partTree);
+        TreeNode<CraftablePart> partTree = new(originPart);
+        OriginSlot.BuildTree(partTree);
         
         GUIUtility.systemCopyBuffer = BotConverter.BotToString(partTree);
-        gameObject.SetActive(false);
+        return partTree;
     }
 
 

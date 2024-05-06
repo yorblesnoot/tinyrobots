@@ -8,6 +8,7 @@ public class PartSlot : MonoBehaviour
     [SerializeField] Button slotButton;
     [SerializeField] GameObject activeIndicator;
     [SerializeField] TMP_Text activePartName;
+    [SerializeField] CraftablePart empty;
 
     CraftablePart partIdentity;
     PartSlot[] childSlots;
@@ -24,7 +25,7 @@ public class PartSlot : MonoBehaviour
         else ClearPartIdentity();
     }
 
-    private void ClearPartIdentity()
+    public void ClearPartIdentity()
     {
         partIdentity = null;
         activeIndicator.SetActive(false);
@@ -40,8 +41,8 @@ public class PartSlot : MonoBehaviour
 
 
     //replace this with something better
-    float screenScalingFactor = 100;
-    void SetPartIdentity(CraftablePart part)
+    float screenScalingFactor = 300;
+    public PartSlot[] SetPartIdentity(CraftablePart part)
     {
         childSlots = new PartSlot[part.attachmentPoints.Length];
         partIdentity = part;
@@ -55,11 +56,13 @@ public class PartSlot : MonoBehaviour
             spawned.transform.localPosition = part.slotPositions[i] * screenScalingFactor;
             childSlots[i] = spawned.GetComponent<PartSlot>();
         }
+
+        return childSlots;
     }
 
     public void BuildTree(TreeNode<CraftablePart> parent)
     {
-        if (partIdentity == null) return;
+        if (partIdentity == null) partIdentity = empty;
         TreeNode<CraftablePart> myNode = parent.AddChild(partIdentity);
         if (childSlots == null) return;
         foreach(var slot in childSlots)
