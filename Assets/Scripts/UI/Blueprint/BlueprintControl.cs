@@ -1,16 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class BlueprintControl : MonoBehaviour
 {
     public static CraftablePart ActivePart;
-    public static TreeNode<CraftablePart> activeTree;
+    public static GameObject NewSlot;
 
-    [SerializeField] public static GameObject NewSlot;
     [SerializeField] GameObject newSlot;
     [SerializeField] CraftablePart originPart;
+    [SerializeField] Button exitButton;
     public PartSlot OriginSlot;
 
     public static void SetActivePart(CraftablePart part)
@@ -23,6 +22,7 @@ public class BlueprintControl : MonoBehaviour
 
     private void Awake()
     {
+        exitButton.onClick.AddListener(() => gameObject.SetActive(false));
         NewSlot = newSlot;
         for (int i = 0; i < playerData.partInventory.Count; i++)
         {

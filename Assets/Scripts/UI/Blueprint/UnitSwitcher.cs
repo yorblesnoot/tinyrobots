@@ -11,7 +11,7 @@ public class UnitSwitcher : MonoBehaviour
 
     int activeCharacter = -1;
 
-    private void Awake()
+    private void Start()
     {
         playerData.LoadRecords();
         for(int i = 0; i < unitAmount; i++)
