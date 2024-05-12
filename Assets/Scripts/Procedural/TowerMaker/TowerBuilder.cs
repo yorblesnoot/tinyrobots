@@ -9,6 +9,7 @@ public class TowerBuilder : MonoBehaviour
     [SerializeField] GameObject debugger;
     [SerializeField] int sideLength = 6;
     [SerializeField] float radiusDivisor = 2.1f;
+    [SerializeField] int pieceSize = 4;
     Dictionary<Vector2Int, MapNode> mapGrid;
 
     Vector2Int[] corners;
@@ -26,7 +27,7 @@ public class TowerBuilder : MonoBehaviour
         var ends = GetEndPoints();
         List<MapNode> path = GetMazePath(ends.Item1, ends.Item2);
         DebugPath(path);
-        foreach (var piece in pieces) piece.Initialize();
+        foreach (var piece in pieces) piece.Initialize(pieceSize);
 
     }
 
