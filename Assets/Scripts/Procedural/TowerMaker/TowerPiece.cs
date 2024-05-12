@@ -7,15 +7,9 @@ public class TowerPiece : MonoBehaviour
 {
     [SerializeField] TowerRoom[] rooms;
     public List<Orientation> orientations;
-
-    private void Awake()
-    {
-        Initialize(4);
-    }
-    public void Initialize(int pieceSize)
+    public void GeneratePlacementData(int pieceSize)
     {
         Orientation baseOrientation = new() { rotationAngle = 0, floorPositions = new(), doorPositions = new() };
-        Debug.Log("rooms: ");
         foreach (var room in rooms)
         {
             //get the room's local position
@@ -30,21 +24,39 @@ public class TowerPiece : MonoBehaviour
             List<Vector2Int> doors = room.GetDoorPositions();
             baseOrientation.floorPositions.Add(gridPosition);
             baseOrientation.doorPositions.AddRange(doors.Select(door => door + gridPosition));
-
-            Debug.Log(gridPosition);
-            
         }
 
-        Debug.Log("doors: ");
-        foreach(var door in baseOrientation.doorPositions)
+        DeriveOrientations(baseOrientation);
+    }
+
+    void DeriveOrientations(Orientation baseOrientation)
+    {
+        orientations = new() { baseOrientation };
+        for(int i = 1; i < 4; i++)
         {
-            Debug.Log(door);
+            int rotationAngle = i * 90;
+            Orientation rotated = new()
+            {
+                rotationAngle = rotationAngle,
+                doorPositions = baseOrientation.doorPositions.Select(door => Vector2Int.RoundToInt(Rotate(door, rotationAngle))).ToList(),
+                floorPositions = baseOrientation.floorPositions.Select(floor => Vector2Int.RoundToInt(Rotate(floor, rotationAngle))).ToList()
+            };
+            orientations.Add(rotated);
         }
+    }
+
+    public static Vector2 Rotate(Vector2 v, float degrees)
+    {
+        float delta = Mathf.Deg2Rad * degrees;
+        return new Vector2(
+            v.x * Mathf.Cos(delta) - v.y * Mathf.Sin(delta),
+            v.x * Mathf.Sin(delta) + v.y * Mathf.Cos(delta)
+        );
     }
 
     public class Orientation
     {
-        public float rotationAngle;
+        public int rotationAngle;
         public List<Vector2Int> floorPositions, doorPositions;
     }
 }

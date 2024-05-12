@@ -27,32 +27,47 @@ public class TowerBuilder : MonoBehaviour
         var ends = GetEndPoints();
         List<MapNode> path = GetMazePath(ends.Item1, ends.Item2);
         DebugPath(path);
-        foreach (var piece in pieces) piece.Initialize(pieceSize);
+        foreach (var piece in pieces) piece.GeneratePlacementData(pieceSize);
+        EvaluatePieces(null);
 
     }
 
-    void TestPieces(List<MapNode> path)
+    void EvaluatePieces(List<MapNode> path)
     {
-        //pick a piece from the list
-        int pieceIndex = Random.Range(0, pieces.Count);
-        TowerPiece piece = pieces[pieceIndex];
+        while(pieces.Count > 0)
+        {
+            //pick a piece from the list
+            int pieceIndex = Random.Range(0, pieces.Count);
+            TowerPiece piece = pieces[pieceIndex];
 
-        //test it on each square, in each of the 4 orientations ->
-        TestPiece(piece);
+            //test it on each square, in each of the 4 orientations ->
+            bool foundPlace = PlacePieceIfPossible(piece);
+            if (!foundPlace) pieces.Remove(piece);
+        }
     }
 
-    private void TestPiece(TowerPiece piece)
+    bool PlacePieceIfPossible(TowerPiece piece)
     {
         foreach (MapNode node in mapGrid.Values)
         {
             foreach (TowerPiece.Orientation orientation in piece.orientations)
             {
-                
+                List<PlacedRoom> placedRoom = TryToPlacePiece(node, orientation);
+                if(placedRoom == null) continue;
+                foreach (PlacedRoom room in placedRoom)
+                {
+                    MapNode targetNode = room.node;
+                    targetNode.room = room;
+                    Quaternion rotation = Quaternion.Euler(0, orientation.rotationAngle, 0);
+                    Instantiate(piece, GetWorldVector(targetNode.position), rotation);
+                    return true;
+                }
             }
         }
+        return false;
     }
 
-    bool IsPiecePositionLegal(MapNode baseNode, TowerPiece.Orientation orientation, List<MapNode> path = null)
+    List<PlacedRoom> TryToPlacePiece(MapNode baseNode, TowerPiece.Orientation orientation, List<MapNode> path = null)
     {
         List<MapNode> containedNodes = new();
 
@@ -65,8 +80,8 @@ public class TowerBuilder : MonoBehaviour
             Vector2Int worldFloor = floor / 3 + baseNode.position;
             List<Vector2Int> doors = orientation.doorPositions.Select(door => door - floor).Where(door => door.magnitude == 1).ToList();
             //if a floor is located on an occupied or blocked space, discard
-            if (!mapGrid.TryGetValue(worldFloor, out MapNode floorNode)) return false;
-            if(floorNode.blocked || floorNode.room != null) return false;
+            if (!mapGrid.TryGetValue(worldFloor, out MapNode floorNode)) return null;
+            if(floorNode.blocked || floorNode.room != null) return null;
 
             PlacedRoom room = new() { doors = doors, position = worldFloor, node = floorNode };
             potentialRooms.Add(room);
@@ -81,19 +96,19 @@ public class TowerBuilder : MonoBehaviour
                 if(containedNodes.Contains(neighbor)) continue;
                 if(neighbor.room == null) continue;
                 Vector2Int doorDirection = neighbor.room.position - placed.node.position;
-                if(placed.doors.Contains(doorDirection) != neighbor.room.doors.Contains(-doorDirection)) return false;
+                if(placed.doors.Contains(doorDirection) != neighbor.room.doors.Contains(-doorDirection)) return null;
             }
         }
 
-        if (path == null) return true;
+        if (path == null) return potentialRooms;
         //if the edges of the piece that are intersected by the path don't have doors, discard
 
         //List<PlacedRoom> intersectedRooms = potentialRooms.Where(room => path.Contains(room.node)).ToList();
 
-        return true;
+        return potentialRooms;
     }
 
-    private static void DebugPath(List<MapNode> path)
+    private void DebugPath(List<MapNode> path)
     {
         for (int i = 0; i < path.Count - 1; i++)
         {
@@ -101,7 +116,7 @@ public class TowerBuilder : MonoBehaviour
         }
     }
 
-    private static void DrawLineBetweenNodes(MapNode start, MapNode end, Color color)
+    private void DrawLineBetweenNodes(MapNode start, MapNode end, Color color)
     {
         Vector3 drawPos = GetWorldVector(start.position);
         Vector3 endPos = GetWorldVector(end.position);
@@ -152,9 +167,10 @@ public class TowerBuilder : MonoBehaviour
         }
     }
 
-    private static Vector3 GetWorldVector(Vector2Int node)
+    private Vector3 GetWorldVector(Vector2Int node)
     {
-        return new(node.x, 0, node.y);
+        Vector3 world = new(node.x, 0, node.y);
+        return world * pieceSize;
     }
 
     private void FindCorners()
