@@ -7,9 +7,8 @@ public class TowerBuilder : MonoBehaviour
 {
     [SerializeField] List<TowerPiece> pieces;
     [SerializeField] GameObject debugger;
-    [SerializeField] int sideLength = 6;
-    [SerializeField] float radiusDivisor = 2.1f;
-    [SerializeField] int pieceSize = 4;
+    [SerializeField] int sideLength = 6, pieceSize = 4;
+    [SerializeField] float circleRadius = 3;
     Dictionary<Vector2Int, MapNode> mapGrid;
 
     Vector2Int[] corners;
@@ -28,84 +27,125 @@ public class TowerBuilder : MonoBehaviour
         List<MapNode> path = GetMazePath(ends.Item1, ends.Item2);
         DebugPath(path);
         foreach (var piece in pieces) piece.GeneratePlacementData(pieceSize);
-        EvaluatePieces(null);
-
+        GeneratePieceMap(path);
+        GeneratePieceMap(null);
     }
 
-    void EvaluatePieces(List<MapNode> path)
+    void GeneratePieceMap(List<MapNode> path = null)
     {
-        while(pieces.Count > 0)
+        List<TowerPiece> legalPieces = new(pieces);
+        while(legalPieces.Count > 0)
         {
             //pick a piece from the list
-            int pieceIndex = Random.Range(0, pieces.Count);
-            TowerPiece piece = pieces[pieceIndex];
+            int pieceIndex = Random.Range(0, legalPieces.Count);
+            TowerPiece piece = legalPieces[pieceIndex];
 
-            //test it on each square, in each of the 4 orientations ->
-            bool foundPlace = PlacePieceIfPossible(piece);
-            if (!foundPlace) pieces.Remove(piece);
+            bool foundPlace = PlacePieceIfPossible(piece, path);
+            if (!foundPlace)
+            {
+                Debug.Log("banned " + piece.name);
+                legalPieces.Remove(piece);
+            }
         }
     }
 
-    bool PlacePieceIfPossible(TowerPiece piece)
+    bool PlacePieceIfPossible(TowerPiece piece, List<MapNode> path)
     {
         foreach (MapNode node in mapGrid.Values)
         {
             foreach (TowerPiece.Orientation orientation in piece.orientations)
             {
-                List<PlacedRoom> placedRoom = TryToPlacePiece(node, orientation);
-                if(placedRoom == null) continue;
-                foreach (PlacedRoom room in placedRoom)
-                {
-                    MapNode targetNode = room.node;
-                    targetNode.room = room;
-                    Quaternion rotation = Quaternion.Euler(0, orientation.rotationAngle, 0);
-                    Instantiate(piece, GetWorldVector(targetNode.position), rotation);
-                    return true;
-                }
+                List<PlacedRoom> placedRoom = VerifyPiecePlacableAt(node, orientation, path);
+                if (placedRoom == null) continue;
+                PlacePiece(piece, node, orientation, placedRoom);
+                return true;
             }
         }
         return false;
+
+        void PlacePiece(TowerPiece piece, MapNode node, TowerPiece.Orientation orientation, List<PlacedRoom> placedRoom)
+        {
+            Quaternion rotation = Quaternion.Euler(0, -orientation.rotationAngle, 0);
+            Instantiate(piece, GetWorldVector(node.position), rotation);
+            foreach (PlacedRoom room in placedRoom)
+            {
+                MapNode targetNode = room.node;
+                targetNode.room = room;
+            }
+        }
     }
 
-    List<PlacedRoom> TryToPlacePiece(MapNode baseNode, TowerPiece.Orientation orientation, List<MapNode> path = null)
+    List<PlacedRoom> VerifyPiecePlacableAt(MapNode baseNode, TowerPiece.Orientation orientation, List<MapNode> path)
     {
-        List<MapNode> containedNodes = new();
-
+        List<MapNode> roomsOccupiedByPiece = new();
         List<PlacedRoom> potentialRooms = new();
-        //find the corresponding doors for the room
 
         foreach (var floor in orientation.floorPositions)
         {
-            //figure out where the floors and doors are located on the map grid
             Vector2Int worldFloor = floor / 3 + baseNode.position;
-            List<Vector2Int> doors = orientation.doorPositions.Select(door => door - floor).Where(door => door.magnitude == 1).ToList();
-            //if a floor is located on an occupied or blocked space, discard
+            
+            List<Vector2Int> doors = orientation.doorPositions.Select(door => door - floor).Where(next => next.magnitude == 1).ToList();
+
             if (!mapGrid.TryGetValue(worldFloor, out MapNode floorNode)) return null;
             if(floorNode.blocked || floorNode.room != null) return null;
 
             PlacedRoom room = new() { doors = doors, position = worldFloor, node = floorNode };
+            
             potentialRooms.Add(room);
-            containedNodes.Add(floorNode);
+            roomsOccupiedByPiece.Add(floorNode);
         }
 
-        //if a door is placed opposite a wall, discard
+        if (path != null)
+        {
+            int onPath = potentialRooms.Where(room => path.Contains(room.node)).Count();
+            if(onPath == 0) return null;
+        }
+       
         foreach(var placed in potentialRooms)
         {
-            foreach(MapNode neighbor in placed.node.neighbors)
+            bool doorsGood = EvaluateDoorFlow(path, roomsOccupiedByPiece, placed);
+            if (doorsGood) continue;
+            else return null;
+        }
+        return potentialRooms;
+    }
+
+    bool EvaluateDoorFlow(List<MapNode> path, List<MapNode> roomsOccupiedByPiece, PlacedRoom placed)
+    {
+        foreach (MapNode neighbor in placed.node.neighbors)
+        {
+            if (roomsOccupiedByPiece.Contains(neighbor)) continue;
+
+            Vector2 rawDirection = (neighbor.position - placed.node.position);
+            rawDirection.Normalize();
+            Vector2Int doorDirection = Vector2Int.RoundToInt(rawDirection);
+
+
+            if(path != null)
             {
-                if(containedNodes.Contains(neighbor)) continue;
-                if(neighbor.room == null) continue;
-                Vector2Int doorDirection = neighbor.room.position - placed.node.position;
-                if(placed.doors.Contains(doorDirection) != neighbor.room.doors.Contains(-doorDirection)) return null;
+                int thisNodeIndex = path.IndexOf(placed.node);
+                int neighborIndex = path.IndexOf(neighbor);
+                if(thisNodeIndex > -1 
+                && neighborIndex > -1
+                && Mathf.Abs(thisNodeIndex - neighborIndex) == 1
+                && !placed.doors.Contains(doorDirection)) return false;
+            }
+            
+
+            if (placed.doors.Contains(doorDirection))
+            {
+                if (neighbor.blocked) return false;
+                if (neighbor.room == null) continue;
+                if (!neighbor.room.doors.Contains(-doorDirection)) return false;
+            }
+            else
+            {
+                if (neighbor.blocked) continue;
+                if (neighbor.room == null) continue;
+                if (neighbor.room.doors.Contains(-doorDirection)) return false;
             }
         }
-
-        if (path == null) return potentialRooms;
-        //if the edges of the piece that are intersected by the path don't have doors, discard
-
-        //List<PlacedRoom> intersectedRooms = potentialRooms.Where(room => path.Contains(room.node)).ToList();
-
-        return potentialRooms;
+        return true;
     }
 
     private void DebugPath(List<MapNode> path)
@@ -150,15 +190,13 @@ public class TowerBuilder : MonoBehaviour
             {
                 Vector2Int finalPosition = node.position + direction;
                 if (!mapGrid.TryGetValue(finalPosition, out MapNode neighbor)) continue;
-                if(neighbor.blocked) continue;
                 node.neighbors.Add(neighbor);
             }
         }
 
-
         bool IsCellOutsideCircle(Vector2Int coord)
         {
-            if (Vector2.Distance(coord, center) > sideLength/ radiusDivisor)
+            if (Vector2.Distance(coord, center) > circleRadius)
             {
                 Instantiate(debugger, GetWorldVector(coord), Quaternion.identity);
                 return true;
@@ -175,11 +213,13 @@ public class TowerBuilder : MonoBehaviour
 
     private void FindCorners()
     {
+        int innerCorner = Mathf.RoundToInt(Mathf.Sqrt(circleRadius * circleRadius * .5f));
+        int outerCorner = sideLength - (innerCorner + 1);
         corners = new Vector2Int[4];
-        corners[0] = new(1, 1);
-        corners[1] = new(1, sideLength - 2);
-        corners[2] = new(sideLength - 2,1);
-        corners[3] = new(sideLength - 2, sideLength - 2);
+        corners[0] = new(innerCorner, innerCorner);
+        corners[1] = new(innerCorner, outerCorner);
+        corners[2] = new(outerCorner, innerCorner);
+        corners[3] = new(outerCorner, outerCorner);
     }
 
     (Vector2Int, Vector2Int) GetEndPoints()
@@ -212,7 +252,7 @@ public class TowerBuilder : MonoBehaviour
             }
 
             visited.Add(node);
-            List<MapNode> possibleNext = node.neighbors.Where(x => !visited.Contains(x)).ToList();
+            List<MapNode> possibleNext = node.neighbors.Where(x => !x.blocked && !visited.Contains(x)).ToList();
             MapNode targetNode;
             if (possibleNext.Count > 0)
             {
