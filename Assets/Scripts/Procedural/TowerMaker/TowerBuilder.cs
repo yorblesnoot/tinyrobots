@@ -5,13 +5,16 @@ using UnityEngine;
 
 public class TowerBuilder : MonoBehaviour
 {
-    [SerializeField] List<TowerPiece> pieces;
+    [SerializeField] List<TowerPiece> bodyPieces;
+    [SerializeField] List<TowerPiece> sidePieces;
+    [SerializeField] List<TowerPiece> cornerPieces;
     [SerializeField] GameObject debugger;
     [SerializeField] int sideLength = 6, pieceSize = 4;
     [SerializeField] float circleRadius = 3;
     Dictionary<Vector2Int, MapNode> mapGrid;
 
     Vector2Int[] corners;
+    Vector2Int[] sides;
     static readonly Vector2Int[] directions = { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left };
 
     private void Awake()
@@ -26,21 +29,27 @@ public class TowerBuilder : MonoBehaviour
         var ends = GetEndPoints();
         List<MapNode> path = GetMazePath(ends.Item1, ends.Item2);
         DebugPath(path);
-        foreach (var piece in pieces) piece.GeneratePlacementData(pieceSize);
-        GeneratePieceMap(path);
-        GeneratePieceMap(null);
+        //GeneratePieceMap(cornerPieces, path, corners);
+        GeneratePieceMap(sidePieces, path, sides);
+
+        //GeneratePieceMap(cornerPieces, null, corners);
+        GeneratePieceMap(sidePieces, null, sides);
+
+        GeneratePieceMap(bodyPieces, path);
+        GeneratePieceMap(bodyPieces);
     }
 
-    void GeneratePieceMap(List<MapNode> path = null)
+    void GeneratePieceMap(List<TowerPiece> piecePool, List < MapNode> path = null, Vector2Int[] targetNodes = default)
     {
-        List<TowerPiece> legalPieces = new(pieces);
+        foreach (var piece in piecePool) piece.GeneratePlacementData(pieceSize);
+        List<TowerPiece> legalPieces = new(piecePool);
         while(legalPieces.Count > 0)
         {
             //pick a piece from the list
             int pieceIndex = Random.Range(0, legalPieces.Count);
             TowerPiece piece = legalPieces[pieceIndex];
 
-            bool foundPlace = PlacePieceIfPossible(piece, path);
+            bool foundPlace = PlacePieceIfPossible(piece, path, targetNodes);
             if (!foundPlace)
             {
                 Debug.Log("banned " + piece.name);
@@ -49,13 +58,15 @@ public class TowerBuilder : MonoBehaviour
         }
     }
 
-    bool PlacePieceIfPossible(TowerPiece piece, List<MapNode> path)
+    bool PlacePieceIfPossible(TowerPiece piece, List<MapNode> path, Vector2Int[] targetNodes)
     {
-        foreach (MapNode node in mapGrid.Values)
+        if (targetNodes == default) targetNodes = mapGrid.Keys.ToArray();
+        foreach (var nodeCoords in targetNodes)
         {
+            MapNode node = mapGrid[nodeCoords];
             foreach (TowerPiece.Orientation orientation in piece.orientations)
             {
-                List<PlacedRoom> placedRoom = VerifyPiecePlacableAt(node, orientation, path);
+                List<PlacedRoom> placedRoom = VerifyPiecePlacableAt(node, orientation, path, targetNodes);
                 if (placedRoom == null) continue;
                 PlacePiece(piece, node, orientation, placedRoom);
                 return true;
@@ -75,7 +86,7 @@ public class TowerBuilder : MonoBehaviour
         }
     }
 
-    List<PlacedRoom> VerifyPiecePlacableAt(MapNode baseNode, TowerPiece.Orientation orientation, List<MapNode> path)
+    List<PlacedRoom> VerifyPiecePlacableAt(MapNode baseNode, TowerPiece.Orientation orientation, List<MapNode> path, Vector2Int[] targetNodes)
     {
         List<MapNode> roomsOccupiedByPiece = new();
         List<PlacedRoom> potentialRooms = new();
@@ -86,6 +97,7 @@ public class TowerBuilder : MonoBehaviour
             
             List<Vector2Int> doors = orientation.doorPositions.Select(door => door - floor).Where(next => next.magnitude == 1).ToList();
 
+            if (!targetNodes.Contains(worldFloor)) return null;
             if (!mapGrid.TryGetValue(worldFloor, out MapNode floorNode)) return null;
             if(floorNode.blocked || floorNode.room != null) return null;
 
@@ -220,6 +232,11 @@ public class TowerBuilder : MonoBehaviour
         corners[1] = new(innerCorner, outerCorner);
         corners[2] = new(outerCorner, innerCorner);
         corners[3] = new(outerCorner, outerCorner);
+    }
+
+    void FindSides()
+    {
+        //find sides
     }
 
     (Vector2Int, Vector2Int) GetEndPoints()
