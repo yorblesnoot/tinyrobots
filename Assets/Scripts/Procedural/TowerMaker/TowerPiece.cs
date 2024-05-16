@@ -9,7 +9,7 @@ public class TowerPiece : MonoBehaviour
     public List<Orientation> orientations;
     public void GeneratePlacementData(int pieceSize)
     {
-        Orientation baseOrientation = new() { rotationAngle = 0, floorPositions = new(), doorPositions = new() };
+        Orientation baseOrientation = new() { rotationAngle = 0, floorPositions = new(), doorPositions = new(), anchorPositions = new() };
         foreach (var room in rooms)
         {
             //get the room's local position
@@ -21,9 +21,9 @@ public class TowerPiece : MonoBehaviour
             gridPosition.x = gridPosition.x * 3 + 1;
             gridPosition.y = gridPosition.y * 3 + 1;
 
-            List<Vector2Int> doors = room.GetDoorPositions();
             baseOrientation.floorPositions.Add(gridPosition);
-            baseOrientation.doorPositions.AddRange(doors.Select(door => door + gridPosition));
+            baseOrientation.doorPositions.AddRange(room.GetDoorPositions().Select(door => door + gridPosition));
+            baseOrientation.anchorPositions.AddRange(room.GetAnchorPositions().Select(anchor => anchor + gridPosition));
         }
 
         DeriveOrientations(baseOrientation);
@@ -39,6 +39,7 @@ public class TowerPiece : MonoBehaviour
             {
                 rotationAngle = rotationAngle,
                 doorPositions = baseOrientation.doorPositions.Select(door => Vector2Int.RoundToInt(Rotate(door, rotationAngle))).ToList(),
+                anchorPositions = baseOrientation.anchorPositions.Select(anchor => Vector2Int.RoundToInt(Rotate(anchor, rotationAngle))).ToList(),
                 floorPositions = baseOrientation.floorPositions.Select(floor => Vector2Int.RoundToInt(Rotate(floor, rotationAngle))).ToList()
             };
             orientations.Add(rotated);
@@ -57,6 +58,6 @@ public class TowerPiece : MonoBehaviour
     public class Orientation
     {
         public int rotationAngle;
-        public List<Vector2Int> floorPositions, doorPositions;
+        public List<Vector2Int> floorPositions, doorPositions, anchorPositions;
     }
 }

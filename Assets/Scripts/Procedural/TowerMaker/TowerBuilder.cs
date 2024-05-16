@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TowerBuilder : MonoBehaviour
@@ -13,8 +14,7 @@ public class TowerBuilder : MonoBehaviour
     [SerializeField] float circleRadius = 3;
     Dictionary<Vector2Int, MapNode> mapGrid;
 
-    Vector2Int[] corners;
-    Vector2Int[] sides;
+    Vector2Int[] corners, sides, body;
     static readonly Vector2Int[] directions = { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left };
 
     private void Awake()
@@ -25,21 +25,29 @@ public class TowerBuilder : MonoBehaviour
     void BuildTowerFloor()
     {
         GenerateGrid();
-        FindCorners();
+        DefineCorners();
+        DefineSides();
+        DefineBody();
         var ends = GetEndPoints();
         List<MapNode> path = GetMazePath(ends.Item1, ends.Item2);
         DebugPath(path);
-        //GeneratePieceMap(cornerPieces, path, corners);
-        GeneratePieceMap(sidePieces, path, sides);
+        GeneratePieceMap(cornerPieces, corners, path);
+        GeneratePieceMap(sidePieces, sides, path);
+        GeneratePieceMap(bodyPieces, body, path);
 
-        //GeneratePieceMap(cornerPieces, null, corners);
-        GeneratePieceMap(sidePieces, null, sides);
-
-        GeneratePieceMap(bodyPieces, path);
-        GeneratePieceMap(bodyPieces);
+        GeneratePieceMap(cornerPieces, corners);
+        GeneratePieceMap(bodyPieces, body);
+        
+        GeneratePieceMap(sidePieces, sides);
+        
     }
 
-    void GeneratePieceMap(List<TowerPiece> piecePool, List < MapNode> path = null, Vector2Int[] targetNodes = default)
+    void DefineBody()
+    {
+        body = mapGrid.Keys.Where(node => !sides.Contains(node) && !corners.Contains(node)).ToArray();
+    }
+
+    void GeneratePieceMap(List<TowerPiece> piecePool, Vector2Int[] targetNodes = default, List<MapNode> path = null)
     {
         foreach (var piece in piecePool) piece.GeneratePlacementData(pieceSize);
         List<TowerPiece> legalPieces = new(piecePool);
@@ -94,14 +102,16 @@ public class TowerBuilder : MonoBehaviour
         foreach (var floor in orientation.floorPositions)
         {
             Vector2Int worldFloor = floor / 3 + baseNode.position;
-            
-            List<Vector2Int> doors = orientation.doorPositions.Select(door => door - floor).Where(next => next.magnitude == 1).ToList();
 
             if (!targetNodes.Contains(worldFloor)) return null;
             if (!mapGrid.TryGetValue(worldFloor, out MapNode floorNode)) return null;
             if(floorNode.blocked || floorNode.room != null) return null;
 
-            PlacedRoom room = new() { doors = doors, position = worldFloor, node = floorNode };
+            PlacedRoom room = new() { doors = orientation.doorPositions.Select(door => door - floor).Where(next => next.magnitude == 1).ToList(),
+                anchors = orientation.anchorPositions.Select(anchor => anchor - floor).Where(next => next.magnitude == 1).ToList(),
+                position = worldFloor, node = floorNode };
+
+            room.anchors.DebugContents();
             
             potentialRooms.Add(room);
             roomsOccupiedByPiece.Add(floorNode);
@@ -112,6 +122,7 @@ public class TowerBuilder : MonoBehaviour
             int onPath = potentialRooms.Where(room => path.Contains(room.node)).Count();
             if(onPath == 0) return null;
         }
+       
        
         foreach(var placed in potentialRooms)
         {
@@ -142,7 +153,12 @@ public class TowerBuilder : MonoBehaviour
                 && Mathf.Abs(thisNodeIndex - neighborIndex) == 1
                 && !placed.doors.Contains(doorDirection)) return false;
             }
-            
+
+
+            if (placed.anchors.Contains(doorDirection))
+            {
+                if (neighbor.blocked) return false;
+            }
 
             if (placed.doors.Contains(doorDirection))
             {
@@ -223,7 +239,7 @@ public class TowerBuilder : MonoBehaviour
         return world * pieceSize;
     }
 
-    private void FindCorners()
+    private void DefineCorners()
     {
         int innerCorner = Mathf.RoundToInt(Mathf.Sqrt(circleRadius * circleRadius * .5f));
         int outerCorner = sideLength - (innerCorner + 1);
@@ -234,9 +250,18 @@ public class TowerBuilder : MonoBehaviour
         corners[3] = new(outerCorner, outerCorner);
     }
 
-    void FindSides()
+    void DefineSides()
     {
-        //find sides
+        float halfSide = (sideLength - 1) / 2f;
+        int longSide = Mathf.RoundToInt(halfSide + circleRadius);
+        int shortside = Mathf.RoundToInt(halfSide - circleRadius);
+        Debug.Log(halfSide + ", " + circleRadius);
+        Debug.Log(shortside + ", " + longSide);
+        Vector2Int[] targetNodes = mapGrid.Keys.ToArray();
+        targetNodes = targetNodes.Where(node => !mapGrid[node].blocked)
+            .Where(node => node.x == shortside || node.x == longSide || node.y == shortside || node.y == longSide).ToArray();
+        sides = targetNodes;
+        sides.DebugContents();
     }
 
     (Vector2Int, Vector2Int) GetEndPoints()
@@ -300,7 +325,13 @@ public class TowerBuilder : MonoBehaviour
     {
         public Vector2Int position;
         public MapNode node;
-        public List<Vector2Int> doors;
+        public List<Vector2Int> doors, anchors;
+    }
+
+    class PathableRoom
+    {
+        public List<PlacedRoom> rooms;
+        public List<PathableRoom> neighbors;
     }
 
 }

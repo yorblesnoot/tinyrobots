@@ -5,10 +5,21 @@ using UnityEngine;
 public class TowerRoom : MonoBehaviour
 {
     [SerializeField] Transform[] doors;
+    [SerializeField] Transform[] anchors;
     public List<Vector2Int> GetDoorPositions()
     {
+        return GetGridPositions(doors);
+    }
+
+    public List<Vector2Int> GetAnchorPositions()
+    {
+        return GetGridPositions(anchors);
+    }
+
+    public List<Vector2Int> GetGridPositions(Transform[] targets)
+    {
         List<Vector2Int> doorPositions = new();
-        foreach (Transform t in doors)
+        foreach (Transform t in targets)
         {
             Vector2 flatPos = new(t.localPosition.x, t.localPosition.z);
             flatPos.Normalize();
