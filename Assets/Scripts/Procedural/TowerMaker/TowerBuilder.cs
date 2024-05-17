@@ -1,29 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class TowerBuilder : MonoBehaviour
 {
+    [SerializeField] PlayerNavigator playerNavigator;
     [SerializeField] List<TowerPiece> bodyPieces;
     [SerializeField] List<TowerPiece> sidePieces;
     [SerializeField] List<TowerPiece> cornerPieces;
-    [SerializeField] GameObject debugger;
     [SerializeField] int sideLength = 6, pieceSize = 4;
     [SerializeField] float circleRadius = 3;
     Dictionary<Vector2Int, MapNode> mapGrid;
+    Dictionary<PlacedRoom, TowerNavigableZone> zoneRooms;
 
     Vector2Int[] corners, sides, body;
     static readonly Vector2Int[] directions = { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left };
 
-    private void Awake()
+    private void Start()
     {
         BuildTowerFloor();
     }
 
     void BuildTowerFloor()
     {
+        zoneRooms = new();
         GenerateGrid();
         DefineCorners();
         DefineSides();
@@ -37,9 +38,30 @@ public class TowerBuilder : MonoBehaviour
 
         GeneratePieceMap(cornerPieces, corners);
         GeneratePieceMap(bodyPieces, body);
-        
         GeneratePieceMap(sidePieces, sides);
-        
+        PopulateNavigableZone();
+        PlacePlayer(path);
+    }
+
+    void PlacePlayer(List<MapNode> path)
+    {
+        TowerNavigableZone zone = zoneRooms[path[0].room];
+        playerNavigator.transform.position = zone.unitPosition;
+        playerNavigator.occupiedZone = zone;
+    }
+
+    void PopulateNavigableZone()
+    {
+        foreach (var room in zoneRooms.Keys)
+        {
+            if(room.connectedNodes.Count == 0) continue;
+            foreach (var connected in room.connectedNodes)
+            {
+                TowerNavigableZone connectedZone = zoneRooms[connected.room];
+                
+                zoneRooms[room].neighbors.Add(connectedZone);
+            }
+        }
     }
 
     void DefineBody()
@@ -74,23 +96,27 @@ public class TowerBuilder : MonoBehaviour
             MapNode node = mapGrid[nodeCoords];
             foreach (TowerPiece.Orientation orientation in piece.orientations)
             {
-                List<PlacedRoom> placedRoom = VerifyPiecePlacableAt(node, orientation, path, targetNodes);
-                if (placedRoom == null) continue;
-                PlacePiece(piece, node, orientation, placedRoom);
+                List<PlacedRoom> placedRooms = VerifyPiecePlacableAt(node, orientation, path, targetNodes);
+                if (placedRooms == null) continue;
+                PlacePiece(piece, node, orientation, placedRooms);
                 return true;
             }
         }
         return false;
+    }
 
-        void PlacePiece(TowerPiece piece, MapNode node, TowerPiece.Orientation orientation, List<PlacedRoom> placedRoom)
+    void PlacePiece(TowerPiece piece, MapNode node, TowerPiece.Orientation orientation, List<PlacedRoom> placedRooms)
+    {
+        Quaternion rotation = Quaternion.Euler(0, -orientation.rotationAngle, 0);
+        GameObject spawned = Instantiate(piece, GetWorldVector(node.position), rotation).gameObject;
+        TowerNavigableZone zone = spawned.GetComponent<TowerNavigableZone>();
+        zone.Initialize();
+        
+        foreach (PlacedRoom room in placedRooms)
         {
-            Quaternion rotation = Quaternion.Euler(0, -orientation.rotationAngle, 0);
-            Instantiate(piece, GetWorldVector(node.position), rotation);
-            foreach (PlacedRoom room in placedRoom)
-            {
-                MapNode targetNode = room.node;
-                targetNode.room = room;
-            }
+            zoneRooms.Add(room, zone);
+            MapNode targetNode = room.node;
+            targetNode.room = room;
         }
     }
 
@@ -110,8 +136,6 @@ public class TowerBuilder : MonoBehaviour
             PlacedRoom room = new() { doors = orientation.doorPositions.Select(door => door - floor).Where(next => next.magnitude == 1).ToList(),
                 anchors = orientation.anchorPositions.Select(anchor => anchor - floor).Where(next => next.magnitude == 1).ToList(),
                 position = worldFloor, node = floorNode };
-
-            room.anchors.DebugContents();
             
             potentialRooms.Add(room);
             roomsOccupiedByPiece.Add(floorNode);
@@ -135,6 +159,7 @@ public class TowerBuilder : MonoBehaviour
 
     bool EvaluateDoorFlow(List<MapNode> path, List<MapNode> roomsOccupiedByPiece, PlacedRoom placed)
     {
+        placed.connectedNodes = new();
         foreach (MapNode neighbor in placed.node.neighbors)
         {
             if (roomsOccupiedByPiece.Contains(neighbor)) continue;
@@ -162,6 +187,7 @@ public class TowerBuilder : MonoBehaviour
 
             if (placed.doors.Contains(doorDirection))
             {
+                placed.connectedNodes.Add(neighbor);
                 if (neighbor.blocked) return false;
                 if (neighbor.room == null) continue;
                 if (!neighbor.room.doors.Contains(-doorDirection)) return false;
@@ -226,7 +252,6 @@ public class TowerBuilder : MonoBehaviour
         {
             if (Vector2.Distance(coord, center) > circleRadius)
             {
-                Instantiate(debugger, GetWorldVector(coord), Quaternion.identity);
                 return true;
             }
             return false;
@@ -299,7 +324,6 @@ public class TowerBuilder : MonoBehaviour
             if (possibleNext.Count > 0)
             {
                 path.Push(node);
-                
                 int neighborIndex = Random.Range(0, possibleNext.Count);
                 targetNode = possibleNext[neighborIndex];
             }
@@ -311,7 +335,6 @@ public class TowerBuilder : MonoBehaviour
             VisitNode(targetNode);
         }
     }
-
 
     class MapNode
     {
@@ -326,12 +349,6 @@ public class TowerBuilder : MonoBehaviour
         public Vector2Int position;
         public MapNode node;
         public List<Vector2Int> doors, anchors;
+        public List<MapNode> connectedNodes;
     }
-
-    class PathableRoom
-    {
-        public List<PlacedRoom> rooms;
-        public List<PathableRoom> neighbors;
-    }
-
 }

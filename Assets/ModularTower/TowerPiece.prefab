@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1710915741074409043}
   - component: {fileID: 8773507256765872638}
+  - component: {fileID: 4596824917159781401}
   m_Layer: 0
   m_Name: TowerPiece
   m_TagString: Untagged
@@ -47,6 +48,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rooms:
   - {fileID: 2003443731139106567}
+--- !u!114 &4596824917159781401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8767840861287640265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfaf7ac76dcc9b346acd76500ff2260a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitPosition: {x: 0, y: 0, z: 0}
+  unitHeight: 1
 --- !u!1001 &8783720278699827642
 PrefabInstance:
   m_ObjectHideFlags: 0

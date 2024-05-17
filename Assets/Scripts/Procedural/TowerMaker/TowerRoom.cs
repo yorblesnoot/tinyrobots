@@ -6,6 +6,8 @@ public class TowerRoom : MonoBehaviour
 {
     [SerializeField] Transform[] doors;
     [SerializeField] Transform[] anchors;
+
+    [HideInInspector] public TowerNavigableZone associatedZone;
     public List<Vector2Int> GetDoorPositions()
     {
         return GetGridPositions(doors);
@@ -27,5 +29,10 @@ public class TowerRoom : MonoBehaviour
             doorPositions.Add(outPos);
         }
         return doorPositions;
+    }
+
+    private void OnMouseDown()
+    {
+        associatedZone.ZoneClicked();
     }
 }

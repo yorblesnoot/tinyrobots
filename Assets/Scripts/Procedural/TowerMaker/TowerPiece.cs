@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TowerPiece : MonoBehaviour
 {
-    [SerializeField] TowerRoom[] rooms;
+    public TowerRoom[] rooms;
     public List<Orientation> orientations;
     public void GeneratePlacementData(int pieceSize)
     {
