@@ -48,6 +48,8 @@ public class TowerBuilder : MonoBehaviour
         TowerNavigableZone zone = zoneRooms[path[0].room];
         playerNavigator.transform.position = zone.unitPosition;
         playerNavigator.occupiedZone = zone;
+        zone.Reveal(zone.unitPosition);
+        zone.RevealNeighbors();
     }
 
     void PopulateNavigableZone()

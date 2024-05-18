@@ -28,5 +28,6 @@ public class PlayerNavigator : MonoBehaviour
     {
         moving = false;
         occupiedZone = zone;
+        zone.RevealNeighbors();
     }
 }

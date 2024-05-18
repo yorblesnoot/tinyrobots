@@ -60,8 +60,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfaf7ac76dcc9b346acd76500ff2260a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitPosition: {x: 0, y: 0, z: 0}
   unitHeight: 1
+  revealDuration: 2
+  maxDistance: 7
+  unitPosition: {x: 0, y: 0, z: 0}
 --- !u!1001 &8783720278699827642
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -203,6 +205,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: TowerFloor
+      objectReference: {fileID: 0}
+    - target: {fileID: 6692319104144872140, guid: 3875d6d1e42d6d547ae6d730383339a0,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6957693951078296028, guid: 3875d6d1e42d6d547ae6d730383339a0,
         type: 3}

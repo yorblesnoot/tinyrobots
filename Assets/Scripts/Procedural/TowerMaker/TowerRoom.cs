@@ -1,3 +1,5 @@
+using PrimeTween;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +10,7 @@ public class TowerRoom : MonoBehaviour
     [SerializeField] Transform[] anchors;
 
     [HideInInspector] public TowerNavigableZone associatedZone;
+    
     public List<Vector2Int> GetDoorPositions()
     {
         return GetGridPositions(doors);
