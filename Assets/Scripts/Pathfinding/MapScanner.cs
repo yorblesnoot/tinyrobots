@@ -18,9 +18,12 @@ public class MapScanner : MonoBehaviour
         mask = LayerMask.GetMask("Terrain");
     }
 
-    public byte[,,] GetVoxelGrid()
+    public byte[,,] GetVoxelGrid(GameObject mapObject)
     {
-        
+        Vector3Int mapBounds = mapObject.GetComponent<MapBounds>().GetMapSize();
+        xSize = mapBounds.x;
+        ySize = mapBounds.y;
+        zSize = mapBounds.z;
         byte[,,] outputGrid = new byte[xSize, ySize, zSize];
         for (int x = 0; x < xSize; x++)
         {

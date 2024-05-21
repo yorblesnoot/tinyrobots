@@ -43,8 +43,8 @@ public class BattleInitializer : MonoBehaviour
         }
         else
         {
-            Instantiate(relay.battleMap);
-            mapGrid = voxelizer.GetVoxelGrid();
+            GameObject map = Instantiate(relay.battleMap);
+            mapGrid = voxelizer.GetVoxelGrid(map);
         }
 
         return mapGrid;
