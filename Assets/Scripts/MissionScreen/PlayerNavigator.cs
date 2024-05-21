@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlayerNavigator : MonoBehaviour
 {
     [SerializeField] float moveTime = 1f;
+    [SerializeField] SceneRelay relay;
+    [SerializeField] SceneLoader loader;
     public static PlayerNavigator Instance { get; private set; }
     [HideInInspector] public TowerNavigableZone occupiedZone;
 
@@ -29,5 +31,9 @@ public class PlayerNavigator : MonoBehaviour
         moving = false;
         occupiedZone = zone;
         zone.RevealNeighbors();
+        if (!zone.hasBattle) return;
+
+        relay.battleMap = zone.battleMap;
+        loader.Change(SceneType.BATTLE);
     }
 }

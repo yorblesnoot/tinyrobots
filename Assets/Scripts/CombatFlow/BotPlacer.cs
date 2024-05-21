@@ -18,7 +18,7 @@ public class BotPlacer : MonoBehaviour
     {
         botConverter.Initialize();
         if(useRandomPlacement) PlaceBotsRandomly();
-        SpawnPoint.ReadyToSpawn?.Invoke(this);
+        else SpawnPoint.ReadyToSpawn?.Invoke(this);
     }
 
     [SerializeField] int zoneDivisor = 2;

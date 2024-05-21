@@ -22,7 +22,7 @@ public class BlueprintControl : MonoBehaviour
 
     private void Awake()
     {
-        exitButton.onClick.AddListener(() => gameObject.SetActive(false));
+        exitButton?.onClick.AddListener(() => gameObject.SetActive(false));
         NewSlot = newSlot;
         for (int i = 0; i < playerData.partInventory.Count; i++)
         {

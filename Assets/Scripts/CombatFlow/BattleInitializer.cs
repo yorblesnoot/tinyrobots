@@ -12,7 +12,8 @@ public class BattleInitializer : MonoBehaviour
     }
     [SerializeField] MapMode mapMode;
 
-    [SerializeField] PhysicsVoxelizer voxelizer;
+    [SerializeField] MapScanner voxelizer;
+    [SerializeField] SceneRelay relay;
 
     [SerializeField] NoiseVoxelGenerator noiseGenerator;
     [SerializeField] MarchingCubes marchingCubesRenderer;
@@ -42,6 +43,7 @@ public class BattleInitializer : MonoBehaviour
         }
         else
         {
+            Instantiate(relay.battleMap);
             mapGrid = voxelizer.GetVoxelGrid();
         }
 

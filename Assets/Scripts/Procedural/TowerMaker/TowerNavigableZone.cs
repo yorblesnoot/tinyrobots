@@ -8,9 +8,11 @@ public class TowerNavigableZone : MonoBehaviour
 {
     [SerializeField] float unitHeight = 1;
     [SerializeField] float revealDuration = 1;
+    public GameObject battleMap;
 
     [HideInInspector] public HashSet<TowerNavigableZone> neighbors;
     [HideInInspector] public Vector3 unitPosition;
+    [HideInInspector] public bool hasBattle;
 
     TowerPiece towerPiece;
     Renderer[] renderers;
