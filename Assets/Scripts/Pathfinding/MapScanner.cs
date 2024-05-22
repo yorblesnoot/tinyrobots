@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MapScanner : MonoBehaviour
 {
-    [SerializeField] int xSize, ySize, zSize;
+    int xSize, ySize, zSize;
     int mask;
 
     struct DirectedHit

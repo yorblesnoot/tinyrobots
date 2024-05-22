@@ -15,9 +15,9 @@ public class MainCameraControl : MonoBehaviour
     [SerializeField] float zoomSpeed;
     [SerializeField] int maxZoom;
     [SerializeField] int minZoom;
-    [SerializeField] float maxTiltAngle;
     [SerializeField] float actionCutDuration = 2f;
     [SerializeField] float actionCutMaxZoom = 5f;
+    [SerializeField] int focalPointDeadzone = 5;
 
     Vector3 mapCorner;
 
@@ -152,8 +152,8 @@ public class MainCameraControl : MonoBehaviour
         moveOffset *= scrollSpeed;
         Vector3 slidPosition = transform.position + yRotation * moveOffset;
         //clamp focus point within map bounds
-        slidPosition = slidPosition.Clamp(Vector3.zero, mapCorner);
         transform.position = slidPosition;
+        ClampFocusInMap();
     }
 
     private void Zoom(float factor)
@@ -162,7 +162,15 @@ public class MainCameraControl : MonoBehaviour
         Vector3 direction = Cams.FocalPoint.position - Camera.main.transform.position;
         direction.Normalize();
         direction *= factor;
-        Cams.FocalPoint.position += direction;
+        transform.position += direction;
+        ClampFocusInMap();
+    }
+
+    void ClampFocusInMap()
+    {
+        Vector3 minimum = Vector3.one * focalPointDeadzone;
+        Vector3 maximum = mapCorner - minimum;
+        transform.position = transform.position.Clamp(minimum, maximum);
     }
 
     public static void CutToUnit(TinyBot bot)
