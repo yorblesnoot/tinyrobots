@@ -2139,7 +2139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 15.14525, z: -14.65958}
+  m_FollowOffset: {x: 0, y: -3.453237, z: -13.56386}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -2592,9 +2592,7 @@ MonoBehaviour:
   botAssembler: {fileID: 468739834}
   turnManager: {fileID: 1202214817}
   useRandomPlacement: 1
-  zoneDivisor: 2
-  spawnLowerCutoff: 0
-  spawnUpperCutoff: 30
+  spawnZones: []
 --- !u!114 &468739838
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4773,12 +4771,12 @@ MonoBehaviour:
   m_BindingMode: 4
   m_SplineCurvature: 1
   m_Orbits:
-  - m_Height: 17.22771
-    m_Radius: 9.844321
+  - m_Height: 10.99943
+    m_Radius: 6.285336
   - m_Height: 0
-    m_Radius: 22.14993
-  - m_Height: -17.22771
-    m_Radius: 9.844321
+    m_Radius: 14.14214
+  - m_Height: -10.99943
+    m_Radius: 6.285336
   m_LegacyHeadingBias: 3.4028235e+38
   m_Rigs:
   - {fileID: 438095355}
@@ -6356,8 +6354,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1272736895}
-  m_LocalRotation: {x: 0.46327525, y: -0.000000020998893, z: 0.0000000109773275, w: 0.8862145}
-  m_LocalPosition: {x: 0, y: 9.59701, z: 3.119316}
+  m_LocalRotation: {x: 0.34947675, y: 0.0000000137788465, z: -0.0000000051394546,
+    w: 0.936945}
+  m_LocalPosition: {x: 0, y: 8.857971, z: -0.10410309}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8864,7 +8863,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 15.14525, z: -14.65958}
+  m_FollowOffset: {x: 0, y: -3.453237, z: -13.56386}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -10214,7 +10213,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 15.14525, z: -14.65958}
+  m_FollowOffset: {x: 0, y: -3.453237, z: -13.56386}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BotPlacer : MonoBehaviour
@@ -17,20 +18,22 @@ public class BotPlacer : MonoBehaviour
     public void PlaceBots()
     {
         botConverter.Initialize();
-        if(useRandomPlacement) PlaceBotsRandomly();
-        else SpawnPoint.ReadyToSpawn?.Invoke(this);
+        PlaceBotsInSpawnZones();
+        SpawnPoint.ReadyToSpawn?.Invoke(this);
     }
 
-    [SerializeField] int zoneDivisor = 2;
-    [SerializeField] int spawnLowerCutoff = 5;
-    [SerializeField] int spawnUpperCutoff = 30;
-    private void PlaceBotsRandomly()
+    [HideInInspector] public List<SpawnZone> spawnZones;
+    private void PlaceBotsInSpawnZones()
     {
         List<TinyBot> bots = new();
         SpawnBotList(playerBots, Allegiance.PLAYER);
         SpawnBotList(enemyBots, Allegiance.ENEMY);
 
         Dictionary<MoveStyle, List<Vector3>> styleNodes = Pathfinder3D.GetStyleNodes();
+        spawnZones = new();
+        SpawnZone.GetSpawnZones.Invoke(this);
+
+
         Dictionary<Allegiance, Dictionary<MoveStyle, List<Vector3>>> spawnSlots = new()
         {
             { Allegiance.PLAYER, new() },
@@ -43,11 +46,13 @@ public class BotPlacer : MonoBehaviour
             List<Vector3> nodes = styleNodes[style];
             foreach (Vector3 node in nodes)
             {
-                if (node.y < spawnLowerCutoff || node.y > spawnUpperCutoff) continue;
-                if (node.x + node.z < Pathfinder3D.xSize / zoneDivisor) spawnSlots[Allegiance.PLAYER][style].Add(node);
-                if (node.x + node.z > Pathfinder3D.xSize * 2 - Pathfinder3D.xSize / zoneDivisor) spawnSlots[Allegiance.ENEMY][style].Add(node);
+                SpawnZone targetZone = spawnZones.Where(zone => Vector3.Distance(node, zone.Position) < zone.Radius).FirstOrDefault();
+                if(targetZone == null) continue;
+                spawnSlots[targetZone.Allegiance][style].Add(node);
+                Debug.Log(targetZone);
             }
         }
+        Debug.Log(spawnSlots[Allegiance.PLAYER][MoveStyle.FLY].Count);
 
         foreach (TinyBot bot in bots)
         {
@@ -63,6 +68,11 @@ public class BotPlacer : MonoBehaviour
                 bots.Add(botUnit);
             }
         }
+    }
+
+    public void SubmitZone(SpawnZone zone)
+    {
+        spawnZones.Add(zone);
     }
 
     public void OrientBot(TinyBot bot, Vector3 position)
