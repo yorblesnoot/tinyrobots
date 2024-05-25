@@ -15,14 +15,14 @@ public enum MoveStyle
 
 public static class Pathfinder3D
 {
-    static Dictionary<Vector3Int, PathfindingNode> nodeMap = new();
+    static Dictionary<Vector3Int, Node> nodeMap = new();
     public static int xSize, ySize, zSize;
 
-    static byte[,,] coreMap;
+    static byte[,,] byteMap;
 
     public static void Initialize(byte[,,] map)
     {
-        coreMap = map;
+        byteMap = map;
         xSize = map.GetLength(0); ySize = map.GetLength(1); zSize = map.GetLength(2);
         nodeMap = new();
         for (int x = 0; x < xSize; x++)
@@ -41,7 +41,7 @@ public static class Pathfinder3D
             directionMagnitudes[i] = directions[i].magnitude;
         }
 
-        foreach (PathfindingNode node in nodeMap.Values)
+        foreach (Node node in nodeMap.Values)
         {
             SetNeighbors(node);
         }
@@ -50,8 +50,8 @@ public static class Pathfinder3D
     static void EvaluateNode(int x, int y, int z)
     {
         Vector3Int location = new(x, y, z);
-        byte value = coreMap[x, y, z];
-        PathfindingNode node = new()
+        byte value = byteMap[x, y, z];
+        Node node = new()
         {
             location = location,
             modeAccess = new()
@@ -91,7 +91,7 @@ public static class Pathfinder3D
 
         static bool NeighborIsTerrain(int x, int y, int z)
         {
-            return !PointIsOffMap(x, y, z) && coreMap[x, y, z] == 1;
+            return !PointIsOffMap(x, y, z) && byteMap[x, y, z] == 1;
         }
     }
 
@@ -116,12 +116,13 @@ public static class Pathfinder3D
     public static bool GetLandingPointBy(Vector3 target, MoveStyle style, out Vector3Int coords)
     {
         coords = Vector3Int.RoundToInt(target);
+        if(!nodeMap.ContainsKey(coords)) return false;
         if (nodeMap[coords].modeAccess[style]) return true;
         else
         {
             foreach(var edge in nodeMap[coords].edges)
             {
-                if (!nodeMap[coords].modeAccess[style]) continue;
+                if (!nodeMap[edge.neighbor.location].modeAccess[style]) continue;
                 coords = edge.neighbor.location;
                 return true;
             }
@@ -137,11 +138,26 @@ public static class Pathfinder3D
         return nodeMap.Values.Where(node => node.G < float.PositiveInfinity).Select(node => node.location).ToList();
     }
 
+    public static Vector3 GetCrawlOrientation(Vector3Int node)
+    {
+        Vector3 total = Vector3.zero;
+        int number = 0;
+        Node source = nodeMap[node];
+        foreach(var edge in source.edges)
+        {
+            if (!edge.neighbor.blocked) continue;
+
+            total += edge.neighbor.location - source.location;
+            number++;
+        }
+        return -total/number;
+    }
+
     public static List<Vector3> FindVectorPath(Vector3Int end, out List<float> gValues)
     {
         gValues = new();
         List<Vector3> worldPath = new();
-        List<PathfindingNode> path = FindPath(end);
+        List<Node> path = FindPath(end);
         if (path == null || path.Count == 0) return null;
         foreach(var node in path)
         {
@@ -155,17 +171,17 @@ public static class Pathfinder3D
     {
         MoveStyle style = owner.PrimaryMovement.Style;
         Vector3Int startCoords = Vector3Int.RoundToInt(owner.transform.position);
-        if (!nodeMap.TryGetValue(startCoords, out PathfindingNode start)) return;
+        if (!nodeMap.TryGetValue(startCoords, out Node start)) return;
         GetNodeOccupancy(owner);
 
-        HashSet<PathfindingNode> unvisited = new();
-        foreach (PathfindingNode node in nodeMap.Values)
+        HashSet<Node> unvisited = new();
+        foreach (Node node in nodeMap.Values)
         {
             node.G = float.PositiveInfinity;
             node.parent = null;
             unvisited.Add(node);
         }
-        PriorityQueue<PathfindingNode, float> frontier = new();
+        PriorityQueue<Node, float> frontier = new();
         frontier.EnsureCapacity(xSize * ySize * zSize/4);
 
         start.G = 0;
@@ -175,13 +191,13 @@ public static class Pathfinder3D
         while (unvisited.Count > 0)
         {
             if (frontier.Count == 0) return;
-            PathfindingNode current = frontier.Dequeue();
+            Node current = frontier.Dequeue();
             unvisited.Remove(current);
             if (current.G == float.PositiveInfinity) return;
 
-            foreach (PathfindingNode.Edge edge in current.edges)
+            foreach (Node.Edge edge in current.edges)
             {
-                PathfindingNode neighbor = edge.neighbor;
+                Node neighbor = edge.neighbor;
                 if (neighbor.blocked || neighbor.occupied || neighbor.modeAccess[style] == false || !unvisited.Contains(neighbor)) continue;
                 float possibleG = current.G + edge.magnitude;
                 if (possibleG < neighbor.G)
@@ -216,7 +232,7 @@ public static class Pathfinder3D
 
     static void SetNodeOccupancy(Vector3Int position, bool status)
     {
-        PathfindingNode node = nodeMap[position];
+        Node node = nodeMap[position];
         node.occupied = status;
         foreach(var edge in node.edges)
         {
@@ -236,9 +252,9 @@ public static class Pathfinder3D
             throw new NotImplementedException();
         }
     }
-    static List<PathfindingNode> FindPath(Vector3Int endCoords)
+    static List<Node> FindPath(Vector3Int endCoords)
     {
-        List<PathfindingNode> finishedList = new();
+        List<Node> finishedList = new();
         if (!nodeMap.TryGetValue(endCoords, out var currentNode)) return null;
 
 
@@ -251,14 +267,14 @@ public static class Pathfinder3D
         finishedList.Reverse();
         return finishedList;
     }
-    static void SetNeighbors(PathfindingNode current)
+    static void SetNeighbors(Node current)
     {
         current.edges = new();
         for (int i = 0; i < directions.Length; i++)
         {
             Vector3Int direction = directions[i];
             Vector3Int locationCheck = direction + current.location;
-            if (nodeMap.TryGetValue(locationCheck, out PathfindingNode val))
+            if (nodeMap.TryGetValue(locationCheck, out Node val))
             {
                 current.edges.Add(new() { neighbor = val, magnitude = directionMagnitudes[i] });
             }
@@ -278,25 +294,26 @@ public static class Pathfinder3D
             new Vector3Int(-1, 1, 1), new Vector3Int(1, 1, 1)        // Corners
     };
     static float[] directionMagnitudes;
-}
-
-
-class PathfindingNode
-{
-    public float G = float.PositiveInfinity;
-
-    public Vector3Int location;
-
-    public bool blocked;
-    public bool occupied;
-    public Dictionary<MoveStyle, bool> modeAccess;
-
-    public PathfindingNode parent;
-
-    public class Edge
+    class Node
     {
-        public PathfindingNode neighbor;
-        public float magnitude;
+        public float G = float.PositiveInfinity;
+
+        public Vector3Int location;
+
+        public bool blocked;
+        public bool occupied;
+        public Dictionary<MoveStyle, bool> modeAccess;
+
+        public Node parent;
+
+        public class Edge
+        {
+            public Node neighbor;
+            public float magnitude;
+        }
+        public List<Edge> edges;
     }
-    public List<Edge> edges;
 }
+
+
+

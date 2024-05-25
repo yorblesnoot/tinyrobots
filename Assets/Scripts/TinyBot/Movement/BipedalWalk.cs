@@ -22,14 +22,12 @@ public class BipedalWalk : LegMovement
         rayPosition.y += anchorUpwardLimit;
         
         Ray ray = new(rayPosition, Vector3.down);
-        Vector3 finalPosition = initialPosition;
         if (Physics.Raycast(ray, out var hitInfo, anchorDownwardLength, LayerMask.GetMask("Terrain")))
         {
-            finalPosition = hitInfo.point;
-            finalPosition = legModel.InverseTransformPoint(finalPosition);
+            return legModel.InverseTransformPoint(hitInfo.point);
         }
-
-        return finalPosition;
+        else
+            return default;
     }
 
     protected override float LegDistanceFromDeadZone(Anchor anchor)

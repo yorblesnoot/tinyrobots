@@ -49,10 +49,8 @@ public class BotPlacer : MonoBehaviour
                 SpawnZone targetZone = spawnZones.Where(zone => Vector3.Distance(node, zone.Position) < zone.Radius).FirstOrDefault();
                 if(targetZone == null) continue;
                 spawnSlots[targetZone.Allegiance][style].Add(node);
-                Debug.Log(targetZone);
             }
         }
-        Debug.Log(spawnSlots[Allegiance.PLAYER][MoveStyle.FLY].Count);
 
         foreach (TinyBot bot in bots)
         {

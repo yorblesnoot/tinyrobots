@@ -1,6 +1,8 @@
+using PrimeTween;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public abstract class LegMovement : PrimaryMovement
@@ -15,7 +17,6 @@ public abstract class LegMovement : PrimaryMovement
     [SerializeField] protected float anchorUpwardLimit = 2f;
     [SerializeField] protected float anchorDownwardLength = 3f;
     [SerializeField] AnimationCurve legRaise;
-    [SerializeField] SphereCollider detector;
     [SerializeField] protected float forwardBias = .5f;
 
     protected bool stepping;
@@ -46,18 +47,23 @@ public abstract class LegMovement : PrimaryMovement
     protected abstract void InitializeParameters();
     protected override void AnimateToOrientation()
     {
-        Anchor farthestFromBase = null;
         foreach (var anchor in anchors)
         {
-            farthestFromBase ??= anchor;
             GluePosition(anchor);
-            if (anchor.distanceFromDeadZone > farthestFromBase.distanceFromDeadZone) farthestFromBase = anchor;
         }
+        if (stepping) return;
 
-        if (farthestFromBase.distanceFromDeadZone > anchorZoneRadius && !stepping)
+        anchors = anchors.OrderByDescending(anchor => anchor.distanceFromDeadZone).ToArray();
+
+        for(int i = 0; i < anchors.Length; i++)
         {
-            StartCoroutine(StepToBase(farthestFromBase));
+            if (anchors[i].distanceFromDeadZone > anchorZoneRadius)
+            {
+                TryStepToBase(anchors[0]);
+            }
+            if(stepping) return;
         }
+        
     }
 
     protected void GluePosition(Anchor anchor)
@@ -74,24 +80,18 @@ public abstract class LegMovement : PrimaryMovement
         return Vector3.Distance(anchor.ikTarget.localPosition, anchor.localBasePosition + localForward * forwardBias);
     }
     
-    protected IEnumerator StepToBase(Anchor anchor, bool goToNeutral = false)
+    protected void TryStepToBase(Anchor anchor, bool goToNeutral = false)
     {
-        stepping = true;
-        anchor.stepping = true;
-
         Vector3 localStartPosition = anchor.ikTarget.localPosition;
         Vector3 finalPosition = GetLimbTarget(anchor, goToNeutral, localStartPosition);
+        if (finalPosition == default) return;
+        stepping = true;
+        anchor.stepping = true;
+        Tween.LocalPosition(anchor.ikTarget, finalPosition, legStepDuration).OnComplete(() => CompleteStep(anchor));
+    }
 
-        float timeElapsed = 0;
-        while (timeElapsed < legStepDuration)
-        {
-            float interpolator = timeElapsed / legStepDuration;
-            Vector3 targetPosition = Vector3.Lerp(localStartPosition, finalPosition, interpolator);
-            //targetPosition.y += legRaise.Evaluate(interpolator);
-            anchor.ikTarget.localPosition = targetPosition;
-            timeElapsed += Time.deltaTime;
-            yield return null;
-        }
+    private void CompleteStep(Anchor anchor)
+    {
         anchor.UpdateGluedPosition();
         stepping = false;
         anchor.stepping = false;
@@ -103,18 +103,14 @@ public abstract class LegMovement : PrimaryMovement
     {
         foreach (var anchor in anchors)
         {
-            yield return StartCoroutine(StepToBase(anchor, true));
+            TryStepToBase(anchor, true);
+            yield return new WaitForSeconds(legStepDuration);
         }
     }
 
     protected Vector3 GetMeshNormalAt(Vector3 target)
     {
-        Collider[] colliders = Physics.OverlapSphere(target, 1f, LayerMask.GetMask("Terrain"));
-        if (colliders.Length == 0) return Vector3.up;
-        detector.transform.SetParent(null);
-        detector.transform.position = target;
-        CheckSphereExtra(colliders[0], detector, out Vector3 closestPoint, out Vector3 surfaceNormal);
-        return surfaceNormal;
+        return Pathfinder3D.GetCrawlOrientation(Vector3Int.RoundToInt(target));
     }
     protected static bool CheckSphereExtra(Collider target_collider, SphereCollider sphere_collider, out Vector3 closestPoint, out Vector3 surfaceNormal)
     {
@@ -149,3 +145,5 @@ public abstract class LegMovement : PrimaryMovement
         }
     }
 }
+
+

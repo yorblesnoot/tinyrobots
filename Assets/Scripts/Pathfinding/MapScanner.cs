@@ -7,6 +7,8 @@ public class MapScanner : MonoBehaviour
     int xSize, ySize, zSize;
     int mask;
 
+    readonly int margin = 3;
+
     struct DirectedHit
     {
         public Vector3 position;
@@ -56,7 +58,8 @@ public class MapScanner : MonoBehaviour
                 hitcount += directedHits[0].front ? 1 : -1;
                 directedHits.RemoveAt(0);
             }
-            if (hitcount > 0)
+            bool outside = z < 0 || z >= zSize;
+            if (hitcount > 0 && !outside)
             {
                 grid[x, y, z] = 1;
                 Vector3 debug = new(x, y, z);
@@ -68,8 +71,8 @@ public class MapScanner : MonoBehaviour
     private List<DirectedHit> GetHitProfile(int x, int y)
     {
         List<DirectedHit> directedHits = new();
-        Vector3 origin = new(x, y, 0);
-        Vector3 end = new(x, y, zSize);
+        Vector3 origin = new(x, y, -margin);
+        Vector3 end = new(x, y, zSize + margin);
         RaycastHit[] fronts = Physics.RaycastAll(origin, Vector3.forward, zSize, mask);
         RaycastHit[] backs = Physics.RaycastAll(end, Vector3.back, zSize, mask);
         directedHits.AddRange(ParseHits(fronts, true));

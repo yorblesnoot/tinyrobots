@@ -112,8 +112,9 @@ public class PrimaryCursor : MonoBehaviour
         //generate new path
         if (PlayerControlledBot != null)
         {
-            Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
-            if (currentPosition != lastPosition)
+            bool foundValidSpot = Pathfinder3D.GetLandingPointBy(transform.position, PlayerControlledBot.PrimaryMovement.Style, out Vector3Int currentPosition);
+            //Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
+            if (foundValidSpot && currentPosition != lastPosition)
             {
                 lastPosition = currentPosition;
                 List<Vector3> possiblePath = Pathfinder3D.FindVectorPath(currentPosition, out List<float> distances);

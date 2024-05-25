@@ -3,8 +3,11 @@ using UnityEngine;
 
 public class SpiderCrawl : LegMovement
 {
-    [SerializeField][Range(0f, 1f)] float raycastInTilt;
-    [SerializeField] float anchorInwardLength;
+    [SerializeField][Range(0f, 1f)] float firstCastTilt;
+    [SerializeField][Range(0f, 1f)] float secondCastTilt;
+    [SerializeField] float secondCastLength;
+    [SerializeField] float secondCastHeight = -1;
+    
     
     public override void SpawnOrientation()
     {
@@ -22,32 +25,40 @@ public class SpiderCrawl : LegMovement
     }
     protected override Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral, Vector3 localStartPosition)
     {
-        Vector3 direction = anchor.localBasePosition - localStartPosition;
-        direction.Normalize();
-        Vector3 initialPosition = anchor.localBasePosition + (goToNeutral ? Vector3.zero : direction * anchorZoneRadius);
-        Vector3 rayPosition = initialPosition;
+        Vector3 targetDirection = anchor.localBasePosition - localStartPosition;
+        targetDirection.Normalize();
+
+        Vector3 worldForward = goToNeutral ? Vector3.zero : transform.forward * forwardBias;
+        Vector3 localForward = anchor.ikTarget.InverseTransformDirection(worldForward);
+        Vector3 firstRaySource = anchor.localBasePosition + localForward;
 
 
-        rayPosition.y += anchorUpwardLimit;
-        Vector3 secondaryRayPosition = rayPosition;
+        firstRaySource.y += anchorUpwardLimit;
+        Vector3 secondRaySource = firstRaySource;
+        secondRaySource.y += secondCastHeight;
 
-        rayPosition = legModel.TransformPoint(rayPosition);
-        secondaryRayPosition = legModel.TransformPoint(secondaryRayPosition);
-        Vector3 centerDirection = transform.position - secondaryRayPosition;
+        firstRaySource = legModel.TransformPoint(firstRaySource) + worldForward;
+        secondRaySource = legModel.TransformPoint(secondRaySource) + worldForward;
+        Vector3 centerDirection = transform.position - firstRaySource;
         centerDirection.Normalize();
-        Vector3 finalDirection = Vector3.Slerp(-Owner.transform.up, centerDirection, raycastInTilt);
+        Vector3 firstRayDirection = Vector3.Slerp(-Owner.transform.up, centerDirection, firstCastTilt);
+        Vector3 secondRayDirection = Vector3.Slerp(-Owner.transform.up, centerDirection, secondCastTilt);
 
-        Ray ray = new(rayPosition, finalDirection);
-        Ray secondRay = new(secondaryRayPosition, centerDirection);
-        Vector3 finalPosition = initialPosition;
-        if (Physics.Raycast(ray, out var hitInfo, anchorDownwardLength, LayerMask.GetMask("Terrain"))
-            || Physics.Raycast(secondRay, out hitInfo, anchorInwardLength, LayerMask.GetMask("Terrain")))
+        Ray firstRay = new(firstRaySource, firstRayDirection);
+        Ray secondRay = new(secondRaySource, secondRayDirection);
+
+        Debug.DrawRay(firstRaySource, firstRayDirection * anchorDownwardLength, Color.green, 20);
+        Debug.DrawRay(secondRaySource, secondRayDirection * secondCastLength, Color.red, 20);
+
+        if (Physics.Raycast(firstRay, out var hitInfo, anchorDownwardLength, LayerMask.GetMask("Terrain"))
+            || Physics.Raycast(secondRay, out hitInfo, secondCastLength, LayerMask.GetMask("Terrain")))
         {
-            finalPosition = hitInfo.point;
-            finalPosition = legModel.InverseTransformPoint(finalPosition);
+            return legModel.InverseTransformPoint(hitInfo.point);
         }
-
-        return finalPosition;
+        else
+        {
+            return default;
+        }
     }
     
     public override Quaternion GetRotationAtPosition(Vector3 moveTarget)
