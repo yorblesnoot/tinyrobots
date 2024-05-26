@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class MapScanner : MonoBehaviour
+public class MapScanner
 {
     int xSize, ySize, zSize;
     int mask;
@@ -15,7 +15,7 @@ public class MapScanner : MonoBehaviour
         public bool front;
     }
 
-    private void Awake()
+    public MapScanner()
     {
         mask = LayerMask.GetMask("Terrain");
     }
