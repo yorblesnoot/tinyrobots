@@ -1,14 +1,13 @@
 using Cinemachine;
 using System.Collections;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class MainCameraControl : MonoBehaviour
 {
-    [SerializeField] CinemachineBrain brain;
 
+    [SerializeField] CameraSet cams;
     [SerializeField] float scrollSpeed = 1f;
     [SerializeField] float scrollZoneX;
     [SerializeField] float scrollZoneY;
@@ -18,27 +17,41 @@ public class MainCameraControl : MonoBehaviour
     [SerializeField] float actionCutDuration = 2f;
     [SerializeField] float actionCutMaxZoom = 5f;
     [SerializeField] int focalPointDeadzone = 5;
+    [SerializeField] CinemachineConfiner[] confiners;
 
-    Vector3 mapCorner;
 
-    [System.Serializable]
-    class CameraSet
-    {
-        public CinemachineVirtualCamera Strafe;
-        public CinemachineFreeLook Pivot;
-        public CinemachineClearShot Automatic;
-        public Transform FocalPoint;
-    }
-    [SerializeField] CameraSet cams;
+    [SerializeField] CinemachineBrain brain;
+    Vector3Int mapCorner;
     static CameraSet Cams;
 
     public static MainCameraControl Instance;
     public void Initialize(byte[,,] map)
     {
         mapCorner = new(map.GetLength(0), map.GetLength(1), map.GetLength(2));
+        ConfineCameras(mapCorner);
         Cams = cams;
         Cams.FocalPoint = transform;
         Instance = this;
+    }
+
+    void ConfineCameras(Vector3Int corner)
+    {
+        GameObject boundingBox = new();
+        boundingBox.layer = LayerMask.NameToLayer("Ignore Raycast");
+        BoxCollider boundingCollider = boundingBox.AddComponent<BoxCollider>();
+        Vector3 bounds = corner;
+        bounds.x -= focalPointDeadzone;
+        bounds.y -= focalPointDeadzone;
+        bounds.z -= focalPointDeadzone;
+
+        Vector3 center = corner;
+        center /= 2;
+        boundingCollider.size = bounds;
+        boundingCollider.center = center;
+        foreach(var cam in confiners)
+        {
+            cam.m_BoundingVolume = boundingCollider;
+        }
     }
 
     BaseInput playerInput;
@@ -225,5 +238,14 @@ public class MainCameraControl : MonoBehaviour
             yield return null;
         }
         freeCameraAvailable = true;
+    }
+
+    [System.Serializable]
+    class CameraSet
+    {
+        public CinemachineVirtualCamera Strafe;
+        public CinemachineFreeLook Pivot;
+        public CinemachineClearShot Automatic;
+        public Transform FocalPoint;
     }
 }

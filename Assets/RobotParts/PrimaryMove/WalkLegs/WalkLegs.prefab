@@ -348,7 +348,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Owner: {fileID: 0}
   lookSpeed: 1
-  chassisHeight: 1.7
+  chassisHeight: 1.3
   sourceBone: {fileID: 1365928021841588218}
   moveSpeed: 3
   speedMultiplier: 1
@@ -365,7 +365,7 @@ MonoBehaviour:
     localBasePosition: {x: 0, y: 0, z: 0}
     distanceFromDeadZone: 0
     gluedWorldPosition: {x: 0, y: 0, z: 0}
-  anchorZoneRadius: 0
+  anchorZoneRadius: 1
   legModel: {fileID: 5779783543885095998}
   anchorUpwardLimit: 3
   anchorDownwardLength: 4
@@ -402,9 +402,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  detector: {fileID: 7268788363791862517}
-  zoneLength: 0.8
-  zoneWidth: 0.2
+  forwardBias: 1
 --- !u!4 &6736121662031412448 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5192667463394062400, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
@@ -765,12 +763,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bf93bd5919da8654f98a239681348ebf, type: 3}
---- !u!135 &7268788363791862517 stripped
-SphereCollider:
-  m_CorrespondingSourceObject: {fileID: 3246892837307255217, guid: bf93bd5919da8654f98a239681348ebf,
-    type: 3}
-  m_PrefabInstance: {fileID: 5318939539274400580}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6322864759978197973
 PrefabInstance:
   m_ObjectHideFlags: 0
