@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 1
+  m_Fog: 0
   m_FogColor: {r: 0.50787646, g: 0.7206805, b: 0.9528302, a: 0.7294118}
   m_FogMode: 3
   m_FogDensity: 0.03
@@ -2170,7 +2170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 7.825905, z: -10.41204}
+  m_FollowOffset: {x: 0, y: 0.3671183, z: -0.349617}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -4738,12 +4738,12 @@ MonoBehaviour:
   m_BindingMode: 4
   m_SplineCurvature: 1
   m_Orbits:
-  - m_Height: 10.51788
-    m_Radius: 6.01018
+  - m_Height: 0.4146879
+    m_Radius: 0.2369629
   - m_Height: 0
-    m_Radius: 13.52314
-  - m_Height: -10.51788
-    m_Radius: 6.01018
+    m_Radius: 0.533176
+  - m_Height: -0.4146879
+    m_Radius: 0.2369629
   m_LegacyHeadingBias: 3.4028235e+38
   m_Rigs:
   - {fileID: 438095355}
@@ -6312,8 +6312,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1272736895}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3602487, y: -0.00000001718214, z: 0.0000000066353674, w: 0.9328563}
-  m_LocalPosition: {x: 0, y: 7.005581, z: 2.1241016}
+  m_LocalRotation: {x: 0.15081128, y: 0.000000029461463, z: -0.000000004494527, w: 0.9885626}
+  m_LocalPosition: {x: 0, y: 1.3199997, z: 5.4978886}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6883,7 +6883,6 @@ GameObject:
   - component: {fileID: 1329150491}
   - component: {fileID: 1329150490}
   - component: {fileID: 1329150493}
-  - component: {fileID: 1329150494}
   m_Layer: 0
   m_Name: FocusPoint
   m_TagString: Untagged
@@ -6989,37 +6988,6 @@ MonoBehaviour:
   - {fileID: 945171445}
   brain: {fileID: 1414972263}
   originReturnTime: 0.5
---- !u!114 &1329150494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1329150488}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 813160bac4d7c8e4892121e71976d622,
-    type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Main
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!1001 &1384278913
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8874,7 +8842,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 7.825905, z: -10.41204}
+  m_FollowOffset: {x: 0, y: 0.3671183, z: -0.349617}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -10280,7 +10248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 7.825905, z: -10.41204}
+  m_FollowOffset: {x: 0, y: 0.3671183, z: -0.349617}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1

@@ -6,6 +6,14 @@
       "source": "local-tarball",
       "dependencies": {}
     },
+    "com.occasoftware.buto": {
+      "version": "file:com.occasoftware.buto",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {
+        "com.unity.render-pipelines.universal": "14.0.7"
+      }
+    },
     "com.unity.ai.navigation": {
       "version": "1.1.5",
       "depth": 0,

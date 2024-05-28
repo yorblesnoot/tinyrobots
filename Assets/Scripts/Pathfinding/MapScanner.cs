@@ -23,6 +23,7 @@ public class MapScanner
     public byte[,,] GetVoxelGrid(GameObject mapObject)
     {
         Vector3Int mapBounds = mapObject.GetComponent<MapBounds>().GetMapSize();
+        Debug.Log(mapBounds);
         xSize = mapBounds.x;
         ySize = mapBounds.y;
         zSize = mapBounds.z;
