@@ -8,6 +8,7 @@ public class PartSlot : MonoBehaviour
     [SerializeField] GameObject activeIndicator;
     [SerializeField] TMP_Text activePartName;
     [SerializeField] CraftablePart empty;
+    [SerializeField] float diagramScaling = 300;
 
     CraftablePart partIdentity;
     PartSlot[] childSlots;
@@ -38,9 +39,6 @@ public class PartSlot : MonoBehaviour
         childSlots = null;
     }
 
-
-    //replace this with something better
-    float screenScalingFactor = 300;
     public PartSlot[] SetPartIdentity(CraftablePart part)
     {
         childSlots = new PartSlot[part.attachmentPoints.Length];
@@ -52,7 +50,7 @@ public class PartSlot : MonoBehaviour
         {
             GameObject spawned = Instantiate(BlueprintControl.NewSlot);
             spawned.transform.SetParent(transform, false);
-            spawned.transform.localPosition = part.slotPositions[i] * screenScalingFactor;
+            spawned.transform.localPosition = part.slotPositions[i] * diagramScaling;
             childSlots[i] = spawned.GetComponent<PartSlot>();
         }
 

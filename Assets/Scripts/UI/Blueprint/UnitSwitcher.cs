@@ -17,7 +17,7 @@ public class UnitSwitcher : MonoBehaviour
         for(int i = 0; i < unitAmount; i++)
         {
             GameObject spawned = Instantiate(unitTab, transform);
-            AssignSwitch(i, spawned.GetComponent<Button>());
+            AssignSwitch(i, spawned.GetComponentInChildren<Button>());
         }
         SwitchCharacter(0);
     }
