@@ -31,7 +31,6 @@ public class PlayerNavigator : MonoBehaviour
         moving = false;
         occupiedZone = zone;
         zone.RevealNeighbors();
-        Debug.Log(zone.battleMap);
         if (zone.battleMap == null) return;
 
         relay.battleMap = zone.battleMap;

@@ -1,21 +1,22 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class BotAssembler : MonoBehaviour
 {
     [SerializeField] PortraitGenerator portraitGenerator;
     [SerializeField] BotPalette palette;
-    public TinyBot BuildBotFromPartTree(TreeNode<CraftablePart> tree, Allegiance allegiance)
+    public TinyBot BuildBotFromPartTree(TreeNode<CraftablePart> treeRoot, Allegiance allegiance)
     {
         PrimaryMovement locomotion = null;
         AttachmentPoint initialAttachmentPoint;
         List<GameObject> spawnedParts;
         //this function sets the above variables
-        GameObject bot = DeployOrigin(tree);
+        BotStats botStats = new();
+        GameObject bot = DeployOrigin(treeRoot);
         TinyBot botUnit = bot.GetComponent<TinyBot>();
+        botStats.MaxAll();
+        botUnit.Stats = botStats;
         SetBotTallness(locomotion, initialAttachmentPoint, botUnit);
-
         RestructureHierarchy(locomotion, initialAttachmentPoint, bot);
 
         
@@ -25,11 +26,12 @@ public class BotAssembler : MonoBehaviour
 
         return botUnit;
 
-        GameObject DeployOrigin(TreeNode<CraftablePart> tree)
+        GameObject DeployOrigin(TreeNode<CraftablePart> treeRoot)
         {
-            GameObject spawned = Instantiate(tree.Value.attachableObject);
+            GameObject spawned = Instantiate(treeRoot.Value.attachableObject);
+            AddPartStats(treeRoot.Value);
             spawnedParts = new() { spawned };
-            List<TreeNode<CraftablePart>> children = tree.Children;
+            List<TreeNode<CraftablePart>> children = treeRoot.Children;
             AttachmentPoint[] attachmentPoints = spawned.GetComponentsInChildren<AttachmentPoint>();
             initialAttachmentPoint = attachmentPoints[0];
             RecursiveConstruction(children[0], initialAttachmentPoint);
@@ -40,6 +42,7 @@ public class BotAssembler : MonoBehaviour
         void RecursiveConstruction(TreeNode<CraftablePart> currentNode, AttachmentPoint attachmentPoint)
         {
             GameObject spawned = Instantiate(currentNode.Value.attachableObject);
+            AddPartStats(currentNode.Value);
             PartModifier modifier = spawned.GetComponent<PartModifier>();
             if (modifier.mainRenderers != null)
             {
@@ -48,7 +51,6 @@ public class BotAssembler : MonoBehaviour
                     palette.RecolorPart(renderer, allegiance);
                 }
             }
-
 
             //if we've placed the primary movement part, flag it for rearrangement
             if (currentNode.Value.primaryLocomotion) locomotion = spawned.GetComponent<PrimaryMovement>();
@@ -76,7 +78,18 @@ public class BotAssembler : MonoBehaviour
             locomotion.transform.SetParent(bot.transform, true);
             initialAttachmentPoint.transform.SetParent(locomotion.sourceBone, true);
         }
+
+        void AddPartStats(CraftablePart part)
+        {
+            part.Initialize();
+            foreach (var stat in part.Stats)
+            {
+                botStats.Max[stat.Key] += stat.Value;
+            }
+        }
     }
+
+    
 
     private static void SetBotTallness(PrimaryMovement locomotion, AttachmentPoint initialAttachmentPoint, TinyBot bot)
     {

@@ -5,7 +5,8 @@ public enum StatType
 {
     HEALTH,
     ACTION,
-    MOVEMENT
+    MOVEMENT,
+    ARMOR
 }
 public class BotStats
 {
@@ -21,16 +22,14 @@ public class BotStats
             Max.Add(type, 0);
             Current.Add(type, 0);
         }
-        SetSampleStats();
     }
 
-    void SetSampleStats()
+    public void MaxAll()
     {
-        Max[StatType.ACTION] = 2;
-        Max[StatType.MOVEMENT] = 15;
-        Max[StatType.HEALTH] = 30;
-
-        Current[StatType.HEALTH] = 30;
+        foreach (StatType type in Enum.GetValues(typeof(StatType)))
+        {
+            SetToMax(type);
+        }
     }
 
     public void SetToMax(StatType type)
