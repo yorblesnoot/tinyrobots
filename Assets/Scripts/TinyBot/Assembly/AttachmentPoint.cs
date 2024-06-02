@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class AttachmentPoint : MonoBehaviour
 {
-    public PartType PartType;
+    public PartType SlotType;
 }

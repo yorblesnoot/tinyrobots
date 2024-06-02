@@ -8,7 +8,7 @@ public class BlueprintControl : MonoBehaviour
     public static GameObject NewSlot;
 
     [SerializeField] GameObject newSlot;
-    [SerializeField] CraftablePart originPart;
+    [HideInInspector] public CraftablePart originPart;
     [SerializeField] Button exitButton;
     public PartSlot OriginSlot;
 

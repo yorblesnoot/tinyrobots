@@ -6,16 +6,19 @@ using UnityEngine;
 
 public enum PartType
 {
+    CORE,
     CHASSIS,
-    MOBILITY,
-    ATTACHMENT,
-    MOD
+    UPPER,
+    LOWER,
+    REAR,
+    LATERAL
 }
 
 [CreateAssetMenu(fileName = "CraftPart", menuName = "ScriptableObjects/CraftPart")]
 public class CraftablePart : SOWithGUID
 {
     [SerializeField] Stat[] partStats;
+    public PartType type;
     public int weight = 20;
     public GameObject attachableObject;
     public bool primaryLocomotion;

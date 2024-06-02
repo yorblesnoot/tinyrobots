@@ -1,20 +1,23 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UnitSwitcher : MonoBehaviour
 {
-    [SerializeField] int unitAmount;
     [SerializeField] GameObject unitTab;
     [SerializeField] BlueprintControl blueprintControl;
     [SerializeField] PlayerData playerData;
     [SerializeField] CraftablePart empty;
 
     int activeCharacter = -1;
+    List<CraftablePart> cores;
 
     private void Start()
     {
         playerData.LoadRecords();
-        for(int i = 0; i < unitAmount; i++)
+        cores = playerData.partInventory.Where(part => part.type == PartType.CORE).ToList();
+        for(int i = 0; i < cores.Count; i++)
         {
             GameObject spawned = Instantiate(unitTab, transform);
             AssignSwitch(i, spawned.GetComponentInChildren<Button>());
@@ -37,6 +40,7 @@ public class UnitSwitcher : MonoBehaviour
         }
 
         activeCharacter = charIndex;
+        blueprintControl.originPart = cores[activeCharacter];
 
         if (charIndex >= playerData.botsInventory.Count) return;
 
