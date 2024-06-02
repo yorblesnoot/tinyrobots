@@ -11,13 +11,11 @@ public class UnitSwitcher : MonoBehaviour
     [SerializeField] CraftablePart empty;
 
     int activeCharacter = -1;
-    List<CraftablePart> cores;
 
     private void Start()
     {
         playerData.LoadRecords();
-        cores = playerData.partInventory.Where(part => part.type == PartType.CORE).ToList();
-        for(int i = 0; i < cores.Count; i++)
+        for(int i = 0; i < playerData.coreInventory.Count; i++)
         {
             GameObject spawned = Instantiate(unitTab, transform);
             AssignSwitch(i, spawned.GetComponentInChildren<Button>());
@@ -35,16 +33,16 @@ public class UnitSwitcher : MonoBehaviour
         if(activeCharacter >= 0)
         {
             TreeNode<CraftablePart> bot = blueprintControl.BuildBot();
-            playerData.botsInventory[activeCharacter] = bot;
+            playerData.coreInventory[activeCharacter].bot = bot;
             blueprintControl.OriginSlot.ClearPartIdentity();
         }
 
         activeCharacter = charIndex;
-        blueprintControl.originPart = cores[activeCharacter];
+        blueprintControl.originPart = playerData.coreInventory[activeCharacter].corePart;
 
-        if (charIndex >= playerData.botsInventory.Count) return;
+        if (charIndex >= playerData.coreInventory.Count) return;
 
-        PlacePartsInSlots(playerData.botsInventory[charIndex].Children[0], blueprintControl.OriginSlot);
+        PlacePartsInSlots(playerData.coreInventory[charIndex].bot.Children[0], blueprintControl.OriginSlot);
 
     }
 

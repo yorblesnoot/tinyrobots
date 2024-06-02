@@ -8,11 +8,16 @@ public class PlayerData : ScriptableObject
 {
     public void LoadRecords()
     {
-        botsInventory = records.Select(x => botConverter.StringToBot(x.record)).ToList();
+        foreach(BotCore core in coreInventory)
+        {
+            if(core.record != null)
+            {
+                core.bot = botConverter.StringToBot(core.record.record);
+            }
+        }
     }
-    [SerializeField] List<BotRecord> records;
     public List<CraftablePart> partInventory;
-    public List<TreeNode<CraftablePart>> botsInventory;
+    public List<BotCore> coreInventory;
 
     [Header("Components")]
     [SerializeField] BotConverter botConverter;

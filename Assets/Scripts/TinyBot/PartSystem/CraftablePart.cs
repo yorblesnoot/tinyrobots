@@ -30,10 +30,51 @@ public class CraftablePart : SOWithGUID
     public void DeriveAttachmentAttributes()
     {
         GameObject spawned = Instantiate(attachableObject);
-        attachmentPoints = attachableObject.GetComponentsInChildren<AttachmentPoint>();
+        SetSlotTypes();
         Create2DSlotLayout();
         Initialize();
         spawned.SetActive(false);
+    }
+
+    void SetSlotTypes()
+    {
+        attachmentPoints = attachableObject.GetComponentsInChildren<AttachmentPoint>();
+        if (type == PartType.CORE)
+        {
+            attachmentPoints[0].SlotType = PartType.CHASSIS;
+        }
+        else if(type == PartType.CHASSIS)
+        {
+            AssignChassisSlots();
+        }
+        else
+        {
+            AssignAllLateral(attachmentPoints);
+        }
+    }
+
+    void AssignChassisSlots()
+    {
+        List<AttachmentPoint> sortable = attachmentPoints.OrderBy(x => x.transform.localPosition.y).ToList();
+        AssignRemove(PartType.LOWER, 0);
+        AssignRemove(PartType.UPPER, sortable.Count - 1);
+        sortable = sortable.OrderBy(x => x.transform.localPosition.z).ToList();
+        AssignRemove(PartType.REAR, 0);
+        AssignAllLateral(sortable);
+
+        void AssignRemove(PartType type, int index)
+        {
+            sortable[index].SlotType = type;
+            sortable.RemoveAt(index);
+        }
+    }
+
+    void AssignAllLateral(IEnumerable<AttachmentPoint> sortable)
+    {
+        foreach (AttachmentPoint attachmentPoint in sortable)
+        {
+            attachmentPoint.SlotType = PartType.LATERAL;
+        }
     }
 
     public void Initialize()

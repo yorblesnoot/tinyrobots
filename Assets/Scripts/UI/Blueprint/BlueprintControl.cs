@@ -26,6 +26,7 @@ public class BlueprintControl : MonoBehaviour
         NewSlot = newSlot;
         for (int i = 0; i < playerData.partInventory.Count; i++)
         {
+            if (playerData.partInventory[i].type == PartType.CORE) continue;
             playerData.partInventory[i].DeriveAttachmentAttributes();
             InitializePartDisplay(i);            
         }

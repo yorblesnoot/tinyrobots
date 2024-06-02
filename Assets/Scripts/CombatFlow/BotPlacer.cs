@@ -6,7 +6,6 @@ public class BotPlacer : MonoBehaviour
 {
     [SerializeField] BotConverter botConverter;
 
-    [SerializeField] List<BotRecord> playerBots;
     [SerializeField] List<BotRecord> enemyBots;
 
     [SerializeField] PlayerData playerData;
@@ -18,6 +17,7 @@ public class BotPlacer : MonoBehaviour
     public void PlaceBots()
     {
         botConverter.Initialize();
+        playerData.LoadRecords();
         PlaceBotsInSpawnZones();
         SpawnPoint.ReadyToSpawn?.Invoke(this);
     }
@@ -26,8 +26,9 @@ public class BotPlacer : MonoBehaviour
     private void PlaceBotsInSpawnZones()
     {
         List<TinyBot> bots = new();
-        SpawnBotList(playerBots, Allegiance.PLAYER);
-        SpawnBotList(enemyBots, Allegiance.ENEMY);
+
+        SpawnPlayerBots();
+        SpawnBotsFromRecords(enemyBots, Allegiance.ENEMY);
 
         Dictionary<MoveStyle, List<Vector3>> styleNodes = Pathfinder3D.GetStyleNodes();
         spawnZones = new();
@@ -58,7 +59,16 @@ public class BotPlacer : MonoBehaviour
             OrientBot(bot, spawnSlots[bot.allegiance][style].GrabRandomly());
         }
 
-        void SpawnBotList(List<BotRecord> botRecords, Allegiance allegiance)
+        void SpawnPlayerBots()
+        {
+            foreach(var core in playerData.coreInventory)
+            {
+                bots.Add(SpawnBot(Allegiance.PLAYER, core.bot));
+            }
+        }
+
+
+        void SpawnBotsFromRecords(List<BotRecord> botRecords, Allegiance allegiance)
         {
             foreach (var botRecord in botRecords)
             {
@@ -83,6 +93,11 @@ public class BotPlacer : MonoBehaviour
     public TinyBot SpawnBot(Allegiance allegiance, BotRecord botRecord)
     {
         var tree = botConverter.StringToBot(botRecord.record);
+        return SpawnBot(allegiance, tree);
+    }
+
+    public TinyBot SpawnBot(Allegiance allegiance, TreeNode<CraftablePart> tree)
+    {
         TinyBot botUnit = botAssembler.BuildBotFromPartTree(tree, allegiance);
         botUnit.allegiance = allegiance;
 

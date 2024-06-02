@@ -21,7 +21,11 @@ public class PartSlot : MonoBehaviour
 
     void CheckToActivate()
     {
-        if (partIdentity == null) SetPartIdentity(BlueprintControl.ActivePart);
+        if (partIdentity == null)
+        {
+
+            SetPartIdentity(BlueprintControl.ActivePart);
+        }
         else ClearPartIdentity();
     }
 
