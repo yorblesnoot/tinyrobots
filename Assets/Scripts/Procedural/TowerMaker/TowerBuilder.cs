@@ -84,7 +84,7 @@ public class TowerBuilder : MonoBehaviour
             bool foundPlace = PlacePieceIfPossible(piece, path, targetNodes);
             if (!foundPlace)
             {
-                Debug.Log("banned " + piece.name);
+                //Debug.Log("banned " + piece.name);
                 legalPieces.Remove(piece);
             }
         }
@@ -282,13 +282,10 @@ public class TowerBuilder : MonoBehaviour
         float halfSide = (sideLength - 1) / 2f;
         int longSide = Mathf.RoundToInt(halfSide + circleRadius);
         int shortside = Mathf.RoundToInt(halfSide - circleRadius);
-        Debug.Log(halfSide + ", " + circleRadius);
-        Debug.Log(shortside + ", " + longSide);
         Vector2Int[] targetNodes = mapGrid.Keys.ToArray();
         targetNodes = targetNodes.Where(node => !mapGrid[node].blocked)
             .Where(node => node.x == shortside || node.x == longSide || node.y == shortside || node.y == longSide).ToArray();
         sides = targetNodes;
-        sides.DebugContents();
     }
 
     (Vector2Int, Vector2Int) GetEndPoints()

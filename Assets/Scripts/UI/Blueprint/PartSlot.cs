@@ -10,6 +10,8 @@ public class PartSlot : MonoBehaviour
     [SerializeField] CraftablePart empty;
     [SerializeField] float diagramScaling = 300;
 
+    public PartType slotType;
+
     CraftablePart partIdentity;
     PartSlot[] childSlots;
     
@@ -21,12 +23,19 @@ public class PartSlot : MonoBehaviour
 
     void CheckToActivate()
     {
-        if (partIdentity == null)
+        if (partIdentity != null)
         {
-
-            SetPartIdentity(BlueprintControl.ActivePart);
+            ClearPartIdentity();
+            return;
         }
-        else ClearPartIdentity();
+
+        if(BlueprintControl.ActivePart == null) return;
+        PartType partType = BlueprintControl.ActivePart.type;
+        if (partType == slotType) SetPartIdentity(BlueprintControl.ActivePart);
+        else if (partType == PartType.LATERAL)
+        {
+            if(slotType == PartType.UPPER || slotType == PartType.LOWER) SetPartIdentity(BlueprintControl.ActivePart);
+        }
     }
 
     public void ClearPartIdentity()
@@ -56,6 +65,7 @@ public class PartSlot : MonoBehaviour
             spawned.transform.SetParent(transform, false);
             spawned.transform.localPosition = part.slotPositions[i] * diagramScaling;
             childSlots[i] = spawned.GetComponent<PartSlot>();
+            childSlots[i].slotType = part.attachmentPoints[i].SlotType;
         }
 
         return childSlots;
