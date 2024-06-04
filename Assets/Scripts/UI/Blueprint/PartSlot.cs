@@ -25,31 +25,45 @@ public class PartSlot : MonoBehaviour
     {
         if (partIdentity != null)
         {
-            ClearPartIdentity();
+            ClearPartIdentity(false, true);
             return;
         }
 
         if(BlueprintControl.ActivePart == null) return;
         PartType partType = BlueprintControl.ActivePart.type;
-        if (partType == slotType) SetPartIdentity(BlueprintControl.ActivePart);
+        if (partType == slotType) SlotPart();
         else if (partType == PartType.LATERAL)
         {
-            if(slotType == PartType.UPPER || slotType == PartType.LOWER) SetPartIdentity(BlueprintControl.ActivePart);
+            if (slotType == PartType.UPPER || slotType == PartType.LOWER) SlotPart();
         }
     }
 
-    public void ClearPartIdentity()
+    void SlotPart()
     {
-        partIdentity = null;
-        activeIndicator.SetActive(false);
-        activePartName.text = "";
-        if (childSlots == null) return;
+        SetPartIdentity(BlueprintControl.ActivePart);
+        BlueprintControl.SlotActivePart();
+    }
 
-        foreach (var slot in childSlots)
+    public void ClearPartIdentity(bool destroy, bool toInventory)
+    {
+        if (partIdentity != null)
         {
-            Destroy(slot.gameObject);
+            if(toInventory) BlueprintControl.ReturnPart(partIdentity);
+            partIdentity = null;
+            activeIndicator.SetActive(false);
+            activePartName.text = "";
+
+            if (childSlots != null)
+            {
+                foreach (var slot in childSlots)
+                {
+                    slot.ClearPartIdentity(true, toInventory);
+                }
+                childSlots = null;
+            }
         }
-        childSlots = null;
+
+        if (destroy) Destroy(gameObject);
     }
 
     public PartSlot[] SetPartIdentity(CraftablePart part)

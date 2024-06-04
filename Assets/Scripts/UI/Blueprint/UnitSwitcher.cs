@@ -9,9 +9,14 @@ public class UnitSwitcher : MonoBehaviour
     [SerializeField] BlueprintControl blueprintControl;
     [SerializeField] PlayerData playerData;
     [SerializeField] CraftablePart empty;
+    [SerializeField] Button exitButton;
 
     int activeCharacter = -1;
 
+    private void Awake()
+    {
+        exitButton?.onClick.AddListener(ExitCraftScreen);
+    }
     private void Start()
     {
         playerData.LoadRecords();
@@ -23,6 +28,12 @@ public class UnitSwitcher : MonoBehaviour
         SwitchCharacter(0);
     }
 
+    void ExitCraftScreen()
+    {
+        SaveActiveBotToCore();
+        blueprintControl.gameObject.SetActive(false);
+    }
+
     void AssignSwitch(int index, Button button)
     {
         button.onClick.AddListener(() => SwitchCharacter(index));
@@ -30,12 +41,7 @@ public class UnitSwitcher : MonoBehaviour
 
     void SwitchCharacter(int charIndex)
     {
-        if(activeCharacter >= 0)
-        {
-            TreeNode<CraftablePart> bot = blueprintControl.BuildBot();
-            playerData.coreInventory[activeCharacter].bot = bot;
-            blueprintControl.OriginSlot.ClearPartIdentity();
-        }
+        SaveActiveBotToCore();
 
         activeCharacter = charIndex;
         blueprintControl.originPart = playerData.coreInventory[activeCharacter].corePart;
@@ -44,6 +50,16 @@ public class UnitSwitcher : MonoBehaviour
 
         PlacePartsInSlots(playerData.coreInventory[charIndex].bot.Children[0], blueprintControl.OriginSlot);
 
+    }
+
+    private void SaveActiveBotToCore()
+    {
+        if (activeCharacter >= 0)
+        {
+            TreeNode<CraftablePart> bot = blueprintControl.BuildBot();
+            playerData.coreInventory[activeCharacter].bot = bot;
+            blueprintControl.OriginSlot.ClearPartIdentity(false, false);
+        }
     }
 
     void PlacePartsInSlots(TreeNode<CraftablePart> node, PartSlot slot)

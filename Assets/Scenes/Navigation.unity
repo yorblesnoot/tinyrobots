@@ -975,6 +975,7 @@ MonoBehaviour:
   blueprintControl: {fileID: 845626771126788857}
   playerData: {fileID: 11400000, guid: ecd93be42b3c6b041ba1697eca59d1e5, type: 2}
   empty: {fileID: 11400000, guid: 8d3e6b21beedbd04fab8c9047950c332, type: 2}
+  exitButton: {fileID: 1183385521}
 --- !u!224 &704818248 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7164966678023339465, guid: 268ec5325b68efe4cbde6572b2320a00,
@@ -10144,10 +10145,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d874d6175e5a5248a11acbfc41217b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newSlot: {fileID: 4929582602251879122, guid: d9c38f15f59535e48b0f60a7fab45b74, type: 3}
   originPart: {fileID: 11400000, guid: 071766b68be52664f849c34d5d8bca7d, type: 2}
-  exitButton: {fileID: 1183385521}
-  OriginSlot: {fileID: 1135002324}
+  newSlot: {fileID: 4929582602251879122, guid: d9c38f15f59535e48b0f60a7fab45b74, type: 3}
   playerData: {fileID: 11400000, guid: ecd93be42b3c6b041ba1697eca59d1e5, type: 2}
   partDisplays:
   - {fileID: 1851381023}
@@ -10167,6 +10166,7 @@ MonoBehaviour:
   - {fileID: 953634272}
   - {fileID: 17318657}
   - {fileID: 1480634794}
+  OriginSlot: {fileID: 1135002324}
 --- !u!1 &845626771126788859
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,8 +10,9 @@ public class PlayerData : ScriptableObject
     {
         foreach(BotCore core in coreInventory)
         {
-            if(core.record != null)
+            if(core.bot == null && core.record != null)
             {
+                Debug.Log("loaded record");
                 core.bot = botConverter.StringToBot(core.record.record);
             }
         }

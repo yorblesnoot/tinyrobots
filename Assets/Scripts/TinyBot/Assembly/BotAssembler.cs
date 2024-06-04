@@ -81,7 +81,7 @@ public class BotAssembler : MonoBehaviour
 
         void AddPartStats(CraftablePart part)
         {
-            part.Initialize();
+            part.InitializeStats();
             foreach (var stat in part.Stats)
             {
                 botStats.Max[stat.Key] += stat.Value;

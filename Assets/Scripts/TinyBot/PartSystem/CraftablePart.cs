@@ -32,7 +32,7 @@ public class CraftablePart : SOWithGUID
         GameObject spawned = Instantiate(attachableObject);
         SetSlotTypes();
         Create2DSlotLayout();
-        Initialize();
+        InitializeStats();
         spawned.SetActive(false);
     }
 
@@ -58,8 +58,8 @@ public class CraftablePart : SOWithGUID
         List<AttachmentPoint> sortable = attachmentPoints.OrderBy(x => x.transform.localPosition.y).ToList();
         AssignRemove(PartType.LOWER, 0);
         AssignRemove(PartType.UPPER, sortable.Count - 1);
-        sortable = sortable.OrderBy(x => x.transform.localPosition.z).ToList();
-        AssignRemove(PartType.REAR, 0);
+        //sortable = sortable.OrderBy(x => x.transform.localPosition.z).ToList();
+        //AssignRemove(PartType.REAR, 0);
         AssignAllLateral(sortable);
 
         void AssignRemove(PartType type, int index)
@@ -77,7 +77,7 @@ public class CraftablePart : SOWithGUID
         }
     }
 
-    public void Initialize()
+    public void InitializeStats()
     {
         Stats = partStats.ToDictionary(entry => entry.type, entry => entry.bonus);
     }
