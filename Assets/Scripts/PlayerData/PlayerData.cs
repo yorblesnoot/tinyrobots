@@ -12,7 +12,6 @@ public class PlayerData : ScriptableObject
         {
             if(core.bot == null && core.record != null)
             {
-                Debug.Log("loaded record");
                 core.bot = botConverter.StringToBot(core.record.record);
             }
         }

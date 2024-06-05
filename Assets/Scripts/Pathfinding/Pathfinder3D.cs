@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Jobs;
+using Unity.Profiling;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -54,23 +55,23 @@ public static class Pathfinder3D
         Node node = new()
         {
             location = location,
-            modeAccess = new()
+            modeAccess = new bool[Enum.GetNames(typeof(MoveStyle)).Length]
         };
         foreach(MoveStyle style in Enum.GetValues(typeof(MoveStyle)))
         {
-            node.modeAccess.Add(style, false);
+            node.modeAccess[(int)style] = false;
         }
         if (value == 1) { node.blocked = true; }
         else
         {
-            if (NodeIsWalkable(x, y, z)) { node.modeAccess[MoveStyle.WALK] = true; node.modeAccess[MoveStyle.CRAWL] = true; }
+            if (NodeIsWalkable(x, y, z)) { node.modeAccess[(int)MoveStyle.WALK] = true; node.modeAccess[(int)MoveStyle.CRAWL] = true; }
 
             else if (NeighborIsTerrain(x, y - 1, z)
                 || NeighborIsTerrain(x, y + 1, z) || NeighborIsTerrain(x - 1, y, z)
                 || NeighborIsTerrain(x + 1, y, z) || NeighborIsTerrain(x, y, z + 1)
-                || NeighborIsTerrain(x, y, z - 1)) node.modeAccess[MoveStyle.CRAWL] = true;
+                || NeighborIsTerrain(x, y, z - 1)) node.modeAccess[(int)MoveStyle.CRAWL] = true;
 
-            else if (!NeighborIsTerrain(x, y + 2, z)) node.modeAccess[MoveStyle.FLY] = true;
+            else if (!NeighborIsTerrain(x, y + 2, z)) node.modeAccess[(int)MoveStyle.FLY] = true;
         }
         
         nodeMap.Add(location, node);
@@ -108,7 +109,7 @@ public static class Pathfinder3D
         foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle))) styleSpots.Add(style, new());
         foreach(var node in nodeMap.Values)
         {
-            foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle))) if (node.modeAccess[style]) styleSpots[style].Add(node.location);
+            foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle))) if (node.modeAccess[(int)style]) styleSpots[style].Add(node.location);
         }
         return styleSpots;
     }
@@ -117,12 +118,12 @@ public static class Pathfinder3D
     {
         coords = Vector3Int.RoundToInt(target);
         if(!nodeMap.ContainsKey(coords)) return false;
-        if (nodeMap[coords].modeAccess[style]) return true;
+        if (nodeMap[coords].modeAccess[(int)style]) return true;
         else
         {
             foreach(var edge in nodeMap[coords].edges)
             {
-                if (!nodeMap[edge.neighbor.location].modeAccess[style]) continue;
+                if (!nodeMap[edge.neighbor.location].modeAccess[(int)style]) continue;
                 coords = edge.neighbor.location;
                 return true;
             }
@@ -153,8 +154,10 @@ public static class Pathfinder3D
         return -total/number;
     }
 
+    static readonly ProfilerMarker profilerMarker = new("FindVectorPath");
     public static List<Vector3> FindVectorPath(Vector3Int end, out List<float> gValues)
     {
+        profilerMarker.Begin();
         gValues = new();
         List<Vector3> worldPath = new();
         List<Node> path = FindPath(end);
@@ -164,7 +167,9 @@ public static class Pathfinder3D
             worldPath.Add(node.location.ToWorldVector());
             gValues.Add(node.G);
         }
+        profilerMarker.End();
         return worldPath;
+        
     }
 
     public static void GeneratePathingTree(TinyBot owner)
@@ -174,12 +179,11 @@ public static class Pathfinder3D
         if (!nodeMap.TryGetValue(startCoords, out Node start)) return;
         GetNodeOccupancy(owner);
 
-        HashSet<Node> unvisited = new();
+        HashSet<Node> visited = new();
         foreach (Node node in nodeMap.Values)
         {
             node.G = float.PositiveInfinity;
             node.parent = null;
-            unvisited.Add(node);
         }
         PriorityQueue<Node, float> frontier = new();
         frontier.EnsureCapacity(xSize * ySize * zSize/4);
@@ -188,17 +192,18 @@ public static class Pathfinder3D
 
         frontier.Enqueue(start, start.G);
 
-        while (unvisited.Count > 0)
+        int nodeCount = nodeMap.Values.Count;
+        while (visited.Count < nodeCount)
         {
             if (frontier.Count == 0) return;
             Node current = frontier.Dequeue();
-            unvisited.Remove(current);
+            visited.Add(current);
             if (current.G == float.PositiveInfinity) return;
 
             foreach (Node.Edge edge in current.edges)
             {
                 Node neighbor = edge.neighbor;
-                if (neighbor.blocked || neighbor.occupied || neighbor.modeAccess[style] == false || !unvisited.Contains(neighbor)) continue;
+                if (neighbor.blocked || neighbor.occupied || neighbor.modeAccess[(int)style] == false || visited.Contains(neighbor)) continue;
                 float possibleG = current.G + edge.magnitude;
                 if (possibleG < neighbor.G)
                 {
@@ -302,7 +307,7 @@ public static class Pathfinder3D
 
         public bool blocked;
         public bool occupied;
-        public Dictionary<MoveStyle, bool> modeAccess;
+        public bool[] modeAccess;
 
         public Node parent;
 
