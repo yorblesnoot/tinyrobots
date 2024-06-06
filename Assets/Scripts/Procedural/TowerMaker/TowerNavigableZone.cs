@@ -1,20 +1,19 @@
 using PrimeTween;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class TowerNavigableZone : MonoBehaviour
 {
+    public GameObject battleMap;
     [SerializeField] float unitHeight = 1;
     [SerializeField] float revealDuration = 1;
-    public GameObject battleMap;
 
     [HideInInspector] public HashSet<TowerNavigableZone> neighbors;
     [HideInInspector] public Vector3 unitPosition;
     [HideInInspector] public bool hasBattle;
+    [HideInInspector] public TowerPiece towerPiece;
+    [HideInInspector] public int zoneIndex;
 
-    TowerPiece towerPiece;
     Renderer[] renderers;
     int marginDistance;
     int evaporationSource;
@@ -28,11 +27,10 @@ public class TowerNavigableZone : MonoBehaviour
         {
             room.associatedZone = this;
         }
-
         PrepBlackout();
     }
 
-    private void PrepBlackout()
+    void PrepBlackout()
     {
         renderers = GetComponentsInChildren<Renderer>();
         marginDistance = Shader.PropertyToID("_MarginDistance");
@@ -45,16 +43,16 @@ public class TowerNavigableZone : MonoBehaviour
         PlayerNavigator.Instance.TryMoveToZone(this);
     }
 
-    public void RevealNeighbors()
+    public void RevealNeighbors(bool instant = false)
     {
         foreach(var room in neighbors)
         {
-            room.Reveal(unitPosition);
+            room.Reveal(unitPosition, instant);
         }
     }
 
     bool revealed = false;
-    public void Reveal(Vector3 source)
+    public void Reveal(Vector3 source, bool instant = false)
     {
         if (revealed) return;
         revealed = true;
@@ -62,7 +60,7 @@ public class TowerNavigableZone : MonoBehaviour
         foreach (var renderer in renderers)
         {
             renderer.material.SetVector(evaporationSource, source);
-            Tween.MaterialProperty(renderer.material, marginDistance, duration: revealDuration, endValue: maxDistance);
+            Tween.MaterialProperty(renderer.material, marginDistance, duration: instant ? 0 : revealDuration, endValue: maxDistance);
         }
     }
 

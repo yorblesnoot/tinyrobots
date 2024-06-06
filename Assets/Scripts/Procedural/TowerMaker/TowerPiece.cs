@@ -7,6 +7,7 @@ public class TowerPiece : MonoBehaviour
 {
     public TowerRoom[] rooms;
     public List<Orientation> orientations;
+    [HideInInspector] public int pieceIndex;
     public void GeneratePlacementData(int pieceSize)
     {
         Orientation baseOrientation = new() { rotationAngle = 0, floorPositions = new(), doorPositions = new(), anchorPositions = new() };

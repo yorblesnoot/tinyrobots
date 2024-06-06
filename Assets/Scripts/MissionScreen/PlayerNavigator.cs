@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerNavigator : MonoBehaviour
 {
     [SerializeField] float moveTime = 1f;
+    [SerializeField] PlayerData playerData;
     [SerializeField] SceneRelay relay;
     [SerializeField] SceneLoader loader;
     public static PlayerNavigator Instance { get; private set; }
@@ -21,18 +22,21 @@ public class PlayerNavigator : MonoBehaviour
     public void TryMoveToZone(TowerNavigableZone zone)
     {
         if (moving) return;
-        if(!occupiedZone.neighbors.Contains(zone)) return;
+        if (occupiedZone != null && !occupiedZone.neighbors.Contains(zone)) return;
+
         moving = true;
         Tween.Position(transform, endValue: zone.unitPosition, duration: moveTime).OnComplete(() => FinishMove(zone));
     }
 
-    void FinishMove(TowerNavigableZone zone)
+    public void FinishMove(TowerNavigableZone zone)
     {
         moving = false;
         occupiedZone = zone;
         zone.RevealNeighbors();
-        if (zone.battleMap == null) return;
+        playerData.hiddenZones.Remove(zone.zoneIndex);
+        playerData.occupiedZone = zone.zoneIndex;
 
+        if (zone.battleMap == null) return;
         relay.battleMap = zone.battleMap;
         loader.Change(SceneType.BATTLE);
     }

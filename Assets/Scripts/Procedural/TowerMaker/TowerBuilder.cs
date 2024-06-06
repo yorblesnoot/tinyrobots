@@ -6,11 +6,13 @@ using UnityEngine;
 public class TowerBuilder : MonoBehaviour
 {
     [SerializeField] PlayerNavigator playerNavigator;
+    [SerializeField] PlayerData playerData;
     [SerializeField] List<TowerPiece> bodyPieces;
     [SerializeField] List<TowerPiece> sidePieces;
     [SerializeField] List<TowerPiece> cornerPieces;
     [SerializeField] int sideLength = 6, pieceSize = 4;
     [SerializeField] float circleRadius = 3;
+    List<TowerPiece> allPieces;
     Dictionary<Vector2Int, MapNode> mapGrid;
     Dictionary<PlacedRoom, TowerNavigableZone> zoneRooms;
 
@@ -19,19 +21,29 @@ public class TowerBuilder : MonoBehaviour
 
     private void Start()
     {
-        BuildTowerFloor();
+        AssignPieceIndices();
+        //GenerateTowerFloor();
+        Debug.Log(playerData.navMap);
+        if (playerData.navMap == null) GenerateTowerFloor();
+        else LoadMap();
     }
 
-    void BuildTowerFloor()
+    void GenerateTowerFloor()
     {
-        zoneRooms = new();
         GenerateGrid();
-        DefineCorners();
-        DefineSides();
-        DefineBody();
+        GenerateRegions();
         var ends = GetEndPoints();
         List<MapNode> path = GetMazePath(ends.Item1, ends.Item2);
-        DebugPath(path);
+        //DebugPath(path);
+        PlaceMapPieces(path);
+        PopulateNavigableZone();
+        PlacePlayer(zoneRooms[path[0].room]);
+        SaveMap();
+    }
+
+    private void PlaceMapPieces(List<MapNode> path)
+    {
+        zoneRooms = new();
         GeneratePieceMap(cornerPieces, corners, path);
         GeneratePieceMap(sidePieces, sides, path);
         GeneratePieceMap(bodyPieces, body, path);
@@ -39,17 +51,73 @@ public class TowerBuilder : MonoBehaviour
         GeneratePieceMap(cornerPieces, corners);
         GeneratePieceMap(bodyPieces, body);
         GeneratePieceMap(sidePieces, sides);
-        PopulateNavigableZone();
-        PlacePlayer(path);
     }
 
-    void PlacePlayer(List<MapNode> path)
+    void AssignPieceIndices()
     {
-        TowerNavigableZone zone = zoneRooms[path[0].room];
-        playerNavigator.transform.position = zone.unitPosition;
-        playerNavigator.occupiedZone = zone;
+        allPieces = new();
+        allPieces.AddRange(bodyPieces);
+        allPieces.AddRange(sidePieces);
+        allPieces.AddRange(cornerPieces);
+        for(int i = 0; i < allPieces.Count; i++) allPieces[i].pieceIndex = i;
+    }
+
+    private void SaveMap()
+    {
+        List<TowerNavigableZone> zones = zoneRooms.Values.ToHashSet().ToList();
+        List<SavedWorldNode> map = new();
+        playerData.hiddenZones = new();
+
+        for(int i = 0; i < zones.Count; i++)
+        {
+            zones[i].zoneIndex = i;
+            playerData.hiddenZones.Add(i);
+            SavedWorldNode node = new()
+            {
+                pieceIndex = zones[i].towerPiece.pieceIndex,
+                position = zones[i].transform.position,
+                rotation = zones[i].transform.rotation,
+                neighborIndices = zones[i].neighbors.Select(neighbor => zones.IndexOf(neighbor)).ToArray()
+            };
+            map.Add(node);
+        }
+
+        playerData.navMap = map;
+    }
+
+    void LoadMap()
+    {
+        List<TowerNavigableZone> zones = new();
+        for(int i = 0; i < playerData.navMap.Count; i++)
+        {
+            SavedWorldNode node = playerData.navMap[i];
+            TowerPiece piece = allPieces[node.pieceIndex];
+            TowerNavigableZone zone = Instantiate(piece, node.position, node.rotation).GetComponent<TowerNavigableZone>();
+            zone.zoneIndex = i;
+            zone.Initialize();
+            zones.Add(zone);
+        }
+        for (int i = 0; i < playerData.navMap.Count; i++)
+        {
+            SavedWorldNode node = playerData.navMap[i];
+            zones[i].neighbors = node.neighborIndices.Select(x => zones[x]).ToHashSet();
+            if (!playerData.hiddenZones.Contains(i)) zones[i].RevealNeighbors(true);
+        }
+        PlacePlayer(zones[playerData.occupiedZone]);
+    }
+
+    private void GenerateRegions()
+    {
+        DefineCorners();
+        DefineSides();
+        DefineBody();
+    }
+
+    void PlacePlayer(TowerNavigableZone zone)
+    {
         zone.Reveal(zone.unitPosition);
-        zone.RevealNeighbors();
+        playerNavigator.transform.position = zone.unitPosition;
+        playerNavigator.FinishMove(zone);
     }
 
     void PopulateNavigableZone()
