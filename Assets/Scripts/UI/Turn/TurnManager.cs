@@ -11,13 +11,12 @@ public class TurnManager : MonoBehaviour
     [SerializeField] List<TurnPortrait> turnPortraitList;
     [SerializeField] Camera headshotCam;
     [SerializeField] float activeUnitScaleFactor = 1.5f;
+    [SerializeField] BattleEnder battleEnder;
+    
     static float ActiveUnitScaleFactor = 1.5f;
-
     static List<TurnPortrait> PortraitStock;
-
     static float cardWidth;
     static float cardHeight;
-
     static int activeIndex = 0;
 
     public static List<TinyBot> TurnTakers;
@@ -132,26 +131,18 @@ public class TurnManager : MonoBehaviour
     {
         if (TurnTakers.Where(bot => bot.allegiance == Allegiance.PLAYER).Count() == 0)
         {
-            GameOver();
+            Singleton.battleEnder.GameOver();
             return true;
         }
         else if (TurnTakers.Where(bot => bot.allegiance == Allegiance.ENEMY).Count() == 0)
         {
-            PlayerWin();
+            Singleton.battleEnder.PlayerWin();
             return true;
         }
         return false;
     }
 
-    private static void PlayerWin()
-    {
-        SceneManager.LoadScene(1);
-    }
-
-    static void GameOver()
-    {
-        SceneManager.LoadScene(0);
-    }
+    
 
     static void ArrangePortraits(List<TinyBot> active)
     {

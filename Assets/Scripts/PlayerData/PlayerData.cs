@@ -19,21 +19,21 @@ public class PlayerData : ScriptableObject
     }
     public List<CraftablePart> partInventory;
     public List<BotCore> coreInventory;
-    public List<SavedWorldNode> navMap;
-    public List<int> hiddenZones;
-    public int occupiedZone;
+    public List<SavedNavZone> mapData;
+    public int zoneLocation;
 
     [Header("Components")]
     [SerializeField] BotConverter botConverter;
 }
 
-public struct SavedWorldNode
+public class SavedNavZone
 {
     public int pieceIndex;
     public Vector3 position;
     public Quaternion rotation;
     public int[] neighborIndices;
     public bool revealed;
+    public ZoneEventType eventType;
 }
 
 

@@ -9,7 +9,7 @@ public class TowerRoom : MonoBehaviour
     [SerializeField] Transform[] doors;
     [SerializeField] Transform[] anchors;
 
-    [HideInInspector] public TowerNavigableZone associatedZone;
+    [HideInInspector] public TowerNavZone associatedZone;
     
     public List<Vector2Int> GetDoorPositions()
     {

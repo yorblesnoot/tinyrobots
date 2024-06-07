@@ -5,26 +5,30 @@ using UnityEngine;
 
 public class TowerBuilder : MonoBehaviour
 {
-    [SerializeField] PlayerNavigator playerNavigator;
-    [SerializeField] PlayerData playerData;
+    [Header("Settings")]
     [SerializeField] List<TowerPiece> bodyPieces;
     [SerializeField] List<TowerPiece> sidePieces;
     [SerializeField] List<TowerPiece> cornerPieces;
     [SerializeField] int sideLength = 6, pieceSize = 4;
     [SerializeField] float circleRadius = 3;
+
+    [Header("Components")]
+    [SerializeField] PlayerNavigator playerNavigator;
+    [SerializeField] PlayerData playerData;
+    [SerializeField] SceneRelay relay;
+    [SerializeField] EventProvider eventProvider;
+
     List<TowerPiece> allPieces;
     Dictionary<Vector2Int, MapNode> mapGrid;
-    Dictionary<PlacedRoom, TowerNavigableZone> zoneRooms;
+    Dictionary<PlacedRoom, TowerNavZone> zoneRooms;
 
     Vector2Int[] corners, sides, body;
     static readonly Vector2Int[] directions = { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left };
 
-    private void Start()
+    public void GeneratePlaySpace()
     {
         AssignPieceIndices();
-        //GenerateTowerFloor();
-        Debug.Log(playerData.navMap);
-        if (playerData.navMap == null) GenerateTowerFloor();
+        if (relay.generateNavMap) GenerateTowerFloor();
         else LoadMap();
     }
 
@@ -38,7 +42,7 @@ public class TowerBuilder : MonoBehaviour
         PlaceMapPieces(path);
         PopulateNavigableZone();
         PlacePlayer(zoneRooms[path[0].room]);
-        SaveMap();
+        SaveMapData();
     }
 
     private void PlaceMapPieces(List<MapNode> path)
@@ -62,48 +66,50 @@ public class TowerBuilder : MonoBehaviour
         for(int i = 0; i < allPieces.Count; i++) allPieces[i].pieceIndex = i;
     }
 
-    private void SaveMap()
+    private void SaveMapData()
     {
-        List<TowerNavigableZone> zones = zoneRooms.Values.ToHashSet().ToList();
-        List<SavedWorldNode> map = new();
-        playerData.hiddenZones = new();
+        List<TowerNavZone> zones = zoneRooms.Values.ToHashSet().ToList();
+        List<SavedNavZone> map = new();
 
         for(int i = 0; i < zones.Count; i++)
         {
             zones[i].zoneIndex = i;
-            playerData.hiddenZones.Add(i);
-            SavedWorldNode node = new()
+            SavedNavZone node = new()
             {
                 pieceIndex = zones[i].towerPiece.pieceIndex,
                 position = zones[i].transform.position,
                 rotation = zones[i].transform.rotation,
-                neighborIndices = zones[i].neighbors.Select(neighbor => zones.IndexOf(neighbor)).ToArray()
+                neighborIndices = zones[i].neighbors.Select(neighbor => zones.IndexOf(neighbor)).ToArray(),
+                revealed = false,
+                eventType = zones[i].zoneEvent
             };
             map.Add(node);
         }
 
-        playerData.navMap = map;
+        playerData.mapData = map;
     }
 
     void LoadMap()
     {
-        List<TowerNavigableZone> zones = new();
-        for(int i = 0; i < playerData.navMap.Count; i++)
+        List<TowerNavZone> zones = new();
+        for(int i = 0; i < playerData.mapData.Count; i++)
         {
-            SavedWorldNode node = playerData.navMap[i];
-            TowerPiece piece = allPieces[node.pieceIndex];
-            TowerNavigableZone zone = Instantiate(piece, node.position, node.rotation).GetComponent<TowerNavigableZone>();
+            SavedNavZone saved = playerData.mapData[i];
+            TowerPiece piece = allPieces[saved.pieceIndex];
+            TowerNavZone zone = Instantiate(piece, saved.position, saved.rotation).GetComponent<TowerNavZone>();
             zone.zoneIndex = i;
             zone.Initialize();
+            zone.zoneEvent = saved.eventType;
+            eventProvider[zone.zoneEvent].Visualize(zone);
             zones.Add(zone);
         }
-        for (int i = 0; i < playerData.navMap.Count; i++)
+        for (int i = 0; i < playerData.mapData.Count; i++)
         {
-            SavedWorldNode node = playerData.navMap[i];
+            SavedNavZone node = playerData.mapData[i];
             zones[i].neighbors = node.neighborIndices.Select(x => zones[x]).ToHashSet();
-            if (!playerData.hiddenZones.Contains(i)) zones[i].RevealNeighbors(true);
+            if (playerData.mapData[i].revealed) zones[i].RevealNeighbors(true);
         }
-        PlacePlayer(zones[playerData.occupiedZone]);
+        PlacePlayer(zones[playerData.zoneLocation]);
     }
 
     private void GenerateRegions()
@@ -113,7 +119,7 @@ public class TowerBuilder : MonoBehaviour
         DefineBody();
     }
 
-    void PlacePlayer(TowerNavigableZone zone)
+    void PlacePlayer(TowerNavZone zone)
     {
         zone.Reveal(zone.unitPosition);
         playerNavigator.transform.position = zone.unitPosition;
@@ -127,7 +133,7 @@ public class TowerBuilder : MonoBehaviour
             if(room.connectedNodes.Count == 0) continue;
             foreach (var connected in room.connectedNodes)
             {
-                TowerNavigableZone connectedZone = zoneRooms[connected.room];
+                TowerNavZone connectedZone = zoneRooms[connected.room];
                 
                 zoneRooms[room].neighbors.Add(connectedZone);
             }
@@ -179,9 +185,12 @@ public class TowerBuilder : MonoBehaviour
     {
         Quaternion rotation = Quaternion.Euler(0, -orientation.rotationAngle, 0);
         GameObject spawned = Instantiate(piece, GetWorldVector(node.position), rotation).gameObject;
-        TowerNavigableZone zone = spawned.GetComponent<TowerNavigableZone>();
+        TowerNavZone zone = spawned.GetComponent<TowerNavZone>();
+        zone.zoneEvent = eventProvider.GetRandomWeightedEvent();
         zone.Initialize();
-        
+        eventProvider[zone.zoneEvent].Visualize(zone);
+
+
         foreach (PlacedRoom room in placedRooms)
         {
             zoneRooms.Add(room, zone);
@@ -189,6 +198,8 @@ public class TowerBuilder : MonoBehaviour
             targetNode.room = room;
         }
     }
+
+
 
     List<PlacedRoom> VerifyPiecePlacableAt(MapNode baseNode, TowerPiece.Orientation orientation, List<MapNode> path, Vector2Int[] targetNodes)
     {

@@ -2,17 +2,17 @@ using PrimeTween;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TowerNavigableZone : MonoBehaviour
+public class TowerNavZone : MonoBehaviour
 {
     public GameObject battleMap;
     [SerializeField] float unitHeight = 1;
     [SerializeField] float revealDuration = 1;
 
-    [HideInInspector] public HashSet<TowerNavigableZone> neighbors;
+    [HideInInspector] public HashSet<TowerNavZone> neighbors;
     [HideInInspector] public Vector3 unitPosition;
-    [HideInInspector] public bool hasBattle;
     [HideInInspector] public TowerPiece towerPiece;
     [HideInInspector] public int zoneIndex;
+    [HideInInspector] public ZoneEventType zoneEvent;
 
     Renderer[] renderers;
     int marginDistance;

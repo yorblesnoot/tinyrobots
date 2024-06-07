@@ -7,37 +7,42 @@ public class PlayerNavigator : MonoBehaviour
 {
     [SerializeField] float moveTime = 1f;
     [SerializeField] PlayerData playerData;
-    [SerializeField] SceneRelay relay;
-    [SerializeField] SceneLoader loader;
+    [SerializeField] EventProvider eventProvider;
     public static PlayerNavigator Instance { get; private set; }
-    [HideInInspector] public TowerNavigableZone occupiedZone;
+    [HideInInspector] public TowerNavZone occupiedZone;
 
-    bool moving;
+    bool moveAvailable;
 
     private void Awake()
     {
         Instance = this;
+        moveAvailable = true;
     }
 
-    public void TryMoveToZone(TowerNavigableZone zone)
+    public void TryMoveToZone(TowerNavZone zone)
     {
-        if (moving) return;
+        if (!moveAvailable) return;
         if (occupiedZone != null && !occupiedZone.neighbors.Contains(zone)) return;
 
-        moving = true;
+        moveAvailable = false;
         Tween.Position(transform, endValue: zone.unitPosition, duration: moveTime).OnComplete(() => FinishMove(zone));
     }
 
-    public void FinishMove(TowerNavigableZone zone)
+    public void FinishMove(TowerNavZone zone)
     {
-        moving = false;
+        
         occupiedZone = zone;
         zone.RevealNeighbors();
-        playerData.hiddenZones.Remove(zone.zoneIndex);
-        playerData.occupiedZone = zone.zoneIndex;
+        playerData.mapData[zone.zoneIndex].revealed = true;
+        playerData.zoneLocation = zone.zoneIndex;
 
-        if (zone.battleMap == null) return;
-        relay.battleMap = zone.battleMap;
-        loader.Change(SceneType.BATTLE);
+        eventProvider[zone.zoneEvent].Activate(zone, ReallowMove);
+    }
+
+    void ReallowMove()
+    {
+        moveAvailable = true;
+        occupiedZone.zoneEvent = ZoneEventType.NONE;
+        playerData.mapData[playerData.zoneLocation].eventType = ZoneEventType.NONE;
     }
 }

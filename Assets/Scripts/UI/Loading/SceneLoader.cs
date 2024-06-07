@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public enum SceneType
 {
     MAINMENU,
-    WORLD,
+    NAVIGATION,
     BATTLE,
     CREDITS
 }
@@ -18,7 +18,7 @@ public class SceneLoader : MonoBehaviour
     [SerializeField] Slider loadingBar;
 
     
-    public void Change(SceneType sceneType)
+    public void Load(SceneType sceneType)
     {
         loadingScreen.gameObject.SetActive(true);
         loadingBar.value = 0;
