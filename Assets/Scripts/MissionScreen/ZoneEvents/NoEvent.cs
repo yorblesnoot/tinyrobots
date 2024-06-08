@@ -14,4 +14,9 @@ public class NoEvent : ZoneEvent
     {
         
     }
+
+    public override void Clear(TowerNavZone zone)
+    {
+        
+    }
 }

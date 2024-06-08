@@ -33,7 +33,7 @@ public class SavedNavZone
     public Quaternion rotation;
     public int[] neighborIndices;
     public bool revealed;
-    public ZoneEventType eventType;
+    public int eventType;
 }
 
 

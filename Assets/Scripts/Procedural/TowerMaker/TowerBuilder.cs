@@ -28,7 +28,7 @@ public class TowerBuilder : MonoBehaviour
     public void GeneratePlaySpace()
     {
         AssignPieceIndices();
-        if (relay.generateNavMap) GenerateTowerFloor();
+        if (relay.generateNavMap || playerData.mapData == null) GenerateTowerFloor();
         else LoadMap();
     }
 
@@ -41,8 +41,9 @@ public class TowerBuilder : MonoBehaviour
         //DebugPath(path);
         PlaceMapPieces(path);
         PopulateNavigableZone();
-        PlacePlayer(zoneRooms[path[0].room]);
         SaveMapData();
+        PlacePlayer(zoneRooms[path[0].room]);
+        
     }
 
     private void PlaceMapPieces(List<MapNode> path)
@@ -81,8 +82,8 @@ public class TowerBuilder : MonoBehaviour
                 rotation = zones[i].transform.rotation,
                 neighborIndices = zones[i].neighbors.Select(neighbor => zones.IndexOf(neighbor)).ToArray(),
                 revealed = false,
-                eventType = zones[i].zoneEvent
-            };
+                eventType = zones[i].zoneEventType,
+        };
             map.Add(node);
         }
 
@@ -99,8 +100,8 @@ public class TowerBuilder : MonoBehaviour
             TowerNavZone zone = Instantiate(piece, saved.position, saved.rotation).GetComponent<TowerNavZone>();
             zone.zoneIndex = i;
             zone.Initialize();
-            zone.zoneEvent = saved.eventType;
-            eventProvider[zone.zoneEvent].Visualize(zone);
+            zone.zoneEventType = saved.eventType;
+            zone.zoneEvent = eventProvider[zone.zoneEventType];
             zones.Add(zone);
         }
         for (int i = 0; i < playerData.mapData.Count; i++)
@@ -186,9 +187,9 @@ public class TowerBuilder : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(0, -orientation.rotationAngle, 0);
         GameObject spawned = Instantiate(piece, GetWorldVector(node.position), rotation).gameObject;
         TowerNavZone zone = spawned.GetComponent<TowerNavZone>();
-        zone.zoneEvent = eventProvider.GetRandomWeightedEvent();
+        zone.zoneEventType = eventProvider.GetRandomWeightedEvent();
+        zone.zoneEvent = eventProvider[zone.zoneEventType];
         zone.Initialize();
-        eventProvider[zone.zoneEvent].Visualize(zone);
 
 
         foreach (PlacedRoom room in placedRooms)

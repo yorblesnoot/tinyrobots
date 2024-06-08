@@ -10,7 +10,7 @@ public class BattleEnder : MonoBehaviour
     [SerializeField] PlayerData playerData;
     public void PlayerWin()
     {
-        playerData.mapData[playerData.zoneLocation].eventType = ZoneEventType.NONE;
+        playerData.mapData[playerData.zoneLocation].eventType = 0;
         sceneLoader.Load(SceneType.NAVIGATION);
     }
 

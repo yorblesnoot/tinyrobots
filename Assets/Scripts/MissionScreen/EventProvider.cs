@@ -1,28 +1,28 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum ZoneEventType
+public class EventProvider : MonoBehaviour 
 {
-    NONE,
-    BATTLE
-}
-public class EventProvider : MonoDictionary<ZoneEventType, ZoneEvent>
-{
-    public ZoneEventType GetRandomWeightedEvent()
+    [SerializeField] ZoneEvent[] zoneEvents;
+    public ZoneEvent this[int i]
     {
-        int totalWeight = Values.Sum(x => x.weight);
+        get { return zoneEvents[i]; }
+    }
+    public int GetRandomWeightedEvent()
+    {
+        int totalWeight = zoneEvents.Sum(x => x.weight);
         int random = Random.Range(0, totalWeight);
-        List<ZoneEventType> events = Keys.ToList();
         float current = 0;
-        for(int i = 0; i < events.Count; i++)
+        for(int i = 0; i < zoneEvents.Count(); i++)
         {
-            current += this[events[i]].weight;
-            if(random < current) return events[i];
+            current += zoneEvents[i].weight;
+            if(random < current) return i;
         }
-        return ZoneEventType.NONE;
+        return 0;
     }
 }
 

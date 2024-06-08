@@ -36,13 +36,16 @@ public class PlayerNavigator : MonoBehaviour
         playerData.mapData[zone.zoneIndex].revealed = true;
         playerData.zoneLocation = zone.zoneIndex;
 
-        eventProvider[zone.zoneEvent].Activate(zone, ReallowMove);
+        if(zone.zoneEvent != null) zone.zoneEvent.Activate(zone, ReallowMove);
+        else moveAvailable = true;
     }
 
     void ReallowMove()
     {
         moveAvailable = true;
-        occupiedZone.zoneEvent = ZoneEventType.NONE;
-        playerData.mapData[playerData.zoneLocation].eventType = ZoneEventType.NONE;
+        occupiedZone.zoneEvent.Clear(occupiedZone);
+        occupiedZone.zoneEvent = null;
+        occupiedZone.zoneEventType = 0;
+        playerData.mapData[playerData.zoneLocation].eventType = 0;
     }
 }

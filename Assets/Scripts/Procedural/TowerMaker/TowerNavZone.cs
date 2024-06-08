@@ -12,7 +12,8 @@ public class TowerNavZone : MonoBehaviour
     [HideInInspector] public Vector3 unitPosition;
     [HideInInspector] public TowerPiece towerPiece;
     [HideInInspector] public int zoneIndex;
-    [HideInInspector] public ZoneEventType zoneEvent;
+    [HideInInspector] public int zoneEventType;
+    [HideInInspector] public ZoneEvent zoneEvent;
 
     Renderer[] renderers;
     int marginDistance;
@@ -56,6 +57,7 @@ public class TowerNavZone : MonoBehaviour
     {
         if (revealed) return;
         revealed = true;
+        zoneEvent.Visualize(this);
         float maxDistance = source == unitPosition ? 10 : Vector3.Distance(unitPosition, source) * 2;
         foreach (var renderer in renderers)
         {
