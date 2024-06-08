@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BattleEnder : MonoBehaviour
@@ -8,16 +5,16 @@ public class BattleEnder : MonoBehaviour
     [SerializeField] SceneLoader sceneLoader;
     [SerializeField] SceneRelay relay;
     [SerializeField] PlayerData playerData;
+    [SerializeField] DropsUI dropsUI;
     public void PlayerWin()
     {
         playerData.mapData[playerData.zoneLocation].eventType = 0;
-        sceneLoader.Load(SceneType.NAVIGATION);
+        dropsUI.OfferDrops(() => sceneLoader.Load(SceneType.NAVIGATION));
     }
 
     public void GameOver()
     {
         relay.generateNavMap = true;
         sceneLoader.Load(SceneType.MAINMENU);
-        
     }
 }

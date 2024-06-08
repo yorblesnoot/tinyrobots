@@ -7,7 +7,7 @@ public static class PhysicsHelper
     static System.Random rand = new();
     public static IEnumerator LerpTo(this GameObject thing, Vector3 endPosition, float duration, bool local = false)
     {
-        UnityEngine.Transform transform = thing.transform;
+        Transform transform = thing.transform;
         float timeElapsed = 0;
         Vector3 startPosition = local ? transform.localPosition : transform.position;
         while (timeElapsed < duration)
@@ -20,21 +20,6 @@ public static class PhysicsHelper
         }
         if (local) transform.localPosition = endPosition;
         else transform.position = endPosition;
-    }
-
-    public static IEnumerator DampTo(this GameObject thing, Vector3 endPosition, float duration, bool local = false)
-    {
-        UnityEngine.Transform transform = thing.transform;
-        float timeElapsed = 0;
-        Vector3 velocity = Vector3.zero;
-        while (timeElapsed < duration)
-        {
-            Vector3 step = Vector3.SmoothDamp(local ? thing.transform.localPosition : transform.position, endPosition, ref velocity, duration);
-            timeElapsed += Time.deltaTime;
-            if (local) transform.localPosition = step;
-            else transform.position = step;
-            yield return null;
-        }
     }
 
     public static Quaternion RandomCardinalRotate()

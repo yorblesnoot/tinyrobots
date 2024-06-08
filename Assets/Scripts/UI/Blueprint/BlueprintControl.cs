@@ -60,7 +60,7 @@ public class BlueprintControl : MonoBehaviour
                 initializedParts.Add(playerData.partInventory[i]);
             }
             partDisplays[i].gameObject.SetActive(true);
-            partDisplays[i].InitializeDisplay(playerData.partInventory[i]);
+            partDisplays[i].InitializeDisplay(playerData.partInventory[i], SetActivePart);
         }
 
         for(int i = playerData.partInventory.Count; i < partDisplays.Count; i++) partDisplays[i].gameObject.SetActive(false);

@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BotConverter", menuName = "ScriptableObjects/Singletons/BotConverter")]
 public class BotConverter : ScriptableObject
 {
-    [SerializeField] List<CraftablePart> parts;
+    public List<CraftablePart> parts;
     Dictionary<string, CraftablePart> partMap;
 
     public void Initialize()

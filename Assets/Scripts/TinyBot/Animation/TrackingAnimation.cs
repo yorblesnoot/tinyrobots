@@ -1,3 +1,4 @@
+using PrimeTween;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,6 @@ public abstract class TrackingAnimation : MonoBehaviour
 
     public void ResetTracking()
     {
-        StartCoroutine(aimTarget.gameObject.LerpTo(basePosition, .5f, true));
+        Tween.LocalPosition(aimTarget, endValue: basePosition, duration: .5f);
     }
 }

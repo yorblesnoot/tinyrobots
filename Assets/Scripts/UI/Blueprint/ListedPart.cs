@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -16,12 +14,17 @@ public class ListedPart : MonoBehaviour
     [SerializeField] Color activeColor;
     [SerializeField] PartStatDisplay[] statDisplays;
 
-    CraftablePart partIdentity;
+    [HideInInspector] public CanvasGroup group;
+
+    public CraftablePart partIdentity {get; private set;}
 
     public static UnityEvent resetActivation = new();
 
-    public void InitializeDisplay(CraftablePart part)
+    UnityAction<CraftablePart> submitPartCallback;
+    public void InitializeDisplay(CraftablePart part, UnityAction<CraftablePart> activationCallback)
     {
+        group = GetComponent<CanvasGroup>();
+        submitPartCallback = activationCallback;
         partIdentity = part;
         nameDisplay.text = part.name;
         selectButton.onClick.RemoveAllListeners();
@@ -45,7 +48,7 @@ public class ListedPart : MonoBehaviour
     {
         resetActivation.Invoke();
         buttonImage.color = activeColor;
-        BlueprintControl.SetActivePart(partIdentity);
+        submitPartCallback(partIdentity);
     }
 
     void BecomeInactive()

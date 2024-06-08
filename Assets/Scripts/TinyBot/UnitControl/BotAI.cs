@@ -2,16 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static UnityEditor.FilePathAttribute;
 
 public class BotAI
 {
     readonly TinyBot thisBot;
     int terrainMask;
+    float optimalDistance;
 
     public BotAI(TinyBot bot)
     {
         thisBot = bot;
         terrainMask = LayerMask.GetMask("Terrain");
+        FindOptimalDistance();
+    }
+
+    void FindOptimalDistance()
+    {
+        List<Ability> rangedAbilities = thisBot.Abilities.Where(skill => skill.range > 0).ToList();
+        float total = rangedAbilities.Sum(skill => skill.range);
+        rangedAbilities.DebugContents();
+        
+        optimalDistance = total / rangedAbilities.Count;
+        Debug.Log(optimalDistance);
     }
 
     readonly float lockTime = 1f;
@@ -97,22 +110,39 @@ public class BotAI
 
         IEnumerator MoveFreely()
         {
+            float remainingMove = thisBot.Stats.Current[StatType.MOVEMENT];
             enemies.OrderBy(unit => Vector3.Distance(unit.transform.position, thisBot.transform.position)).ToList();
             Vector3 closestEnemyPosition = enemies[0].transform.position;
-            List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations();
-            pathableLocations = pathableLocations.OrderBy(location => Vector3.Distance(location, closestEnemyPosition)).ToList();
-            List<Vector3> path = Pathfinder3D.FindVectorPath(pathableLocations[0], out var moveCosts);
+            List<Vector3Int> pathableLocations;
+            if (thisBot.Stats.Current[StatType.ACTION] > 0) 
+            {
+                pathableLocations = Pathfinder3D.GetPathableLocations();
+                pathableLocations = pathableLocations.OrderBy(location =>
+                Vector3.Distance(location, closestEnemyPosition)).ToList();
+            }
+            else
+            {
+                pathableLocations = Pathfinder3D.GetPathableLocations(Mathf.FloorToInt(remainingMove));
+                pathableLocations = pathableLocations.OrderBy(location =>
+                Mathf.Abs(Vector3.Distance(location, closestEnemyPosition) - optimalDistance))
+                    .ToList();
+            }
             
-            //this needs a look
-            int endIndex = 0;
-            if (moveCosts == null || moveCosts.Count == 0) yield break;
-            while (endIndex < moveCosts.Count && moveCosts[endIndex] < thisBot.Stats.Current[StatType.MOVEMENT]) endIndex++;
-            if (endIndex == 0) yield break;
+            List<Vector3> path = Pathfinder3D.FindVectorPath(pathableLocations[0], out var moveCosts);
+            if(path == null) yield break;
+
+            float maxMove = moveCosts.Where(cost => cost < remainingMove).LastOrDefault();
+            int endIndex = moveCosts.IndexOf(maxMove);
             path = path.Take(endIndex).ToList();
+            if (path.Count == 0) yield break;
+
             thisBot.AttemptToSpendResource(Mathf.RoundToInt(moveCosts[endIndex]), StatType.MOVEMENT);
 
             yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.TraversePath(path));
+
         }
+
+        
     }
 
     Vector3 GunPositionAt(Ability ability, Vector3 position)

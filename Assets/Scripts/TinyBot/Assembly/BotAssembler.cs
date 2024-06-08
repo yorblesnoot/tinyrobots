@@ -68,8 +68,6 @@ public class BotAssembler : MonoBehaviour
             {
                 RecursiveConstruction(children[i], attachmentPoints[i]);
             }
-
-            return;
         }
 
         static void RestructureHierarchy(PrimaryMovement locomotion, AttachmentPoint initialAttachmentPoint, GameObject bot)

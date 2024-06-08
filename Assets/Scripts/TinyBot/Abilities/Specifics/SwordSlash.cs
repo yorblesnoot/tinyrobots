@@ -1,3 +1,4 @@
+using PrimeTween;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -112,6 +113,6 @@ public class SwordSlash : SpatialAbility
 
     public override void NeutralAim()
     {
-        StartCoroutine(ikTarget.gameObject.LerpTo(neutralPosition, .5f, true));
+        Tween.LocalPosition(ikTarget, endValue: neutralPosition, duration: .5f);
     }
 }

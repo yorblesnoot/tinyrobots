@@ -19,8 +19,6 @@ public class MainCameraControl : MonoBehaviour
     [SerializeField] int focalPointDeadzone = 5;
     [SerializeField] CinemachineConfiner[] confiners;
 
-
-    [SerializeField] CinemachineBrain brain;
     Vector3Int mapCorner;
     static CameraSet Cams;
 
@@ -107,7 +105,7 @@ public class MainCameraControl : MonoBehaviour
     private void LateUpdate()
     {
         if(freeCameraAvailable) PlayerControlCamera();
-        brain.ManualUpdate();
+        cams.Brain.ManualUpdate();
     }
 
     private void PlayerControlCamera()
@@ -190,7 +188,11 @@ public class MainCameraControl : MonoBehaviour
     {
         Cams.Strafe.Priority = 0;
         Cams.Pivot.Priority = 0;
+        
         Cams.FocalPoint.transform.position = bot.transform.position;
+        Cams.Automatic.m_MinDuration = 0;
+        Cams.Brain.ManualUpdate();
+        Cams.Automatic.m_MinDuration = 50;
     }
 
     static bool tracking;
@@ -246,6 +248,7 @@ public class MainCameraControl : MonoBehaviour
         public CinemachineVirtualCamera Strafe;
         public CinemachineFreeLook Pivot;
         public CinemachineClearShot Automatic;
+        public CinemachineBrain Brain;
         public Transform FocalPoint;
     }
 }
