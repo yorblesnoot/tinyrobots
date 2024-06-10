@@ -7,9 +7,6 @@ using UnityEngine;
 public class SwordSlash : SpatialAbility
 {
     [SerializeField] GameObject aimer;
-    [SerializeField] SpatialTargeter indicator;
-    [SerializeField] Animator animator;
-    [SerializeField] Transform ikTarget;
     [SerializeField] Transform readyPosition;
     [SerializeField] Transform slashPosition;
 
@@ -21,13 +18,6 @@ public class SwordSlash : SpatialAbility
     [SerializeField] float returnTime = .3f;
 
     [SerializeField] float aimLag = 30;
-
-
-    Vector3 neutralPosition;
-    private void Start()
-    {
-        neutralPosition = ikTarget.transform.localPosition;
-    }
 
     public override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
@@ -97,7 +87,6 @@ public class SwordSlash : SpatialAbility
             timeElapsed += Time.deltaTime;
             yield return null;
         }
-        
     }
 
     Vector3[] GetSlashPoints()
@@ -108,11 +97,5 @@ public class SwordSlash : SpatialAbility
         Vector3 lastPosition = Vector3.Reflect(-Owner.ChassisPoint.InverseTransformPoint(startPosition), Vector3.forward);
         lastPosition = Owner.ChassisPoint.TransformPoint(lastPosition);
         return new Vector3[] { startPosition, lastPosition };
-
-    }
-
-    public override void NeutralAim()
-    {
-        Tween.LocalPosition(ikTarget, endValue: neutralPosition, duration: .5f);
     }
 }

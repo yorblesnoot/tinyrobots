@@ -1,4 +1,6 @@
+using PrimeTween;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,6 +14,7 @@ public enum Allegiance
 }
 public class TinyBot : MonoBehaviour
 {
+    [SerializeField] float landingDuration = .5f;
     [SerializeField] float deathExplodeMaxForce;
     [SerializeField] float hitRecoilTime;
     [SerializeField] float hitReturnTime;
@@ -19,22 +22,23 @@ public class TinyBot : MonoBehaviour
     [SerializeField] GameObject selectBrackets;
     [SerializeField] BotStateFeedback feedback;
     [SerializeField] GameObject hitSpark;
-    
     public Transform headshotPosition;
+    public Transform ChassisPoint;
 
+    [HideInInspector] public Rigidbody PhysicsBody;
     [HideInInspector] public Sprite portrait;
     [HideInInspector] public Allegiance allegiance;
     [HideInInspector] public bool availableForTurn;
-
     [HideInInspector] public PrimaryMovement PrimaryMovement;
+    [HideInInspector] public UnityEvent beganTurn = new();
+    [HideInInspector] public UnityEvent endedTurn = new();
 
     public BotStats Stats = new();
 
-    public Transform ChassisPoint;
+    
 
     public static UnityEvent ClearActiveBot = new();
-    public UnityEvent beganTurn = new();
-    public UnityEvent endedTurn = new();
+    
 
     BotAI botAI;
 
@@ -43,6 +47,7 @@ public class TinyBot : MonoBehaviour
     Renderer[] partRenderers;
     public void Initialize(List<Ability> abilities, List<GameObject> parts, PrimaryMovement primaryMovement)
     {
+        PhysicsBody = GetComponent<Rigidbody>();
         Parts = parts;
         Abilities = abilities;
         PrimaryMovement = primaryMovement;
@@ -107,6 +112,7 @@ public class TinyBot : MonoBehaviour
     [SerializeField] float deathPushMulti = 1;
     void Die(Vector3 hitSource)
     {
+        StopAllCoroutines();
         Vector3 hitPush = (transform.position - hitSource).normalized * deathPushMulti;
         foreach(var part in Parts)
         {
@@ -130,6 +136,24 @@ public class TinyBot : MonoBehaviour
         Stats.Current[StatType.HEALTH] = Math.Clamp(Stats.Current[StatType.HEALTH] - damage, 0, Stats.Max[StatType.HEALTH]);
         TurnManager.UpdateHealth(this);
         if(Stats.Current[StatType.HEALTH] == 0) Die(source);
+    }
+
+    public IEnumerator Fall()
+    {
+        PhysicsBody.isKinematic = false;
+        bool foundLanding = false;
+        while(!foundLanding)
+        {
+            if(Pathfinder3D.GetLandingPointBy(transform.position, PrimaryMovement.Style, out Vector3Int coords))
+            {
+                foundLanding = true;
+                PhysicsBody.isKinematic = false;
+                Tween.Position(transform, endValue: coords, duration: landingDuration).Group(
+                Tween.Rotation(transform, endValue: PrimaryMovement.GetRotationAtPosition(coords), duration: landingDuration))
+                    .OnComplete(() => PrimaryMovement.NeutralStance());
+            }
+            yield return null;
+        }
     }
 
     private void OnMouseEnter()

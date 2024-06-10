@@ -6,12 +6,12 @@ using UnityEngine;
 
 public enum PartType
 {
+    LATERAL,
     CORE,
     CHASSIS,
     UPPER,
     LOWER,
     REAR,
-    LATERAL
 }
 
 [CreateAssetMenu(fileName = "CraftPart", menuName = "ScriptableObjects/CraftPart")]

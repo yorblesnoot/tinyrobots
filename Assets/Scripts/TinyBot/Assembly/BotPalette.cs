@@ -8,7 +8,7 @@ public class BotPalette : ScriptableObject
     {
         Material[] activePalette = palettePicker[allegiance];
         Material[] modPalette = renderer.materials;
-        for (int i = 0; i < activePalette.Length; i++)
+        for (int i = 0; i < modPalette.Length; i++)
         {
             modPalette[i] = activePalette[i];
         }

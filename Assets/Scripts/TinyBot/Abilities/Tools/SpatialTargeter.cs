@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SpatialTargeter : MonoBehaviour
 {
-    [HideInInspector] public List<TinyBot> intersectingBots = new();
+    List<TinyBot> intersectingBots = new();
     public void ResetIntersecting()
     {
         intersectingBots = new();

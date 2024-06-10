@@ -74,7 +74,7 @@ public abstract class Ability : MonoBehaviour
     List<TinyBot> currentTargets = new();
     public abstract List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false);
 
-    public virtual bool IsUsable(Vector3 sourcePosition)
+    public virtual bool IsUsable(Vector3 targetPosition)
     {
         if (currentCooldown == 0) return true;
         return false;

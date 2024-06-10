@@ -77,7 +77,7 @@ public class PrimaryCursor : MonoBehaviour
             if (anAbilityIsActive)
             {
                 Ability skill = ClickableAbility.Active.Skill;
-                if (skill.IsUsable(PlayerControlledBot.transform.position)
+                if (skill.IsUsable(transform.position)
                 && PlayerControlledBot.AttemptToSpendResource(skill.cost, StatType.ACTION))
                 {
                     StatDisplay.SyncStatDisplay(PlayerControlledBot);
