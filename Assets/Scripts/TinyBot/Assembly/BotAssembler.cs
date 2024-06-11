@@ -102,9 +102,10 @@ public class BotAssembler : MonoBehaviour
         List<Ability> abilities = new();
         foreach (var part in spawnedParts)
         {
-            if(!part.TryGetComponent(out Ability ability)) continue;
-            ability.Initialize(botUnit);
-            abilities.Add(ability);
+            Ability[] partAbilities = part.GetComponents<Ability>();
+            if(partAbilities == null || partAbilities.Length == 0) continue;
+            foreach(var ability in partAbilities) ability.Initialize(botUnit);
+            abilities.AddRange(partAbilities);
         }
 
         return abilities;

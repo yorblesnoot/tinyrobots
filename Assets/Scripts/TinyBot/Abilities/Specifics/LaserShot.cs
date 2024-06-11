@@ -9,8 +9,7 @@ public class LaserShot : LinearAbility
     [SerializeField] TurretTracker turretTracker;
     protected override IEnumerator PerformEffects()
     {
-        List<Vector3> points = CastAlongPoints(targetTrajectory.ToArray(), blockingLayerMask, out var hit);
-        yield return StartCoroutine(LaunchAlongLine(laser, points, travelTime, hit));
+        yield return StartCoroutine(LaunchAlongLine(laser, travelTime));
         NeutralAim();
     }
 

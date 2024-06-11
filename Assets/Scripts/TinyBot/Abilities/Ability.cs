@@ -13,8 +13,8 @@ public abstract class Ability : MonoBehaviour
     public int cooldown = 1;
     public int damage;
     public Sprite icon;
-    
 
+    [HideInInspector] public bool locked;    
     [HideInInspector] public int currentCooldown;
 
     public string[] blockingLayers;

@@ -19,7 +19,7 @@ public class MoveBoost : SelfAbility
         Owner.endedTurn.AddListener(NeutralAim);
         Owner.PrimaryMovement.speedMultiplier = 1.5f;
         Owner.Stats.Current[StatType.MOVEMENT] += Owner.Stats.Max[StatType.MOVEMENT];
-        if (Owner.allegiance == Allegiance.PLAYER) StatDisplay.Update.Invoke();
+        if (Owner.allegiance == Allegiance.PLAYER) TurnResourceCounter.Update.Invoke();
         yield break;
     }
 

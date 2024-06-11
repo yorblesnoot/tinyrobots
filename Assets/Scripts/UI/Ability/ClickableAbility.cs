@@ -31,7 +31,8 @@ public class ClickableAbility : MonoBehaviour
     void HideIfTooExpensive()
     {
         if (Skill == null || Skill.currentCooldown > 0) return;
-        bool unusuable = Skill.cost > UnitControl.PlayerControlledBot.Stats.Current[StatType.ACTION];
+        bool unusuable = Skill.cost > UnitControl.PlayerControlledBot.Stats.Current[StatType.ACTION]
+            || Skill.locked;
         cooldownPanel.gameObject.SetActive(unusuable);
         cooldown.text = "";
     }
@@ -45,7 +46,7 @@ public class ClickableAbility : MonoBehaviour
         Active = null;
     }
 
-    public static void CancelAbility()
+    public static void Cancel()
     {
         if(Active == null) return;
         Active.Skill.NeutralAim();

@@ -2175,7 +2175,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 8.377821, z: -7.408169}
+  m_FollowOffset: {x: 0, y: 5.486722, z: -12.51159}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -3690,6 +3690,12 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1629795479}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &705899608 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5153121383040663928, guid: 6ddbe58ac59410049b1285fbfaf69834,
+    type: 3}
+  m_PrefabInstance: {fileID: 442903197578375128}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &711072395 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 995898288885625350, guid: 55e632b7184416d4c8ebd3533162b908,
@@ -4861,12 +4867,12 @@ MonoBehaviour:
   m_BindingMode: 4
   m_SplineCurvature: 1
   m_Orbits:
-  - m_Height: 9.185596
-    m_Radius: 5.24887
+  - m_Height: 10.86175
+    m_Radius: 6.206654
   - m_Height: 0
-    m_Radius: 11.81019
-  - m_Height: -9.185596
-    m_Radius: 5.24887
+    m_Radius: 13.96526
+  - m_Height: -10.86175
+    m_Radius: 6.206654
   m_LegacyHeadingBias: 3.4028235e+38
   m_Rigs:
   - {fileID: 438095355}
@@ -6504,8 +6510,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1272736895}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.46043962, y: -0.00000003141562, z: 0.000000016295079, w: 0.8876911}
-  m_LocalPosition: {x: 0, y: 10.36828, z: 2.5551605}
+  m_LocalRotation: {x: -0.028831562, y: 2.7562164e-16, z: 7.949908e-18, w: 0.9995843}
+  m_LocalPosition: {x: 0, y: 0, z: -4.829319}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -9415,7 +9421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 8.377821, z: -7.408169}
+  m_FollowOffset: {x: 0, y: 5.486722, z: -12.51159}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -10957,7 +10963,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 4
-  m_FollowOffset: {x: 0, y: 8.377821, z: -7.408169}
+  m_FollowOffset: {x: 0, y: 5.486722, z: -12.51159}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -11259,10 +11265,50 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2419956447974706190, guid: 6ddbe58ac59410049b1285fbfaf69834,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -4.31
+      objectReference: {fileID: 0}
+    - target: {fileID: 2991994915423297627, guid: 6ddbe58ac59410049b1285fbfaf69834,
+        type: 3}
+      propertyPath: carryHeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2991994915423297627, guid: 6ddbe58ac59410049b1285fbfaf69834,
+        type: 3}
+      propertyPath: emissionPoint
+      value: 
+      objectReference: {fileID: 705899608}
+    - target: {fileID: 4154475003743823877, guid: 6ddbe58ac59410049b1285fbfaf69834,
+        type: 3}
+      propertyPath: gravityAccel
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4154475003743823877, guid: 6ddbe58ac59410049b1285fbfaf69834,
+        type: 3}
+      propertyPath: thrownAirTime
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4420275621227971060, guid: 6ddbe58ac59410049b1285fbfaf69834,
         type: 3}
       propertyPath: m_Name
       value: GrabArm
+      objectReference: {fileID: 0}
+    - target: {fileID: 6113042683860170779, guid: 6ddbe58ac59410049b1285fbfaf69834,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6113042683860170779, guid: 6ddbe58ac59410049b1285fbfaf69834,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 6113042683860170779, guid: 6ddbe58ac59410049b1285fbfaf69834,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.03
       objectReference: {fileID: 0}
     - target: {fileID: 6837197245924368795, guid: 6ddbe58ac59410049b1285fbfaf69834,
         type: 3}

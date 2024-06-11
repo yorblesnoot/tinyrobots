@@ -10,8 +10,7 @@ public class GrenadeLob : ParabolicAbility
     [SerializeField] ExplosiveModule explosiveModule;
     protected override IEnumerator PerformEffects()
     {
-        List<Vector3> points = CastAlongPoints(targetTrajectory.ToArray(), blockingLayerMask, out var hit);
-        yield return StartCoroutine(LaunchAlongLine(grenade, points, travelTime, hit));
+        yield return StartCoroutine(LaunchAlongLine(grenade, travelTime));
         NeutralAim();
     }
 

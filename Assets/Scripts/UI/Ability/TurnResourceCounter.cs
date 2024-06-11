@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class StatDisplay : MonoBehaviour
+public class TurnResourceCounter : MonoBehaviour
 {
     [SerializeField] List<Image> abilityPoints;
     [SerializeField] TMP_Text abilityCount;
@@ -52,12 +52,11 @@ public class StatDisplay : MonoBehaviour
     public void UpdateResourceDisplays()
     {
         UpdateAbilityPoints();
-        StartCoroutine(AnimateBar());
+        StartCoroutine(AnimateMoveBar());
     }
 
-    IEnumerator AnimateBar()
+    IEnumerator AnimateMoveBar()
     {
-        
         while(moveSlider.value != currentBot.Stats.Current[StatType.MOVEMENT])
         {
             float newValue = Mathf.Lerp(moveSlider.value, currentBot.Stats.Current[StatType.MOVEMENT], Time.deltaTime);

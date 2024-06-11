@@ -30,13 +30,13 @@ public class PrimaryCursor : MonoBehaviour
     public static TinyBot TargetedBot;
 
     [SerializeField] UnitControl abilityUI;
-    [SerializeField] StatDisplay statDisplay;
+    [SerializeField] TurnResourceCounter statDisplay;
     [SerializeField] LineRenderer pathingLine;
     [SerializeField] LineRenderer redLine;
     [SerializeField] GameObject numRotator;
     [SerializeField] TMP_Text moveCostPreview;
 
-    static StatDisplay StatDisplay;
+    static TurnResourceCounter StatDisplay;
     static UnitControl AbilityUI;
 
     public static bool actionInProgress = false;
@@ -99,13 +99,13 @@ public class PrimaryCursor : MonoBehaviour
                 && !EventSystem.current.IsPointerOverGameObject()
                 && PlayerControlledBot.AttemptToSpendResource(currentPathCost, StatType.MOVEMENT))
             {
-                StatDisplay.Update.Invoke();
+                TurnResourceCounter.Update.Invoke();
                 StartCoroutine(TraversePath());
             }
                 
             
         }
-        else if (Input.GetMouseButtonDown(1)) ClickableAbility.CancelAbility();
+        else if (Input.GetMouseButtonDown(1)) ClickableAbility.Cancel();
 
         //Debug.Log($"active {ActiveBot}, action {actionInProgress}, ability {anAbilityIsActive}");
 

@@ -17,7 +17,7 @@ public class ActionBoost : SelfAbility
         smokeBurst.Play();
         Owner.endedTurn.AddListener(NeutralAim);
         Owner.Stats.Current[StatType.ACTION] += 1;
-        if (Owner.allegiance == Allegiance.PLAYER) StatDisplay.Update.Invoke();
+        if (Owner.allegiance == Allegiance.PLAYER) TurnResourceCounter.Update.Invoke();
         yield break;
     }
 

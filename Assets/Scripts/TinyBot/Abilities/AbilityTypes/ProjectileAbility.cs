@@ -21,9 +21,10 @@ public abstract class ProjectileAbility : Ability
         return hitBots;
     }
 
-    protected IEnumerator LaunchAlongLine(GameObject launched, List<Vector3> trajectory, float travelTime, RaycastHit hit)
+    protected IEnumerator LaunchAlongLine(GameObject launched, float travelTime)
     {
-        GameObject spawned = Instantiate(launched);
+        List<Vector3> trajectory = CastAlongPoints(targetTrajectory.ToArray(), blockingLayerMask, out var hit);
+        GameObject spawned = launched.scene.name == null ? Instantiate(launched) : launched;
         float intervalTime = travelTime / trajectory.Count;
         float timeElapsed;
         spawned.transform.rotation = Quaternion.LookRotation(trajectory[1] - trajectory[0]);

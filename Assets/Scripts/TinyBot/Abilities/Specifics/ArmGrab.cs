@@ -9,11 +9,14 @@ public class ArmGrab : SpatialAbility
     [SerializeField] ArmThrow armThrow;
     [SerializeField] float carryHeight = 1;
     [SerializeField] float armMoveDuration = .5f;
+    [SerializeField] float grabPointDistance = .5f;
     public override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
-        Vector3 direction = target.transform.position - Owner.transform.position;
+        Vector3 rangeLineOrigin = transform.position;
+        Vector3 direction = target.transform.position - rangeLineOrigin;
+        float distance = Vector3.Distance(target.transform.position, rangeLineOrigin);
         direction.Normalize();
-        Vector3 endPoint = Owner.transform.position + direction * range;
+        Vector3 endPoint = rangeLineOrigin + direction * Mathf.Min(range, distance);
         Vector3 targetPosition = Vector3.Lerp(ikTarget.position, endPoint, Time.deltaTime);
         ikTarget.transform.position = targetPosition;
         indicator.transform.position = targetPosition;
@@ -29,11 +32,15 @@ public class ArmGrab : SpatialAbility
     protected override IEnumerator PerformEffects()
     {
         TinyBot target = indicator.GetIntersectingBots()[0];
-        yield return new WaitForSeconds(armMoveDuration);
+        yield return Tween.Position(ikTarget, endValue: target.ChassisPoint.position, duration: armMoveDuration).ToYieldInstruction();
         target.transform.SetParent(emissionPoint.transform, true);
-        Vector3 holdPosition = new(0, carryHeight, 0);
-        Tween.LocalPosition(ikTarget, endValue: holdPosition, duration: armMoveDuration);
+        Vector3 holdPosition = Owner.transform.up * carryHeight;
+        holdPosition += transform.position + Owner.transform.forward;
+        Tween.Position(ikTarget, endValue: holdPosition, duration: armMoveDuration);
+        armThrow.PrepareToThrow(target);
     }
+
+    
 
     public override bool IsUsable(Vector3 targetPosition)
     {
