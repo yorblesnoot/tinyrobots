@@ -53,7 +53,7 @@ public class SpiderCrawl : LegMovement
         if (Physics.Raycast(firstRay, out var hitInfo, anchorDownwardLength, LayerMask.GetMask("Terrain"))
             || Physics.Raycast(secondRay, out hitInfo, secondCastLength, LayerMask.GetMask("Terrain")))
         {
-            return legModel.InverseTransformPoint(hitInfo.point);
+            return hitInfo.point;
         }
         else
         {

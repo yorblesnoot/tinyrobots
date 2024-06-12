@@ -23,7 +23,7 @@ public class BipedalWalk : LegMovement
         Ray ray = new(rayPosition, Vector3.down);
         if (Physics.Raycast(ray, out var hitInfo, anchorDownwardLength, LayerMask.GetMask("Terrain")))
         {
-            return legModel.InverseTransformPoint(hitInfo.point);
+            return hitInfo.point;
         }
         else return default;
     }

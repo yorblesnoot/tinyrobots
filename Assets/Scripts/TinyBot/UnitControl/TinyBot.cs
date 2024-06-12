@@ -138,18 +138,22 @@ public class TinyBot : MonoBehaviour
         if(Stats.Current[StatType.HEALTH] == 0) Die(source);
     }
 
-    public IEnumerator Fall()
+    public IEnumerator Fall(Vector3 velocity = default)
     {
         PhysicsBody.isKinematic = false;
         bool foundLanding = false;
+        PhysicsBody.velocity = velocity;
         while(!foundLanding)
         {
             if(Pathfinder3D.GetLandingPointBy(transform.position, PrimaryMovement.Style, out Vector3Int coords))
             {
+                PhysicsBody.isKinematic = true;
+                //PhysicsBody.velocity = Vector3.zero;
                 foundLanding = true;
-                PhysicsBody.isKinematic = false;
+                Vector3 surfaceNormal = PrimaryMovement.Style == MoveStyle.CRAWL ? Pathfinder3D.GetCrawlOrientation(coords) : Vector3.up;
+                Quaternion rotationTarget = Quaternion.FromToRotation(transform.up, surfaceNormal) * transform.rotation;
                 Tween.Position(transform, endValue: coords, duration: landingDuration).Group(
-                Tween.Rotation(transform, endValue: PrimaryMovement.GetRotationAtPosition(coords), duration: landingDuration))
+                Tween.Rotation(transform, endValue: rotationTarget, duration: landingDuration))
                     .OnComplete(() => PrimaryMovement.NeutralStance());
             }
             yield return null;

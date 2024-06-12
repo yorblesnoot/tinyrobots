@@ -35,12 +35,12 @@ public abstract class ProjectileAbility : Ability
             timeElapsed = 0;
             while (timeElapsed < intervalTime)
             {
-                yield return null;
+                timeElapsed += Time.deltaTime;
                 float interpolator = timeElapsed / intervalTime;
                 spawned.transform.SetPositionAndRotation(Vector3.Lerp(trajectory[i], trajectory[i + 1], interpolator),
                     Quaternion.Slerp(startRotation, targetRotation, interpolator));
-                timeElapsed += Time.deltaTime;
-
+                
+                yield return null;
             }
         }
         CompleteTrajectory(trajectory.Last(), spawned, hit);

@@ -32,6 +32,8 @@ public class ArmGrab : SpatialAbility
     protected override IEnumerator PerformEffects()
     {
         TinyBot target = indicator.GetIntersectingBots()[0];
+        indicator.gameObject.SetActive(false);
+        target.ToggleActiveLayer(true);
         yield return Tween.Position(ikTarget, endValue: target.ChassisPoint.position, duration: armMoveDuration).ToYieldInstruction();
         target.transform.SetParent(emissionPoint.transform, true);
         Vector3 holdPosition = Owner.transform.up * carryHeight;

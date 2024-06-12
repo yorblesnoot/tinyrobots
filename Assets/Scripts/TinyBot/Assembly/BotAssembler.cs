@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class BotAssembler : MonoBehaviour
 {
+    [SerializeField] float botColliderOffset = 1;
     [SerializeField] PortraitGenerator portraitGenerator;
     [SerializeField] BotPalette palette;
     public TinyBot BuildBotFromPartTree(TreeNode<CraftablePart> treeRoot, Allegiance allegiance)
@@ -89,15 +90,17 @@ public class BotAssembler : MonoBehaviour
 
     
 
-    private static void SetBotTallness(PrimaryMovement locomotion, AttachmentPoint initialAttachmentPoint, TinyBot bot)
+    void SetBotTallness(PrimaryMovement locomotion, AttachmentPoint initialAttachmentPoint, TinyBot bot)
     {
         Vector3 chassisPosition = initialAttachmentPoint.transform.localPosition;
         chassisPosition.y = locomotion.chassisHeight;
         initialAttachmentPoint.transform.localPosition = chassisPosition;
-        bot.GetComponent<CapsuleCollider>().center = chassisPosition;
+        Vector3 colliderCenter = chassisPosition;
+        colliderCenter.y -= botColliderOffset;
+        bot.GetComponent<CapsuleCollider>().center = colliderCenter;
     }
 
-    private static List<Ability> GetAbilityList(List<GameObject> spawnedParts, TinyBot botUnit)
+    List<Ability> GetAbilityList(List<GameObject> spawnedParts, TinyBot botUnit)
     {
         List<Ability> abilities = new();
         foreach (var part in spawnedParts)

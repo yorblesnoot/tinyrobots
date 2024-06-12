@@ -86,7 +86,7 @@ public abstract class LegMovement : PrimaryMovement
         if (finalPosition == default) return;
         stepping = true;
         anchor.stepping = true;
-        Tween.LocalPosition(anchor.ikTarget, finalPosition, legStepDuration).OnComplete(() => CompleteStep(anchor));
+        Tween.Position(anchor.ikTarget, finalPosition, legStepDuration).OnComplete(() => CompleteStep(anchor));
     }
 
     private void CompleteStep(Anchor anchor)

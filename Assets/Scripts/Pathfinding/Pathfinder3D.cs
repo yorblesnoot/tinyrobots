@@ -96,7 +96,7 @@ public static class Pathfinder3D
         }
     }
 
-    static bool PointIsOffMap(int x, int y, int z)
+    public static bool PointIsOffMap(int x, int y, int z)
     {
         if (x < 0 || y < 0 || z < 0) return true;
         if (x >= xSize || y >= ySize || z >= zSize) return true;
