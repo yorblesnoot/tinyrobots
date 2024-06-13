@@ -15,30 +15,38 @@ public class HookGrapple : LinearAbility
     private void Start()
     {
         baseHookPosition = hook.transform.localPosition;
+        line.useWorldSpace = true;
     }
     protected override IEnumerator PerformEffects()
     {
         
         List<Vector3> trajectory = CastAlongPoints(targetTrajectory.ToArray(), blockingLayerMask, out var hit);
-        if (hit.collider == null) yield break;
-        Debug.Log("found hit");
+        
         line.positionCount = 2;
         Transform parent = hook.transform.parent;
         hook.transform.SetParent(null, true);
         if (hit.collider.TryGetComponent(out TinyBot bot)) bot.ReceiveDamage(damage, Owner.transform.position, hit.point);
         float intervalTime = travelTime / trajectory.Count;
         yield return StartCoroutine(LaunchWithLine(hook, trajectory, intervalTime));
-        Vector3 backDirection = trajectory[0] - trajectory[1];
-        backDirection.Normalize();
-        backDirection *= backDistance;
-        Vector3 secondTarget = trajectory[1] - backDirection;
-        List<Vector3> secondaryTrajectory = new() { trajectory[0], secondTarget };
-        yield return StartCoroutine(LaunchWithLine(Owner.gameObject, secondaryTrajectory, intervalTime));
+        if (hit.collider != null)
+        {
+            Vector3 backDirection = trajectory[1] - trajectory[0];
+            backDirection.Normalize();
+            backDirection *= backDistance;
+            Vector3 secondTarget = trajectory[1] - backDirection;
+            List<Vector3> secondaryTrajectory = new() { trajectory[0], secondTarget };
+            yield return StartCoroutine(LaunchWithLine(Owner.gameObject, secondaryTrajectory, intervalTime));
+        }
+        else
+        {
+            List<Vector3> reverseTrajectory = new() { hook.transform.position, parent.TransformPoint(baseHookPosition) };
+            yield return StartCoroutine(LaunchWithLine(hook, reverseTrajectory, intervalTime));
+        }
         line.positionCount = 0;
         hook.transform.SetParent(parent);
         hook.transform.localPosition = baseHookPosition;
         NeutralAim();
-        yield return StartCoroutine(Owner.Fall());
+        if(hit.collider != null) yield return StartCoroutine(Owner.Fall());
         
     }
 
@@ -55,7 +63,6 @@ public class HookGrapple : LinearAbility
                 float interpolator = timeElapsed / intervalTime;
                 launched.transform.position = Vector3.Lerp(trajectory[i], trajectory[i + 1], interpolator);
                 Vector3[] linePoints = new Vector3[2] { emissionPoint.transform.position, hook.transform.position };
-                linePoints.DebugContents();
                 line.SetPositions(linePoints);
                 yield return null;
             }

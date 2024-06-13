@@ -42,12 +42,14 @@ public abstract class Ability : MonoBehaviour
     readonly float skillDelay = .5f;
     public IEnumerator Execute()
     {
+        Vector3Int startPosition = Vector3Int.RoundToInt(Owner.transform.position);
         MainCameraControl.ActionPanTo(GetFinalAimPoint());
         currentCooldown = cooldown;
         PrimaryCursor.actionInProgress = true;
         yield return new WaitForSeconds(skillDelay);
         yield return StartCoroutine(PerformEffects());
         PrimaryCursor.actionInProgress = false;
+        if (Vector3Int.RoundToInt(Owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(Owner);
     }
 
     Vector3 GetFinalAimPoint()

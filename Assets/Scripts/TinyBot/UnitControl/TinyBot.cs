@@ -149,7 +149,7 @@ public class TinyBot : MonoBehaviour
             if (Pathfinder3D.PointIsOffMap(cleanPosition.x, cleanPosition.y, cleanPosition.z))
             {
                 Die(transform.position);
-                yield break;
+                foundLanding = true;
             }
             if (Pathfinder3D.GetLandingPointBy(transform.position, PrimaryMovement.Style, out Vector3Int coords))
             {
@@ -165,6 +165,7 @@ public class TinyBot : MonoBehaviour
             
             yield return null;
         }
+        Pathfinder3D.GeneratePathingTree(this);
     }
 
     private void OnMouseEnter()
