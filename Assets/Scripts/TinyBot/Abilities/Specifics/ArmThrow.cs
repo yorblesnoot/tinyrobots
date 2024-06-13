@@ -40,6 +40,7 @@ public class ArmThrow : ParabolicAbility
 
     void EndGrab()
     {
+        animator.SetBool("open", true);
         grabbed.ToggleActiveLayer(false);
         grabbed.transform.SetParent(null, true);
         Owner.endedTurn.RemoveListener(DropGrabbed);
@@ -64,7 +65,8 @@ public class ArmThrow : ParabolicAbility
         NeutralAim();
         float intervalTime = thrownAirTime / targetTrajectory.Count;
         Vector3 displacement = targetTrajectory[^1] - targetTrajectory[^2];
-        StartCoroutine(grabbed.Fall(displacement / intervalTime));
+        yield return StartCoroutine(grabbed.Fall(displacement / intervalTime));
+        Pathfinder3D.EvaluateNodeOccupancy(Owner);
     }
 
     public override void NeutralAim()

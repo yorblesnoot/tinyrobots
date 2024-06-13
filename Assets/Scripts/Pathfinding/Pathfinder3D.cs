@@ -177,7 +177,7 @@ public static class Pathfinder3D
         MoveStyle style = owner.PrimaryMovement.Style;
         Vector3Int startCoords = Vector3Int.RoundToInt(owner.transform.position);
         if (!nodeMap.TryGetValue(startCoords, out Node start)) return;
-        GetNodeOccupancy(owner);
+        EvaluateNodeOccupancy(owner);
 
         HashSet<Node> visited = new();
         foreach (Node node in nodeMap.Values)
@@ -216,7 +216,7 @@ public static class Pathfinder3D
     }
 
     static List<Vector3Int> lastOccupied = new();
-    private static void GetNodeOccupancy(TinyBot owner)
+    public static void EvaluateNodeOccupancy(TinyBot owner)
     {
         if(lastOccupied.Count > 0)
         {

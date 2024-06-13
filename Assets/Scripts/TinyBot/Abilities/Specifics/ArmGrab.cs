@@ -34,6 +34,8 @@ public class ArmGrab : SpatialAbility
         TinyBot target = indicator.GetIntersectingBots()[0];
         indicator.gameObject.SetActive(false);
         target.ToggleActiveLayer(true);
+        animator.SetBool("open", false);
+        Pathfinder3D.EvaluateNodeOccupancy(Owner);
         yield return Tween.Position(ikTarget, endValue: target.ChassisPoint.position, duration: armMoveDuration).ToYieldInstruction();
         target.transform.SetParent(emissionPoint.transform, true);
         Vector3 holdPosition = Owner.transform.up * carryHeight;

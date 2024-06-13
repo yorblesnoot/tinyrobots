@@ -145,7 +145,13 @@ public class TinyBot : MonoBehaviour
         PhysicsBody.velocity = velocity;
         while(!foundLanding)
         {
-            if(Pathfinder3D.GetLandingPointBy(transform.position, PrimaryMovement.Style, out Vector3Int coords))
+            Vector3Int cleanPosition = Vector3Int.RoundToInt(transform.position);
+            if (Pathfinder3D.PointIsOffMap(cleanPosition.x, cleanPosition.y, cleanPosition.z))
+            {
+                Die(transform.position);
+                yield break;
+            }
+            if (Pathfinder3D.GetLandingPointBy(transform.position, PrimaryMovement.Style, out Vector3Int coords))
             {
                 PhysicsBody.isKinematic = true;
                 //PhysicsBody.velocity = Vector3.zero;
@@ -156,6 +162,7 @@ public class TinyBot : MonoBehaviour
                 Tween.Rotation(transform, endValue: rotationTarget, duration: landingDuration))
                     .OnComplete(() => PrimaryMovement.NeutralStance());
             }
+            
             yield return null;
         }
     }
