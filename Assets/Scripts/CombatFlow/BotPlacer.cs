@@ -30,7 +30,7 @@ public class BotPlacer : MonoBehaviour
         SpawnPlayerBots();
         SpawnBotsFromRecords(enemyBots, Allegiance.ENEMY);
 
-        Dictionary<MoveStyle, List<Vector3>> styleNodes = Pathfinder3D.GetStyleNodes();
+        Dictionary<MoveStyle, List<Vector3Int>> styleNodes = Pathfinder3D.GetStyleNodes();
         spawnZones = new();
         SpawnZone.GetSpawnZones.Invoke(this);
 
@@ -44,7 +44,7 @@ public class BotPlacer : MonoBehaviour
         {
             spawnSlots[Allegiance.PLAYER].Add(style, new());
             spawnSlots[Allegiance.ENEMY].Add(style, new());
-            List<Vector3> nodes = styleNodes[style];
+            List<Vector3Int> nodes = styleNodes[style];
             foreach (Vector3 node in nodes)
             {
                 SpawnZone targetZone = spawnZones.Where(zone => Vector3.Distance(node, zone.Position) < zone.Radius).FirstOrDefault();

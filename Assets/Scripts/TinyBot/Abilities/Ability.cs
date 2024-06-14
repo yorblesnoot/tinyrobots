@@ -6,23 +6,26 @@ using UnityEngine;
 
 public abstract class Ability : MonoBehaviour
 {
-    public GameObject emissionPoint;
+    
     public CursorType PreferredCursor;
+    public AbilityType Type;
     public int cost;
     public int range;
     public int cooldown = 1;
     public int damage;
     public Sprite icon;
+    public string[] blockingLayers;
+    public GameObject emissionPoint;
 
     [HideInInspector] public bool locked;    
     [HideInInspector] public int currentCooldown;
+    [HideInInspector] public TinyBot Owner;
 
-    public string[] blockingLayers;
+    
+    GameObject trackedTarget;
+    protected bool playerTargeting;
     protected int blockingLayerMask;
 
-    GameObject trackedTarget;
-    [HideInInspector] public TinyBot Owner;
-    protected bool playerTargeting;
     private void Awake()
     {
         blockingLayerMask = LayerMask.GetMask(blockingLayers);
@@ -118,4 +121,12 @@ public abstract class Ability : MonoBehaviour
         }
         currentTargets = new(newTargets);
     }
-} 
+}
+
+public enum AbilityType
+{
+    ATTACK,
+    BUFF,
+    DASH,
+    SUMMON
+}

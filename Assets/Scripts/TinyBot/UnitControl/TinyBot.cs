@@ -116,7 +116,7 @@ public class TinyBot : MonoBehaviour
         Vector3 hitPush = (transform.position - hitSource).normalized * deathPushMulti;
         foreach(var part in Parts)
         {
-            Rigidbody rigidPart = part.AddComponent<Rigidbody>();
+            if(!part.TryGetComponent(out Rigidbody rigidPart)) rigidPart = part.AddComponent<Rigidbody>();
             Vector3 explodeForce = new(Random.Range(minForce, deathExplodeMaxForce), 
                 Random.Range(minForce, deathExplodeMaxForce), 
                 Random.Range(minForce, deathExplodeMaxForce));
