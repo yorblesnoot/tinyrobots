@@ -398,7 +398,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 54fe99835a0f7514aaf8b4abc2b32a81,
         type: 3}
       propertyPath: m_Layer
-      value: 2
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 54fe99835a0f7514aaf8b4abc2b32a81,
         type: 3}
@@ -483,7 +483,7 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -652,16 +652,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b844cae21ae58440a09432794831c30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emissionPoint: {fileID: 5153121383040663928}
   PreferredCursor: 0
+  Type: 0
   cost: 1
   range: 2
   cooldown: 1
   damage: 0
   icon: {fileID: 21300000, guid: 0e77e93919f1e455dbefa760bc0660de, type: 3}
+  blockingLayers: []
+  emissionPoint: {fileID: 5153121383040663928}
   locked: 0
   currentCooldown: 0
-  blockingLayers: []
   Owner: {fileID: 0}
   ikTarget: {fileID: 2419956447974706190}
   indicator: {fileID: 2936317473077055898}
@@ -682,17 +683,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c64ab2b94e883149887ddaea40501e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  emissionPoint: {fileID: 7519672149628714507}
   PreferredCursor: 0
+  Type: 0
   cost: 1
   range: 10
   cooldown: 1
   damage: 0
   icon: {fileID: 21300000, guid: 64910aa9bb3a74497a5a5dbbe2f5a468, type: 3}
-  locked: 0
-  currentCooldown: 0
   blockingLayers:
   - Terrain
+  emissionPoint: {fileID: 7519672149628714507}
+  locked: 0
+  currentCooldown: 0
   Owner: {fileID: 0}
   parabolaPoints: 10
   gravityAccel: -0.3

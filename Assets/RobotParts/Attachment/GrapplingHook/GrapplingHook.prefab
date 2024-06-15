@@ -883,11 +883,11 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3145039084063412271, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2050468632216818095}
+      addedObject: {fileID: 2108442309565912237}
     - targetCorrespondingSourceObject: {fileID: 3145039084063412271, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2108442309565912237}
+      addedObject: {fileID: 2050468632216818095}
   m_SourcePrefab: {fileID: 100100000, guid: efe31d825ac3a73448c7a58c0e7e6f7f, type: 3}
 --- !u!4 &4521607159603276345 stripped
 Transform:
@@ -907,6 +907,37 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 8552325017676864121}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2108442309565912237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6704340495507720790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 989c6e8297770704db614d0cda15e35c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PreferredCursor: 1
+  Type: 0
+  cost: 1
+  range: 15
+  cooldown: 2
+  damage: 5
+  icon: {fileID: 21300000, guid: d5fc92820481b43a2986103f885cef46, type: 3}
+  blockingLayers:
+  - Default
+  - Terrain
+  emissionPoint: {fileID: 1716039679318861372}
+  locked: 0
+  currentCooldown: 0
+  Owner: {fileID: 0}
+  backDistance: 2
+  travelTime: 1
+  turretTracker: {fileID: 2050468632216818095}
+  line: {fileID: 8709156930818878667}
+  hook: {fileID: 8858788719128827533}
 --- !u!114 &2050468632216818095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -921,33 +952,3 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aimTarget: {fileID: 7557978401156518759}
   slowness: 30
---- !u!114 &2108442309565912237
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6704340495507720790}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 989c6e8297770704db614d0cda15e35c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  emissionPoint: {fileID: 1716039679318861372}
-  PreferredCursor: 1
-  cost: 1
-  range: 15
-  cooldown: 2
-  damage: 5
-  icon: {fileID: 21300000, guid: d5fc92820481b43a2986103f885cef46, type: 3}
-  locked: 0
-  currentCooldown: 0
-  blockingLayers:
-  - Default
-  - Terrain
-  Owner: {fileID: 0}
-  backDistance: 2
-  travelTime: 1
-  turretTracker: {fileID: 2050468632216818095}
-  line: {fileID: 8709156930818878667}
-  hook: {fileID: 8858788719128827533}

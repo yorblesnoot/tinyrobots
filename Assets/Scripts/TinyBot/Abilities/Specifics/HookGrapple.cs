@@ -25,11 +25,12 @@ public class HookGrapple : LinearAbility
         line.positionCount = 2;
         Transform parent = hook.transform.parent;
         hook.transform.SetParent(null, true);
-        if (hit.collider.TryGetComponent(out TinyBot bot)) bot.ReceiveDamage(damage, Owner.transform.position, hit.point);
+        
         float intervalTime = travelTime / trajectory.Count;
         yield return StartCoroutine(LaunchWithLine(hook, trajectory, intervalTime));
         if (hit.collider != null)
         {
+            if (hit.collider.TryGetComponent(out TinyBot bot)) bot.ReceiveDamage(damage, Owner.transform.position, hit.point);
             Vector3 backDirection = trajectory[1] - trajectory[0];
             backDirection.Normalize();
             backDirection *= backDistance;

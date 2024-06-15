@@ -127,6 +127,7 @@ public enum AbilityType
 {
     ATTACK,
     BUFF,
+    SHIELD,
     DASH,
     SUMMON
 }

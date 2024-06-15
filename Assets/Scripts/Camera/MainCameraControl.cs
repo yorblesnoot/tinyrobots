@@ -30,6 +30,7 @@ public class MainCameraControl : MonoBehaviour
         Cams = cams;
         Cams.FocalPoint = transform;
         Instance = this;
+        RestrictCamera(false);
     }
 
     void ConfineCameras(Vector3Int corner)
@@ -201,14 +202,14 @@ public class MainCameraControl : MonoBehaviour
     {
         if (tracking) return;
         tracking = true;
-        freeCameraAvailable = false;
+        RestrictCamera(true);
         Instance.StartCoroutine(TrackTowardsEntity(target));
     }
 
     public static void ReleaseTracking()
     {
         tracking = false;
-        freeCameraAvailable = true;
+        RestrictCamera(false);
     }
 
     static IEnumerator TrackTowardsEntity(Transform target)
@@ -222,7 +223,7 @@ public class MainCameraControl : MonoBehaviour
 
     public static void ActionPanTo(Vector3 target)
     {
-        freeCameraAvailable = false;
+        RestrictCamera(true);
         Instance.StartCoroutine(ActionCut(target, Instance.actionCutDuration));
         
     }
@@ -239,7 +240,7 @@ public class MainCameraControl : MonoBehaviour
             timeElapsed += Time.deltaTime;
             yield return null;
         }
-        freeCameraAvailable = true;
+        RestrictCamera(false);
     }
 
     [System.Serializable]

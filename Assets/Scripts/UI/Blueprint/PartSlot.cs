@@ -30,6 +30,7 @@ public class PartSlot : MonoBehaviour
         }
 
         if(BlueprintControl.ActivePart == null) return;
+        Debug.Log(BlueprintControl.ActivePart.type + " into " + slotType);
         PartType partType = BlueprintControl.ActivePart.type;
         if (partType == slotType) SlotPart();
         else if (partType == PartType.LATERAL)
@@ -88,11 +89,11 @@ public class PartSlot : MonoBehaviour
     public void BuildTree(TreeNode<CraftablePart> parent)
     {
         if (partIdentity == null) partIdentity = empty;
-        TreeNode<CraftablePart> myNode = parent.AddChild(partIdentity);
+        TreeNode<CraftablePart> incomingNode = parent.AddChild(partIdentity);
         if (childSlots == null) return;
         foreach(var slot in childSlots)
         {
-            slot.BuildTree(myNode);
+            slot.BuildTree(incomingNode);
         }
     }
 }

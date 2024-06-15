@@ -29,6 +29,12 @@ public class ArmGrab : SpatialAbility
         indicator.gameObject.SetActive(true);
     }
 
+    public override void ReleaseLockOn()
+    {
+        base.ReleaseLockOn();
+        indicator.gameObject.SetActive(false);
+    }
+
     protected override IEnumerator PerformEffects()
     {
         TinyBot target = indicator.GetIntersectingBots()[0];
