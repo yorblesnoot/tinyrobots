@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class TowerRoom : MonoBehaviour
 {
@@ -36,6 +37,7 @@ public class TowerRoom : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (EventSystem.current.IsPointerOverGameObject()) return;
         associatedZone.ZoneClicked();
     }
 }

@@ -56,6 +56,7 @@ public class BotAI
         Vector3 closestEnemyPosition;
         foreach (TinyBot bot in TurnManager.TurnTakers)
         {
+            if(bot == thisBot) continue;
             if(bot.allegiance == thisBot.allegiance) allies.Add(bot);
             else enemies.Add(bot);
         }
@@ -95,6 +96,7 @@ public class BotAI
         {
             foreach (var ability in dashes)
             {
+                if (AbilityIsUnavailable(ability)) continue;
                 List<Vector3Int> dashLocations = Pathfinder3D.GetCompatibleLocations(thisBot.transform.position, 
                 ability.range, thisBot.PrimaryMovement.Style).Where(x =>
                 {
@@ -138,14 +140,13 @@ public class BotAI
         IEnumerator ShieldPhase()
         {
             shields.Shuffle();
+            if(shields.Count == 0) yield break;
             Ability shield = shields[0];
             if(AbilityIsUnavailable(shield)) yield break;
             Vector3 myPosition = thisBot.transform.position;
-            List<Vector3> averages = new() {
-                enemies.Select(x => x.transform.position - myPosition).ToList().Average(),
-                -allies.Select(x => x.transform.position - myPosition).ToList().Average(),
-                Pathfinder3D.GetCrawlOrientation(Vector3Int.RoundToInt(thisBot.transform.position))
-            };
+            List<Vector3> averages = new() {enemies.Select(x => x.ChassisPoint.position - myPosition).ToList().Average(), 
+                Pathfinder3D.GetCrawlOrientation(Vector3Int.RoundToInt(thisBot.transform.position)) };
+            if (allies.Count > 0) averages.Add(-allies.Select(x => x.ChassisPoint.position - myPosition).ToList().Average());
             Vector3 finalDirection = averages.Average();
             Vector3 finalPosition = myPosition + finalDirection;
             pointer.transform.position = finalPosition;
@@ -187,6 +188,7 @@ public class BotAI
         thisBot.AttemptToSpendResource(ability.cost, StatType.ACTION);
         yield return thisBot.StartCoroutine(ability.Execute());
         ability.ReleaseLockOn();
+        yield return new WaitForSeconds(lockTime);
     }
     #endregion
 
@@ -219,7 +221,7 @@ public class BotAI
     }
     private bool AbilityIsUnavailable(Ability ability)
     {
-        return ability.cost <= thisBot.Stats.Current[StatType.ACTION] || !ability.IsAvailable();
+        return ability.cost > thisBot.Stats.Current[StatType.ACTION] || !ability.IsAvailable();
     }
     Vector3 GunPositionAt(Ability ability, Vector3 position)
     {
