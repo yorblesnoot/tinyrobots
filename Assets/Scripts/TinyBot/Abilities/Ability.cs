@@ -81,8 +81,13 @@ public abstract class Ability : MonoBehaviour
 
     public virtual bool IsUsable(Vector3 targetPosition)
     {
-        if (currentCooldown == 0) return true;
-        return false;
+        return true;
+    }
+
+    public virtual bool IsAvailable()
+    {
+        if (currentCooldown > 0 || locked) return false;
+        return true;
     }
     public virtual void LockOnTo(GameObject target, bool draw)
     {

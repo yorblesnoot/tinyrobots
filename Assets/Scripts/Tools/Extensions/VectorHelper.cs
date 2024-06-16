@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public static class VectorHelper
@@ -15,5 +16,15 @@ public static class VectorHelper
         value.y = Mathf.Clamp(value.y, min.y, max.y);
         value.z = Mathf.Clamp(value.z, min.z, max.z);
         return value;
+    }
+
+    public static Vector3 Average(this IEnumerable<Vector3> vectors)
+    {
+        Vector3 total = Vector3.zero;
+        foreach (var vector in vectors)
+        {
+            total += vector;
+        }
+        return total / vectors.Count();
     }
 }

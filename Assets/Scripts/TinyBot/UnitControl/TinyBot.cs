@@ -165,7 +165,6 @@ public class TinyBot : MonoBehaviour
             
             yield return null;
         }
-        Pathfinder3D.GeneratePathingTree(this);
     }
 
     private void OnMouseEnter()

@@ -47,8 +47,11 @@ public class HookGrapple : LinearAbility
         hook.transform.SetParent(parent);
         hook.transform.localPosition = baseHookPosition;
         NeutralAim();
-        if(hit.collider != null) yield return StartCoroutine(Owner.Fall());
-        
+        if (hit.collider != null)
+        {
+            yield return StartCoroutine(Owner.Fall());
+            Pathfinder3D.GeneratePathingTree(Owner);
+        }
     }
 
     private IEnumerator LaunchWithLine(GameObject launched, List<Vector3> trajectory, float intervalTime)

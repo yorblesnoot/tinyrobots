@@ -9,7 +9,6 @@ public class ArmGrab : SpatialAbility
     [SerializeField] ArmThrow armThrow;
     [SerializeField] float carryHeight = 1;
     [SerializeField] float armMoveDuration = .5f;
-    [SerializeField] float grabPointDistance = .5f;
     public override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
         Vector3 rangeLineOrigin = transform.position;
@@ -54,7 +53,6 @@ public class ArmGrab : SpatialAbility
 
     public override bool IsUsable(Vector3 targetPosition)
     {
-        if(!base.IsUsable(targetPosition)) return false;
         if(indicator.GetIntersectingBots().Count == 0) return false;
         return true;
     }
