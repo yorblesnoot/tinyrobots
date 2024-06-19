@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System;
-using UnityEditor.Playables;
 
 public class BotAI
 {
@@ -56,7 +55,6 @@ public class BotAI
         Vector3 closestEnemyPosition;
         foreach (TinyBot bot in TurnManager.TurnTakers)
         {
-            if(bot == thisBot) continue;
             if(bot.allegiance == thisBot.allegiance) allies.Add(bot);
             else enemies.Add(bot);
         }
@@ -199,15 +197,15 @@ public class BotAI
         if (Physics.CheckSphere(location, terrainCheckSize, terrainMask)) return null;
         Debug.DrawRay(location, Vector3.down, Color.blue, 10f);
 
-        foreach (var playerUnit in targets)
+        foreach (var targetBot in targets)
         {
-            Transform targetPoint = playerUnit.ChassisPoint;
-            if (Vector3.Distance(targetPoint.position, location) > ability.range) continue;
+            Transform targetPoint = targetBot.ChassisPoint;
+            if (ability.range > 0 && Vector3.Distance(targetPoint.position, location) > ability.range) continue;
 
             List<TinyBot> hits = ability.AimAt(targetPoint.gameObject, location, true);
-            if (hits == null || hits.Count == 0 || !hits.Contains(playerUnit)) continue;
+            if (hits == null || hits.Count == 0 || !hits.Contains(targetBot)) continue;
             Debug.DrawRay(location, Vector3.up, Color.yellow, 10f);
-            return playerUnit;
+            return targetBot;
         }
         return null;
     }

@@ -44,7 +44,7 @@ public class UnitSwitcher : MonoBehaviour
         SaveActiveBotToCore();
 
         activeCharacter = charIndex;
-        blueprintControl.originPart = playerData.coreInventory[activeCharacter].corePart;
+        blueprintControl.originPart = playerData.coreInventory[activeCharacter].CorePart;
 
         if (charIndex >= playerData.coreInventory.Count) return;
 

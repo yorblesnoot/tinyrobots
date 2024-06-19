@@ -5,8 +5,7 @@ using UnityEngine;
 public class BotPlacer : MonoBehaviour
 {
     [SerializeField] BotConverter botConverter;
-
-    [SerializeField] List<BotRecord> enemyBots;
+    [SerializeField] List<EnemyEncounter> encounters;
 
     [SerializeField] PlayerData playerData;
     [SerializeField] BotAssembler botAssembler;
@@ -26,14 +25,15 @@ public class BotPlacer : MonoBehaviour
     private void PlaceBotsInSpawnZones()
     {
         List<TinyBot> bots = new();
-
-        SpawnPlayerBots();
-        SpawnBotsFromRecords(enemyBots, Allegiance.ENEMY);
+        bots.AddRange(playerData.coreInventory.Select(core => 
+            SpawnBot(Allegiance.PLAYER, core.bot)));
+        EnemyEncounter encounter = encounters.GrabRandomly(false);
+        List<BotRecord> enemyRecords = encounter.GetSpawnList(playerData.difficulty);
+        bots.AddRange(enemyRecords.Select(record => SpawnBot(Allegiance.ENEMY, record)));
 
         Dictionary<MoveStyle, List<Vector3Int>> styleNodes = Pathfinder3D.GetStyleNodes();
         spawnZones = new();
         SpawnZone.GetSpawnZones.Invoke(this);
-
 
         Dictionary<Allegiance, Dictionary<MoveStyle, List<Vector3>>> spawnSlots = new()
         {
@@ -57,24 +57,6 @@ public class BotPlacer : MonoBehaviour
         {
             MoveStyle style = bot.PrimaryMovement.Style;
             OrientBot(bot, spawnSlots[bot.allegiance][style].GrabRandomly());
-        }
-
-        void SpawnPlayerBots()
-        {
-            foreach(var core in playerData.coreInventory)
-            {
-                bots.Add(SpawnBot(Allegiance.PLAYER, core.bot));
-            }
-        }
-
-
-        void SpawnBotsFromRecords(List<BotRecord> botRecords, Allegiance allegiance)
-        {
-            foreach (var botRecord in botRecords)
-            {
-                TinyBot botUnit = SpawnBot(allegiance, botRecord);
-                bots.Add(botUnit);
-            }
         }
     }
 

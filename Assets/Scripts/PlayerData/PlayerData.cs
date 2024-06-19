@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerData", menuName = "ScriptableObjects/Singletons/PlayerData")]
@@ -11,9 +8,9 @@ public class PlayerData : ScriptableObject
     {
         foreach(BotCore core in coreInventory)
         {
-            if(core.bot == null && core.record != null)
+            if(core.bot == null && core.StarterRecord != null)
             {
-                core.bot = botConverter.StringToBot(core.record.record);
+                core.bot = botConverter.StringToBot(core.StarterRecord.record);
             }
         }
     }
@@ -21,6 +18,7 @@ public class PlayerData : ScriptableObject
     public List<BotCore> coreInventory;
     public List<SavedNavZone> mapData;
     public int zoneLocation;
+    public int difficulty = 3;
 
     [Header("Components")]
     [SerializeField] BotConverter botConverter;

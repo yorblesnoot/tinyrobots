@@ -1,0 +1,34 @@
+- Current PM Version 1.4.1
+- Min Unity Version - 2021.3.33
+
+Release Notes:
+v1.5.0
+- Added a header to the PaletteModifier script that shows the asset name/version and the Unity version of the current project.
+- Added quick access buttons to the documentation/discord server and review page of PM.
+- Fixed an issue with the mouse zoom in the Texture Grid editor. 
+
+v1.4.1:
+- Updated asset folder hierarchy.
+
+v1.4.0:
+- Improved the zoom of the Texture Grid Editor. 
+- Changed the grid colors of the Grid Editor/UV Inspector to improve the visibility when using the Unity dark theme.
+- When creating a new Texture Grid asset and a texture is selected in the Project window, the TG abbreviation will be added at the 
+  end of the name instead of the beginning.
+- Previously when you dragged the canvas in the UV Inspector, you were not allowed to get it out of view. This now no longer the case.
+- Going forward, Unity 2021.3 will be the minimum supported version.
+
+v1.3.0:
+- Added the ability to clear the internal texture data stored in a Texture Grid scriptable object.
+
+v1.2.0:
+- Added the ability to use Palette Modifier with materials that use a custom shader.
+- Fixed an issue that generated errors in the UV Inspector.
+
+v1.1.0:
+- Added a UV Inspector.
+
+v1.0.1:
+- Fixed a bug that generated errors in a build;
+
+v1.0.0 Initial release.

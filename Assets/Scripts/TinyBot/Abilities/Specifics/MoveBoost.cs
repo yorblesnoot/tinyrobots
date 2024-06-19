@@ -1,10 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveBoost : SelfAbility
 {
-
     [SerializeField] Animator animator;
     public override void NeutralAim()
     {

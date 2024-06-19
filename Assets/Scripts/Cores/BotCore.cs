@@ -5,8 +5,17 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BotCore", menuName = "ScriptableObjects/BotCore")]
 public class BotCore : ScriptableObject
 {
-    public CraftablePart corePart;
+    public void Initialize(BotConverter converter)
+    {
+        bot = converter.StringToBot(StarterRecord.record);
+    }
+
     public TreeNode<CraftablePart> bot;
-    public BotRecord record;
+
+    [Header("Characteristics")]
+    public string displayName;
+
+    [field: SerializeField] public BotRecord StarterRecord {  get; private set; }
+    [field: SerializeField] public CraftablePart CorePart { get; private set; }
     //skill tree?
 }
