@@ -34,9 +34,6 @@ public class TinyBot : MonoBehaviour
     [HideInInspector] public UnityEvent endedTurn = new();
 
     public BotStats Stats = new();
-
-    
-
     public static UnityEvent ClearActiveBot = new();
     
 

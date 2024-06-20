@@ -61,14 +61,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfaf7ac76dcc9b346acd76500ff2260a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  battleMap: {fileID: 2870855880228974987, guid: 356ebc69ab223dd4a99db0b786aa8e52,
+    type: 3}
   unitHeight: 1
   revealDuration: 2
-  battleMap: {fileID: 0}
-  playerData: {fileID: 11400000, guid: ecd93be42b3c6b041ba1697eca59d1e5, type: 2}
   unitPosition: {x: 0, y: 0, z: 0}
-  hasBattle: 0
   towerPiece: {fileID: 0}
   zoneIndex: 0
+  zoneEventType: 0
+  zoneEvent: {fileID: 0}
 --- !u!1001 &8783720278699827642
 PrefabInstance:
   m_ObjectHideFlags: 0

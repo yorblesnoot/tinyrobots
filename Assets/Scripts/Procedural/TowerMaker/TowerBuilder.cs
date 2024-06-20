@@ -56,6 +56,9 @@ public class TowerBuilder : MonoBehaviour
         GeneratePieceMap(cornerPieces, corners);
         GeneratePieceMap(bodyPieces, body);
         GeneratePieceMap(sidePieces, sides);
+
+        zoneRooms[path[0].room].zoneEvent = null;
+        zoneRooms[path[0].room].zoneEventType = 0;
     }
 
     void AssignPieceIndices()

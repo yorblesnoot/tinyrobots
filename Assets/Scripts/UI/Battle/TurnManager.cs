@@ -44,6 +44,7 @@ public class TurnManager : MonoBehaviour
 
     public static void RemoveTurnTaker(TinyBot bot)
     {
+        Debug.Log("removed turn taker");
         currentlyActive.Remove(bot);
         if (TurnTakers.IndexOf(bot) < activeIndex) activeIndex--;
         TurnTakers.Remove(bot);

@@ -12,6 +12,7 @@ public class NewGameStarter : MonoBehaviour
 
     public void NewGame()
     {
+        botConverter.Initialize();
         playerData.coreInventory = new();
         foreach (BotCore core in starterCores)
         {

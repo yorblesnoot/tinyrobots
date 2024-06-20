@@ -57,7 +57,7 @@ public class TowerNavZone : MonoBehaviour
     {
         if (revealed) return;
         revealed = true;
-        zoneEvent.Visualize(this);
+        zoneEvent?.Visualize(this);
         float maxDistance = source == unitPosition ? 10 : Vector3.Distance(unitPosition, source) * 2;
         foreach (var renderer in renderers)
         {

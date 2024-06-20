@@ -37,7 +37,7 @@ public class TowerRoom : MonoBehaviour
 
     private void OnMouseDown()
     {
-        //if (EventSystem.current.IsPointerOverGameObject()) return;
+        if (EventSystem.current.IsPointerOverGameObject()) return;
         associatedZone.ZoneClicked();
     }
 }

@@ -30,7 +30,7 @@ public class DropsUI : MonoBehaviour
     void GivePart(CraftablePart part)
     {
         playerData.partInventory.Add(part);
-        Tween sequence = new();
+        Sequence sequence = Sequence.Create();
         foreach(var display in dropDisplays)
         {
             display.group.interactable = false;

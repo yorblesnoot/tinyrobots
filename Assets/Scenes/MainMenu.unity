@@ -1188,6 +1188,7 @@ GameObject:
   - component: {fileID: 757350157}
   - component: {fileID: 757350156}
   - component: {fileID: 757350160}
+  - component: {fileID: 757350161}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -1296,6 +1297,23 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &757350161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 757350155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e471303dd756bc48b463460ccfa9051, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  newGameButton: {fileID: 1364081824}
+  continueButton: {fileID: 1710104439}
+  optionsButton: {fileID: 1447360228}
+  quitButton: {fileID: 2048317338}
+  newGameStarter: {fileID: 1850524710}
 --- !u!1 &837666467
 GameObject:
   m_ObjectHideFlags: 0
@@ -1417,8 +1435,7 @@ MonoBehaviour:
   continueButton: {fileID: 1710104439}
   optionsButton: {fileID: 1447360228}
   quitButton: {fileID: 2048317338}
-  relay: {fileID: 11400000, guid: ae6e43f53999c8e47b5bb43485353f3f, type: 2}
-  loader: {fileID: 488833867}
+  newGameStarter: {fileID: 1850524710}
 --- !u!1 &994833300
 GameObject:
   m_ObjectHideFlags: 0
@@ -2262,6 +2279,88 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1710104437}
   m_CullTransparentMesh: 1
+--- !u!1 &1838807479
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1838807480}
+  m_Layer: 0
+  m_Name: Managers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1838807480
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1838807479}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 235.02501, y: 119.09932, z: 163.47644}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1850524709}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1850524708
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1850524709}
+  - component: {fileID: 1850524710}
+  m_Layer: 0
+  m_Name: NewGame
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1850524709
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850524708}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1838807480}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1850524710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850524708}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e49fa23d663d7d45be4da107697046a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerData: {fileID: 11400000, guid: ecd93be42b3c6b041ba1697eca59d1e5, type: 2}
+  sceneRelay: {fileID: 11400000, guid: ae6e43f53999c8e47b5bb43485353f3f, type: 2}
+  botConverter: {fileID: 11400000, guid: efd80f4536a76904d8f8a1a5b13e844c, type: 2}
+  loader: {fileID: 488833867}
+  starterCores:
+  - {fileID: 11400000, guid: 860feb0d5dc177a488b6a2eb42305b4a, type: 2}
 --- !u!1 &1851248989
 GameObject:
   m_ObjectHideFlags: 0
@@ -3060,3 +3159,4 @@ SceneRoots:
   - {fileID: 375135317}
   - {fileID: 757350159}
   - {fileID: 2117458090}
+  - {fileID: 1838807480}

@@ -14,7 +14,19 @@ public class MainMenu : MonoBehaviour
     
     private void Awake()
     {
-        newGameButton.onClick.AddListener(newGameStarter.NewGame);
-        quitButton.onClick.AddListener(Application.Quit);
+        newGameButton.onClick.RemoveAllListeners();
+        newGameButton.onClick.AddListener(NewGame);
+        quitButton.onClick.AddListener(Quit);
+    }
+
+    void NewGame()
+    {
+        Debug.Log(newGameStarter);
+        newGameStarter.NewGame();
+    }
+
+    void Quit()
+    {
+        Application.Quit();
     }
 }
