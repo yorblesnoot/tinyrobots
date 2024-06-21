@@ -56,7 +56,10 @@ public class MapScanner
             List<DirectedHit> directedHits = GetHitProfile(a, b, castDimension);
 
             directedHits = directedHits.OrderBy(hit => hit.position[castDimension]).ToList();
-
+            foreach (DirectedHit hit in directedHits)
+            {
+                Debug.DrawLine(hit.position, hit.position + rayDirection / 5, hit.front ? Color.green : Color.red, 20f);
+            }
 
             int hitcount = 0;
             for (int c = 0; c < cSize; c++)
@@ -64,19 +67,24 @@ public class MapScanner
                 while (directedHits.Count > 0 && c > directedHits[0].position[castDimension])
                 {
                     hitcount += directedHits[0].front ? 1 : -1;
-                    Debug.DrawLine(directedHits[0].position, directedHits[0].position + rayDirection / 5, directedHits[0].front ? Color.green : Color.red, 20f);
                     directedHits.RemoveAt(0);
                 }
-                bool outside = c < 0 || c >= cSize;
-                if (hitcount > 0 && !outside)
+                
+                if (hitcount > 0)
                 {
-                    Vector3Int coord = Vector3Int.zero;
-                    coord[targetDimensions[0]] = a;
-                    coord[targetDimensions[1]] = b;
-                    coord[castDimension] = c;
-                    outputGrid[coord.x, coord.y, coord.z] = 1;
-                    Debug.DrawLine(coord, coord + rayDirection / 5, Color.blue, 20f);
+                    AssignGridCoord(c);
                 }
+            }
+
+            void AssignGridCoord(int c)
+            {
+                if (c < 0 || c >= cSize) return;
+                Vector3Int coord = Vector3Int.zero;
+                coord[targetDimensions[0]] = a;
+                coord[targetDimensions[1]] = b;
+                coord[castDimension] = c;
+                outputGrid[coord.x, coord.y, coord.z] = 1;
+                Debug.DrawLine(coord, coord + rayDirection / 5, Color.blue, 20f);
             }
         }
         List<DirectedHit> GetHitProfile(int a, int b, int dimension)
@@ -91,6 +99,7 @@ public class MapScanner
             end[dimension] = cSize + margin;
 
 
+#pragma warning disable UNT0028 // Use non-allocating physics APIs
             RaycastHit[] fronts = Physics.RaycastAll(origin, rayDirection, cSize + margin * 2, mask);
             RaycastHit[] backs = Physics.RaycastAll(end, -rayDirection, cSize + margin * 2, mask);
             directedHits.AddRange(ParseHits(fronts, true));
