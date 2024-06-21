@@ -99,7 +99,7 @@ public abstract class Ability : MonoBehaviour
         trackedTarget = null;
         StartCoroutine(Owner.PrimaryMovement.NeutralStance());
         LineMaker.HideLine();
-        HighlightAffectedTargets(null);
+        SetTargets(null);
     }
 
     protected abstract IEnumerator PerformEffects();
@@ -109,16 +109,18 @@ public abstract class Ability : MonoBehaviour
     {
         if (trackedTarget == null) return;
         List<TinyBot> newTargets = AimAt(trackedTarget, emissionPoint.transform.position);
-        if(playerTargeting) HighlightAffectedTargets(newTargets);
+        if(playerTargeting) SetTargets(newTargets);
         Owner.PrimaryMovement.RotateToTrackEntity(trackedTarget);
     }
 
-    private void HighlightAffectedTargets(List<TinyBot> newTargets)
+    private void SetTargets(List<TinyBot> newTargets)
     {
         newTargets ??= new();
-        foreach(TinyBot bot in newTargets)
+        for (int i = 0; i < newTargets.Count; i++)
         {
-            if(!currentTargets.Contains(bot)) bot.SetOutlineColor(Color.red);
+            TinyBot bot = newTargets[i];
+            if (bot == null) newTargets.Remove(bot);
+            else if (!currentTargets.Contains(bot)) bot.SetOutlineColor(Color.red);
         }
         foreach(TinyBot bot in currentTargets)
         {

@@ -118,7 +118,9 @@ public class BotAI
         IEnumerator MovePhase()
         {
             float remainingMove = thisBot.Stats.Current[StatType.MOVEMENT];
-            List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations(Mathf.FloorToInt(remainingMove));
+            List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations();
+            List<Vector3Int> goodLocations = pathableLocations.Where(IsWithinOptimalRange(closestEnemyPosition)).ToList();
+            if (goodLocations.Count > 0) pathableLocations = goodLocations;
             pathableLocations = pathableLocations.OrderBy(DistanceFromOptimalRange(closestEnemyPosition)).ToList();
 
             List<Vector3> path = Pathfinder3D.FindVectorPath(pathableLocations[0], out var moveCosts);
@@ -232,6 +234,11 @@ public class BotAI
     Func<Vector3Int, float> DistanceFromOptimalRange(Vector3 closestEnemyPosition)
     {
         return location => Mathf.Abs(Vector3.Distance(location, closestEnemyPosition) - optimalDistance);
+    }
+
+    Func<Vector3Int, bool> IsWithinOptimalRange(Vector3 closestEnemyPosition)
+    {
+        return location => Vector3.Distance(location, closestEnemyPosition) <= optimalDistance;
     }
     #endregion
 }

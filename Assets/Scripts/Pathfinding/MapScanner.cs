@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MapScanner
 {
-    int xSize, ySize, zSize;
+    int[] sideLengths = new int[3];
     int mask;
 
     readonly int margin = 3;
@@ -20,77 +20,97 @@ public class MapScanner
         mask = LayerMask.GetMask("Terrain");
     }
 
+    readonly int[] dimensions = {0, 1, 2};
     public byte[,,] GetVoxelGrid(GameObject mapObject)
     {
         Vector3Int mapBounds = mapObject.GetComponent<MapBounds>().GetMapSize();
-        Debug.Log(mapBounds);
-        xSize = mapBounds.x;
-        ySize = mapBounds.y;
-        zSize = mapBounds.z;
-        byte[,,] outputGrid = new byte[xSize, ySize, zSize];
-        for (int x = 0; x < xSize; x++)
+        sideLengths[0] = mapBounds.x;
+        sideLengths[1] = mapBounds.y;
+        sideLengths[2] = mapBounds.z;
+        byte[,,] outputGrid = new byte[mapBounds.x, mapBounds.y, mapBounds.z];
+        for (int i = 0; i <= 2; i++)
         {
-            for (int y = 0; y < ySize; y++)
-            {
-                DoubleCastScan(x, y, outputGrid);
-            }
+            ScanDimension(outputGrid, i);
         }
+        
         return outputGrid;
     }
 
-    private void DoubleCastScan(int x, int y, byte[,,] grid)
+    private void ScanDimension(byte[,,] outputGrid, int castDimension)
     {
-        List<DirectedHit> directedHits = GetHitProfile(x, y);
-        bool[] finalProfile = new bool[zSize + 1];
-        foreach (DirectedHit hit in directedHits)
+        List<int> targetDimensions = dimensions.ToList();
+        targetDimensions.Remove(castDimension);
+        int cSize = sideLengths[castDimension];
+        Vector3 rayDirection = Vector3.zero;
+        rayDirection[castDimension] = 1;
+        for (int a = 0; a < sideLengths[targetDimensions[0]]; a++)
         {
-            int snappedZ = Mathf.RoundToInt(hit.position.z);
-            finalProfile[snappedZ] = hit.front;
-            Debug.DrawLine(hit.position, hit.position + Vector3.up / 10, hit.front ? Color.red : Color.yellow, 20f);
+            for (int b = 0; b < sideLengths[targetDimensions[1]]; b++)
+            {
+                DoubleCastScan(a, b);
+            }
         }
 
-        directedHits = directedHits.OrderBy(hit => hit.position.z).ToList();
-
-        int hitcount = 0;
-        for(int z =  0; z < zSize; z++)
+        void DoubleCastScan(int a, int b)
         {
-            while(directedHits.Count > 0 && z > directedHits[0].position.z)
+            List<DirectedHit> directedHits = GetHitProfile(a, b, castDimension);
+
+            directedHits = directedHits.OrderBy(hit => hit.position[castDimension]).ToList();
+
+
+            int hitcount = 0;
+            for (int c = 0; c < cSize; c++)
             {
-                hitcount += directedHits[0].front ? 1 : -1;
-                directedHits.RemoveAt(0);
+                while (directedHits.Count > 0 && c > directedHits[0].position[castDimension])
+                {
+                    hitcount += directedHits[0].front ? 1 : -1;
+                    Debug.DrawLine(directedHits[0].position, directedHits[0].position + rayDirection / 5, directedHits[0].front ? Color.green : Color.red, 20f);
+                    directedHits.RemoveAt(0);
+                }
+                bool outside = c < 0 || c >= cSize;
+                if (hitcount > 0 && !outside)
+                {
+                    Vector3Int coord = Vector3Int.zero;
+                    coord[targetDimensions[0]] = a;
+                    coord[targetDimensions[1]] = b;
+                    coord[castDimension] = c;
+                    outputGrid[coord.x, coord.y, coord.z] = 1;
+                    Debug.DrawLine(coord, coord + rayDirection / 5, Color.blue, 20f);
+                }
             }
-            bool outside = z < 0 || z >= zSize;
-            if (hitcount > 0 && !outside)
+        }
+        List<DirectedHit> GetHitProfile(int a, int b, int dimension)
+        {
+            List<DirectedHit> directedHits = new();
+            Vector3 origin = Vector3.zero;
+            origin[targetDimensions[0]] = a;
+            origin[targetDimensions[1]] = b;
+            origin[dimension] = -margin;
+
+            Vector3 end = origin;
+            end[dimension] = cSize + margin;
+
+
+            RaycastHit[] fronts = Physics.RaycastAll(origin, rayDirection, cSize + margin * 2, mask);
+            RaycastHit[] backs = Physics.RaycastAll(end, -rayDirection, cSize + margin * 2, mask);
+            directedHits.AddRange(ParseHits(fronts, true));
+            directedHits.AddRange(ParseHits(backs, false));
+            return directedHits;
+
+            static List<DirectedHit> ParseHits(RaycastHit[] hits, bool front)
             {
-                grid[x, y, z] = 1;
-                Vector3 debug = new(x, y, z);
-                Debug.DrawLine(debug, debug + Vector3.up/20, Color.blue, 20f);
+                List<DirectedHit> parsed = new();
+                foreach (RaycastHit hit in hits)
+                {
+                    DirectedHit parsedHit = new() { front = front, position = hit.point };
+                    parsed.Add(parsedHit);
+                }
+                return parsed;
             }
         }
     }
 
-    private List<DirectedHit> GetHitProfile(int x, int y)
-    {
-        List<DirectedHit> directedHits = new();
-        Vector3 origin = new(x, y, -margin);
-        Vector3 end = new(x, y, zSize + margin);
-        RaycastHit[] fronts = Physics.RaycastAll(origin, Vector3.forward, zSize, mask);
-        RaycastHit[] backs = Physics.RaycastAll(end, Vector3.back, zSize, mask);
-        directedHits.AddRange(ParseHits(fronts, true));
-        directedHits.AddRange(ParseHits(backs, false));
-        return directedHits;
-
-        static List<DirectedHit> ParseHits(RaycastHit[] hits, bool front)
-        {
-            List<DirectedHit> parsed = new();
-            foreach (RaycastHit hit in hits)
-            {
-                DirectedHit parsedHit = new() { front = front, position = hit.point };
-                parsed.Add(parsedHit);
-            }
-            return parsed;
-        }
-    }
+    
 
     
 }

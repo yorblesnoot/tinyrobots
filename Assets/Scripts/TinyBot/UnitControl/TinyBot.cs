@@ -120,6 +120,7 @@ public class TinyBot : MonoBehaviour
             rigidPart.velocity = explodeForce + hitPush;
         }
         TurnManager.RemoveTurnTaker(this);
+        GetComponent<Collider>().isTrigger = false;
         Destroy(gameObject, 5f);
     }
 
