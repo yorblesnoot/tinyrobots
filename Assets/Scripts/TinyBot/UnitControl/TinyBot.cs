@@ -64,11 +64,10 @@ public class TinyBot : MonoBehaviour
         }
     }
 
-    public bool AttemptToSpendResource(int resource, StatType statType)
+
+    public void SpendResource(int resource, StatType statType)
     {
-        if (resource > Stats.Current[statType]) return false;
         Stats.Current[statType] -= resource;
-        return true;
     }
 
     public void BeginTurn()

@@ -57,10 +57,10 @@ public class PrimaryCursor : MonoBehaviour
 
     Vector3Int lastPosition;
     List<Vector3> currentPath;
-    int currentPathCost;
+    float currentPathCost;
     private void LateUpdate()
     {
-        bool anAbilityIsActive = ClickableAbility.Active != null;
+        bool abilityActive = ClickableAbility.Active != null;
 
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
         if (State == CursorState.FREE) ActiveBehaviour.ControlCursor();
@@ -72,62 +72,63 @@ public class PrimaryCursor : MonoBehaviour
         
         if (Input.GetMouseButtonDown(0))
         {
-            //Debug.Log(EventSystem.current.IsPointerOverGameObject());
-            //ability use
-            if (anAbilityIsActive)
-            {
-                Ability skill = ClickableAbility.Active.Skill;
-                if (skill.IsUsable(transform.position)
-                && PlayerControlledBot.AttemptToSpendResource(skill.cost, StatType.ACTION))
-                {
-                    StatDisplay.SyncStatDisplay(PlayerControlledBot);
-                    
-                    StartCoroutine(UseSkill(skill));
-                    ClickableAbility.Active.UpdateCooldowns();
-                    ClickableAbility.DeactivateSelectedAbility();
-                }
-            }
-            else if (TargetedBot != null)
-            {
-                SelectBot(TargetedBot);
-                HideMovePreview();
-                Unsnap();
-            }
-            //traverse a confirmed path
-            else if (currentPath != null && PlayerControlledBot != null
-                && currentPathCost <= PlayerControlledBot.Stats.Current[StatType.MOVEMENT]
-                && !EventSystem.current.IsPointerOverGameObject()
-                && PlayerControlledBot.AttemptToSpendResource(currentPathCost, StatType.MOVEMENT))
-            {
-                TurnResourceCounter.Update.Invoke();
-                StartCoroutine(TraversePath());
-            }
-                
-            
+            ProcessClick(abilityActive);
         }
         else if (Input.GetMouseButtonDown(1)) ClickableAbility.Cancel();
 
-        //Debug.Log($"active {ActiveBot}, action {actionInProgress}, ability {anAbilityIsActive}");
 
-        //generate new path
         if (PlayerControlledBot != null)
         {
-            bool foundValidSpot = Pathfinder3D.GetLandingPointBy(transform.position, PlayerControlledBot.PrimaryMovement.Style, out Vector3Int currentPosition);
-            //Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
-            if (foundValidSpot && currentPosition != lastPosition)
-            {
-                lastPosition = currentPosition;
-                List<Vector3> possiblePath = Pathfinder3D.FindVectorPath(currentPosition, out List<float> distances);
-                if(possiblePath != null && possiblePath.Count > 0)
-                {
-                    ProcessAndPreviewPath(possiblePath, distances);
-                }                
-            }
+            GenerateMovePreview();
         }
-        //toggle path preview
-        if (PlayerControlledBot == null || anAbilityIsActive)
+        if (PlayerControlledBot == null || abilityActive)
         {
             HideMovePreview();
+        }
+    }
+
+    private void GenerateMovePreview()
+    {
+        bool foundValidSpot = Pathfinder3D.GetLandingPointBy(transform.position, PlayerControlledBot.PrimaryMovement.Style, out Vector3Int currentPosition);
+        //Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
+        if (!foundValidSpot || currentPosition == lastPosition) return;
+
+        lastPosition = currentPosition;
+        List<Vector3> possiblePath = Pathfinder3D.FindVectorPath(currentPosition, out List<float> distances);
+        if (possiblePath == null || possiblePath.Count == 0) return;
+        ProcessAndPreviewPath(possiblePath, distances);
+    }
+
+    private void ProcessClick(bool anAbilityIsActive)
+    {
+        if (EventSystem.current.IsPointerOverGameObject()) return;
+        if (anAbilityIsActive)
+        {
+            Ability skill = ClickableAbility.Active.Skill;
+            if (skill.IsUsable(transform.position)
+            && skill.cost <= PlayerControlledBot.Stats.Current[StatType.ACTION])
+            {
+                PlayerControlledBot.SpendResource(skill.cost, StatType.ACTION);
+                StatDisplay.SyncStatDisplay(PlayerControlledBot);
+
+                StartCoroutine(UseSkill(skill));
+                ClickableAbility.Active.UpdateCooldowns();
+                ClickableAbility.DeactivateSelectedAbility();
+            }
+        }
+        else if (TargetedBot != null)
+        {
+            SelectBot(TargetedBot);
+            HideMovePreview();
+            Unsnap();
+        }
+        //traverse a confirmed path
+        else if (currentPath != null && PlayerControlledBot != null)
+        {
+            if (currentPath.Count == 0) return;
+            PlayerControlledBot.SpendResource(Mathf.CeilToInt(currentPathCost), StatType.MOVEMENT);
+            TurnResourceCounter.Update.Invoke();
+            StartCoroutine(TraversePath());
         }
     }
 
@@ -142,26 +143,36 @@ public class PrimaryCursor : MonoBehaviour
         numRotator.SetActive(true);
         numRotator.transform.SetParent(null);
         numRotator.transform.position = possiblePath[^1];
-        moveCostPreview.text = Mathf.RoundToInt(distances[^1]).ToString() + " ft";
+        moveCostPreview.text = Mathf.CeilToInt(distances[^1]).ToString() + " ft";
         currentPath = new();
         List<Vector3> redPath = new();
         int pathIndex = 0;
         float currentMove = PlayerControlledBot.Stats.Current[StatType.MOVEMENT];
-        while (pathIndex < possiblePath.Count)
+
+        while (pathIndex < possiblePath.Count && distances[pathIndex] < currentMove)
         {
-            float distance = distances[pathIndex];
-            
-            if (distance <= currentMove + 1)
-                currentPath.Add(possiblePath[pathIndex]);
-            if (distance >= currentMove - 1)
-                redPath.Add(possiblePath[pathIndex]);
+            currentPath.Add(possiblePath[pathIndex]);
+            pathIndex++;            
+        }
+        if(pathIndex > 0 && pathIndex < possiblePath.Count)
+        {
+            float extraMove = distances[pathIndex] - currentMove;
+            Vector3 offset = possiblePath[pathIndex] - possiblePath[pathIndex - 1]; 
+            offset.Normalize();
+            Vector3 midPoint = possiblePath[pathIndex - 1] + offset * extraMove;
+            currentPath.Add(midPoint);
+            redPath.Add(midPoint);
+        }
+        while (pathIndex < possiblePath.Count && distances[pathIndex] > currentMove)
+        {
+            redPath.Add(possiblePath[pathIndex]);
             pathIndex++;
         }
-        
+
         pathingLine.positionCount = currentPath.Count;
         pathingLine.SetPositions(currentPath.ToArray());
         
-        currentPathCost = currentPath.Count > 0 ? Mathf.RoundToInt(distances[^1]) : 0;
+        currentPathCost = currentPath.Count > 0 ? distances[^1] : 0;
         redLine.positionCount = redPath.Count;
         redLine.SetPositions(redPath.ToArray());
         moveCostPreview.color = redPath.Count > 0 ? Color.red : Color.white;

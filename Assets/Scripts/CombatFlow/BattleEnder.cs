@@ -8,6 +8,7 @@ public class BattleEnder : MonoBehaviour
     [SerializeField] DropsUI dropsUI;
     public void PlayerWin()
     {
+        if (playerData == null) Debug.LogWarning("No active Navigation Map found.");
         playerData.mapData[playerData.zoneLocation].eventType = 0;
         dropsUI.OfferDrops(() => sceneLoader.Load(SceneType.NAVIGATION));
     }

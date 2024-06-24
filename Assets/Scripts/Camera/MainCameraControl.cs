@@ -190,7 +190,7 @@ public class MainCameraControl : MonoBehaviour
         Cams.Strafe.Priority = 0;
         Cams.Pivot.Priority = 0;
         
-        Cams.FocalPoint.transform.position = bot.transform.position;
+        Cams.FocalPoint.transform.position = bot.ChassisPoint.position;
         Cams.Automatic.m_MinDuration = 0;
         Cams.Brain.ManualUpdate();
         Cams.Automatic.m_MinDuration = 50;

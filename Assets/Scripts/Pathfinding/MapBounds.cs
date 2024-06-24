@@ -16,14 +16,33 @@ public class MapBounds : MonoBehaviour
         return Vector3Int.FloorToInt(outerCorner.position);
     }
 
-    readonly Vector3[] directions = { Vector3.up, Vector3.down, Vector3.back, Vector3.forward, Vector3.left, Vector3.right };
-
     private void OnDrawGizmos()
     {
-        foreach (var direction in directions)
+        if(outerCorner == null) return;
+        Gizmos.color = Color.blue;
+        Vector3[] points = new Vector3[6];
+        List<Vector3> lines = new();
+        for (int i = 0; i < 3; i++)
         {
-            Gizmos.DrawRay(outerCorner.position, direction * 100);
+            points[i] = transform.position;
+            points[i][i] = outerCorner.transform.position[i];
+            lines.Add(transform.position);
+            lines.Add(points[i]);
         }
-        
+        for (int i = 0; i < 3; i++)
+        {
+            int ip = i + 3;
+            points[ip] = outerCorner.transform.position;
+            points[ip][i] = transform.position[i];
+            lines.Add(outerCorner.transform.position);
+            lines.Add(points[ip]);
+        }
+        lines.Add(points[0]); lines.Add(points[5]);
+        lines.Add(points[0]); lines.Add(points[4]);
+        lines.Add(points[1]); lines.Add(points[5]);
+        lines.Add(points[1]); lines.Add(points[3]);
+        lines.Add(points[2]); lines.Add(points[3]);
+        lines.Add(points[2]); lines.Add(points[4]);
+        Gizmos.DrawLineList(lines.ToArray());
     }
 }

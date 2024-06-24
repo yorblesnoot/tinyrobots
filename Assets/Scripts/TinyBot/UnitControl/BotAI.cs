@@ -131,7 +131,7 @@ public class BotAI
             path = path.Take(endIndex).ToList();
             if (path.Count == 0) yield break;
 
-            thisBot.AttemptToSpendResource(Mathf.RoundToInt(moveCosts[endIndex]), StatType.MOVEMENT);
+            thisBot.SpendResource(Mathf.RoundToInt(moveCosts[endIndex]), StatType.MOVEMENT);
 
             yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.TraversePath(path));
             yield return ShieldPhase();
@@ -176,7 +176,7 @@ public class BotAI
         if (moveRequired)
         {
             List<Vector3> path = Pathfinder3D.FindVectorPath(location, out var moveCosts);
-            thisBot.AttemptToSpendResource(Mathf.RoundToInt(moveCosts[^1]), StatType.MOVEMENT);
+            thisBot.SpendResource(Mathf.RoundToInt(moveCosts[^1]), StatType.MOVEMENT);
             yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.TraversePath(path));
             Pathfinder3D.GeneratePathingTree(thisBot);
         }
@@ -185,7 +185,7 @@ public class BotAI
     {
         ability.LockOnTo(target, false);
         yield return new WaitForSeconds(lockTime);
-        thisBot.AttemptToSpendResource(ability.cost, StatType.ACTION);
+        thisBot.SpendResource(ability.cost, StatType.ACTION);
         yield return thisBot.StartCoroutine(ability.Execute());
         ability.ReleaseLockOn();
         yield return new WaitForSeconds(lockTime);
