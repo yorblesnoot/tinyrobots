@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SpatialTargeter : MonoBehaviour
@@ -12,7 +13,7 @@ public class SpatialTargeter : MonoBehaviour
 
     public List<TinyBot> GetIntersectingBots()
     {
-        return new(intersectingBots);
+        return new(intersectingBots.Where(bot => bot != null));
     }
     private void OnTriggerEnter(Collider other)
     {

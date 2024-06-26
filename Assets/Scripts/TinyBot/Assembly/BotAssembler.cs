@@ -52,14 +52,12 @@ public class BotAssembler : MonoBehaviour
                     palette.RecolorPart(renderer, allegiance);
                 }
             }
-
-            //if we've placed the primary movement part, flag it for rearrangement
-            if (currentNode.Value.primaryLocomotion) locomotion = spawned.GetComponent<PrimaryMovement>();
             spawnedParts.Add(spawned);
 
             spawned.transform.SetParent(attachmentPoint.transform, false);
             spawned.transform.localRotation = Quaternion.identity;
 
+            if (currentNode.Value.primaryLocomotion) locomotion = spawned.GetComponent<PrimaryMovement>();
             List<TreeNode<CraftablePart>> children = currentNode.Children;
             AttachmentPoint[] attachmentPoints = spawned.GetComponentsInChildren<AttachmentPoint>();
 

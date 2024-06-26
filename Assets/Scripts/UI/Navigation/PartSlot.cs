@@ -1,26 +1,34 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class PartSlot : MonoBehaviour
 {
-    [SerializeField] Button slotButton;
+    [SerializeField] Animator slotAnimator;
     [SerializeField] GameObject activeIndicator;
-    [SerializeField] TMP_Text activePartName;
+    //[SerializeField] TMP_Text activePartName;
     [SerializeField] CraftablePart empty;
-    [SerializeField] float diagramScaling = 300;
+    [SerializeField] float cameraApproachDistance = 3f;
 
-    public PartType slotType;
+    [HideInInspector] public AttachmentPoint attachmentPoint;
+    GameObject mockup;
 
     CraftablePart partIdentity;
     PartSlot[] childSlots;
-    
-
-    private void Awake()
+    readonly string contract = "contract";
+    private void Start()
     {
-        slotButton.onClick.AddListener(CheckToActivate);
+        Vector3 camPosition = Camera.main.transform.position;
+        activeIndicator.transform.LookAt(camPosition);
+        Vector3 direction = transform.forward;
+        direction.Normalize();
+        direction *= cameraApproachDistance;
+        activeIndicator.transform.position += direction;
     }
-
+    private void OnMouseDown()
+    {
+        Debug.Log("clicked");
+        CheckToActivate();
+    }
     void CheckToActivate()
     {
         if (partIdentity != null)
@@ -29,6 +37,7 @@ public class PartSlot : MonoBehaviour
             return;
         }
 
+        PartType slotType = attachmentPoint == null ? PartType.CHASSIS : attachmentPoint.SlotType;
         if(BlueprintControl.ActivePart == null) return;
         Debug.Log(BlueprintControl.ActivePart.type + " into " + slotType);
         PartType partType = BlueprintControl.ActivePart.type;
@@ -47,12 +56,14 @@ public class PartSlot : MonoBehaviour
 
     public void ClearPartIdentity(bool destroy, bool toInventory)
     {
+        slotAnimator.SetBool(contract, false);
         if (partIdentity != null)
         {
             if(toInventory) BlueprintControl.ReturnPart(partIdentity);
+            Destroy(mockup);
             partIdentity = null;
-            activeIndicator.SetActive(false);
-            activePartName.text = "";
+            //activeIndicator.SetActive(false);
+            //activePartName.text = "";
 
             if (childSlots != null)
             {
@@ -64,23 +75,42 @@ public class PartSlot : MonoBehaviour
             }
         }
 
-        if (destroy) Destroy(gameObject);
+        if (destroy)
+        {
+            
+            Destroy(gameObject);
+        }
     }
 
     public PartSlot[] SetPartIdentity(CraftablePart part)
     {
-        childSlots = new PartSlot[part.attachmentPoints.Length];
-        partIdentity = part;
-        activeIndicator.SetActive(true);
-        activePartName.text = part.name;
-
-        for (int i = 0; i < part.attachmentPoints.Length; i++)
+        slotAnimator.SetBool(contract, true);
+        mockup = Instantiate(part.attachableObject);
+        Animator partAnimator = mockup.GetComponentInChildren<Animator>();
+        if (partAnimator != null) partAnimator.speed = 0;
+        PartModifier modifier = mockup.GetComponent<PartModifier>();
+        if (modifier.mainRenderers != null)
         {
-            GameObject spawned = Instantiate(BlueprintControl.NewSlot);
-            spawned.transform.SetParent(transform, false);
-            spawned.transform.localPosition = part.slotPositions[i] * diagramScaling;
-            childSlots[i] = spawned.GetComponent<PartSlot>();
-            childSlots[i].slotType = part.attachmentPoints[i].SlotType;
+            foreach (Renderer renderer in modifier.mainRenderers)
+            {
+                //palette.RecolorPart(renderer, allegiance);
+            }
+        }
+
+        mockup.transform.SetParent(attachmentPoint == null ? transform : attachmentPoint.transform, false);
+        mockup.transform.localRotation = Quaternion.identity;
+        AttachmentPoint[] attachmentPoints = mockup.GetComponentsInChildren<AttachmentPoint>();
+        partIdentity = part;
+        //activeIndicator.SetActive(true);
+        //activePartName.text = part.name;
+
+        childSlots = new PartSlot[attachmentPoints.Length];
+        for (int i = 0; i < attachmentPoints.Length; i++)
+        {
+            GameObject slot = Instantiate(BlueprintControl.NewSlot);
+            slot.transform.position = attachmentPoints[i].transform.position;
+            childSlots[i] = slot.GetComponent<PartSlot>();
+            childSlots[i].attachmentPoint = attachmentPoints[i];
         }
 
         return childSlots;
