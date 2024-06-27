@@ -15,18 +15,15 @@ public class PartSlot : MonoBehaviour
     CraftablePart partIdentity;
     PartSlot[] childSlots;
     readonly string contract = "contract";
-    private void Start()
+    private void OnEnable()
     {
-        Vector3 camPosition = Camera.main.transform.position;
-        activeIndicator.transform.LookAt(camPosition);
-        Vector3 direction = transform.forward;
-        direction.Normalize();
-        direction *= cameraApproachDistance;
-        activeIndicator.transform.position += direction;
+        activeIndicator.transform.localPosition = Vector3.zero;
+        Vector3 towardsCamera = -BlueprintControl.GetCameraForward();
+        activeIndicator.transform.SetPositionAndRotation(transform.position + towardsCamera * cameraApproachDistance, 
+            Quaternion.LookRotation(towardsCamera));
     }
     private void OnMouseDown()
     {
-        Debug.Log("clicked");
         CheckToActivate();
     }
     void CheckToActivate()
@@ -56,7 +53,7 @@ public class PartSlot : MonoBehaviour
 
     public void ClearPartIdentity(bool destroy, bool toInventory)
     {
-        slotAnimator.SetBool(contract, false);
+        if(slotAnimator != null) slotAnimator.SetBool(contract, false);
         if (partIdentity != null)
         {
             if(toInventory) BlueprintControl.ReturnPart(partIdentity);

@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,10 +13,21 @@ public class BlueprintControl : MonoBehaviour
     [SerializeField] PlayerData playerData;
     [SerializeField] List<ListedPart> partDisplays;
     public PartSlot OriginSlot;
+    
 
     static BlueprintControl Instance;
     static List<CraftablePart> partInventory;
     HashSet<CraftablePart> initializedParts = new();
+    [SerializeField] CinemachineVirtualCamera craftCam;
+    private void OnEnable()
+    {
+        craftCam.Priority = 100;
+    }
+
+    private void OnDisable()
+    {
+        craftCam.Priority = 0;
+    }
 
     public static void SetActivePart(CraftablePart part)
     {
@@ -36,7 +48,7 @@ public class BlueprintControl : MonoBehaviour
         Instance.UpdatePartDisplays();
     }
 
-    private void Awake()
+    public void Initialize()
     {
         Instance = this;
         partInventory = playerData.partInventory;
@@ -75,5 +87,8 @@ public class BlueprintControl : MonoBehaviour
         return partTree;
     }
 
-
+    public static Vector3 GetCameraForward()
+    {
+        return Instance.craftCam.transform.forward;
+    }
 }

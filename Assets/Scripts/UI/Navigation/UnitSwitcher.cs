@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -9,29 +10,27 @@ public class UnitSwitcher : MonoBehaviour
     [SerializeField] BlueprintControl blueprintControl;
     [SerializeField] PlayerData playerData;
     [SerializeField] CraftablePart empty;
-    [SerializeField] Button exitButton;
 
     int activeCharacter = -1;
 
     private void Awake()
     {
-        exitButton?.onClick.AddListener(ExitCraftScreen);
-    }
-    private void Start()
-    {
         playerData.LoadRecords();
-        for(int i = 0; i < playerData.coreInventory.Count; i++)
+        for (int i = 0; i < playerData.coreInventory.Count; i++)
         {
             GameObject spawned = Instantiate(unitTab, transform);
             AssignSwitch(i, spawned.GetComponentInChildren<Button>());
         }
+    }
+    private void OnEnable()
+    {
         SwitchCharacter(0);
     }
 
-    void ExitCraftScreen()
+    private void OnDisable()
     {
         SaveActiveBotToCore();
-        blueprintControl.gameObject.SetActive(false);
+        activeCharacter = -1;
     }
 
     void AssignSwitch(int index, Button button)
@@ -41,6 +40,7 @@ public class UnitSwitcher : MonoBehaviour
 
     void SwitchCharacter(int charIndex)
     {
+        if (charIndex == activeCharacter) return;
         SaveActiveBotToCore();
 
         activeCharacter = charIndex;
@@ -54,12 +54,11 @@ public class UnitSwitcher : MonoBehaviour
 
     private void SaveActiveBotToCore()
     {
-        if (activeCharacter >= 0)
-        {
-            TreeNode<CraftablePart> bot = blueprintControl.BuildBot();
-            playerData.coreInventory[activeCharacter].bot = bot;
-            blueprintControl.OriginSlot.ClearPartIdentity(false, false);
-        }
+        if (activeCharacter < 0) return;
+
+        TreeNode<CraftablePart> bot = blueprintControl.BuildBot();
+        playerData.coreInventory[activeCharacter].bot = bot;
+        blueprintControl.OriginSlot.ClearPartIdentity(false, false);
     }
 
     void PlacePartsInSlots(TreeNode<CraftablePart> node, PartSlot slot)
