@@ -12,7 +12,7 @@ public class PartSlot : MonoBehaviour
     [HideInInspector] public AttachmentPoint attachmentPoint;
     GameObject mockup;
 
-    CraftablePart partIdentity;
+    ModdedPart partIdentity;
     PartSlot[] childSlots;
     readonly string contract = "contract";
     private void OnEnable()
@@ -34,14 +34,14 @@ public class PartSlot : MonoBehaviour
             return;
         }
 
-        PartType slotType = attachmentPoint == null ? PartType.CHASSIS : attachmentPoint.SlotType;
+        SlotType slotType = attachmentPoint == null ? SlotType.CHASSIS : attachmentPoint.SlotType;
         if(BlueprintControl.ActivePart == null) return;
-        Debug.Log(BlueprintControl.ActivePart.type + " into " + slotType);
-        PartType partType = BlueprintControl.ActivePart.type;
+        Debug.Log(BlueprintControl.ActivePart.BasePart.Type + " into " + slotType);
+        SlotType partType = BlueprintControl.ActivePart.BasePart.Type;
         if (partType == slotType) SlotPart();
-        else if (partType == PartType.LATERAL)
+        else if (partType == SlotType.LATERAL)
         {
-            if (slotType == PartType.UPPER || slotType == PartType.LOWER) SlotPart();
+            if (slotType == SlotType.UPPER || slotType == SlotType.LOWER) SlotPart();
         }
     }
 
@@ -79,10 +79,10 @@ public class PartSlot : MonoBehaviour
         }
     }
 
-    public PartSlot[] SetPartIdentity(CraftablePart part)
+    public PartSlot[] SetPartIdentity(ModdedPart part)
     {
         slotAnimator.SetBool(contract, true);
-        mockup = Instantiate(part.attachableObject);
+        mockup = Instantiate(part.BasePart.AttachableObject);
         Animator partAnimator = mockup.GetComponentInChildren<Animator>();
         if (partAnimator != null) partAnimator.speed = 0;
         PartModifier modifier = mockup.GetComponent<PartModifier>();
@@ -113,10 +113,10 @@ public class PartSlot : MonoBehaviour
         return childSlots;
     }
 
-    public void BuildTree(TreeNode<CraftablePart> parent)
+    public void BuildTree(TreeNode<ModdedPart> parent)
     {
-        if (partIdentity == null) partIdentity = empty;
-        TreeNode<CraftablePart> incomingNode = parent.AddChild(partIdentity);
+        partIdentity ??= new(empty);
+        TreeNode<ModdedPart> incomingNode = parent.AddChild(partIdentity);
         if (childSlots == null) return;
         foreach(var slot in childSlots)
         {

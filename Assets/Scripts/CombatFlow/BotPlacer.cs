@@ -78,7 +78,7 @@ public class BotPlacer : MonoBehaviour
         return SpawnBot(allegiance, tree);
     }
 
-    public TinyBot SpawnBot(Allegiance allegiance, TreeNode<CraftablePart> tree)
+    public TinyBot SpawnBot(Allegiance allegiance, TreeNode<ModdedPart> tree)
     {
         TinyBot botUnit = botAssembler.BuildBotFromPartTree(tree, allegiance);
         botUnit.allegiance = allegiance;

@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class BlueprintControl : MonoBehaviour
 {
-    public static CraftablePart ActivePart;
+    public static ModdedPart ActivePart;
     public static GameObject NewSlot;
-    [HideInInspector] public CraftablePart originPart;
+    [HideInInspector] public ModdedPart originPart;
 
     [SerializeField] GameObject newSlot;
     [SerializeField] PlayerData playerData;
@@ -16,8 +16,8 @@ public class BlueprintControl : MonoBehaviour
     
 
     static BlueprintControl Instance;
-    static List<CraftablePart> partInventory;
-    HashSet<CraftablePart> initializedParts = new();
+    static List<ModdedPart> partInventory;
+    HashSet<ModdedPart> initializedParts = new();
     [SerializeField] CinemachineVirtualCamera craftCam;
     private void OnEnable()
     {
@@ -29,7 +29,7 @@ public class BlueprintControl : MonoBehaviour
         craftCam.Priority = 0;
     }
 
-    public static void SetActivePart(CraftablePart part)
+    public static void SetActivePart(ModdedPart part)
     {
         ActivePart = part;
     }
@@ -42,7 +42,7 @@ public class BlueprintControl : MonoBehaviour
         Instance.UpdatePartDisplays();
     }
 
-    public static void ReturnPart(CraftablePart part)
+    public static void ReturnPart(ModdedPart part)
     {
         partInventory.Add(part);
         Instance.UpdatePartDisplays();
@@ -78,9 +78,9 @@ public class BlueprintControl : MonoBehaviour
         for(int i = playerData.partInventory.Count; i < partDisplays.Count; i++) partDisplays[i].gameObject.SetActive(false);
     }
 
-    public TreeNode<CraftablePart> BuildBot()
+    public TreeNode<ModdedPart> BuildBot()
     {
-        TreeNode<CraftablePart> partTree = new(originPart);
+        TreeNode<ModdedPart> partTree = new(originPart);
         OriginSlot.BuildTree(partTree);
         
         GUIUtility.systemCopyBuffer = BotConverter.BotToString(partTree);

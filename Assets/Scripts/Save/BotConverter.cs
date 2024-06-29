@@ -1,24 +1,32 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "BotConverter", menuName = "ScriptableObjects/Singletons/BotConverter")]
 public class BotConverter : ScriptableObject
 {
-    public List<CraftablePart> parts;
+    public List<CraftablePart> PartLibrary;
+    public List<PartMutator> MutatorLibrary;
     Dictionary<string, CraftablePart> partMap;
+    Dictionary<string, PartMutator> mutatorMap;
 
     public void Initialize()
     {
         BuildPartMap();
     }
-    public static string BotToString(TreeNode<CraftablePart> botTreeOriginNode)
+    public static string BotToString(TreeNode<ModdedPart> botTreeOriginNode)
     {
         string output = "";
         ConvertNode(botTreeOriginNode);
 
-        void ConvertNode(TreeNode<CraftablePart> node)
+        void ConvertNode(TreeNode<ModdedPart> node)
         {
-            output += node.Value.Id;
+            output += node.Value.BasePart.Id;
+            foreach(var mutator in node.Value.Mutators)
+            {
+                output += "!";
+                output += mutator.Id;
+            }
             if (node.Children.Count == 0) return;
             output += "{";
             foreach (var child in node.Children)
@@ -32,15 +40,15 @@ public class BotConverter : ScriptableObject
     }
 
     readonly int guidSkip = 36;
-    public TreeNode<CraftablePart> StringToBot(string input)
+    public TreeNode<ModdedPart> StringToBot(string input)
     {
         if (partMap == null) Initialize();
         string guid = input[..guidSkip];
 
-        TreeNode<CraftablePart> output = new(partMap[guid]);
-        TreeNode<CraftablePart> last = output;
+        TreeNode<ModdedPart> output = new(new(partMap[guid]));
+        TreeNode<ModdedPart> last = output;
 
-        Stack<TreeNode<CraftablePart>> depthRecord = new();
+        Stack<TreeNode<ModdedPart>> depthRecord = new();
         
         int textCursor = guidSkip;
         while (textCursor < input.Length)
@@ -57,21 +65,34 @@ public class BotConverter : ScriptableObject
             }
             else
             {
-                string sub = input.Substring(textCursor, guidSkip);
-                last = depthRecord.Peek().AddChild(partMap[sub]);
-                textCursor += guidSkip;
+                textCursor = GetPartFromSequence(input, textCursor, out var modPart);
+                last = depthRecord.Peek().AddChild(modPart);
             }
         }
         return output;
     }
 
+    int GetPartFromSequence(string input, int textCursor, out ModdedPart modPart)
+    {
+        string sub = input.Substring(textCursor, guidSkip);
+        modPart = new(partMap[sub]);
+        textCursor += guidSkip;
+        while(input[textCursor] == '!')
+        {
+            textCursor++;
+            string modSub = input.Substring(textCursor, guidSkip);
+            PartMutator mutator = mutatorMap[modSub];
+            modPart.Mutators.Add(mutator);
+            textCursor += guidSkip;
+        }
+        modPart.MutatePart();
+        return textCursor;
+    }
+
     void BuildPartMap()
     {
-        partMap = new();
-        foreach (var part in parts)
-        {
-            partMap.Add(part.Id, part);
-        }
+        partMap = PartLibrary.ToDictionary(p => p.Id, p => p);
+        mutatorMap = MutatorLibrary.ToDictionary(m => m.Id, m => m);    
     }
 
 

@@ -14,7 +14,7 @@ public class PlayerData : ScriptableObject
             }
         }
     }
-    public List<CraftablePart> partInventory;
+    public List<ModdedPart> partInventory;
     public List<BotCore> coreInventory;
     public List<SavedNavZone> mapData;
     public int zoneLocation;

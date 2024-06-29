@@ -44,7 +44,7 @@ public class UnitSwitcher : MonoBehaviour
         SaveActiveBotToCore();
 
         activeCharacter = charIndex;
-        blueprintControl.originPart = playerData.coreInventory[activeCharacter].CorePart;
+        blueprintControl.originPart = new(playerData.coreInventory[activeCharacter].CorePart);
 
         if (charIndex >= playerData.coreInventory.Count) return;
 
@@ -56,14 +56,14 @@ public class UnitSwitcher : MonoBehaviour
     {
         if (activeCharacter < 0) return;
 
-        TreeNode<CraftablePart> bot = blueprintControl.BuildBot();
+        TreeNode<ModdedPart> bot = blueprintControl.BuildBot();
         playerData.coreInventory[activeCharacter].bot = bot;
         blueprintControl.OriginSlot.ClearPartIdentity(false, false);
     }
 
-    void PlacePartsInSlots(TreeNode<CraftablePart> node, PartSlot slot)
+    void PlacePartsInSlots(TreeNode<ModdedPart> node, PartSlot slot)
     {
-        if(node.Value == empty) return;
+        if(node.Value.BasePart == empty) return;
         PartSlot[] childSlots = slot.SetPartIdentity(node.Value);
         if(childSlots == null || childSlots.Length == 0) return;
         for(int i = 0; i < childSlots.Length; i++)

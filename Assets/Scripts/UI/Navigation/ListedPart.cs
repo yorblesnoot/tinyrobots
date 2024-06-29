@@ -16,17 +16,17 @@ public class ListedPart : MonoBehaviour
 
     [HideInInspector] public CanvasGroup group;
 
-    public CraftablePart partIdentity {get; private set;}
+    public ModdedPart PartIdentity {get; private set;}
 
     public static UnityEvent resetActivation = new();
 
-    UnityAction<CraftablePart> submitPartCallback;
-    public void InitializeDisplay(CraftablePart part, UnityAction<CraftablePart> activationCallback)
+    UnityAction<ModdedPart> submitPartCallback;
+    public void InitializeDisplay(ModdedPart part, UnityAction<ModdedPart> activationCallback)
     {
         group = GetComponent<CanvasGroup>();
         submitPartCallback = activationCallback;
-        partIdentity = part;
-        nameDisplay.text = part.name;
+        PartIdentity = part;
+        nameDisplay.text = part.BasePart.name;
         selectButton.onClick.RemoveAllListeners();
         selectButton.onClick.AddListener(BecomeActive);
         resetActivation.AddListener(BecomeInactive);
@@ -41,14 +41,14 @@ public class ListedPart : MonoBehaviour
             }
             else statDisplays[i].Hide();
         }
-        weightDisplay.text = part.weight.ToString();
+        weightDisplay.text = part.Weight.ToString();
     }
 
     void BecomeActive()
     {
         resetActivation.Invoke();
         buttonImage.color = activeColor;
-        submitPartCallback(partIdentity);
+        submitPartCallback(PartIdentity);
     }
 
     void BecomeInactive()

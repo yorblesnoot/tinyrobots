@@ -10,7 +10,7 @@ public class BotCore : ScriptableObject
         bot = converter.StringToBot(StarterRecord.record);
     }
 
-    public TreeNode<CraftablePart> bot;
+    public TreeNode<ModdedPart> bot;
 
     [Header("Characteristics")]
     public string displayName;

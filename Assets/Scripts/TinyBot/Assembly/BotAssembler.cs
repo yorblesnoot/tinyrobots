@@ -6,7 +6,7 @@ public class BotAssembler : MonoBehaviour
     [SerializeField] float botColliderOffset = 1;
     [SerializeField] PortraitGenerator portraitGenerator;
     [SerializeField] BotPalette palette;
-    public TinyBot BuildBotFromPartTree(TreeNode<CraftablePart> treeRoot, Allegiance allegiance)
+    public TinyBot BuildBotFromPartTree(TreeNode<ModdedPart> treeRoot, Allegiance allegiance)
     {
         PrimaryMovement locomotion = null;
         AttachmentPoint initialAttachmentPoint;
@@ -27,12 +27,12 @@ public class BotAssembler : MonoBehaviour
 
         return botUnit;
 
-        GameObject DeployOrigin(TreeNode<CraftablePart> treeRoot)
+        GameObject DeployOrigin(TreeNode<ModdedPart> treeRoot)
         {
-            GameObject spawned = Instantiate(treeRoot.Value.attachableObject);
+            GameObject spawned = Instantiate(treeRoot.Value.BasePart.AttachableObject);
             AddPartStats(treeRoot.Value);
             spawnedParts = new() { spawned };
-            List<TreeNode<CraftablePart>> children = treeRoot.Children;
+            List<TreeNode<ModdedPart>> children = treeRoot.Children;
             AttachmentPoint[] attachmentPoints = spawned.GetComponentsInChildren<AttachmentPoint>();
             initialAttachmentPoint = attachmentPoints[0];
             RecursiveConstruction(children[0], initialAttachmentPoint);
@@ -40,9 +40,9 @@ public class BotAssembler : MonoBehaviour
             return spawned;
         }
 
-        void RecursiveConstruction(TreeNode<CraftablePart> currentNode, AttachmentPoint attachmentPoint)
+        void RecursiveConstruction(TreeNode<ModdedPart> currentNode, AttachmentPoint attachmentPoint)
         {
-            GameObject spawned = Instantiate(currentNode.Value.attachableObject);
+            GameObject spawned = Instantiate(currentNode.Value.BasePart.AttachableObject);
             AddPartStats(currentNode.Value);
             PartModifier modifier = spawned.GetComponent<PartModifier>();
             if (modifier.mainRenderers != null)
@@ -57,8 +57,8 @@ public class BotAssembler : MonoBehaviour
             spawned.transform.SetParent(attachmentPoint.transform, false);
             spawned.transform.localRotation = Quaternion.identity;
 
-            if (currentNode.Value.primaryLocomotion) locomotion = spawned.GetComponent<PrimaryMovement>();
-            List<TreeNode<CraftablePart>> children = currentNode.Children;
+            if (currentNode.Value.BasePart.PrimaryLocomotion) locomotion = spawned.GetComponent<PrimaryMovement>();
+            List<TreeNode<ModdedPart>> children = currentNode.Children;
             AttachmentPoint[] attachmentPoints = spawned.GetComponentsInChildren<AttachmentPoint>();
 
             if (children.Count == 0) return;
@@ -76,9 +76,8 @@ public class BotAssembler : MonoBehaviour
             initialAttachmentPoint.transform.SetParent(locomotion.sourceBone, true);
         }
 
-        void AddPartStats(CraftablePart part)
+        void AddPartStats(ModdedPart part)
         {
-            part.InitializeStats();
             foreach (var stat in part.Stats)
             {
                 botStats.Max[stat.Key] += stat.Value;
