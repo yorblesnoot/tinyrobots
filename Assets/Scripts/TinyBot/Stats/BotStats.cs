@@ -6,7 +6,8 @@ public enum StatType
     HEALTH,
     ACTION,
     MOVEMENT,
-    ARMOR
+    ARMOR,
+    WEIGHT
 }
 public class BotStats
 {

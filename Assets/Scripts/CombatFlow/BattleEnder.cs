@@ -9,7 +9,7 @@ public class BattleEnder : MonoBehaviour
     public void PlayerWin()
     {
         if (playerData == null) Debug.LogWarning("No active Navigation Map found.");
-        playerData.mapData[playerData.zoneLocation].eventType = 0;
+        playerData.MapData[playerData.ZoneLocation].eventType = 0;
         dropsUI.OfferDrops(() => sceneLoader.Load(SceneType.NAVIGATION));
     }
 

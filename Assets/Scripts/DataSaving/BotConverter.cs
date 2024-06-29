@@ -12,7 +12,7 @@ public class BotConverter : ScriptableObject
 
     public void Initialize()
     {
-        BuildPartMap();
+        BuildConversionDictionaries();
     }
     public static string BotToString(TreeNode<ModdedPart> botTreeOriginNode)
     {
@@ -89,7 +89,7 @@ public class BotConverter : ScriptableObject
         return textCursor;
     }
 
-    void BuildPartMap()
+    void BuildConversionDictionaries()
     {
         partMap = PartLibrary.ToDictionary(p => p.Id, p => p);
         mutatorMap = MutatorLibrary.ToDictionary(m => m.Id, m => m);    

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerData", menuName = "ScriptableObjects/Singletons/PlayerData")]
@@ -6,7 +7,8 @@ public class PlayerData : ScriptableObject
 {
     public void LoadRecords()
     {
-        foreach(BotCore core in coreInventory)
+        if(DevMode) PartInventory = botConverter.PartLibrary.Select(part => new ModdedPart(part)).ToList();
+        foreach(BotCore core in CoreInventory)
         {
             if(core.bot == null && core.StarterRecord != null)
             {
@@ -14,11 +16,12 @@ public class PlayerData : ScriptableObject
             }
         }
     }
-    public List<ModdedPart> partInventory;
-    public List<BotCore> coreInventory;
-    public List<SavedNavZone> mapData;
-    public int zoneLocation;
-    public int difficulty = 3;
+    public List<ModdedPart> PartInventory;
+    public List<BotCore> CoreInventory;
+    public List<SavedNavZone> MapData;
+    public int ZoneLocation;
+    public int Difficulty = 3;
+    public bool DevMode;
 
     [Header("Components")]
     [SerializeField] BotConverter botConverter;

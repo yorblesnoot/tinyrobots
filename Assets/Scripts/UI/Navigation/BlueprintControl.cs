@@ -10,18 +10,20 @@ public class BlueprintControl : MonoBehaviour
     [HideInInspector] public ModdedPart originPart;
 
     [SerializeField] GameObject newSlot;
-    [SerializeField] PlayerData playerData;
-    [SerializeField] List<ListedPart> partDisplays;
-    public PartSlot OriginSlot;
     
+    [SerializeField] List<VisualizedPart> partDisplays;
+    public PartSlot OriginSlot;
+    public PlayerData PlayerData;
+
 
     static BlueprintControl Instance;
     static List<ModdedPart> partInventory;
-    HashSet<ModdedPart> initializedParts = new();
     [SerializeField] CinemachineVirtualCamera craftCam;
+    static bool devMode;
     private void OnEnable()
     {
         craftCam.Priority = 100;
+        devMode = PlayerData.DevMode;
     }
 
     private void OnDisable()
@@ -36,14 +38,16 @@ public class BlueprintControl : MonoBehaviour
 
     public static void SlotActivePart()
     {
+        if (devMode) return;
         partInventory.Remove(ActivePart);
         ActivePart = null;
-        ListedPart.resetActivation.Invoke();
+        VisualizedPart.resetActivation.Invoke();
         Instance.UpdatePartDisplays();
     }
 
     public static void ReturnPart(ModdedPart part)
     {
+        if (devMode) return;
         partInventory.Add(part);
         Instance.UpdatePartDisplays();
     }
@@ -51,31 +55,27 @@ public class BlueprintControl : MonoBehaviour
     public void Initialize()
     {
         Instance = this;
-        partInventory = playerData.partInventory;
+        partInventory = PlayerData.PartInventory;
         NewSlot = newSlot;
         UpdatePartDisplays();
     }
 
     void UpdatePartDisplays()
     {
-        for (int i = 0; i < playerData.partInventory.Count; i++)
+        for (int i = 0; i < PlayerData.PartInventory.Count; i++)
         {
             if(i == partDisplays.Count - 1)
             {
-                ListedPart display = Instantiate(partDisplays[^1], partDisplays[^1].transform.parent);
+                VisualizedPart display = Instantiate(partDisplays[^1], partDisplays[^1].transform.parent);
                 partDisplays.Add(display);
             }
-
-            if (!initializedParts.Contains(playerData.partInventory[i]))
-            {
-                playerData.partInventory[i].DeriveAttachmentAttributes();
-                initializedParts.Add(playerData.partInventory[i]);
-            }
             partDisplays[i].gameObject.SetActive(true);
-            partDisplays[i].InitializeDisplay(playerData.partInventory[i], SetActivePart);
+            ModdedPart part = PlayerData.PartInventory[i];
+            if (part.Stats == null) part.MutatePart();
+            partDisplays[i].InitializeDisplay(part, SetActivePart);
         }
 
-        for(int i = playerData.partInventory.Count; i < partDisplays.Count; i++) partDisplays[i].gameObject.SetActive(false);
+        for(int i = PlayerData.PartInventory.Count; i < partDisplays.Count; i++) partDisplays[i].gameObject.SetActive(false);
     }
 
     public TreeNode<ModdedPart> BuildBot()

@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 137bd5aa327f3414ba52423ab73340df, type: 3}
-  m_Name: Origin
+  m_Name: BossOrigin
   m_EditorClassIdentifier: 
-  Id: 98d4efd8-d13e-4994-95c2-021edc81ce1c
-  partStats:
+  Id: 2a82094a-48a7-482d-b58c-94125e2362b5
+  PartStats:
+  - type: 0
+    value: 50
   - type: 1
-    bonus: 2
-  type: 1
-  weight: 0
-  attachableObject: {fileID: 9120402016229796176, guid: 176698837bd8e894b8fd5a9592676de8,
+    value: 3
+  Type: 1
+  Weight: 0
+  AttachableObject: {fileID: 9120402016229796176, guid: 176698837bd8e894b8fd5a9592676de8,
     type: 3}
-  primaryLocomotion: 0
-  attachmentPoints: []
-  slotPositions: []
+  PrimaryLocomotion: 0

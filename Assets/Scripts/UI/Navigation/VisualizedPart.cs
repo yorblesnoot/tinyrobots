@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class ListedPart : MonoBehaviour
+public class VisualizedPart : MonoBehaviour
 {
     [SerializeField] TMP_Text nameDisplay;
     [SerializeField] TMP_Text weightDisplay;

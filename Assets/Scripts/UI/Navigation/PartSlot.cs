@@ -14,7 +14,7 @@ public class PartSlot : MonoBehaviour
 
     ModdedPart partIdentity;
     PartSlot[] childSlots;
-    readonly string contract = "contract";
+    readonly string contractionAnimation = "contract";
     private void OnEnable()
     {
         activeIndicator.transform.localPosition = Vector3.zero;
@@ -53,7 +53,7 @@ public class PartSlot : MonoBehaviour
 
     public void ClearPartIdentity(bool destroy, bool toInventory)
     {
-        if(slotAnimator != null) slotAnimator.SetBool(contract, false);
+        if(slotAnimator != null) slotAnimator.SetBool(contractionAnimation, false);
         if (partIdentity != null)
         {
             if(toInventory) BlueprintControl.ReturnPart(partIdentity);
@@ -81,7 +81,7 @@ public class PartSlot : MonoBehaviour
 
     public PartSlot[] SetPartIdentity(ModdedPart part)
     {
-        slotAnimator.SetBool(contract, true);
+        slotAnimator.SetBool(contractionAnimation, true);
         mockup = Instantiate(part.BasePart.AttachableObject);
         Animator partAnimator = mockup.GetComponentInChildren<Animator>();
         if (partAnimator != null) partAnimator.speed = 0;

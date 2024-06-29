@@ -13,13 +13,14 @@ public class NewGameStarter : MonoBehaviour
     public void NewGame()
     {
         botConverter.Initialize();
-        playerData.coreInventory = new();
+        playerData.CoreInventory = new();
         foreach (BotCore core in starterCores)
         {
             core.Initialize(botConverter);
-            playerData.coreInventory.Add(core);
+            playerData.CoreInventory.Add(core);
         }
         sceneRelay.generateNavMap = true;
+        playerData.PartInventory = new();
         loader.Load(SceneType.NAVIGATION);
     }
 }

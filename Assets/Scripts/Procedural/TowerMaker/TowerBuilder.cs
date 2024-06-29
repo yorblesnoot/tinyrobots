@@ -28,7 +28,7 @@ public class TowerBuilder : MonoBehaviour
     public void GeneratePlaySpace()
     {
         AssignPieceIndices();
-        if (relay.generateNavMap || playerData.mapData == null) GenerateTowerFloor();
+        if (relay.generateNavMap || playerData.MapData == null) GenerateTowerFloor();
         else LoadMap();
     }
 
@@ -90,15 +90,15 @@ public class TowerBuilder : MonoBehaviour
             map.Add(node);
         }
 
-        playerData.mapData = map;
+        playerData.MapData = map;
     }
 
     void LoadMap()
     {
         List<TowerNavZone> zones = new();
-        for(int i = 0; i < playerData.mapData.Count; i++)
+        for(int i = 0; i < playerData.MapData.Count; i++)
         {
-            SavedNavZone saved = playerData.mapData[i];
+            SavedNavZone saved = playerData.MapData[i];
             TowerPiece piece = allPieces[saved.pieceIndex];
             TowerNavZone zone = Instantiate(piece, saved.position, saved.rotation).GetComponent<TowerNavZone>();
             zone.zoneIndex = i;
@@ -107,13 +107,13 @@ public class TowerBuilder : MonoBehaviour
             zone.zoneEvent = eventProvider[zone.zoneEventType];
             zones.Add(zone);
         }
-        for (int i = 0; i < playerData.mapData.Count; i++)
+        for (int i = 0; i < playerData.MapData.Count; i++)
         {
-            SavedNavZone node = playerData.mapData[i];
+            SavedNavZone node = playerData.MapData[i];
             zones[i].neighbors = node.neighborIndices.Select(x => zones[x]).ToHashSet();
-            if (playerData.mapData[i].revealed) zones[i].RevealNeighbors(true);
+            if (playerData.MapData[i].revealed) zones[i].RevealNeighbors(true);
         }
-        PlacePlayer(zones[playerData.zoneLocation]);
+        PlacePlayer(zones[playerData.ZoneLocation]);
     }
 
     private void GenerateRegions()

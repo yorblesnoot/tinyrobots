@@ -64,7 +64,6 @@ public class TinyBot : MonoBehaviour
         }
     }
 
-
     public void SpendResource(int resource, StatType statType)
     {
         Stats.Current[statType] -= resource;

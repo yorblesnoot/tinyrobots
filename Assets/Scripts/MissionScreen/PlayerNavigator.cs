@@ -33,8 +33,8 @@ public class PlayerNavigator : MonoBehaviour
         
         occupiedZone = zone;
         zone.RevealNeighbors();
-        playerData.mapData[zone.zoneIndex].revealed = true;
-        playerData.zoneLocation = zone.zoneIndex;
+        playerData.MapData[zone.zoneIndex].revealed = true;
+        playerData.ZoneLocation = zone.zoneIndex;
 
         if(zone.zoneEvent != null) zone.zoneEvent.Activate(zone, ReallowMove);
         else moveAvailable = true;
@@ -46,6 +46,6 @@ public class PlayerNavigator : MonoBehaviour
         occupiedZone.zoneEvent.Clear(occupiedZone);
         occupiedZone.zoneEvent = null;
         occupiedZone.zoneEventType = 0;
-        playerData.mapData[playerData.zoneLocation].eventType = 0;
+        playerData.MapData[playerData.ZoneLocation].eventType = 0;
     }
 }

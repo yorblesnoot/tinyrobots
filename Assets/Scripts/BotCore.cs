@@ -11,6 +11,7 @@ public class BotCore : ScriptableObject
     }
 
     public TreeNode<ModdedPart> bot;
+    public int currentHealth;
 
     [Header("Characteristics")]
     public string displayName;

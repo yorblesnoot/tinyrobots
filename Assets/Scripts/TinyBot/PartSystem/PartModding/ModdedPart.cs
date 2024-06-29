@@ -1,13 +1,17 @@
 using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 
+[System.Serializable]
 public class ModdedPart
 {
-    public CraftablePart BasePart { get; private set; }
+    public CraftablePart BasePart;
     public Dictionary<StatType, int> Stats;
     public Dictionary<AbilityModifier, int> Mods;
     //public int[] ExtraAbilities;
     public List<PartMutator> Mutators = new();
+    public int Weight { get; private set; }
+
+    ModdedPart() { }
     public ModdedPart(CraftablePart part)
     {
         BasePart = part;
@@ -36,6 +40,13 @@ public class ModdedPart
         {
             if (Mods.ContainsKey(modSet.Type)) Mods[modSet.Type] += modSet.Value;
             else Mods.Add(modSet.Type, modSet.Value);
+        }
+
+        Weight = BasePart.Weight;
+        if (Stats.TryGetValue(StatType.WEIGHT, out int extraWeight))
+        {
+            Stats.Remove(StatType.WEIGHT);
+            Weight += extraWeight;
         }
     }
 }

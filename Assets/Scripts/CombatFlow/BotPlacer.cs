@@ -25,10 +25,10 @@ public class BotPlacer : MonoBehaviour
     private void PlaceBotsInSpawnZones()
     {
         List<TinyBot> bots = new();
-        bots.AddRange(playerData.coreInventory.Select(core => 
+        bots.AddRange(playerData.CoreInventory.Select(core => 
             SpawnBot(Allegiance.PLAYER, core.bot)));
         EnemyEncounter encounter = encounters.GrabRandomly(false);
-        List<BotRecord> enemyRecords = encounter.GetSpawnList(playerData.difficulty);
+        List<BotRecord> enemyRecords = encounter.GetSpawnList(playerData.Difficulty);
         bots.AddRange(enemyRecords.Select(record => SpawnBot(Allegiance.ENEMY, record)));
 
         Dictionary<MoveStyle, List<Vector3Int>> styleNodes = Pathfinder3D.GetStyleNodes();

@@ -9,7 +9,7 @@ public class DropsUI : MonoBehaviour
     [SerializeField] float partFadeDuration = .5f;
     [SerializeField] float missionEndDelay = 2;
     [SerializeField] BotConverter botConverter;
-    [SerializeField] ListedPart[] dropDisplays;
+    [SerializeField] VisualizedPart[] dropDisplays;
     [SerializeField] PlayerData playerData;
     List<CraftablePart> possibleDrops;
 
@@ -32,7 +32,7 @@ public class DropsUI : MonoBehaviour
 
     void GivePart(ModdedPart part)
     {
-        playerData.partInventory.Add(part);
+        playerData.PartInventory.Add(part);
         Sequence sequence = Sequence.Create();
         foreach(var display in dropDisplays)
         {
