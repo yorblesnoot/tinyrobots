@@ -11,7 +11,7 @@ public class ModdedPart
     public List<PartMutator> Mutators = new();
     public int Weight { get; private set; }
 
-    ModdedPart() { }
+    public ModdedPart() { }
     public ModdedPart(CraftablePart part)
     {
         BasePart = part;

@@ -1,7 +1,7 @@
 using Cinemachine;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class BlueprintControl : MonoBehaviour
 {
@@ -10,7 +10,7 @@ public class BlueprintControl : MonoBehaviour
     [HideInInspector] public ModdedPart originPart;
 
     [SerializeField] GameObject newSlot;
-    
+    [SerializeField] CinemachineVirtualCamera craftCam;
     [SerializeField] List<VisualizedPart> partDisplays;
     public PartSlot OriginSlot;
     public PlayerData PlayerData;
@@ -18,8 +18,9 @@ public class BlueprintControl : MonoBehaviour
 
     static BlueprintControl Instance;
     static List<ModdedPart> partInventory;
-    [SerializeField] CinemachineVirtualCamera craftCam;
     static bool devMode;
+
+    public static UnityEvent<ModdedPart> PartSlotted = new();
     private void OnEnable()
     {
         craftCam.Priority = 100;

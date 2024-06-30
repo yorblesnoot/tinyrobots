@@ -10,10 +10,9 @@ public class PlayerData : ScriptableObject
         if(DevMode) PartInventory = botConverter.PartLibrary.Select(part => new ModdedPart(part)).ToList();
         foreach(BotCore core in CoreInventory)
         {
-            if(core.bot == null && core.StarterRecord != null)
-            {
-                core.bot = botConverter.StringToBot(core.StarterRecord.record);
-            }
+            if (core.bot != null || core.StarterRecord == null) continue;
+            
+            core.bot = botConverter.StringToBot(core.StarterRecord.record);
         }
     }
     public List<ModdedPart> PartInventory;

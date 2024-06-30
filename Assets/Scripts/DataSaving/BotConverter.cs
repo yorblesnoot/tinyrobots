@@ -21,6 +21,8 @@ public class BotConverter : ScriptableObject
 
         void ConvertNode(TreeNode<ModdedPart> node)
         {
+            Debug.Log("basepart");
+            Debug.Log(node.Value.BasePart);
             output += node.Value.BasePart.Id;
             foreach(var mutator in node.Value.Mutators)
             {
@@ -42,10 +44,13 @@ public class BotConverter : ScriptableObject
     readonly int guidSkip = 36;
     public TreeNode<ModdedPart> StringToBot(string input)
     {
+        Debug.Log("loaded bot from string");
         if (partMap == null) Initialize();
         string guid = input[..guidSkip];
-
-        TreeNode<ModdedPart> output = new(new(partMap[guid]));
+        CraftablePart basePart = partMap[guid];
+        ModdedPart moddedPart = new(basePart);
+        Debug.Log(basePart);
+        TreeNode<ModdedPart> output = new(moddedPart);
         TreeNode<ModdedPart> last = output;
 
         Stack<TreeNode<ModdedPart>> depthRecord = new();

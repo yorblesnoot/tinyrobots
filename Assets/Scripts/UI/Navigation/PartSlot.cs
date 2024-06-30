@@ -17,11 +17,14 @@ public class PartSlot : MonoBehaviour
     readonly string contractionAnimation = "contract";
     private void OnEnable()
     {
+        partIdentity = null;
+        Debug.Log("identity is " + partIdentity);
         activeIndicator.transform.localPosition = Vector3.zero;
         Vector3 towardsCamera = -BlueprintControl.GetCameraForward();
         activeIndicator.transform.SetPositionAndRotation(transform.position + towardsCamera * cameraApproachDistance, 
             Quaternion.LookRotation(towardsCamera));
     }
+
     private void OnMouseDown()
     {
         CheckToActivate();
@@ -74,7 +77,6 @@ public class PartSlot : MonoBehaviour
 
         if (destroy)
         {
-            
             Destroy(gameObject);
         }
     }
@@ -115,7 +117,14 @@ public class PartSlot : MonoBehaviour
 
     public void BuildTree(TreeNode<ModdedPart> parent)
     {
-        partIdentity ??= new(empty);
+        if (partIdentity == null)
+        {
+            Debug.Log("part identity was null");
+            partIdentity = new();
+            partIdentity.BasePart = empty;
+        }
+        
+        Debug.Log(partIdentity.BasePart);
         TreeNode<ModdedPart> incomingNode = parent.AddChild(partIdentity);
         if (childSlots == null) return;
         foreach(var slot in childSlots)

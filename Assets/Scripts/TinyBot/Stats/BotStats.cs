@@ -7,6 +7,7 @@ public enum StatType
     ACTION,
     MOVEMENT,
     ARMOR,
+    SHIELD,
     WEIGHT
 }
 public class BotStats

@@ -20,7 +20,8 @@ public class UnitSwitcher : MonoBehaviour
         {
             bool validTab = i < coreCount;
             tabs[i].gameObject.SetActive(validTab);
-            if (validTab) tabs[i].AssignTab(() => SwitchCharacter(i), playerData.CoreInventory[i]);
+            int index = i;
+            if (validTab) tabs[i].AssignTab(() => SwitchCharacter(index), playerData.CoreInventory[i]);
         }
     }
     private void OnEnable()
@@ -38,23 +39,22 @@ public class UnitSwitcher : MonoBehaviour
     {
         if (charIndex == activeCharacter) return;
         SaveActiveBotToCore();
-
         activeCharacter = charIndex;
+        Debug.Log(activeCharacter);
         blueprintControl.originPart = new(playerData.CoreInventory[activeCharacter].CorePart);
 
-        if (charIndex >= playerData.CoreInventory.Count) return;
-
-        if (playerData.CoreInventory[charIndex].bot == null) return;
+        BotCore core = playerData.CoreInventory[charIndex];
+        if (core.bot == null) return;
+        Debug.Log("tried to place parts");
         PlacePartsInSlots(playerData.CoreInventory[charIndex].bot.Children[0], blueprintControl.OriginSlot);
-
+        
     }
 
     private void SaveActiveBotToCore()
     {
         if (activeCharacter < 0) return;
 
-        TreeNode<ModdedPart> bot = blueprintControl.BuildBot();
-        playerData.CoreInventory[activeCharacter].bot = bot;
+        playerData.CoreInventory[activeCharacter].bot = blueprintControl.BuildBot();
         blueprintControl.OriginSlot.ClearPartIdentity(false, false);
     }
 
