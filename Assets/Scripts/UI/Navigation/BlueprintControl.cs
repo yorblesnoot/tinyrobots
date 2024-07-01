@@ -20,7 +20,7 @@ public class BlueprintControl : MonoBehaviour
     static List<ModdedPart> partInventory;
     static bool devMode;
 
-    public static UnityEvent<ModdedPart> PartSlotted = new();
+
     private void OnEnable()
     {
         craftCam.Priority = 100;
@@ -72,7 +72,7 @@ public class BlueprintControl : MonoBehaviour
             }
             partDisplays[i].gameObject.SetActive(true);
             ModdedPart part = PlayerData.PartInventory[i];
-            if (part.Stats == null) part.MutatePart();
+            if (part.Stats == null) part.InitializePart();
             partDisplays[i].InitializeDisplay(part, SetActivePart);
         }
 

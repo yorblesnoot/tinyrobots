@@ -1,0 +1,65 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using TMPro;
+using UnityEngine;
+
+public class UnitStatsDisplay : MonoBehaviour
+{
+    
+    [SerializeField] StatEntry[] stats;
+    [SerializeField] TMP_Text weightDisplay;
+    [SerializeField] AbilityDisplay[] abilityDisplays;
+
+    Dictionary<StatType, StatEntry> entries;
+    List<ModdedPart> activeParts = new();
+    int totalWeight;
+    int maxWeight;
+    private void Awake()
+    {
+        PartSlot.SlottedPart.AddListener(ModifyPartStats);
+        entries = stats.ToDictionary(stat => stat.Type, stat => stat);
+    }
+
+    public void ModifyPartStats(ModdedPart part, bool add)
+    {
+        if(add) activeParts.Add(part);
+        else activeParts.Remove(part);
+        RefreshDisplays();
+    }
+
+    void RefreshDisplays()
+    {
+        foreach (var entry in entries.Values) entry.Value = 0;
+        totalWeight = maxWeight = 0;
+        List<Ability> activeAbilities = new();
+
+        foreach(var part in activeParts)
+        {
+            activeAbilities.AddRange(part.Sample.GetComponents<Ability>());
+            foreach(StatType stat in part.Stats.Keys) entries[stat].Value += part.Stats[stat];
+            if(part.Weight < 0) maxWeight -= part.Weight;
+            else totalWeight += part.Weight;
+        }
+
+        foreach(var entry in entries.Values) entry.Display.text = entry.Value.ToString();
+        weightDisplay.text = $"{totalWeight} / {(maxWeight == 0 ? "-" : maxWeight)}";
+        weightDisplay.color = totalWeight > maxWeight ? Color.red : Color.white;
+
+        for(int i = 0; i < abilityDisplays.Length; i++)
+        {
+            bool abilityExists = i < activeAbilities.Count;
+            abilityDisplays[i].gameObject.SetActive(abilityExists);
+            if(abilityExists) abilityDisplays[i].Become(activeAbilities[i]);
+        }
+    }
+
+
+    [Serializable]
+    class StatEntry
+    {
+        public StatType Type;
+        [HideInInspector] public int Value;
+        public TMP_Text Display;
+    }
+}

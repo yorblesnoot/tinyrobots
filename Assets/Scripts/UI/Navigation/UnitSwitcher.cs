@@ -40,12 +40,10 @@ public class UnitSwitcher : MonoBehaviour
         if (charIndex == activeCharacter) return;
         SaveActiveBotToCore();
         activeCharacter = charIndex;
-        Debug.Log(activeCharacter);
         blueprintControl.originPart = new(playerData.CoreInventory[activeCharacter].CorePart);
 
         BotCore core = playerData.CoreInventory[charIndex];
         if (core.bot == null) return;
-        Debug.Log("tried to place parts");
         PlacePartsInSlots(playerData.CoreInventory[charIndex].bot.Children[0], blueprintControl.OriginSlot);
         
     }

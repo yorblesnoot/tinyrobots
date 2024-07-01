@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PartSlot : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class PartSlot : MonoBehaviour
     ModdedPart partIdentity;
     PartSlot[] childSlots;
     readonly string contractionAnimation = "contract";
+
+    public static UnityEvent<ModdedPart, bool> SlottedPart = new();
     private void OnEnable()
     {
         partIdentity = null;
@@ -56,11 +59,12 @@ public class PartSlot : MonoBehaviour
 
     public void ClearPartIdentity(bool destroy, bool toInventory)
     {
+        SlottedPart.Invoke(partIdentity, false);
         if(slotAnimator != null) slotAnimator.SetBool(contractionAnimation, false);
         if (partIdentity != null)
         {
             if(toInventory) BlueprintControl.ReturnPart(partIdentity);
-            Destroy(mockup);
+            mockup.SetActive(false);
             partIdentity = null;
             //activeIndicator.SetActive(false);
             //activePartName.text = "";
@@ -83,8 +87,10 @@ public class PartSlot : MonoBehaviour
 
     public PartSlot[] SetPartIdentity(ModdedPart part)
     {
+        SlottedPart.Invoke(BlueprintControl.ActivePart, true);
         slotAnimator.SetBool(contractionAnimation, true);
-        mockup = Instantiate(part.BasePart.AttachableObject);
+        mockup = part.Sample;
+        mockup.SetActive(true);
         Animator partAnimator = mockup.GetComponentInChildren<Animator>();
         if (partAnimator != null) partAnimator.speed = 0;
         PartModifier modifier = mockup.GetComponent<PartModifier>();
@@ -119,12 +125,10 @@ public class PartSlot : MonoBehaviour
     {
         if (partIdentity == null)
         {
-            Debug.Log("part identity was null");
             partIdentity = new();
             partIdentity.BasePart = empty;
         }
         
-        Debug.Log(partIdentity.BasePart);
         TreeNode<ModdedPart> incomingNode = parent.AddChild(partIdentity);
         if (childSlots == null) return;
         foreach(var slot in childSlots)

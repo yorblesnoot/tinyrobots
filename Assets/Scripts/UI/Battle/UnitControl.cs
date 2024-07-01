@@ -51,7 +51,7 @@ public class UnitControl : MonoBehaviour
             if(i < abilityList.Count)
             {
                 Ability ability = abilityList[i];
-                clickableAbilities[i].Become(ability, keyCodes[i]);
+                clickableAbilities[i].Become(ability);
                 deployedAbilities.Add(clickableAbilities[i]);
             }
             else

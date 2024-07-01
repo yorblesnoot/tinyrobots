@@ -10,6 +10,7 @@ public class ModdedPart
     //public int[] ExtraAbilities;
     public List<PartMutator> Mutators = new();
     public int Weight { get; private set; }
+    public GameObject Sample;
 
     public ModdedPart() { }
     public ModdedPart(CraftablePart part)
@@ -17,7 +18,15 @@ public class ModdedPart
         BasePart = part;
     }
 
-    public void MutatePart()
+    public void InitializePart()
+    {
+        Sample = GameObject.Instantiate(BasePart.AttachableObject);
+        if(Sample.TryGetComponent(out Collider collider)) collider.enabled = false;
+        Weight = BasePart.Weight;
+        MutatePart();
+    }
+
+    void MutatePart()
     {
         if (Mutators == null) return;
 
@@ -42,7 +51,6 @@ public class ModdedPart
             else Mods.Add(modSet.Type, modSet.Value);
         }
 
-        Weight = BasePart.Weight;
         if (Stats.TryGetValue(StatType.WEIGHT, out int extraWeight))
         {
             Stats.Remove(StatType.WEIGHT);

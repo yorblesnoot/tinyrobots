@@ -44,7 +44,6 @@ public class BotConverter : ScriptableObject
     readonly int guidSkip = 36;
     public TreeNode<ModdedPart> StringToBot(string input)
     {
-        Debug.Log("loaded bot from string");
         if (partMap == null) Initialize();
         string guid = input[..guidSkip];
         CraftablePart basePart = partMap[guid];
@@ -90,7 +89,7 @@ public class BotConverter : ScriptableObject
             modPart.Mutators.Add(mutator);
             textCursor += guidSkip;
         }
-        modPart.MutatePart();
+        modPart.InitializePart();
         return textCursor;
     }
 

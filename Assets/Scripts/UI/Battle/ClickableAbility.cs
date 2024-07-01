@@ -4,16 +4,13 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class ClickableAbility : MonoBehaviour
+public class ClickableAbility : AbilityDisplay
 {
     public static UnityEvent playerUsedAbility = new();
-    [SerializeField] Image image;
+    
     [SerializeField] Button button;
     [SerializeField] TMP_Text cooldown;
     [SerializeField] Image cooldownPanel;
-    [HideInInspector] public Ability Skill;
-
-    
     [SerializeField] Transform pipHolder;
     [SerializeField] List<Image> actionPoints;
 
@@ -53,12 +50,10 @@ public class ClickableAbility : MonoBehaviour
         DeactivateSelectedAbility();
     }
 
-    public void Become(Ability ability, KeyCode key)
+    public override void Become(Ability ability)
     {
+        base.Become(ability);
         ability.Owner.beganTurn.AddListener(UpdateCooldowns);
-        gameObject.SetActive(true);
-        Skill = ability;
-        image.sprite = ability.icon;
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(Activate);
         SetPips(ability.cost);
