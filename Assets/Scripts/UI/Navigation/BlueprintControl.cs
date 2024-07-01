@@ -59,6 +59,7 @@ public class BlueprintControl : MonoBehaviour
         partInventory = PlayerData.PartInventory;
         NewSlot = newSlot;
         UpdatePartDisplays();
+        foreach (var core in PlayerData.CoreInventory) core.Initialize();
     }
 
     void UpdatePartDisplays()
@@ -72,7 +73,7 @@ public class BlueprintControl : MonoBehaviour
             }
             partDisplays[i].gameObject.SetActive(true);
             ModdedPart part = PlayerData.PartInventory[i];
-            if (part.Stats == null) part.InitializePart();
+            part.InitializePart();
             partDisplays[i].InitializeDisplay(part, SetActivePart);
         }
 

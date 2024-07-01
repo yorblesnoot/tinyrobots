@@ -21,7 +21,6 @@ public class PartSlot : MonoBehaviour
     private void OnEnable()
     {
         partIdentity = null;
-        Debug.Log("identity is " + partIdentity);
         activeIndicator.transform.localPosition = Vector3.zero;
         Vector3 towardsCamera = -BlueprintControl.GetCameraForward();
         activeIndicator.transform.SetPositionAndRotation(transform.position + towardsCamera * cameraApproachDistance, 
@@ -64,7 +63,7 @@ public class PartSlot : MonoBehaviour
         if (partIdentity != null)
         {
             if(toInventory) BlueprintControl.ReturnPart(partIdentity);
-            mockup.SetActive(false);
+            if(mockup != null) mockup.SetActive(false);
             partIdentity = null;
             //activeIndicator.SetActive(false);
             //activePartName.text = "";
@@ -87,7 +86,7 @@ public class PartSlot : MonoBehaviour
 
     public PartSlot[] SetPartIdentity(ModdedPart part)
     {
-        SlottedPart.Invoke(BlueprintControl.ActivePart, true);
+        SlottedPart.Invoke(part, true);
         slotAnimator.SetBool(contractionAnimation, true);
         mockup = part.Sample;
         mockup.SetActive(true);

@@ -10,31 +10,38 @@ public class UnitStatsDisplay : MonoBehaviour
     [SerializeField] StatEntry[] stats;
     [SerializeField] TMP_Text weightDisplay;
     [SerializeField] AbilityDisplay[] abilityDisplays;
+    [SerializeField] BlueprintControl blueprintControl;
 
     Dictionary<StatType, StatEntry> entries;
     List<ModdedPart> activeParts = new();
     int totalWeight;
     int maxWeight;
-    private void Awake()
+
+    public void Initialize()
     {
         PartSlot.SlottedPart.AddListener(ModifyPartStats);
         entries = stats.ToDictionary(stat => stat.Type, stat => stat);
     }
 
-    public void ModifyPartStats(ModdedPart part, bool add)
+    void ModifyPartStats(ModdedPart part, bool add)
     {
         if(add) activeParts.Add(part);
         else activeParts.Remove(part);
         RefreshDisplays();
     }
 
-    void RefreshDisplays()
+    public void RefreshDisplays()
     {
+        Debug.Log("refreshed");
         foreach (var entry in entries.Values) entry.Value = 0;
         totalWeight = maxWeight = 0;
         List<Ability> activeAbilities = new();
 
-        foreach(var part in activeParts)
+        List<ModdedPart> activePartsPlusOrigin = new(activeParts)
+        {
+            blueprintControl.originPart
+        };
+        foreach(var part in activePartsPlusOrigin)
         {
             activeAbilities.AddRange(part.Sample.GetComponents<Ability>());
             foreach(StatType stat in part.Stats.Keys) entries[stat].Value += part.Stats[stat];

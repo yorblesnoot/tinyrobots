@@ -21,8 +21,6 @@ public class BotConverter : ScriptableObject
 
         void ConvertNode(TreeNode<ModdedPart> node)
         {
-            Debug.Log("basepart");
-            Debug.Log(node.Value.BasePart);
             output += node.Value.BasePart.Id;
             foreach(var mutator in node.Value.Mutators)
             {

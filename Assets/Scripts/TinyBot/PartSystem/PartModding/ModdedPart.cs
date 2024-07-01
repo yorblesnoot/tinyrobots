@@ -28,15 +28,17 @@ public class ModdedPart
 
     void MutatePart()
     {
-        if (Mutators == null) return;
-
         List<StatValue> statValues = new(BasePart.PartStats);
         List<ModValue> modValues = new();
-        foreach (PartMutator mutator in Mutators)
+        if (Mutators != null)
         {
-            statValues.AddRange(mutator.Stats);
-            modValues.AddRange(mutator.Mods);
+            foreach (PartMutator mutator in Mutators)
+            {
+                statValues.AddRange(mutator.Stats);
+                modValues.AddRange(mutator.Mods);
+            }
         }
+        
         Stats = new();
         foreach (var statSet in statValues)
         {

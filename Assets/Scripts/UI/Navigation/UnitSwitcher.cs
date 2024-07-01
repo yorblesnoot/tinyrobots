@@ -7,6 +7,7 @@ public class UnitSwitcher : MonoBehaviour
     [SerializeField] BlueprintControl blueprintControl;
     [SerializeField] CraftablePart empty;
     [SerializeField] UnitTab[] tabs;
+    [SerializeField] UnitStatsDisplay unitStatsDisplay;
 
     PlayerData playerData;
     int activeCharacter = -1;
@@ -26,6 +27,7 @@ public class UnitSwitcher : MonoBehaviour
     }
     private void OnEnable()
     {
+        unitStatsDisplay.Initialize();
         SwitchCharacter(0);
     }
 
@@ -40,11 +42,12 @@ public class UnitSwitcher : MonoBehaviour
         if (charIndex == activeCharacter) return;
         SaveActiveBotToCore();
         activeCharacter = charIndex;
-        blueprintControl.originPart = new(playerData.CoreInventory[activeCharacter].CorePart);
+        blueprintControl.originPart = playerData.CoreInventory[activeCharacter].ModdedCore;
 
         BotCore core = playerData.CoreInventory[charIndex];
-        if (core.bot == null) return;
-        PlacePartsInSlots(playerData.CoreInventory[charIndex].bot.Children[0], blueprintControl.OriginSlot);
+        if (core.bot != null)
+            PlacePartsInSlots(playerData.CoreInventory[charIndex].bot.Children[0], blueprintControl.OriginSlot);
+        unitStatsDisplay.RefreshDisplays();
         
     }
 

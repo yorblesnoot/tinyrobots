@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "BotCore", menuName = "ScriptableObjects/BotCore")]
 public class BotCore : ScriptableObject
 {
-    public void Initialize(BotConverter converter)
+    public void Initialize(BotConverter converter = null)
     {
-        bot = converter.StringToBot(StarterRecord.record);
+        if(StarterRecord != null && converter != null) bot = converter.StringToBot(StarterRecord.record);
+        ModdedCore = new(corePart);
+        ModdedCore.InitializePart();
     }
 
     public TreeNode<ModdedPart> bot;
@@ -17,6 +20,9 @@ public class BotCore : ScriptableObject
     public string displayName;
 
     [field: SerializeField] public BotRecord StarterRecord {  get; private set; }
-    [field: SerializeField] public CraftablePart CorePart { get; private set; }
+    [SerializeField] CraftablePart corePart;
+
+    [HideInInspector] public ModdedPart ModdedCore;
+
     //skill tree?
 }

@@ -31,7 +31,6 @@ public class VisualizedPart : MonoBehaviour
         selectButton.onClick.AddListener(BecomeActive);
         resetActivation.AddListener(BecomeInactive);
 
-
         List<StatType> statTypes = part.Stats.Keys.ToList();
         for(int i = 0; i < statDisplays.Count(); i++)
         {
