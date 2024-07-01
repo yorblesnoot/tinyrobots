@@ -32,7 +32,6 @@ public class UnitStatsDisplay : MonoBehaviour
 
     public void RefreshDisplays()
     {
-        Debug.Log("refreshed");
         foreach (var entry in entries.Values) entry.Value = 0;
         totalWeight = maxWeight = 0;
         List<Ability> activeAbilities = new();
@@ -53,6 +52,7 @@ public class UnitStatsDisplay : MonoBehaviour
         weightDisplay.text = $"{totalWeight} / {(maxWeight == 0 ? "-" : maxWeight)}";
         weightDisplay.color = totalWeight > maxWeight ? Color.red : Color.white;
 
+        Debug.Log(activeAbilities.Count);
         for(int i = 0; i < abilityDisplays.Length; i++)
         {
             bool abilityExists = i < activeAbilities.Count;

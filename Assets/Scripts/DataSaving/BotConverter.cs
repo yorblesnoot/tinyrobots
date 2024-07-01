@@ -46,7 +46,6 @@ public class BotConverter : ScriptableObject
         string guid = input[..guidSkip];
         CraftablePart basePart = partMap[guid];
         ModdedPart moddedPart = new(basePart);
-        Debug.Log(basePart);
         TreeNode<ModdedPart> output = new(moddedPart);
         TreeNode<ModdedPart> last = output;
 

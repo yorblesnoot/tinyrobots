@@ -29,7 +29,8 @@ public class BotAssembler : MonoBehaviour
 
         GameObject DeployOrigin(TreeNode<ModdedPart> treeRoot)
         {
-            GameObject spawned = Instantiate(treeRoot.Value.BasePart.AttachableObject);
+            treeRoot.Value.InitializePart();
+            GameObject spawned = treeRoot.Value.Sample;
             AddPartStats(treeRoot.Value);
             spawnedParts = new() { spawned };
             List<TreeNode<ModdedPart>> children = treeRoot.Children;
@@ -42,7 +43,8 @@ public class BotAssembler : MonoBehaviour
 
         void RecursiveConstruction(TreeNode<ModdedPart> currentNode, AttachmentPoint attachmentPoint)
         {
-            GameObject spawned = Instantiate(currentNode.Value.BasePart.AttachableObject);
+            currentNode.Value.InitializePart();
+            GameObject spawned = currentNode.Value.Sample;
             AddPartStats(currentNode.Value);
             PartModifier modifier = spawned.GetComponent<PartModifier>();
             if (modifier.mainRenderers != null)
@@ -62,7 +64,6 @@ public class BotAssembler : MonoBehaviour
             AttachmentPoint[] attachmentPoints = spawned.GetComponentsInChildren<AttachmentPoint>();
 
             if (children.Count == 0) return;
-
             for (int i = 0; i < children.Count; i++)
             {
                 RecursiveConstruction(children[i], attachmentPoints[i]);

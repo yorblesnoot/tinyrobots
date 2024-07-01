@@ -6,5 +6,5 @@ using UnityEngine;
 public class BotRecord : SOWithGUID
 {
     public string displayName;
-    public string record;
+   [TextArea(3,10)] public string record;
 }
