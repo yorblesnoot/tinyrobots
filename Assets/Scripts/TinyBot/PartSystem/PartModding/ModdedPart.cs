@@ -10,7 +10,9 @@ public class ModdedPart
     //public int[] ExtraAbilities;
     public List<PartMutator> Mutators = new();
     public int Weight { get; private set; }
-    public GameObject Sample;
+    [HideInInspector] public GameObject Sample;
+    [HideInInspector] public Ability[] Abilities;
+
 
     public ModdedPart() { }
     public ModdedPart(CraftablePart part)
@@ -20,10 +22,17 @@ public class ModdedPart
 
     public void InitializePart()
     {
-        Sample = GameObject.Instantiate(BasePart.AttachableObject);
-        if(Sample.TryGetComponent(out Collider collider)) collider.enabled = false;
+        InstantiateSample();
         Weight = BasePart.Weight;
         MutatePart();
+    }
+
+    public void InstantiateSample()
+    {
+        if (Sample != null) return;
+        Sample = GameObject.Instantiate(BasePart.AttachableObject);
+        if (Sample.TryGetComponent(out Collider collider)) collider.enabled = false;
+        Abilities = Sample.GetComponents<Ability>();
     }
 
     void MutatePart()
@@ -42,8 +51,8 @@ public class ModdedPart
         Stats = new();
         foreach (var statSet in statValues)
         {
-            if (Stats.ContainsKey(statSet.type)) Stats[statSet.type] += statSet.value;
-            else Stats.Add(statSet.type, statSet.value);
+            if (Stats.ContainsKey(statSet.Type)) Stats[statSet.Type] += statSet.Value;
+            else Stats.Add(statSet.Type, statSet.Value);
         }
 
         Mods = new();
@@ -52,6 +61,31 @@ public class ModdedPart
             if (Mods.ContainsKey(modSet.Type)) Mods[modSet.Type] += modSet.Value;
             else Mods.Add(modSet.Type, modSet.Value);
         }
+
+        foreach(var ability in Abilities)
+        {
+            foreach (var mod in Mods)
+            {
+                if(mod.Key == AbilityModifier.RANGE && ability.ModifiableRange) ability.range += mod.Value;
+                else if(mod.Key == AbilityModifier.COOLDOWN)
+                {
+                    int newCooldown = mod.Value + ability.cooldown;
+                    ability.cooldown = Mathf.Clamp(newCooldown, 1, newCooldown);
+                }
+                else if (mod.Key == AbilityModifier.DAMAGEPERCENT)
+                {
+                    float finalDamage = ability.damage;
+                    finalDamage *= 1 + mod.Value/100;
+                    ability.damage = Mathf.RoundToInt(finalDamage);
+                }
+                else if (mod.Key == AbilityModifier.COST)
+                {
+                    int finalCost = ability.cost + mod.Value;
+                    ability.cost = Mathf.Clamp(finalCost, 0, int.MaxValue); 
+                }
+            }
+        }
+        
 
         if (Stats.TryGetValue(StatType.WEIGHT, out int extraWeight))
         {

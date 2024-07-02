@@ -42,7 +42,7 @@ public class UnitStatsDisplay : MonoBehaviour
         };
         foreach(var part in activePartsPlusOrigin)
         {
-            activeAbilities.AddRange(part.Sample.GetComponents<Ability>());
+            activeAbilities.AddRange(part.Abilities);
             foreach(StatType stat in part.Stats.Keys) entries[stat].Value += part.Stats[stat];
             if(part.Weight < 0) maxWeight -= part.Weight;
             else totalWeight += part.Weight;

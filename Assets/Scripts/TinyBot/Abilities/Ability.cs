@@ -11,8 +11,10 @@ public abstract class Ability : MonoBehaviour
     public AbilityType Type;
     public int cost;
     public int range;
+    public bool ModifiableRange = false;
     public int cooldown = 1;
     public int damage;
+    
     public Sprite icon;
     public string[] blockingLayers;
     public GameObject emissionPoint;

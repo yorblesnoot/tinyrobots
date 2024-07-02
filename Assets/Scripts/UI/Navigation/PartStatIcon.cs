@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PartStatDisplay : MonoBehaviour
+public class PartStatIcon : MonoBehaviour
 {
 
     [SerializeField] StatIcons[] icons;

@@ -12,7 +12,7 @@ public class VisualizedPart : MonoBehaviour
     [SerializeField] Button selectButton;
     [SerializeField] Image buttonImage;
     [SerializeField] Color activeColor;
-    [SerializeField] PartStatDisplay[] statDisplays;
+    [SerializeField] PartStatIcon[] statDisplays;
 
     [HideInInspector] public CanvasGroup group;
 

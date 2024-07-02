@@ -9,6 +9,6 @@ public enum AbilityModifier
 {
     RANGE,
     COOLDOWN,
-    DAMAGE,
+    DAMAGEPERCENT,
     COST
 }
