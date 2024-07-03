@@ -3,12 +3,13 @@ using System.Collections.Generic;
 
 public enum StatType
 {
-    HEALTH,
-    ACTION,
-    MOVEMENT,
-    ARMOR,
-    SHIELD,
-    WEIGHT
+    HEALTH, //flat
+    ACTION, //flat
+    MOVEMENT, //flat
+    ARMOR, //percent
+    SHIELD, //flat
+    INITIATIVE, //flat
+    WEIGHT //percent
 }
 public class BotStats
 {

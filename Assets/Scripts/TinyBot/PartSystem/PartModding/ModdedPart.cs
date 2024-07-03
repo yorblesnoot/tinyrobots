@@ -6,7 +6,7 @@ public class ModdedPart
 {
     public CraftablePart BasePart;
     public Dictionary<StatType, int> Stats;
-    public Dictionary<AbilityModifier, int> Mods;
+    public Dictionary<ModType, int> Mods;
     //public int[] ExtraAbilities;
     public List<PartMutator> Mutators = new();
     public int Weight { get; private set; }
@@ -66,19 +66,19 @@ public class ModdedPart
         {
             foreach (var mod in Mods)
             {
-                if(mod.Key == AbilityModifier.RANGE && ability.ModifiableRange) ability.range += mod.Value;
-                else if(mod.Key == AbilityModifier.COOLDOWN)
+                if(mod.Key == ModType.RANGE && ability.ModifiableRange) ability.range += mod.Value;
+                else if(mod.Key == ModType.COOLDOWN)
                 {
                     int newCooldown = mod.Value + ability.cooldown;
                     ability.cooldown = Mathf.Clamp(newCooldown, 1, newCooldown);
                 }
-                else if (mod.Key == AbilityModifier.DAMAGEPERCENT)
+                else if (mod.Key == ModType.DAMAGEPERCENT)
                 {
                     float finalDamage = ability.damage;
                     finalDamage *= 1 + mod.Value/100;
                     ability.damage = Mathf.RoundToInt(finalDamage);
                 }
-                else if (mod.Key == AbilityModifier.COST)
+                else if (mod.Key == ModType.COST)
                 {
                     int finalCost = ability.cost + mod.Value;
                     ability.cost = Mathf.Clamp(finalCost, 0, int.MaxValue); 

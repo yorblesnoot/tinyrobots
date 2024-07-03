@@ -1,11 +1,11 @@
 [System.Serializable]
 public struct ModValue 
 {
-    public AbilityModifier Type;
+    public ModType Type;
     public int Value;
 }
 
-public enum AbilityModifier
+public enum ModType
 {
     RANGE,
     COOLDOWN,
