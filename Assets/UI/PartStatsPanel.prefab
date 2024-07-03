@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1092763422191785844}
+  - component: {fileID: 1042469926029079424}
+  - component: {fileID: 5429026758188925808}
   - component: {fileID: 8579048936726488034}
   - component: {fileID: 4433080759301256197}
-  - component: {fileID: 1042469926029079424}
   m_Layer: 5
   m_Name: PartStatsPanel
   m_TagString: Untagged
@@ -43,6 +44,52 @@ RectTransform:
   m_AnchoredPosition: {x: -227.00003, y: -155.32718}
   m_SizeDelta: {x: 428.98, y: 755.8056}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1042469926029079424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2171663269053701451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 679f3e69cf5c7df4da2c4db04b543c10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nameDisplay: {fileID: 4296894198355540756}
+  weightDisplay: {fileID: 4603176994705796529}
+  abilityDisplays:
+  - {fileID: 278598681759341524}
+  - {fileID: 4581616188197475553}
+  - {fileID: 3062968348129630848}
+  - {fileID: 4582408905045224341}
+  - {fileID: 3017923866750704102}
+  modLines:
+  - {fileID: 9030276065429283522}
+  - {fileID: 6034570290929269903}
+  - {fileID: 3502262659482364074}
+  - {fileID: 3168486964031874483}
+  - {fileID: 1876112846114404222}
+  - {fileID: 3015921109662809836}
+  statDisplays:
+  - {fileID: 4811210112392057673}
+  - {fileID: 6088423895402554709}
+  - {fileID: 3181181709350265245}
+  - {fileID: 9211086319690893749}
+  - {fileID: 4447056766585505040}
+  - {fileID: 2785085080447309244}
+--- !u!225 &5429026758188925808
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2171663269053701451}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!222 &8579048936726488034
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -81,40 +128,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1042469926029079424
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2171663269053701451}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 679f3e69cf5c7df4da2c4db04b543c10, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nameDisplay: {fileID: 4296894198355540756}
-  weightDisplay: {fileID: 4603176994705796529}
-  abilityDisplays:
-  - {fileID: 278598681759341524}
-  - {fileID: 4581616188197475553}
-  - {fileID: 3062968348129630848}
-  - {fileID: 4582408905045224341}
-  - {fileID: 3017923866750704102}
-  modLines:
-  - {fileID: 9030276065429283522}
-  - {fileID: 6034570290929269903}
-  - {fileID: 3502262659482364074}
-  - {fileID: 3168486964031874483}
-  - {fileID: 1876112846114404222}
-  - {fileID: 3015921109662809836}
-  statDisplays:
-  - {fileID: 4811210112392057673}
-  - {fileID: 6088423895402554709}
-  - {fileID: 3181181709350265245}
-  - {fileID: 9211086319690893749}
-  - {fileID: 4447056766585505040}
-  - {fileID: 2785085080447309244}
 --- !u!1 &2776099545874171423
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,7 +253,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -446,6 +459,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4182148708286332888, guid: 1bca29172e9b33e4b9b2d8791b50e279,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6742409372722577911, guid: 1bca29172e9b33e4b9b2d8791b50e279,
         type: 3}
       propertyPath: m_Pivot.x
@@ -587,6 +605,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4182148708286332888, guid: 1bca29172e9b33e4b9b2d8791b50e279,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6742409372722577911, guid: 1bca29172e9b33e4b9b2d8791b50e279,
         type: 3}
       propertyPath: m_Pivot.x
@@ -722,6 +745,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PartStat (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1849603620399489239, guid: 843db72f06cb41446944e1637d4b665e,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7997421335284908480, guid: 843db72f06cb41446944e1637d4b665e,
         type: 3}
@@ -1020,6 +1048,11 @@ PrefabInstance:
       propertyPath: m_text
       value: '0 '
       objectReference: {fileID: 0}
+    - target: {fileID: 6977439850700510172, guid: 6f459514adeae3d449da7b4f6106f927,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9200444908510229984, guid: 6f459514adeae3d449da7b4f6106f927,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1161,6 +1194,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4182148708286332888, guid: 1bca29172e9b33e4b9b2d8791b50e279,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6742409372722577911, guid: 1bca29172e9b33e4b9b2d8791b50e279,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1301,6 +1339,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4182148708286332888, guid: 1bca29172e9b33e4b9b2d8791b50e279,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6742409372722577911, guid: 1bca29172e9b33e4b9b2d8791b50e279,
         type: 3}
@@ -1589,6 +1632,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PartStat (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1849603620399489239, guid: 843db72f06cb41446944e1637d4b665e,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7997421335284908480, guid: 843db72f06cb41446944e1637d4b665e,
         type: 3}
       propertyPath: m_Pivot.x
@@ -1724,6 +1772,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PartStat
+      objectReference: {fileID: 0}
+    - target: {fileID: 1849603620399489239, guid: 843db72f06cb41446944e1637d4b665e,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7997421335284908480, guid: 843db72f06cb41446944e1637d4b665e,
         type: 3}
@@ -1865,6 +1918,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4182148708286332888, guid: 1bca29172e9b33e4b9b2d8791b50e279,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6742409372722577911, guid: 1bca29172e9b33e4b9b2d8791b50e279,
         type: 3}
@@ -2153,6 +2211,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PartStat (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 1849603620399489239, guid: 843db72f06cb41446944e1637d4b665e,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7997421335284908480, guid: 843db72f06cb41446944e1637d4b665e,
         type: 3}
       propertyPath: m_Pivot.x
@@ -2435,6 +2498,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PartStat (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1849603620399489239, guid: 843db72f06cb41446944e1637d4b665e,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7997421335284908480, guid: 843db72f06cb41446944e1637d4b665e,
         type: 3}
       propertyPath: m_Pivot.x
@@ -2570,6 +2638,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PartStat (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1849603620399489239, guid: 843db72f06cb41446944e1637d4b665e,
+        type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7997421335284908480, guid: 843db72f06cb41446944e1637d4b665e,
         type: 3}

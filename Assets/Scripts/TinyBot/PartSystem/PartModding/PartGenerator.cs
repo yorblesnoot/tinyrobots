@@ -7,7 +7,7 @@ public class PartGenerator : MonoBehaviour
 {
     [SerializeField] List<PartMutator> mutators;
     [SerializeField] BotConverter botConverter;
-    [SerializeField] List<CraftablePart> generableBases;
+    List<CraftablePart> generableBases;
     private void Awake()
     {
         generableBases = botConverter.PartLibrary.Where(part => part.Type != SlotType.CORE).ToList();

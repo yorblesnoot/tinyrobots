@@ -13,7 +13,7 @@ public class ModdedPart
     [HideInInspector] public GameObject Sample;
     [HideInInspector] public Ability[] Abilities;
 
-
+    readonly HashSet<StatType> percentStats = new() { StatType.WEIGHT, StatType.ARMOR };
     public ModdedPart() { }
     public ModdedPart(CraftablePart part)
     {
@@ -47,14 +47,35 @@ public class ModdedPart
                 modValues.AddRange(mutator.Mods);
             }
         }
-        
+
+        ApplyStats(statValues);
+        ApplyMods(modValues);
+
+        if (!Stats.TryGetValue(StatType.WEIGHT, out int extraWeight)) return;
+
+        Stats.Remove(StatType.WEIGHT);
+        Weight += extraWeight;
+    }
+
+    void ApplyStats(List<StatValue> statValues)
+    {
         Stats = new();
+        Dictionary<StatType, int> percentMap = new();
         foreach (var statSet in statValues)
         {
-            if (Stats.ContainsKey(statSet.Type)) Stats[statSet.Type] += statSet.Value;
-            else Stats.Add(statSet.Type, statSet.Value);
+            if (!Stats.ContainsKey(statSet.Type)) Stats.Add(statSet.Type, 0);
+            if (percentStats.Contains(statSet.Type)) percentMap.Add(statSet.Type, statSet.Value);
+            else Stats[statSet.Type] += statSet.Value;
         }
+        foreach (var percentSet in statValues)
+        {
+            float mult = 1 + (float)percentSet.Value / 100;
+            Stats[percentSet.Type] = Mathf.RoundToInt(mult * Stats[percentSet.Type]);
+        }
+    }
 
+    void ApplyMods(List<ModValue> modValues)
+    {
         Mods = new();
         foreach (var modSet in modValues)
         {
@@ -62,35 +83,33 @@ public class ModdedPart
             else Mods.Add(modSet.Type, modSet.Value);
         }
 
-        foreach(var ability in Abilities)
+        foreach (var ability in Abilities)
         {
             foreach (var mod in Mods)
             {
-                if(mod.Key == ModType.RANGE && ability.ModifiableRange) ability.range += mod.Value;
-                else if(mod.Key == ModType.COOLDOWN)
-                {
-                    int newCooldown = mod.Value + ability.cooldown;
-                    ability.cooldown = Mathf.Clamp(newCooldown, 1, newCooldown);
-                }
-                else if (mod.Key == ModType.DAMAGEPERCENT)
-                {
-                    float finalDamage = ability.damage;
-                    finalDamage *= 1 + mod.Value/100;
-                    ability.damage = Mathf.RoundToInt(finalDamage);
-                }
-                else if (mod.Key == ModType.COST)
-                {
-                    int finalCost = ability.cost + mod.Value;
-                    ability.cost = Mathf.Clamp(finalCost, 0, int.MaxValue); 
-                }
+                ApplyMod(ability, mod);
             }
         }
-        
+    }
 
-        if (Stats.TryGetValue(StatType.WEIGHT, out int extraWeight))
+    void ApplyMod(Ability ability, KeyValuePair<ModType, int> mod)
+    {
+        if (mod.Key == ModType.RANGE && ability.ModifiableRange) ability.range += mod.Value;
+        else if (mod.Key == ModType.COOLDOWN)
         {
-            Stats.Remove(StatType.WEIGHT);
-            Weight += extraWeight;
+            int newCooldown = mod.Value + ability.cooldown;
+            ability.cooldown = Mathf.Clamp(newCooldown, 1, newCooldown);
+        }
+        else if (mod.Key == ModType.DAMAGEPERCENT)
+        {
+            float finalDamage = ability.damage;
+            finalDamage *= 1 + mod.Value / 100;
+            ability.damage = Mathf.RoundToInt(finalDamage);
+        }
+        else if (mod.Key == ModType.COST)
+        {
+            int finalCost = ability.cost + mod.Value;
+            ability.cost = Mathf.Clamp(finalCost, 0, int.MaxValue);
         }
     }
 }

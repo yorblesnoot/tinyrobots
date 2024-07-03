@@ -11,7 +11,7 @@ public class BlueprintControl : MonoBehaviour
 
     [SerializeField] GameObject newSlot;
     [SerializeField] CinemachineVirtualCamera craftCam;
-    [SerializeField] List<VisualizedPart> partDisplays;
+    [SerializeField] List<ActivatablePart> partDisplays;
     [SerializeField] PartOverviewPanel partOverviewPanel;
     public PartSlot OriginSlot;
     public PlayerData PlayerData;
@@ -45,7 +45,7 @@ public class BlueprintControl : MonoBehaviour
         partInventory.Remove(ActivePart);
         ActivePart = null;
         Instance.partOverviewPanel.Hide();
-        VisualizedPart.resetActivation.Invoke();
+        ActivatablePart.resetActivation.Invoke();
         Instance.UpdatePartDisplays();
     }
 
@@ -71,13 +71,13 @@ public class BlueprintControl : MonoBehaviour
         {
             if(i == partDisplays.Count - 1)
             {
-                VisualizedPart display = Instantiate(partDisplays[^1], partDisplays[^1].transform.parent);
+                ActivatablePart display = Instantiate(partDisplays[^1], partDisplays[^1].transform.parent);
                 partDisplays.Add(display);
             }
             partDisplays[i].gameObject.SetActive(true);
             ModdedPart part = PlayerData.PartInventory[i];
             part.InitializePart();
-            partDisplays[i].InitializeDisplay(part, SetActivePart);
+            partDisplays[i].DisplayPart(part, SetActivePart);
         }
 
         for(int i = PlayerData.PartInventory.Count; i < partDisplays.Count; i++) partDisplays[i].gameObject.SetActive(false);

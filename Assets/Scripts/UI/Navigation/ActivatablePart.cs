@@ -5,23 +5,20 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class VisualizedPart : MonoBehaviour
+public class ActivatablePart : PartButton
 {
     [SerializeField] TMP_Text nameDisplay;
     [SerializeField] TMP_Text weightDisplay;
-    [SerializeField] Button selectButton;
     [SerializeField] Image buttonImage;
     [SerializeField] Color activeColor;
     [SerializeField] PartStatIcon[] statDisplays;
 
-    [HideInInspector] public CanvasGroup group;
 
-    public ModdedPart PartIdentity {get; private set;}
 
     public static UnityEvent resetActivation = new();
 
     UnityAction<ModdedPart> submitPartCallback;
-    public void InitializeDisplay(ModdedPart part, UnityAction<ModdedPart> activationCallback)
+    public override void DisplayPart(ModdedPart part, UnityAction<ModdedPart> activationCallback)
     {
         group = GetComponent<CanvasGroup>();
         submitPartCallback = activationCallback;
