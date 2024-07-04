@@ -12,6 +12,11 @@ public class UnitTab : MonoBehaviour
     {
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(clickEffect);
-        coreName.text = core.displayName == "" ? core.name.Replace("Core", "") : core.displayName;
+        coreName.text = GetCoreName(core);
+    }
+
+    public static string GetCoreName(BotCore core)
+    {
+         return core.displayName == "" ? core.name.Replace("Core", "") : core.displayName;
     }
 }

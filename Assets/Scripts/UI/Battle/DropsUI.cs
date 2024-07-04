@@ -42,6 +42,6 @@ public class DropsUI : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.D)) OfferDrops(null);
+        //if (Input.GetKeyDown(KeyCode.D)) OfferDrops(null);
     }
 }

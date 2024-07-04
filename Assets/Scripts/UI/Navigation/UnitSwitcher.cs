@@ -1,13 +1,14 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UnitSwitcher : MonoBehaviour
 {
-    [SerializeField] GameObject unitTab;
     [SerializeField] BlueprintControl blueprintControl;
     [SerializeField] CraftablePart empty;
     [SerializeField] UnitTab[] tabs;
     [SerializeField] UnitStatsDisplay unitStatsDisplay;
+    [SerializeField] TMP_Text nameDisplay;
 
     PlayerData playerData;
     int activeCharacter = -1;
@@ -45,6 +46,7 @@ public class UnitSwitcher : MonoBehaviour
         blueprintControl.originPart = playerData.CoreInventory[activeCharacter].ModdedCore;
 
         BotCore core = playerData.CoreInventory[charIndex];
+        nameDisplay.text = UnitTab.GetCoreName(core);
         if (core.bot != null)
             PlacePartsInSlots(playerData.CoreInventory[charIndex].bot.Children[0], blueprintControl.OriginSlot);
         unitStatsDisplay.RefreshDisplays();
