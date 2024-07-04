@@ -20,7 +20,7 @@ public class ActivatablePart : PartButton
     UnityAction<ModdedPart> submitPartCallback;
     public override void DisplayPart(ModdedPart part, UnityAction<ModdedPart> activationCallback)
     {
-        group = GetComponent<CanvasGroup>();
+        Group = GetComponent<CanvasGroup>();
         submitPartCallback = activationCallback;
         PartIdentity = part;
         nameDisplay.text = part.BasePart.name;
@@ -28,12 +28,12 @@ public class ActivatablePart : PartButton
         selectButton.onClick.AddListener(BecomeActive);
         resetActivation.AddListener(BecomeInactive);
 
-        List<StatType> statTypes = part.Stats.Keys.ToList();
+        List<StatType> statTypes = part.FinalStats.Keys.ToList();
         for(int i = 0; i < statDisplays.Count(); i++)
         {
             if(i < statTypes.Count)
             {
-                statDisplays[i].AssignStat(statTypes[i], part.Stats[statTypes[i]]);
+                statDisplays[i].AssignStat(statTypes[i], part.FinalStats[statTypes[i]]);
             }
             else statDisplays[i].Hide();
         }

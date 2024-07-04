@@ -16,8 +16,9 @@ public class PartOverviewPanel : MonoBehaviour
         gameObject.SetActive(true);
         nameDisplay.text = part.BasePart.name;
         SetAbilities(part);
-        SetStats(part);
+        SetBaseStats(part);
         SetMods(part);
+        part.Mutators.DebugContents();
     }
 
     public void Hide()
@@ -28,7 +29,7 @@ public class PartOverviewPanel : MonoBehaviour
     void SetMods(ModdedPart part)
     {
         List<string> words = new();
-        foreach(var stat in part.Stats) words.Add(GetStatPhrase(stat.Key, stat.Value));
+        foreach(var stat in part.StatChanges) words.Add(GetStatPhrase(stat.Key, stat.Value));
         foreach(var mod in part.Mods) words.Add(GetModPhrase(mod.Key, mod.Value));
         for(int i = 0; i < modLines.Length; i++)
         {
@@ -40,41 +41,40 @@ public class PartOverviewPanel : MonoBehaviour
     string GetStatPhrase(StatType type, int value)
     {
         string statName = type.ToString().ToLower().FirstToUpper();
-        string plusOrMinus = value > 0 ? "+" : "-";
-        if (type == StatType.WEIGHT || type == StatType.ARMOR)
+        string plus = value > 0 ? "+" : "";
+        if (ModdedPart.PercentStats.Contains(type))
         {
-            return $"{plusOrMinus}{value}% {statName}";
+            return $"{plus}{value}% {statName}";
         }
         else if(type == StatType.ACTION || type == StatType.MOVEMENT)
         {
-            return $"{plusOrMinus}{value} {statName} points";
+            return $"{plus}{value} {statName} points";
         }
-        else if (type == StatType.HEALTH || type == StatType.INITIATIVE || type == StatType.SHIELD)
+        else
         {
-            return $"{plusOrMinus}{value} {statName}";
+            return $"{plus}{value} {statName}";
         }
-        return "";
     }
 
     string GetModPhrase(ModType type, int value)
     {
         string modName = type.ToString().ToLower().FirstToUpper();
-        string plusOrMinus = value > 0 ? "+" : "-";
+        string plus = value > 0 ? "+" : "";
         if (type == ModType.DAMAGEPERCENT)
         {
-            return $"{plusOrMinus}{value}% Ability Damage";
+            return $"{plus}{value}% Ability Damage";
         }
-        else return $"{plusOrMinus}{value}% {modName}";
+        else return $"{plus}{value} {modName}";
     }
 
-    void SetStats(ModdedPart part)
+    void SetBaseStats(ModdedPart part)
     {
-        List<StatType> statTypes = part.Stats.Keys.ToList();
+        List<StatType> statTypes = part.FinalStats.Keys.ToList();
         for (int i = 0; i < statDisplays.Count(); i++)
         {
             if (i < statTypes.Count)
             {
-                statDisplays[i].AssignStat(statTypes[i], part.Stats[statTypes[i]]);
+                statDisplays[i].AssignStat(statTypes[i], part.FinalStats[statTypes[i]]);
             }
             else statDisplays[i].Hide();
         }

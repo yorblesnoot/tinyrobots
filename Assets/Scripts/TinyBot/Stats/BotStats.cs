@@ -6,7 +6,7 @@ public enum StatType
     HEALTH, //flat
     ACTION, //flat
     MOVEMENT, //flat
-    ARMOR, //percent
+    ARMOR, //flat
     SHIELD, //flat
     INITIATIVE, //flat
     WEIGHT //percent

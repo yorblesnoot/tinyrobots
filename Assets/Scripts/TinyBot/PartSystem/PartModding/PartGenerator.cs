@@ -26,7 +26,7 @@ public class PartGenerator : MonoBehaviour
             if(CheckStats(partStats, mutator) && CheckMods(mutator, abilities)) availableMutators.Add(mutator);
         }
 
-        while(modPart.Mutators.Count < modNumber && availableMutators.Count >= modNumber)
+        while(modPart.Mutators.Count < modNumber && availableMutators.Count > 0)
         {
             modPart.Mutators.Add(availableMutators.GrabRandomly());
         }
@@ -40,10 +40,9 @@ public class PartGenerator : MonoBehaviour
         if (mutator.Stats.Count() == 0) return true;
         foreach (StatValue stat in mutator.Stats)
         {
-            if (!partStats.Contains(stat.Type)) continue;
-            return true;
+            if (!partStats.Contains(stat.Type)) return false;
         }
-        return false;
+        return true;
     }
 
     bool CheckMods(PartMutator mutator, Ability[] abilities)

@@ -23,7 +23,7 @@ public class DropsUI : MonoBehaviour
         {
             ModdedPart modPart = partGenerator.Generate(modNumber);
             dropDisplays[i].DisplayPart(modPart, GivePart);
-            Tween.Alpha(dropDisplays[i].group, startValue: 0, endValue: 1, duration: partFadeDuration);
+            Tween.Alpha(dropDisplays[i].Group, startValue: 0, endValue: 1, duration: partFadeDuration);
         }
     }
 
@@ -33,8 +33,8 @@ public class DropsUI : MonoBehaviour
         Sequence sequence = Sequence.Create();
         foreach(var display in dropDisplays)
         {
-            display.group.interactable = false;
-            if (display.PartIdentity != part) sequence.Group(Tween.Alpha(display.group, endValue: 0, duration: partFadeDuration));
+            display.Group.interactable = false;
+            if (display.PartIdentity != part) sequence.Group(Tween.Alpha(display.Group, endValue: 0, duration: partFadeDuration));
         }
         if(enderCallback != null) 
             sequence.Chain(Tween.Delay(2)).OnComplete(() => enderCallback());
