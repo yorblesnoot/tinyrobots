@@ -2457,6 +2457,7 @@ MonoBehaviour:
   botColliderOffset: 0.6
   portraitGenerator: {fileID: 734323844}
   palette: {fileID: 11400000, guid: 55d5961420d9960419564510536d2377, type: 2}
+  turnManager: {fileID: 0}
 --- !u!4 &468739835
 Transform:
   m_ObjectHideFlags: 0
@@ -3149,6 +3150,54 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: -10}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &549240241
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 549240242}
+  - component: {fileID: 549240243}
+  m_Layer: 0
+  m_Name: EncounterMission
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &549240242
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549240241}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1097076969}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &549240243
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549240241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: faa26430eb7c50a40af6f9704df965fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerData: {fileID: 11400000, guid: ecd93be42b3c6b041ba1697eca59d1e5, type: 2}
+  botAssembler: {fileID: 468739834}
+  encounters: []
+  SpawnZones: []
 --- !u!1001 &551735183
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4232,7 +4281,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ceca0af9407537243bc4fafe63d68ecd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  portrait: {fileID: 0}
   renderTexture: {fileID: 8400000, guid: 08c69513d27003444916ff6976160934, type: 2}
   headCam: {fileID: 1917068457}
 --- !u!114 &734323845
@@ -5512,7 +5560,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 549240242}
   m_Father: {fileID: 1413525736}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1097076970
@@ -5527,11 +5576,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 585e3890a505e0e40951909b9eef50eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  missions:
+    entries:
+    - key: 0
+      value: {fileID: 0}
   mapMode: 1
   relay: {fileID: 11400000, guid: ae6e43f53999c8e47b5bb43485353f3f, type: 2}
   noiseGenerator: {fileID: 1110564617}
   marchingCubesRenderer: {fileID: 1110564608}
-  botPlacer: {fileID: 468739837}
   mainCameraControl: {fileID: 1329150493}
   turnManager: {fileID: 1202214817}
 --- !u!114 &1097076971
@@ -7270,7 +7322,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1272736895}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.028831495, y: 0.000000016921314, z: 4.8806975e-10, w: 0.9995843}
+  m_LocalRotation: {x: -0.028831493, y: 0.00000001692131, z: 4.880696e-10, w: 0.9995843}
   m_LocalPosition: {x: 0, y: 0, z: -5.07125}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

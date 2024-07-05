@@ -7,7 +7,6 @@ public class BipedalWalk : LegMovement
 {
     protected override void InitializeParameters()
     {
-        PreferredCursor = CursorType.GROUND;
         Style = MoveStyle.WALK;
     }
 

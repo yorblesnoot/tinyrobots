@@ -5,7 +5,6 @@ using UnityEngine;
 public abstract class PrimaryMovement : MonoBehaviour
 {
     public MoveStyle Style { get; protected set; }
-    public CursorType PreferredCursor { get; protected set; }
     [HideInInspector] public TinyBot Owner;
 
     [SerializeField] float lookSpeed = 1f;

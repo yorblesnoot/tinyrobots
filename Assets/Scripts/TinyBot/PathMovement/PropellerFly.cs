@@ -5,7 +5,6 @@ public class PropellerFly : PrimaryMovement
 {
     private void Awake()
     {
-        PreferredCursor = CursorType.AIR;
         Style = MoveStyle.FLY;
     }
 

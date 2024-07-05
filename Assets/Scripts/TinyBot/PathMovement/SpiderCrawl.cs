@@ -20,7 +20,6 @@ public class SpiderCrawl : LegMovement
     }
     protected override void InitializeParameters()
     {
-        PreferredCursor = CursorType.GROUND;
         Style = MoveStyle.CRAWL;
     }
     protected override Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral, Vector3 localStartPosition)

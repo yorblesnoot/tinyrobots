@@ -55,7 +55,7 @@ public class BotAI
         Vector3 closestEnemyPosition;
         foreach (TinyBot bot in TurnManager.TurnTakers)
         {
-            if(bot.allegiance == thisBot.allegiance) allies.Add(bot);
+            if(bot.Allegiance == thisBot.Allegiance) allies.Add(bot);
             else enemies.Add(bot);
         }
         enemies = enemies.OrderBy(unit => Vector3.Distance(unit.transform.position, thisBot.transform.position)).ToList();
@@ -160,7 +160,7 @@ public class BotAI
         MainCameraControl.RestrictCamera(true);
         MainCameraControl.TrackTarget(thisBot.transform);
         thisBot.ToggleActiveLayer(true);
-        Pathfinder3D.GeneratePathingTree(thisBot);
+        Pathfinder3D.GeneratePathingTree(thisBot.MoveStyle, thisBot.transform.position);
     }
     void EndTurn()
     {
@@ -178,7 +178,7 @@ public class BotAI
             List<Vector3> path = Pathfinder3D.FindVectorPath(location, out var moveCosts);
             thisBot.SpendResource(Mathf.RoundToInt(moveCosts[^1]), StatType.MOVEMENT);
             yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.TraversePath(path));
-            Pathfinder3D.GeneratePathingTree(thisBot);
+            Pathfinder3D.GeneratePathingTree(thisBot.MoveStyle, thisBot.transform.position);
         }
     }
     private IEnumerator UseAbility(Ability ability, GameObject target)

@@ -6,20 +6,22 @@ public class BotAssembler : MonoBehaviour
     [SerializeField] float botColliderOffset = 1;
     [SerializeField] PortraitGenerator portraitGenerator;
     [SerializeField] BotPalette palette;
-    public TinyBot BuildBotFromPartTree(TreeNode<ModdedPart> treeRoot, Allegiance allegiance)
+
+
+    public TinyBot BuildBot(TreeNode<ModdedPart> treeRoot, Allegiance allegiance)
     {
         PrimaryMovement locomotion = null;
         AttachmentPoint initialAttachmentPoint;
         List<GameObject> spawnedParts;
-        //this function sets the above variables
         BotStats botStats = new();
+        //this function sets the above variables
         GameObject bot = DeployOrigin(treeRoot);
         TinyBot botUnit = bot.GetComponent<TinyBot>();
         botStats.MaxAll();
         botUnit.Stats = botStats;
+        botUnit.Allegiance = allegiance;
         SetBotTallness(locomotion, initialAttachmentPoint, botUnit);
         RestructureHierarchy(locomotion, initialAttachmentPoint, bot);
-
         
         List<Ability> abilities = GetAbilityList(spawnedParts, botUnit);
         botUnit.Initialize(abilities, spawnedParts, locomotion);
@@ -85,8 +87,6 @@ public class BotAssembler : MonoBehaviour
             }
         }
     }
-
-    
 
     void SetBotTallness(PrimaryMovement locomotion, AttachmentPoint initialAttachmentPoint, TinyBot bot)
     {

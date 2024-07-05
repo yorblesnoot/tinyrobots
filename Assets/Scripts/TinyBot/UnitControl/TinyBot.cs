@@ -26,12 +26,13 @@ public class TinyBot : MonoBehaviour
     public Transform ChassisPoint;
 
     [HideInInspector] public Rigidbody PhysicsBody;
-    [HideInInspector] public Sprite portrait;
-    [HideInInspector] public Allegiance allegiance;
-    [HideInInspector] public bool availableForTurn;
+    [HideInInspector] public Sprite Portrait;
+    [HideInInspector] public Allegiance Allegiance;
+    [HideInInspector] public bool AvailableForTurn;
     [HideInInspector] public PrimaryMovement PrimaryMovement;
-    [HideInInspector] public UnityEvent beganTurn = new();
-    [HideInInspector] public UnityEvent endedTurn = new();
+    [HideInInspector] public UnityEvent BeganTurn = new();
+    [HideInInspector] public UnityEvent EndedTurn = new();
+    [HideInInspector] public MoveStyle MoveStyle { get { return PrimaryMovement.Style; } }
 
     public BotStats Stats = new();
     public static UnityEvent ClearActiveBot = new();
@@ -51,6 +52,12 @@ public class TinyBot : MonoBehaviour
         PrimaryMovement.Owner = this;
         ClearActiveBot.AddListener(ClearActiveUnit);
         partRenderers = GetComponentsInChildren<Renderer>();
+        Pathfinder3D.GetOccupancy.AddListener(DeclareOccupancy);
+    }
+
+    void DeclareOccupancy()
+    {
+        Pathfinder3D.SetNodeOccupancy(Vector3Int.RoundToInt(transform.position), true);
     }
 
     public void SetOutlineColor(Color color)
@@ -71,10 +78,11 @@ public class TinyBot : MonoBehaviour
 
     public void BeginTurn()
     {
-        beganTurn?.Invoke();
+        BeganTurn?.Invoke();
+        Pathfinder3D.SetNodeOccupancy(Vector3Int.RoundToInt(transform.position), false);
         Stats.SetToMax(StatType.ACTION);
         Stats.SetToMax(StatType.MOVEMENT);
-        if (allegiance == Allegiance.PLAYER) availableForTurn = true;
+        if (Allegiance == Allegiance.PLAYER) AvailableForTurn = true;
         else
         {
             botAI ??= new(this);

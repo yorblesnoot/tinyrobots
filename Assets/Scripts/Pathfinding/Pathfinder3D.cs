@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Jobs;
-using Unity.Profiling;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum MoveStyle
 {
@@ -125,12 +124,11 @@ public static class Pathfinder3D
     
 
     #region Path Services
-    public static void GeneratePathingTree(TinyBot owner)
+    public static void GeneratePathingTree(MoveStyle style, Vector3 position)
     {
-        MoveStyle style = owner.PrimaryMovement.Style;
-        Vector3Int startCoords = Vector3Int.RoundToInt(owner.transform.position);
+        Vector3Int startCoords = Vector3Int.RoundToInt(position);
         if (!nodeMap.TryGetValue(startCoords, out Node start)) return;
-        EvaluateNodeOccupancy(owner);
+        EvaluateNodeOccupancy(position);
 
         HashSet<Node> visited = new();
         foreach (Node node in nodeMap.Values)
@@ -247,26 +245,20 @@ public static class Pathfinder3D
 
     #region Occupancy
     static List<Vector3Int> lastOccupied = new();
-    public static void EvaluateNodeOccupancy(TinyBot owner)
+    public static UnityEvent GetOccupancy = new();
+    public static void EvaluateNodeOccupancy(Vector3 position)
     {
-        if(lastOccupied.Count > 0)
-        {
-            foreach (var node in lastOccupied)
-            {
-                SetNodeOccupancy(node, false);
-            }
-        }
-        lastOccupied = new();
-        foreach(var bot in TurnManager.TurnTakers)
-        {
-            if(bot == owner) continue;
-            Vector3Int cleanPosition = Vector3Int.RoundToInt(bot.transform.position);
-            lastOccupied.Add(cleanPosition);
-            SetNodeOccupancy(cleanPosition, true);
-        }
+        ClearOccupancy();
+        GetOccupancy.Invoke();
     }
 
-    static void SetNodeOccupancy(Vector3Int position, bool status)
+    private static void ClearOccupancy()
+    {
+        foreach (var node in lastOccupied) SetNodeOccupancy(node, false);
+        lastOccupied = new();
+    }
+
+    public static void SetNodeOccupancy(Vector3Int position, bool status)
     {
         Node node = nodeMap[position];
         node.occupied = status;

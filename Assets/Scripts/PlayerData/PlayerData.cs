@@ -7,34 +7,26 @@ public class PlayerData : ScriptableObject
 {
     public void LoadRecords()
     {
-        if(DevMode) PartInventory = botConverter.PartLibrary.Where(part => part.Type != SlotType.CORE)
+        if(DevMode) PartInventory = BotConverter.PartLibrary.Where(part => part.Type != SlotType.CORE)
                 .Select(part => new ModdedPart(part)).ToList();
         foreach(BotCore core in CoreInventory)
         {
             if (core.bot != null || core.StarterRecord == null) continue;
             
-            core.bot = botConverter.StringToBot(core.StarterRecord.record);
+            core.bot = BotConverter.StringToBot(core.StarterRecord.record);
         }
     }
     public List<ModdedPart> PartInventory;
     public List<BotCore> CoreInventory;
-    public List<SavedNavZone> MapData;
-    public int ZoneLocation;
+    public MapData MapData;
+    
     public int Difficulty = 3;
     public bool DevMode;
 
     [Header("Components")]
-    [SerializeField] BotConverter botConverter;
+    public BotConverter BotConverter;
 }
 
-public class SavedNavZone
-{
-    public int pieceIndex;
-    public Vector3 position;
-    public Quaternion rotation;
-    public int[] neighborIndices;
-    public bool revealed;
-    public int eventType;
-}
+
 
 
