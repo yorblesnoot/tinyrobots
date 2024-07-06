@@ -2457,7 +2457,6 @@ MonoBehaviour:
   botColliderOffset: 0.6
   portraitGenerator: {fileID: 734323844}
   palette: {fileID: 11400000, guid: 55d5961420d9960419564510536d2377, type: 2}
-  turnManager: {fileID: 0}
 --- !u!4 &468739835
 Transform:
   m_ObjectHideFlags: 0
@@ -3196,7 +3195,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: ecd93be42b3c6b041ba1697eca59d1e5, type: 2}
   botAssembler: {fileID: 468739834}
-  encounters: []
+  encounters:
+  - {fileID: 11400000, guid: e929e5bd3ae93144a882e11947d27fc5, type: 2}
+  - {fileID: 11400000, guid: 5ba117d336622f94f99b18a96916f8bb, type: 2}
   SpawnZones: []
 --- !u!1001 &551735183
 PrefabInstance:
@@ -5579,7 +5580,7 @@ MonoBehaviour:
   missions:
     entries:
     - key: 0
-      value: {fileID: 0}
+      value: {fileID: 549240243}
   mapMode: 1
   relay: {fileID: 11400000, guid: ae6e43f53999c8e47b5bb43485353f3f, type: 2}
   noiseGenerator: {fileID: 1110564617}
@@ -7210,11 +7211,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cdae858a1f117f41a8463dbb1e045f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mappings:
-  - type: 0
-    behaviour: {fileID: 1251433161}
-  - type: 1
-    behaviour: {fileID: 1251433162}
+  airCursor: {fileID: 1251433161}
+  groundCursor: {fileID: 1251433162}
   abilityUI: {fileID: 731169584}
   statDisplay: {fileID: 364993942}
   pathingLine: {fileID: 1599781106}
@@ -7322,7 +7320,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1272736895}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.028831493, y: 0.00000001692131, z: 4.880696e-10, w: 0.9995843}
+  m_LocalRotation: {x: -0.028831486, y: 0.000000016921296, z: 4.880691e-10, w: 0.9995843}
   m_LocalPosition: {x: 0, y: 0, z: -5.07125}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

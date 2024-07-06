@@ -25,6 +25,7 @@ public class TinyBot : MonoBehaviour
     public Transform headshotPosition;
     public Transform ChassisPoint;
 
+    [HideInInspector] public BotCore LinkedCore;
     [HideInInspector] public Rigidbody PhysicsBody;
     [HideInInspector] public Sprite Portrait;
     [HideInInspector] public Allegiance Allegiance;

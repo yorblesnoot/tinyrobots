@@ -26,6 +26,19 @@ public abstract class Mission : MonoBehaviour
         return bot;
     }
 
+    protected List<TinyBot> SpawnPlayerBots()
+    {
+        List<TinyBot> bots = new();
+        foreach (var core in playerData.CoreInventory)
+        {
+            if (!core.Deployable) continue;
+            TinyBot bot = botAssembler.BuildBot(core.Bot, Allegiance.PLAYER);
+            bot.LinkedCore = core;
+            bot.Stats.Current[StatType.HEALTH] = Mathf.RoundToInt(bot.Stats.Max[StatType.HEALTH] * core.HealthRatio);
+        }
+        return bots;
+    }
+
     
     public virtual void RoundEnd() { }
     public abstract bool MetEndCondition(TurnManager turnManager, BattleEnder battleEnder);

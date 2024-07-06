@@ -72,6 +72,7 @@ public class TowerBuilder : MonoBehaviour
 
     private void SaveMapData()
     {
+        mapData = new();
         List<TowerNavZone> zones = zoneRooms.Values.ToHashSet().ToList();
         List<SavedNavZone> map = new();
 

@@ -13,6 +13,8 @@ public class UnitSwitcher : MonoBehaviour
     PlayerData playerData;
     int activeCharacter = -1;
 
+    [HideInInspector] public BotCore ActiveCore { get { return activeCharacter >= 0 ? playerData.CoreInventory[activeCharacter] : null; } }
+
     private void Awake()
     {
         playerData = blueprintControl.PlayerData;
@@ -47,8 +49,8 @@ public class UnitSwitcher : MonoBehaviour
 
         BotCore core = playerData.CoreInventory[charIndex];
         nameDisplay.text = UnitTab.GetCoreName(core);
-        if (core.bot != null)
-            PlacePartsInSlots(playerData.CoreInventory[charIndex].bot.Children[0], blueprintControl.OriginSlot);
+        if (core.Bot != null)
+            PlacePartsInSlots(playerData.CoreInventory[charIndex].Bot.Children[0], blueprintControl.OriginSlot);
         unitStatsDisplay.RefreshDisplays();
         
     }
@@ -57,7 +59,9 @@ public class UnitSwitcher : MonoBehaviour
     {
         if (activeCharacter < 0) return;
 
-        playerData.CoreInventory[activeCharacter].bot = blueprintControl.BuildBot();
+        BotCore core = playerData.CoreInventory[activeCharacter];
+        core.Deployable = unitStatsDisplay.IsDeployable();
+        core.Bot = blueprintControl.BuildBot();
         blueprintControl.OriginSlot.ClearPartIdentity(false, false);
     }
 
