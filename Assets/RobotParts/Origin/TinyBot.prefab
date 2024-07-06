@@ -369,6 +369,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dec2c1ab19d94b4486aa18d6cb145cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  normalPopup:
+    Color: {r: 1, g: 0.5423228, b: 0, a: 1}
+    Size: 28
+  critPopup:
+    Color: {r: 1, g: 0.07661381, b: 0, a: 1}
+    Size: 38
   floatNumber: {fileID: 6650869779228163377, guid: 7ca50f46265ed084b8aa0e3b4a8c2f10,
     type: 3}
 --- !u!114 &5015652637622662206
@@ -388,24 +394,26 @@ MonoBehaviour:
   hitRecoilTime: 0.1
   hitReturnTime: 0.5
   recoilDistancePerDamage: 0.03
+  fallDamagePerUnit: 2
   selectBrackets: {fileID: 3748868292360106338}
   feedback: {fileID: 3745691473234048856}
   hitSpark: {fileID: 2635817547006723021, guid: 4779673784276bd41b3e7f295ad79d19,
     type: 3}
   headshotPosition: {fileID: 1977403559975929643}
   ChassisPoint: {fileID: 8869698945485623094}
-  PhysicsBody: {fileID: 0}
-  portrait: {fileID: 0}
-  allegiance: 0
-  availableForTurn: 0
-  PrimaryMovement: {fileID: 0}
-  beganTurn:
-    m_PersistentCalls:
-      m_Calls: []
-  endedTurn:
-    m_PersistentCalls:
-      m_Calls: []
   deathPushMulti: 1
+  LinkedCore: {fileID: 0}
+  PhysicsBody: {fileID: 0}
+  Portrait: {fileID: 0}
+  Allegiance: 0
+  AvailableForTurn: 0
+  PrimaryMovement: {fileID: 0}
+  BeganTurn:
+    m_PersistentCalls:
+      m_Calls: []
+  EndedTurn:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!54 &7285447138792446022
 Rigidbody:
   m_ObjectHideFlags: 0

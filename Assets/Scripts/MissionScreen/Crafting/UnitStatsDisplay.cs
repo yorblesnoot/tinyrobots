@@ -22,6 +22,7 @@ public class UnitStatsDisplay : MonoBehaviour
 
     public void Initialize()
     {
+        if (entries != null) return;
         PartSlot.SlottedPart.AddListener(ModifyPartStats);
         entries = stats.ToDictionary(stat => stat.Type, stat => stat);
     }
@@ -51,8 +52,13 @@ public class UnitStatsDisplay : MonoBehaviour
         foreach(var part in activePartsPlusOrigin)
         {
             activeAbilities.AddRange(part.Abilities);
-            foreach(StatType stat in part.FinalStats.Keys) entries[stat].Value += part.FinalStats[stat];
-            if(part.FinalStats.TryGetValue(StatType.HEALTH, out int health)) totalHealth += health;
+            foreach (StatType stat in part.FinalStats.Keys)
+            {
+                int increment = part.FinalStats[stat];
+                if (stat == StatType.HEALTH) totalHealth += increment;
+                else entries[stat].Value += increment;
+            }
+            
             if(part.Weight < 0) maxWeight -= part.Weight;
             else totalWeight += part.Weight;
         }

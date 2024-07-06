@@ -12,6 +12,7 @@ public class BotCore : ScriptableObject
 
     public TreeNode<ModdedPart> Bot;
     public float HealthRatio = 1;
+    public Sprite CharacterPortrait;
     [HideInInspector] public bool Deployable = true;
     [HideInInspector] public ModdedPart ModdedCore;
 

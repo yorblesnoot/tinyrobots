@@ -8,11 +8,14 @@ public class HealthOverlay : MonoBehaviour
     [SerializeField] TMP_Text healthCount;
     public void UpdateHealth(TinyBot bot)
     {
-        healthOverlay.maxValue = bot.Stats.Max[StatType.HEALTH];
-        int missingHealth = bot.Stats.Max[StatType.HEALTH] - bot.Stats.Current[StatType.HEALTH];
+        UpdateHealth(bot.Stats.Current[StatType.HEALTH], bot.Stats.Max[StatType.HEALTH]);
+    }
+    public void UpdateHealth(int current, int max)
+    {
+        healthOverlay.maxValue = max;
+        int missingHealth = max - current;
         healthOverlay.value = missingHealth;
         if (healthCount == null) return;
-
-        healthCount.text = $"{bot.Stats.Current[StatType.HEALTH]}/{bot.Stats.Max[StatType.HEALTH]}";
+        healthCount.text = $"{current}/{max}";
     }
 }

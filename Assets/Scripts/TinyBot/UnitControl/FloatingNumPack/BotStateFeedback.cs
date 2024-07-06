@@ -71,6 +71,7 @@ public class BotStateFeedback : MonoBehaviour
         TMP_Text floatText = numberPool.InstantiateFromPool(popPosition, Quaternion.identity).GetComponentInChildren<TMP_Text>();
         floatText.text = pop.Number.ToString();
         floatText.color = pop.Type.Color;
+        floatText.fontSize = pop.Type.Size;
     }
 }
 

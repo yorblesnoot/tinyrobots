@@ -9,12 +9,11 @@ public class UnitSwitcher : MonoBehaviour
     [SerializeField] UnitTab[] tabs;
     [SerializeField] UnitStatsDisplay unitStatsDisplay;
     [SerializeField] TMP_Text nameDisplay;
+    [SerializeField] GameObject navUI;
 
     PlayerData playerData;
-    int activeCharacter = -1;
 
-    [HideInInspector] public BotCore ActiveCore { get { return activeCharacter >= 0 ? playerData.CoreInventory[activeCharacter] : null; } }
-
+    [HideInInspector] public BotCore ActiveCore { get; private set; }
     private void Awake()
     {
         playerData = blueprintControl.PlayerData;
@@ -24,44 +23,46 @@ public class UnitSwitcher : MonoBehaviour
         {
             bool validTab = i < coreCount;
             tabs[i].gameObject.SetActive(validTab);
-            int index = i;
-            if (validTab) tabs[i].AssignTab(() => SwitchCharacter(index), playerData.CoreInventory[i]);
+            if (!validTab) continue;
+            BotCore core = playerData.CoreInventory[i];
+            tabs[i].AssignTab(() => SwitchCharacter(core), core);
         }
-    }
-    private void OnEnable()
-    {
-        unitStatsDisplay.Initialize();
-        SwitchCharacter(0);
     }
 
     private void OnDisable()
     {
         SaveActiveBotToCore();
-        activeCharacter = -1;
+        ActiveCore = null;
     }
 
-    void SwitchCharacter(int charIndex)
+    public void Enable(BotCore core)
     {
-        if (charIndex == activeCharacter) return;
-        SaveActiveBotToCore();
-        activeCharacter = charIndex;
-        blueprintControl.originPart = playerData.CoreInventory[activeCharacter].ModdedCore;
+        navUI.SetActive(false);
+        unitStatsDisplay.Initialize();
+        gameObject.SetActive(true);
+        SwitchCharacter(core);
+    }
 
-        BotCore core = playerData.CoreInventory[charIndex];
-        nameDisplay.text = UnitTab.GetCoreName(core);
-        if (core.Bot != null)
-            PlacePartsInSlots(playerData.CoreInventory[charIndex].Bot.Children[0], blueprintControl.OriginSlot);
+    void SwitchCharacter(BotCore newCore)
+    {
+        if (newCore == ActiveCore) return;
+        SaveActiveBotToCore();
+        ActiveCore = newCore;
+        blueprintControl.originPart = newCore.ModdedCore;
+
+        nameDisplay.text = UnitTab.GetCoreName(newCore);
+        if (newCore.Bot != null)
+            PlacePartsInSlots(newCore.Bot.Children[0], blueprintControl.OriginSlot);
         unitStatsDisplay.RefreshDisplays();
         
     }
 
     private void SaveActiveBotToCore()
     {
-        if (activeCharacter < 0) return;
+        if (ActiveCore == null) return;
 
-        BotCore core = playerData.CoreInventory[activeCharacter];
-        core.Deployable = unitStatsDisplay.IsDeployable();
-        core.Bot = blueprintControl.BuildBot();
+        ActiveCore.Deployable = unitStatsDisplay.IsDeployable();
+        ActiveCore.Bot = blueprintControl.BuildBot();
         blueprintControl.OriginSlot.ClearPartIdentity(false, false);
     }
 
