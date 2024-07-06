@@ -68,7 +68,7 @@ public class SwordSlash : SpatialAbility
         yield return StartCoroutine(SlashThroughPoints(slashPoints, slashTime));
         foreach (TinyBot bot in hitTargets)
         {
-            bot.ReceiveDamage(damage, Owner.transform.position, bot.ChassisPoint.position);
+            bot.ReceiveHit(damage, Owner.transform.position, bot.ChassisPoint.position);
         }
         yield return new WaitForSeconds(returnTime);
         yield return StartCoroutine(ikTarget.gameObject.LerpTo(neutralPosition, returnTime, true));

@@ -7,10 +7,18 @@ using UnityEngine;
 
 public class BotStateFeedback : MonoBehaviour
 {
-
+    [SerializeField] PopupType normalPopup;
+    [SerializeField] PopupType critPopup;
     [SerializeField] GameObject floatNumber;
 
     public static ObjectPool numberPool;
+
+    [Serializable]
+    struct PopupType
+    {
+        public Color Color;
+        public int Size;
+    }
 
     private void Awake()
     {
@@ -20,25 +28,17 @@ public class BotStateFeedback : MonoBehaviour
     readonly AvailableDisplacements displacements = new();
     static readonly Vector3 displacementFactor = new(.5f, 0, 0);
     static readonly float riseFactor = .2f;
-    void PopupFloatingNumber(int number, Color color, int displacement)
-    {
-        Vector3 popPosition = transform.position;
-        popPosition += transform.rotation * displacementFactor * (displacement % 2);
-        popPosition.y += Mathf.Abs(displacement) * riseFactor;
-        TMP_Text floatText = numberPool.InstantiateFromPool(popPosition, Quaternion.identity).GetComponentInChildren<TMP_Text>();
-        floatText.text = number.ToString();
-        floatText.color = color;
-    }
+    
 
     class Popup
     {
-        public int number;
-        public Color color;
+        public int Number;
+        public PopupType Type;
     }
 
     Queue<Popup> popupQueue;
 
-    public void QueuePopup(int number, Color color)
+    public void QueuePopup(int number, bool crit = false)
     {
 
         if (popupQueue == null || popupQueue.Count == 0)
@@ -46,7 +46,7 @@ public class BotStateFeedback : MonoBehaviour
             popupQueue = new();
             StartCoroutine(SequencePopups());
         }
-        popupQueue.Enqueue(new Popup {  number = number, color = color });
+        popupQueue.Enqueue(new Popup {  Number = number, Type = crit ? critPopup : normalPopup });
     }
 
     static readonly float popDelay = .2f;
@@ -59,8 +59,18 @@ public class BotStateFeedback : MonoBehaviour
             Popup newpop = popupQueue.Dequeue();
             int displace = displacements.CheckoutDisplacement();
             StartCoroutine(displacements.CountdownToCheckIn(FloatingNumber.lifespan, displace));
-            PopupFloatingNumber(newpop.number, newpop.color, displace);
+            PopupFloatingNumber(newpop, displace);
         }
+    }
+
+    void PopupFloatingNumber(Popup pop, int displacement)
+    {
+        Vector3 popPosition = transform.position;
+        popPosition += transform.rotation * displacementFactor * (displacement % 2);
+        popPosition.y += Mathf.Abs(displacement) * riseFactor;
+        TMP_Text floatText = numberPool.InstantiateFromPool(popPosition, Quaternion.identity).GetComponentInChildren<TMP_Text>();
+        floatText.text = pop.Number.ToString();
+        floatText.color = pop.Type.Color;
     }
 }
 

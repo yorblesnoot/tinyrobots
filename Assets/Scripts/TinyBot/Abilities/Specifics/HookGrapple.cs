@@ -30,7 +30,7 @@ public class HookGrapple : LinearAbility
         yield return StartCoroutine(LaunchWithLine(hook, trajectory, intervalTime));
         if (hit.collider != null)
         {
-            if (hit.collider.TryGetComponent(out TinyBot bot)) bot.ReceiveDamage(damage, Owner.transform.position, hit.point);
+            if (hit.collider.TryGetComponent(out TinyBot bot)) bot.ReceiveHit(damage, Owner.transform.position, hit.point);
             Vector3 backDirection = trajectory[1] - trajectory[0];
             backDirection.Normalize();
             backDirection *= backDistance;

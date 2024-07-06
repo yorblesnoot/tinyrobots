@@ -19,11 +19,15 @@ public class TinyBot : MonoBehaviour
     [SerializeField] float hitRecoilTime;
     [SerializeField] float hitReturnTime;
     [SerializeField] float recoilDistancePerDamage;
+    [SerializeField] float fallDamagePerUnit = 2;
     [SerializeField] GameObject selectBrackets;
     [SerializeField] BotStateFeedback feedback;
     [SerializeField] GameObject hitSpark;
     public Transform headshotPosition;
     public Transform ChassisPoint;
+
+    readonly float minForce = .1f;
+    [SerializeField] float deathPushMulti = 1;
 
     [HideInInspector] public BotCore LinkedCore;
     [HideInInspector] public Rigidbody PhysicsBody;
@@ -37,7 +41,6 @@ public class TinyBot : MonoBehaviour
 
     public BotStats Stats = new();
     public static UnityEvent ClearActiveBot = new();
-    
 
     BotAI botAI;
 
@@ -112,8 +115,7 @@ public class TinyBot : MonoBehaviour
         ToggleActiveLayer(false);
     }
 
-    readonly float minForce = .1f;
-    [SerializeField] float deathPushMulti = 1;
+    
     void Die(Vector3 hitSource)
     {
         StopAllCoroutines();
@@ -131,44 +133,57 @@ public class TinyBot : MonoBehaviour
         Destroy(gameObject, 5f);
     }
 
-    public void ReceiveDamage(int damage, Vector3 source, Vector3 hitPoint)
+    public void ReceiveHit(int damage, Vector3 source, Vector3 hitPoint)
     {
-        feedback.QueuePopup(damage, Color.red);
+        feedback.QueuePopup(damage);
         StartCoroutine(PrimaryMovement.ApplyImpulseToBody(source, recoilDistancePerDamage * damage, hitRecoilTime, hitReturnTime));
         GameObject spark = Instantiate(hitSpark, hitPoint, Quaternion.identity);
         spark.transform.LookAt(source);
         Destroy(spark, 1f);
+        ReduceHealth(damage);
+        if (Stats.Current[StatType.HEALTH] == 0) Die(source);
+    }
+
+    private void ReduceHealth(int damage)
+    {
         Stats.Current[StatType.HEALTH] = Math.Clamp(Stats.Current[StatType.HEALTH] - damage, 0, Stats.Max[StatType.HEALTH]);
         TurnManager.UpdateHealth(this);
-        if(Stats.Current[StatType.HEALTH] == 0) Die(source);
     }
 
     public IEnumerator Fall(Vector3 velocity = default)
     {
+        float startHeight = transform.position.z;
         PhysicsBody.isKinematic = false;
-        bool foundLanding = false;
         PhysicsBody.velocity = velocity;
-        while(!foundLanding)
+        while(true)
         {
             Vector3Int cleanPosition = Vector3Int.RoundToInt(transform.position);
             if (Pathfinder3D.PointIsOffMap(cleanPosition.x, cleanPosition.y, cleanPosition.z))
             {
                 Die(transform.position);
-                foundLanding = true;
+                break;
             }
             if (Pathfinder3D.GetLandingPointBy(transform.position, PrimaryMovement.Style, out Vector3Int coords))
             {
                 PhysicsBody.isKinematic = true;
                 //PhysicsBody.velocity = Vector3.zero;
-                foundLanding = true;
                 Vector3 surfaceNormal = PrimaryMovement.Style == MoveStyle.CRAWL ? Pathfinder3D.GetCrawlOrientation(coords) : Vector3.up;
                 Quaternion rotationTarget = Quaternion.FromToRotation(transform.up, surfaceNormal) * transform.rotation;
                 Tween.Position(transform, endValue: coords, duration: landingDuration).Group(
                 Tween.Rotation(transform, endValue: rotationTarget, duration: landingDuration))
-                    .OnComplete(() => PrimaryMovement.NeutralStance());
+                    .OnComplete(() => EndFall());
+                break;
             }
             
             yield return null;
+        }
+
+        void EndFall()
+        {
+            StartCoroutine(PrimaryMovement.NeutralStance());
+            float heightDifference = transform.position.z - startHeight;
+            float fallDamage = Mathf.Clamp(heightDifference * fallDamagePerUnit, 0, float.MaxValue);
+            ReduceHealth(Mathf.RoundToInt(fallDamage));
         }
     }
 

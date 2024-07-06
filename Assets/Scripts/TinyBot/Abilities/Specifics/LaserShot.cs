@@ -16,7 +16,7 @@ public class LaserShot : LinearAbility
     protected override void CompleteTrajectory(Vector3 position, GameObject launched, RaycastHit hit)
     {
         Destroy(launched);
-        if (hit.collider != null && hit.collider.TryGetComponent(out TinyBot bot)) bot.ReceiveDamage(damage, Owner.transform.position, hit.point);
+        if (hit.collider != null && hit.collider.TryGetComponent(out TinyBot bot)) bot.ReceiveHit(damage, Owner.transform.position, hit.point);
     }
 
     public override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)

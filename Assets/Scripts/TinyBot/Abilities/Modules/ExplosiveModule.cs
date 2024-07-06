@@ -50,7 +50,7 @@ public class ExplosiveModule : MonoBehaviour
         List<TinyBot> hit = CheckExplosionZone(explosionPosition, true);
         foreach(TinyBot bot in hit)
         {
-            bot.ReceiveDamage(damage, explosionPosition, bot.ChassisPoint.position);
+            bot.ReceiveHit(damage, explosionPosition, bot.ChassisPoint.position);
         }
     }
 
