@@ -12,6 +12,7 @@ public abstract class Ability : MonoBehaviour
     public bool ModifiableRange = false;
     public int cooldown = 1;
     public int damage;
+    public bool useAirCursor = true;
     
     public Sprite icon;
     public string[] blockingLayers;

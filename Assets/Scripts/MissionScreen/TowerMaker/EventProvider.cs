@@ -1,9 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class EventProvider : MonoBehaviour 
 {
@@ -14,7 +10,6 @@ public class EventProvider : MonoBehaviour
     }
     public int GetRandomWeightedEvent()
     {
-        return 1;
         int totalWeight = zoneEvents.Sum(x => x.weight);
         int random = Random.Range(0, totalWeight);
         float current = 0;

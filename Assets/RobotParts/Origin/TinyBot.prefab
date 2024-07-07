@@ -371,10 +371,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalPopup:
     Color: {r: 1, g: 0.5423228, b: 0, a: 1}
-    Size: 28
+    Size: 25
   critPopup:
     Color: {r: 1, g: 0.07661381, b: 0, a: 1}
-    Size: 38
+    Size: 35
   floatNumber: {fileID: 6650869779228163377, guid: 7ca50f46265ed084b8aa0e3b4a8c2f10,
     type: 3}
 --- !u!114 &5015652637622662206
@@ -394,6 +394,7 @@ MonoBehaviour:
   hitRecoilTime: 0.1
   hitReturnTime: 0.5
   recoilDistancePerDamage: 0.03
+  backstabMultiplier: 1.5
   fallDamagePerUnit: 2
   selectBrackets: {fileID: 3748868292360106338}
   feedback: {fileID: 3745691473234048856}

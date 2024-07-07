@@ -33,6 +33,7 @@ public class EncounterMission : Mission
     private void PlaceBotsInSpawnZones()
     {
         List<TinyBot> bots = SpawnPlayerBots();
+        Debug.Log(bots.Count + " player bots");
         SpawnTable encounter = encounters.GrabRandomly(false);
         List<BotRecord> enemyRecords = encounter.GetSpawnList(playerData.Difficulty);
         bots.AddRange(enemyRecords.Select(record => SpawnBot(Allegiance.ENEMY, record)));

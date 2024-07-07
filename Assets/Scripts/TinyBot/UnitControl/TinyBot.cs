@@ -60,8 +60,9 @@ public class TinyBot : MonoBehaviour
         Pathfinder3D.GetOccupancy.AddListener(DeclareOccupancy);
     }
 
-    void DeclareOccupancy()
+    void DeclareOccupancy(Vector3 position)
     {
+        if(transform.position == position) return;
         Pathfinder3D.SetNodeOccupancy(Vector3Int.RoundToInt(transform.position), true);
     }
 
@@ -139,14 +140,14 @@ public class TinyBot : MonoBehaviour
         //check for a backstab
         Vector3 hitDirection = (source - transform.position).normalized;
         float dot = Vector3.Dot(hitDirection, transform.forward);
-        if(canBackstab && dot < 0) damage = Mathf.RoundToInt(backstabMultiplier * damage);
+        bool backstabbed = canBackstab && dot < 0;
 
-        feedback.QueuePopup(damage);
+        feedback.QueuePopup(damage, backstabbed);
         StartCoroutine(PrimaryMovement.ApplyImpulseToBody(source, recoilDistancePerDamage * damage, hitRecoilTime, hitReturnTime));
         GameObject spark = Instantiate(hitSpark, hitPoint, Quaternion.identity);
         spark.transform.LookAt(source);
         Destroy(spark, 1f);
-        ReduceHealth(damage);
+        ReduceHealth(backstabbed ? Mathf.RoundToInt(backstabMultiplier * damage) : damage);
         
     }
 

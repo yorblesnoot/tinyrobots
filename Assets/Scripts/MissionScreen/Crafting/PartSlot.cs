@@ -1,4 +1,5 @@
 using TMPro;
+using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -89,6 +90,7 @@ public class PartSlot : MonoBehaviour
         SlottedPart.Invoke(part, true);
         slotAnimator.SetBool(contractionAnimation, true);
         mockup = part.Sample;
+        if (mockup.TryGetComponent(out Collider collider)) collider.enabled = false;
         mockup.SetActive(true);
         Animator partAnimator = mockup.GetComponentInChildren<Animator>();
         if (partAnimator != null) partAnimator.speed = 0;

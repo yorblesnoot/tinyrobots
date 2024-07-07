@@ -245,11 +245,11 @@ public static class Pathfinder3D
 
     #region Occupancy
     static List<Vector3Int> lastOccupied = new();
-    public static UnityEvent GetOccupancy = new();
+    public static UnityEvent<Vector3> GetOccupancy = new();
     public static void EvaluateNodeOccupancy(Vector3 position)
     {
         ClearOccupancy();
-        GetOccupancy.Invoke();
+        GetOccupancy.Invoke(position);
     }
 
     private static void ClearOccupancy()

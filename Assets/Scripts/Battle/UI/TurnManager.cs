@@ -40,6 +40,7 @@ public class TurnManager : MonoBehaviour
         PortraitStock.RemoveAt(0);
         
         TurnTakers.Add(bot);
+        Debug.Log("ADDED " + bot.Allegiance + " bot");
     }
 
     public static void RemoveTurnTaker(TinyBot bot)

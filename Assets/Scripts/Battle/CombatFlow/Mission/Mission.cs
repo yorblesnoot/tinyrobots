@@ -33,8 +33,10 @@ public abstract class Mission : MonoBehaviour
         {
             if (!core.Deployable) continue;
             TinyBot bot = botAssembler.BuildBot(core.Bot, Allegiance.PLAYER);
+            TurnManager.AddTurnTaker(bot);
             bot.LinkedCore = core;
             bot.Stats.Current[StatType.HEALTH] = Mathf.RoundToInt(bot.Stats.Max[StatType.HEALTH] * core.HealthRatio);
+            bots.Add(bot);
         }
         return bots;
     }

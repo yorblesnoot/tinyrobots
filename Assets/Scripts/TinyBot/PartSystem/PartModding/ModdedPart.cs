@@ -33,7 +33,6 @@ public class ModdedPart
     {
         if (Sample != null) return;
         Sample = GameObject.Instantiate(BasePart.AttachableObject);
-        if (Sample.TryGetComponent(out Collider collider)) collider.enabled = false;
         Abilities = Sample.GetComponents<Ability>();
     }
 
