@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class TreeGenerator : MapGenerator
+public class TreeGenerator 
 {
     
     [SerializeField] TreeParams tp;
@@ -75,13 +75,13 @@ public class TreeGenerator : MapGenerator
             for(int y = 0;y < TreeGeneratorNode.mapSize; y++)
             {
                 TreeGeneratorNode node = Map[x, y, TreeGeneratorNode.mapSize / 2];
-                Instantiate(debugger, node.worldPosition, Quaternion.LookRotation(node.guidingVector));
+                GameObject.Instantiate(debugger, node.worldPosition, Quaternion.LookRotation(node.guidingVector));
                 
             }
         }
     }
 
-    public override void GenerateCoreMap()
+    public void GenerateCoreMap()
     {
         TreeGeneratorNode.mapSize = tp.mapSize;
         GenerateInitialMap(tp.mapSize);
@@ -158,7 +158,7 @@ public class TreeGenerator : MapGenerator
         }
     }
 
-    public override byte[,,] GetByteMap()
+    public byte[,,] GetByteMap()
     {
         return InflateTree(treeNodes);
     }
@@ -220,7 +220,7 @@ public class TreeGenerator : MapGenerator
         {
             foreach (TreeGeneratorNode node in orderedPoints)
             {
-                Instantiate(debugger, node.worldPosition, Quaternion.identity);
+                GameObject.Instantiate(debugger, node.worldPosition, Quaternion.identity);
             }
         }
     }
@@ -368,7 +368,7 @@ public class TreeGenerator : MapGenerator
         return false;
     }
 
-    public override void PlaceSecondaries()
+    public void PlaceSecondaries()
     {
         ground.transform.position = origin.worldPosition;
     }
