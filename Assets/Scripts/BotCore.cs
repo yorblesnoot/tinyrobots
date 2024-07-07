@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "BotCore", menuName = "ScriptableObjects/BotCore")]
 public class BotCore : ScriptableObject
@@ -11,7 +12,14 @@ public class BotCore : ScriptableObject
     }
 
     public TreeNode<ModdedPart> Bot;
-    public float HealthRatio = 1;
+
+    float _healthRatio = 1f;
+    public float HealthRatio { 
+        get { return _healthRatio; } 
+        set { HealthRatioChanged?.Invoke(); _healthRatio = value; } 
+    }
+    [HideInInspector] public UnityEvent HealthRatioChanged = new();
+
     public Sprite CharacterPortrait;
     [HideInInspector] public bool Deployable = true;
     [HideInInspector] public ModdedPart ModdedCore;

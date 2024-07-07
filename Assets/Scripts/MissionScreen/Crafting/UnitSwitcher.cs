@@ -13,7 +13,7 @@ public class UnitSwitcher : MonoBehaviour
 
     PlayerData playerData;
 
-    [HideInInspector] public BotCore ActiveCore { get; private set; }
+    [HideInInspector] public static BotCore ActiveCore { get; private set; }
     private void Awake()
     {
         playerData = blueprintControl.PlayerData;

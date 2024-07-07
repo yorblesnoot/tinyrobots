@@ -12,7 +12,6 @@ public class UnitStatsDisplay : MonoBehaviour
     [SerializeField] TMP_Text healthDisplay;
     [SerializeField] AbilityDisplay[] abilityDisplays;
     [SerializeField] BlueprintControl blueprintControl;
-    [SerializeField] UnitSwitcher unitSwitcher;
 
     Dictionary<StatType, StatEntry> entries;
     List<ModdedPart> activeParts = new();
@@ -64,7 +63,7 @@ public class UnitStatsDisplay : MonoBehaviour
         }
 
         foreach(var entry in entries.Values) entry.Display.text = entry.Value.ToString();
-        healthDisplay.text = $"{unitSwitcher.ActiveCore.HealthRatio * totalHealth} / {totalHealth}";
+        healthDisplay.text = $"{UnitSwitcher.ActiveCore.HealthRatio * totalHealth} / {totalHealth}";
         weightDisplay.text = $"{totalWeight} / {(maxWeight == 0 ? "-" : maxWeight)}";
         weightDisplay.color = IsDeployable() ?  Color.white : Color.red;
 

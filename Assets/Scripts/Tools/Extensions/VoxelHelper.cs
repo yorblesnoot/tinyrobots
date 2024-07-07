@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -20,7 +20,21 @@ public static class VoxelHelper
                 }
             }
         }
-        return flatCoords[Random.Range(0, flatCoords.Count)];
+        return flatCoords[UnityEngine.Random.Range(0, flatCoords.Count)];
+    }
+
+    public static void AllVoxels<T>(this T[,,] map, Action<int, int, int> action)
+    {
+        for (int x = 0; x < map.GetLength(0); x++)
+        {
+            for (int y = 0; y < map.GetLength(1); y++)
+            {
+                for (int z = 0; z < map.GetLength(2); z++)
+                {
+                    action(x, y, z);
+                }
+            }
+        }
     }
 
     public static Vector3 ToWorldVector(this Vector3Int mapVec)

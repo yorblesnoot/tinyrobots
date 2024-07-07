@@ -15,6 +15,6 @@ public class PartySidebar : MonoBehaviour
 
     void EnablePortrait(BotCore core, PartyPortrait portrait)
     {
-        portrait.Become(core, unitSwitcher);
+        portrait.Become(core, unitSwitcher.Enable);
     }
 }
