@@ -107,6 +107,7 @@ public class MainCameraControl : MonoBehaviour
     {
         if(freeCameraAvailable) PlayerControlCamera();
         cams.Brain.ManualUpdate();
+        Cams.Automatic.m_MinDuration = 50;
     }
 
     private void PlayerControlCamera()
@@ -187,13 +188,16 @@ public class MainCameraControl : MonoBehaviour
 
     public static void CutToUnit(TinyBot bot)
     {
+        Cams.FocalPoint.transform.position = bot.transform.position;
+        
         Cams.Strafe.Priority = 0;
         Cams.Pivot.Priority = 0;
-        
-        Cams.FocalPoint.transform.position = bot.ChassisPoint.position;
         Cams.Automatic.m_MinDuration = 0;
-        Cams.Brain.ManualUpdate();
-        Cams.Automatic.m_MinDuration = 50;
+
+        Vector3 delta = bot.ChassisPoint.position - Cams.FocalPoint.transform.position;
+        Cams.Automatic.OnTargetObjectWarped(Cams.FocalPoint, delta);
+
+        //Cams.Automatic.InternalUpdateCameraState(Vector3.up, 0f);
     }
 
     static bool tracking;
