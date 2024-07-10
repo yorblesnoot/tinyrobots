@@ -60,6 +60,11 @@ public class MainCameraControl : MonoBehaviour
 
     private void OnEnable()
     {
+        EnableInputSystem();
+    }
+
+    private void EnableInputSystem()
+    {
         playerInput = new();
         rotator = playerInput.Main.RotatePosition;
         rotator.Enable();
@@ -77,8 +82,7 @@ public class MainCameraControl : MonoBehaviour
     {
         if (!freeCameraAvailable) return;
         Cams.Pivot.Priority = 3;
-        //PrimaryCursor.State = CursorState.SPACELOCKED;
-
+        Cams.Automatic.gameObject.SetActive(false);
         float coreRadius = Cams.Pivot.m_Orbits[1].m_Radius;
         float targetDistance = Vector3.Distance(Camera.main.transform.position, Cams.FocalPoint.position);
         float scaleFactor = targetDistance/coreRadius;
@@ -93,8 +97,7 @@ public class MainCameraControl : MonoBehaviour
 
     void EndFocusRotation(InputAction.CallbackContext context)
     {
-        Cams.Pivot.Priority = 0;
-        Cams.Strafe.Priority = 3;
+        CameraStrafe();
     }
 
     static bool freeCameraAvailable = true;
@@ -159,7 +162,7 @@ public class MainCameraControl : MonoBehaviour
         Vector3 slideDirection = Vector3.Cross(offset, Vector3.up);
 
 
-        Cams.Strafe.Priority = 2;
+        CameraStrafe();
         Quaternion yRotation = Camera.main.transform.rotation;
 
         moveOffset *= scrollSpeed;
@@ -171,12 +174,19 @@ public class MainCameraControl : MonoBehaviour
 
     private void Zoom(float factor)
     {
-        Cams.Strafe.Priority = 2;
+        CameraStrafe();
         Vector3 direction = Cams.FocalPoint.position - Camera.main.transform.position;
         direction.Normalize();
         direction *= factor;
         transform.position += direction;
         ClampFocusInMap();
+    }
+
+    static void CameraStrafe()
+    {
+        Cams.Pivot.Priority = 0;
+        Cams.Strafe.Priority = 2;
+        Cams.Automatic.gameObject.SetActive(false);
     }
 
     void ClampFocusInMap()
@@ -188,16 +198,12 @@ public class MainCameraControl : MonoBehaviour
 
     public static void CutToUnit(TinyBot bot)
     {
+        Cams.Automatic.gameObject.SetActive(true);
         Cams.FocalPoint.transform.position = bot.transform.position;
         
         Cams.Strafe.Priority = 0;
         Cams.Pivot.Priority = 0;
         Cams.Automatic.m_MinDuration = 0;
-
-        Vector3 delta = bot.ChassisPoint.position - Cams.FocalPoint.transform.position;
-        Cams.Automatic.OnTargetObjectWarped(Cams.FocalPoint, delta);
-
-        //Cams.Automatic.InternalUpdateCameraState(Vector3.up, 0f);
     }
 
     static bool tracking;
@@ -229,7 +235,6 @@ public class MainCameraControl : MonoBehaviour
     {
         RestrictCamera(true);
         Instance.StartCoroutine(ActionCut(target, Instance.actionCutDuration));
-        
     }
 
     static IEnumerator ActionCut(Vector3 target, float duration)
