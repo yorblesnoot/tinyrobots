@@ -11,12 +11,12 @@ public enum StatType
     INITIATIVE, //flat
     WEIGHT //percent
 }
-public class BotStats
+public class UnitStats
 {
     public Dictionary<StatType, int> Max;
     public Dictionary<StatType, int> Current;
 
-    public BotStats()
+    public UnitStats()
     {
         Max = new();
         Current = new();

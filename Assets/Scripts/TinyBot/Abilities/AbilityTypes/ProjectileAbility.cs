@@ -4,12 +4,12 @@ using System.Linq;
 using UnityEditor.PackageManager;
 using UnityEngine;
 
-public abstract class ProjectileAbility : Ability
+public abstract class ProjectileAbility : ActiveAbility
 {
     protected List<Vector3> targetTrajectory;
-    public override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
+    public override List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
-        List<TinyBot> hitBots = new();
+        List<Targetable> hitBots = new();
         Vector3 targetPosition = target.transform.position;
         float distance = Vector3.Distance(sourcePosition, targetPosition);
         Vector3 direction = (targetPosition - sourcePosition).normalized;

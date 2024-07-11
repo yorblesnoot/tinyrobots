@@ -19,11 +19,11 @@ public class SwordSlash : SpatialAbility
 
     [SerializeField] float aimLag = 30;
 
-    public override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
+    public override List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
         if (aiMode)
         {
-            List<TinyBot> targets = new();
+            List<Targetable> targets = new();
             Collider[] colliders = Physics.OverlapSphere(sourcePosition, range, LayerMask.GetMask("Default"));
             foreach (Collider collider in colliders)
             {
@@ -56,7 +56,7 @@ public class SwordSlash : SpatialAbility
 
     protected override IEnumerator PerformEffects()
     {
-        List<TinyBot> hitTargets = indicator.GetIntersectingBots().Where(bot => bot != Owner).ToList();
+        List<Targetable> hitTargets = indicator.GetIntersectingBots().Where(bot => bot != Owner).ToList();
         indicator.ResetIntersecting();
         ReleaseLockOn();
         Vector3[] slashPoints = GetSlashPoints();
@@ -66,9 +66,9 @@ public class SwordSlash : SpatialAbility
         yield return StartCoroutine(ikTarget.gameObject.LerpTo(slashPoints[0], slashTime));
         StartCoroutine(Owner.PrimaryMovement.ApplyImpulseToBody(thrustTarget, -1, slashTime, returnTime * 2));
         yield return StartCoroutine(SlashThroughPoints(slashPoints, slashTime));
-        foreach (TinyBot bot in hitTargets)
+        foreach (Targetable target in hitTargets)
         {
-            bot.ReceiveHit(damage, Owner.transform.position, bot.ChassisPoint.position);
+            target.ReceiveHit(damage, Owner.transform.position, target.TargetPoint.position);
         }
         yield return new WaitForSeconds(returnTime);
         yield return StartCoroutine(ikTarget.gameObject.LerpTo(neutralPosition, returnTime, true));
@@ -91,11 +91,11 @@ public class SwordSlash : SpatialAbility
 
     Vector3[] GetSlashPoints()
     {
-        Vector3 awayFromBody = (slashPosition.position - Owner.ChassisPoint.position).normalized;
+        Vector3 awayFromBody = (slashPosition.position - Owner.TargetPoint.position).normalized;
         Vector3 startPosition = slashPosition.position + Owner.transform.up * slashHeight + awayFromBody * slashWidth;
 
-        Vector3 lastPosition = Vector3.Reflect(-Owner.ChassisPoint.InverseTransformPoint(startPosition), Vector3.forward);
-        lastPosition = Owner.ChassisPoint.TransformPoint(lastPosition);
+        Vector3 lastPosition = Vector3.Reflect(-Owner.TargetPoint.InverseTransformPoint(startPosition), Vector3.forward);
+        lastPosition = Owner.TargetPoint.TransformPoint(lastPosition);
         return new Vector3[] { startPosition, lastPosition };
     }
 }

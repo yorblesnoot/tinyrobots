@@ -11,20 +11,20 @@ public class ArmThrow : ParabolicAbility
     [SerializeField] ArmGrab armGrab;
     [SerializeField] Transform ikTarget;
     [SerializeField] Animator animator;
-    
-    TinyBot grabbed;
+
+    Targetable grabbed;
     private void Start()
     {
         locked = true;
     }
 
-    public void PrepareToThrow(TinyBot target)
+    public void PrepareToThrow(Targetable target)
     {
         grabbed = target;
         Owner.Stats.Current[StatType.MOVEMENT] /= 2;
         Owner.EndedTurn.AddListener(DropGrabbed);
         if (Owner.Allegiance == Allegiance.PLAYER) TurnResourceCounter.Update?.Invoke();
-        foreach (Ability ability in Owner.Abilities)
+        foreach (ActiveAbility ability in Owner.Abilities)
         {
             ability.locked = true;
         }

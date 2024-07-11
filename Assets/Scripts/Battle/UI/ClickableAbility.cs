@@ -50,7 +50,7 @@ public class ClickableAbility : AbilityDisplay
         DeactivateSelectedAbility();
     }
 
-    public override void Become(Ability ability)
+    public override void Become(ActiveAbility ability)
     {
         base.Become(ability);
         ability.Owner.BeganTurn.AddListener(UpdateCooldowns);
@@ -91,7 +91,7 @@ public class ClickableAbility : AbilityDisplay
 
     public void Activate()
     {
-        if (Skill.currentCooldown > 0) return;
+        if (!Skill.IsAvailable()) return;
         DeactivateSelectedAbility();
         Active = this;
         PrimaryCursor.ToggleAirCursor(true);

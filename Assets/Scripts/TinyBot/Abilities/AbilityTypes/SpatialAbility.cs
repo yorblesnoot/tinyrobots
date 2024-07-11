@@ -2,7 +2,7 @@ using PrimeTween;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class SpatialAbility : Ability
+public abstract class SpatialAbility : ActiveAbility
 {
     [SerializeField] protected Transform ikTarget;
     [SerializeField] protected SpatialTargeter indicator;

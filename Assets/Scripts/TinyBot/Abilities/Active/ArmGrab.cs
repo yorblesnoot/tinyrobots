@@ -9,7 +9,7 @@ public class ArmGrab : SpatialAbility
     [SerializeField] ArmThrow armThrow;
     [SerializeField] float carryHeight = 1;
     [SerializeField] float armMoveDuration = .5f;
-    public override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
+    public override List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
         Vector3 rangeLineOrigin = transform.position;
         Vector3 direction = target.transform.position - rangeLineOrigin;
@@ -36,12 +36,12 @@ public class ArmGrab : SpatialAbility
 
     protected override IEnumerator PerformEffects()
     {
-        TinyBot target = indicator.GetIntersectingBots()[0];
+        Targetable target = indicator.GetIntersectingBots()[0];
         indicator.gameObject.SetActive(false);
         target.ToggleActiveLayer(true);
         animator.SetBool("open", false);
         Pathfinder3D.EvaluateNodeOccupancy(Owner.transform.position);
-        yield return Tween.Position(ikTarget, endValue: target.ChassisPoint.position, duration: armMoveDuration).ToYieldInstruction();
+        yield return Tween.Position(ikTarget, endValue: target.TargetPoint.position, duration: armMoveDuration).ToYieldInstruction();
         target.transform.SetParent(emissionPoint.transform, true);
         Vector3 holdPosition = Owner.transform.up * carryHeight;
         holdPosition += transform.position + Owner.transform.forward;

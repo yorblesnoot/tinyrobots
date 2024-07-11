@@ -13,7 +13,7 @@ public class BotAssembler : MonoBehaviour
         PrimaryMovement locomotion = null;
         AttachmentPoint initialAttachmentPoint;
         List<GameObject> spawnedParts;
-        BotStats botStats = new();
+        UnitStats botStats = new();
         //this function sets the above variables
         GameObject bot = DeployOrigin(treeRoot);
         TinyBot botUnit = bot.GetComponent<TinyBot>();
@@ -23,7 +23,7 @@ public class BotAssembler : MonoBehaviour
         SetBotTallness(locomotion, initialAttachmentPoint, botUnit);
         RestructureHierarchy(locomotion, initialAttachmentPoint, bot);
         
-        List<Ability> abilities = GetAbilityList(spawnedParts, botUnit);
+        List<ActiveAbility> abilities = GetAbilityList(spawnedParts, botUnit);
         botUnit.Initialize(abilities, spawnedParts, locomotion);
         portraitGenerator.AttachPortrait(botUnit);
 
@@ -98,12 +98,12 @@ public class BotAssembler : MonoBehaviour
         bot.GetComponent<CapsuleCollider>().center = colliderCenter;
     }
 
-    List<Ability> GetAbilityList(List<GameObject> spawnedParts, TinyBot botUnit)
+    List<ActiveAbility> GetAbilityList(List<GameObject> spawnedParts, TinyBot botUnit)
     {
-        List<Ability> abilities = new();
+        List<ActiveAbility> abilities = new();
         foreach (var part in spawnedParts)
         {
-            Ability[] partAbilities = part.GetComponents<Ability>();
+            ActiveAbility[] partAbilities = part.GetComponents<ActiveAbility>();
             if(partAbilities == null || partAbilities.Length == 0) continue;
             foreach(var ability in partAbilities) ability.Initialize(botUnit);
             abilities.AddRange(partAbilities);

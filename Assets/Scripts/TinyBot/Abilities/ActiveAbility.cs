@@ -1,0 +1,122 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public abstract class ActiveAbility : Ability
+{
+    public AbilityType Type;
+    public int cost;
+    
+    public bool useAirCursor = true;
+    public string[] blockingLayers;
+    public GameObject emissionPoint;
+    
+    GameObject trackedTarget;
+    protected bool playerTargeting;
+    protected int blockingLayerMask;
+
+    private void Awake()
+    {
+        blockingLayerMask = LayerMask.GetMask(blockingLayers);
+    }
+
+    
+
+    readonly float skillDelay = .5f;
+    public IEnumerator Execute()
+    {
+        Vector3 rawPosition = Owner.transform.position;
+        Vector3Int startPosition = Vector3Int.RoundToInt(rawPosition);
+        MainCameraControl.ActionPanTo(GetFinalAimPoint());
+        currentCooldown = cooldown;
+        PrimaryCursor.actionInProgress = true;
+        yield return new WaitForSeconds(skillDelay);
+        yield return StartCoroutine(PerformEffects());
+        PrimaryCursor.actionInProgress = false;
+        if (Vector3Int.RoundToInt(Owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(Owner.MoveStyle, Owner.transform.position);
+    }
+
+    Vector3 GetFinalAimPoint()
+    {
+        if(currentTargets != null && currentTargets.Count > 0)
+        {
+            Vector3 average = Vector3.zero;
+            foreach(var target in currentTargets)
+            {
+                average += target.transform.position;
+            }
+            average /= currentTargets.Count;
+            return average;
+        }
+        else
+        {
+            Vector3 offset = PrimaryCursor.Transform.position - Owner.transform.position;
+            offset = offset.normalized;
+            offset *= Mathf.Min(range, offset.magnitude);
+            return offset + Owner.transform.position;
+        }
+    }
+
+    List<Targetable> currentTargets = new();
+    public abstract List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false);
+
+    public virtual bool IsUsable(Vector3 targetPosition)
+    {
+        return true;
+    }
+
+    public virtual bool IsAvailable()
+    {
+        if (currentCooldown > 0 || locked) return false;
+        return true;
+    }
+
+    public virtual void LockOnTo(GameObject target, bool draw)
+    {
+        trackedTarget = target;
+        playerTargeting = draw;
+    }
+    public virtual void ReleaseLockOn()
+    {
+        trackedTarget = null;
+        StartCoroutine(Owner.PrimaryMovement.NeutralStance());
+        LineMaker.HideLine();
+        SetTargets(null);
+    }
+
+    protected abstract IEnumerator PerformEffects();
+
+    public abstract void NeutralAim();
+    void Update()
+    {
+        if (trackedTarget == null) return;
+        List<Targetable> newTargets = AimAt(trackedTarget, emissionPoint.transform.position);
+        if(playerTargeting) SetTargets(newTargets);
+        Owner.PrimaryMovement.RotateToTrackEntity(trackedTarget);
+    }
+
+    private void SetTargets(List<Targetable> newTargets)
+    {
+        newTargets ??= new();
+        for (int i = 0; i < newTargets.Count; i++)
+        {
+            Targetable bot = newTargets[i];
+            if (bot == null) newTargets.Remove(bot);
+            else if (!currentTargets.Contains(bot)) bot.SetOutlineColor(Color.red);
+        }
+        foreach(Targetable bot in currentTargets)
+        {
+            if(!newTargets.Contains(bot)) bot.SetOutlineColor(Color.white);
+        }
+        currentTargets = new(newTargets);
+    }
+}
+
+public enum AbilityType
+{
+    ATTACK,
+    BUFF,
+    SHIELD,
+    DASH,
+    SUMMON
+}

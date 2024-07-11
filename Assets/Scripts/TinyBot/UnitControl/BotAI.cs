@@ -13,7 +13,7 @@ public class BotAI
     readonly GameObject pointer;
     readonly float lockTime = 1f;
     
-    List<Ability> primaries, dashes, shields;
+    List<ActiveAbility> primaries, dashes, shields;
     #region Initialization
     public BotAI(TinyBot bot)
     {
@@ -28,7 +28,7 @@ public class BotAI
         primaries = new();
         dashes = new();
         shields = new();
-        foreach (Ability ability in thisBot.Abilities)
+        foreach (ActiveAbility ability in thisBot.Abilities)
         {
             if (ability.Type == AbilityType.DASH) dashes.Add(ability);
             else if (ability.Type == AbilityType.SHIELD) shields.Add(ability);
@@ -37,7 +37,7 @@ public class BotAI
     }
     float FindOptimalDistance()
     {
-        List<Ability> rangedAttacks = thisBot.Abilities.Where(skill => skill.range > 0 && skill.Type == AbilityType.ATTACK).ToList();
+        List<ActiveAbility> rangedAttacks = thisBot.Abilities.Where(skill => skill.range > 0 && skill.Type == AbilityType.ATTACK).ToList();
         if(rangedAttacks.Count == 0)
         {
             return 10;
@@ -82,7 +82,7 @@ public class BotAI
                     yield return PathToCastingPosition(location);
 
                     //lock on and use ability
-                    yield return UseAbility(ability, target.ChassisPoint.gameObject);
+                    yield return UseAbility(ability, target.TargetPoint.gameObject);
                     yield return AttackPhase();
                     yield break;
                 }
@@ -141,12 +141,12 @@ public class BotAI
         {
             shields.Shuffle();
             if(shields.Count == 0) yield break;
-            Ability shield = shields[0];
+            ActiveAbility shield = shields[0];
             if(AbilityIsUnavailable(shield)) yield break;
             Vector3 myPosition = thisBot.transform.position;
-            List<Vector3> averages = new() {enemies.Select(x => x.ChassisPoint.position - myPosition).ToList().Average(), 
+            List<Vector3> averages = new() {enemies.Select(x => x.TargetPoint.position - myPosition).ToList().Average(), 
                 Pathfinder3D.GetCrawlOrientation(Vector3Int.RoundToInt(thisBot.transform.position)) };
-            if (allies.Count > 0) averages.Add(-allies.Select(x => x.ChassisPoint.position - myPosition).ToList().Average());
+            if (allies.Count > 0) averages.Add(-allies.Select(x => x.TargetPoint.position - myPosition).ToList().Average());
             Vector3 finalDirection = averages.Average();
             Vector3 finalPosition = myPosition + finalDirection;
             pointer.transform.position = finalPosition;
@@ -181,7 +181,7 @@ public class BotAI
             Pathfinder3D.GeneratePathingTree(thisBot.MoveStyle, thisBot.transform.position);
         }
     }
-    private IEnumerator UseAbility(Ability ability, GameObject target)
+    private IEnumerator UseAbility(ActiveAbility ability, GameObject target)
     {
         ability.LockOnTo(target, false);
         yield return new WaitForSeconds(lockTime);
@@ -193,7 +193,7 @@ public class BotAI
     #endregion
 
     #region Decision Tools
-    TinyBot AbilityHasTarget(Ability ability, List<TinyBot> targets, Vector3Int baseLocation)
+    TinyBot AbilityHasTarget(ActiveAbility ability, List<TinyBot> targets, Vector3Int baseLocation)
     {
         Vector3 location = GunPositionAt(ability, baseLocation);
         if (Physics.CheckSphere(location, terrainCheckSize, terrainMask)) return null;
@@ -201,17 +201,17 @@ public class BotAI
 
         foreach (var targetBot in targets)
         {
-            Transform targetPoint = targetBot.ChassisPoint;
+            Transform targetPoint = targetBot.TargetPoint;
             if (ability.range > 0 && Vector3.Distance(targetPoint.position, location) > ability.range) continue;
 
-            List<TinyBot> hits = ability.AimAt(targetPoint.gameObject, location, true);
+            List<Targetable> hits = ability.AimAt(targetPoint.gameObject, location, true);
             if (hits == null || hits.Count == 0 || !hits.Contains(targetBot)) continue;
             Debug.DrawRay(location, Vector3.up, Color.yellow, 10f);
             return targetBot;
         }
         return null;
     }
-    bool DashCanReach(Ability ability, Vector3Int position)
+    bool DashCanReach(ActiveAbility ability, Vector3Int position)
     {
         Debug.DrawRay(position, Vector3.up, Color.yellow, 10f);
         pointer.transform.position = position;
@@ -219,11 +219,11 @@ public class BotAI
         if (ability.IsUsable(pointer.transform.position)) return true;
         return false;
     }
-    private bool AbilityIsUnavailable(Ability ability)
+    private bool AbilityIsUnavailable(ActiveAbility ability)
     {
         return ability.cost > thisBot.Stats.Current[StatType.ACTION] || !ability.IsAvailable();
     }
-    Vector3 GunPositionAt(Ability ability, Vector3 position)
+    Vector3 GunPositionAt(ActiveAbility ability, Vector3 position)
     {
         Quaternion locationRotation = thisBot.PrimaryMovement.GetRotationAtPosition(position);
         Vector3 gunPosition = ability.emissionPoint.transform.position;

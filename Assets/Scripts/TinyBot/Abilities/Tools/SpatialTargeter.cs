@@ -2,32 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class SpatialTargeter : MonoBehaviour
 {
-    List<TinyBot> intersectingBots = new();
+    List<Targetable> intersectingTargets = new();
+    public UnityEvent<Targetable> UnitTargeted = new();
     public void ResetIntersecting()
     {
-        intersectingBots = new();
+        intersectingTargets = new();
     }
 
-    public List<TinyBot> GetIntersectingBots()
+    public List<Targetable> GetIntersectingBots()
     {
-        return new(intersectingBots.Where(bot => bot != null));
+        return new(intersectingTargets.Where(bot => bot != null));
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent(out TinyBot bot))
-        {
-            intersectingBots.Add(bot);
-        }
+        if (!other.gameObject.TryGetComponent(out Targetable target)) return;
+        intersectingTargets.Add(target);
+        UnitTargeted.Invoke(target);
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.TryGetComponent(out TinyBot bot))
+        if (other.gameObject.TryGetComponent(out Targetable target))
         {
-            intersectingBots.Remove(bot);
+            intersectingTargets.Remove(target);
         }
 
     }

@@ -83,7 +83,7 @@ public class PartOverviewPanel : MonoBehaviour
 
     void SetAbilities(ModdedPart part)
     {
-        Ability[] activeAbilities = part.Abilities;
+        ActiveAbility[] activeAbilities = part.Abilities;
         for (int i = 0; i < abilityDisplays.Length; i++)
         {
             bool abilityExists = i < activeAbilities.Length;

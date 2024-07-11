@@ -73,9 +73,9 @@ public class HookGrapple : LinearAbility
         }
     }
 
-    public override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
+    public override List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
-        List<TinyBot> hits = base.AimAt(target, sourcePosition, aiMode);
+        List<Targetable> hits = base.AimAt(target, sourcePosition, aiMode);
         if (!aiMode) turretTracker.TrackTrajectory(targetTrajectory);
         return hits;
     }

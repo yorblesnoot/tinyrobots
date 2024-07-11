@@ -98,7 +98,7 @@ public class PrimaryCursor : MonoBehaviour
         if (EventSystem.current.IsPointerOverGameObject()) return;
         if (anAbilityIsActive)
         {
-            Ability skill = ClickableAbility.Active.Skill;
+            ActiveAbility skill = ClickableAbility.Active.Skill;
             if (skill.IsUsable(transform.position)
             && skill.cost <= PlayerControlledBot.Stats.Current[StatType.ACTION])
             {
@@ -126,7 +126,7 @@ public class PrimaryCursor : MonoBehaviour
         }
     }
 
-    IEnumerator UseSkill(Ability ability)
+    IEnumerator UseSkill(ActiveAbility ability)
     {
         yield return StartCoroutine(ability.Execute());
         ClickableAbility.playerUsedAbility?.Invoke();
@@ -210,7 +210,7 @@ public class PrimaryCursor : MonoBehaviour
         if(State != CursorState.FREE) return;
         TargetedBot = unit;
         State = CursorState.UNITSNAPPED;
-        Transform.position = unit.ChassisPoint.position;
+        Transform.position = unit.TargetPoint.position;
     }
     public static void Unsnap()
     {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TurnManager : MonoBehaviour
 {
@@ -22,6 +23,8 @@ public class TurnManager : MonoBehaviour
     public static Mission Mission;
     static Dictionary<TinyBot, TurnPortrait> activePortraits;
     static List<TinyBot> currentlyActive;
+
+    public static UnityEvent RoundEnded = new();
     private void Awake()
     {
         activeIndex = 0;
@@ -37,10 +40,8 @@ public class TurnManager : MonoBehaviour
     {
         PortraitStock[0].Become(bot);
         activePortraits.Add(bot, PortraitStock[0]);
-        PortraitStock.RemoveAt(0);
-        
+        PortraitStock.RemoveAt(0);       
         TurnTakers.Add(bot);
-        Debug.Log("ADDED " + bot.Allegiance + " bot");
     }
 
     public static void RemoveTurnTaker(TinyBot bot)
@@ -121,6 +122,7 @@ public class TurnManager : MonoBehaviour
 
     private static void StartNewRound()
     {
+        RoundEnded.Invoke();
         Mission.RoundEnd();
         activeIndex = 0;
         foreach(var portrait in activePortraits.Values) portrait.ToggleGrayOut(false);

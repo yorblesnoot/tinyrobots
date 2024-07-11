@@ -26,15 +26,15 @@ public class GrenadeLob : ParabolicAbility
         explosiveModule.HideIndicator();
     }
 
-    public override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
+    public override List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
-        List<TinyBot> hits = base.AimAt(target, sourcePosition, aiMode);
+        List<Targetable> hits = base.AimAt(target, sourcePosition, aiMode);
         gunTracker.TrackTrajectory(targetTrajectory);
-        List<TinyBot> explosiveHits = explosiveModule.CheckExplosionZone(targetTrajectory[^1], aiMode);
-        foreach (TinyBot bot in explosiveHits)
+        List<Targetable> explosiveHits = explosiveModule.CheckExplosionZone(targetTrajectory[^1], aiMode);
+        foreach (Targetable hit in explosiveHits)
         {
-            if(hits.Contains(bot)) continue;
-            hits.Add(bot);
+            if(hits.Contains(hit)) continue;
+            hits.Add(hit);
         }
         return hits;
     }

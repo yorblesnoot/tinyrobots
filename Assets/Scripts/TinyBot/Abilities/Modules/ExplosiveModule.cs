@@ -17,16 +17,16 @@ public class ExplosiveModule : MonoBehaviour
         terrainMask = LayerMask.GetMask("Terrain", "Shield");
         baseIndicator.SetActive(false);
     }
-    public List<TinyBot> CheckExplosionZone(Vector3 explosionPosition, bool aiMode)
+    public List<Targetable> CheckExplosionZone(Vector3 explosionPosition, bool aiMode)
     {
-        List<TinyBot> hitUnits = new();
+        List<Targetable> hitUnits = new();
         Collider[] colliders = Physics.OverlapSphere(explosionPosition, explosionRadius, unitMask);
         if(colliders != null && colliders.Length > 0)
         {
             foreach(Collider collider in colliders)
             {
-                if (!collider.TryGetComponent(out TinyBot bot)) continue;
-                Vector3 direction = bot.ChassisPoint.position - explosionPosition;
+                if (!collider.TryGetComponent(out Targetable bot)) continue;
+                Vector3 direction = bot.TargetPoint.position - explosionPosition;
                 float distance = direction.magnitude;
                 if (Physics.Raycast(explosionPosition, direction, distance, terrainMask)) continue;
                 hitUnits.Add(bot);
@@ -47,10 +47,10 @@ public class ExplosiveModule : MonoBehaviour
         Destroy(effect, 2f);
         yield return new WaitForSeconds(damageDelay);
 
-        List<TinyBot> hit = CheckExplosionZone(explosionPosition, true);
-        foreach(TinyBot bot in hit)
+        List<Targetable> hit = CheckExplosionZone(explosionPosition, true);
+        foreach(Targetable target in hit)
         {
-            bot.ReceiveHit(damage, explosionPosition, bot.ChassisPoint.position);
+            target.ReceiveHit(damage, explosionPosition, target.TargetPoint.position);
         }
     }
 

@@ -42,7 +42,7 @@ public class UnitStatsDisplay : MonoBehaviour
     {
         foreach (var entry in entries.Values) entry.Value = 0;
         totalHealth = totalWeight = maxWeight = 0;
-        List<Ability> activeAbilities = new();
+        List<ActiveAbility> activeAbilities = new();
 
         List<ModdedPart> activePartsPlusOrigin = new(activeParts)
         {

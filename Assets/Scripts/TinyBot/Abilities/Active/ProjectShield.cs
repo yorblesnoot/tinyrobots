@@ -28,7 +28,7 @@ public class ProjectShield : LinearAbility
         basePosition = ikTarget.transform.localPosition;
     }
 
-    public override List<TinyBot> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
+    public override List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
         base.AimAt(target, sourcePosition);
         Vector3 ownerPosition = transform.position;

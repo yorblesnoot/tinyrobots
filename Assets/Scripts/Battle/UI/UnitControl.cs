@@ -45,12 +45,12 @@ public class UnitControl : MonoBehaviour
         
         ClickableAbility.DeactivateSelectedAbility();
         deployedAbilities = new();
-        List<Ability> abilityList = bot.Abilities.Where(a => a != null).ToList();
+        List<ActiveAbility> abilityList = bot.Abilities.Where(a => a != null).ToList();
         for(int i = 0; i < clickableAbilities.Count(); i++)
         {
             if(i < abilityList.Count)
             {
-                Ability ability = abilityList[i];
+                ActiveAbility ability = abilityList[i];
                 clickableAbilities[i].Become(ability);
                 deployedAbilities.Add(clickableAbilities[i]);
             }
