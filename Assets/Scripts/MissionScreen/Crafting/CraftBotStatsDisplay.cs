@@ -4,7 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class UnitStatsDisplay : MonoBehaviour
+public class CraftBotStatsDisplay : MonoBehaviour
 {
     
     [SerializeField] StatEntry[] stats;
@@ -42,7 +42,7 @@ public class UnitStatsDisplay : MonoBehaviour
     {
         foreach (var entry in entries.Values) entry.Value = 0;
         totalHealth = totalWeight = maxWeight = 0;
-        List<ActiveAbility> activeAbilities = new();
+        List<Ability> activeAbilities = new();
 
         List<ModdedPart> activePartsPlusOrigin = new(activeParts)
         {
@@ -67,13 +67,7 @@ public class UnitStatsDisplay : MonoBehaviour
         weightDisplay.text = $"{totalWeight} / {(maxWeight == 0 ? "-" : maxWeight)}";
         weightDisplay.color = IsDeployable() ?  Color.white : Color.red;
 
-        Debug.Log(activeAbilities.Count);
-        for(int i = 0; i < abilityDisplays.Length; i++)
-        {
-            bool abilityExists = i < activeAbilities.Count;
-            abilityDisplays[i].gameObject.SetActive(abilityExists);
-            if(abilityExists) abilityDisplays[i].Become(activeAbilities[i]);
-        }
+        activeAbilities.PassDataToUI(abilityDisplays, (ability, display) => display.Become(ability));
     }
 
 

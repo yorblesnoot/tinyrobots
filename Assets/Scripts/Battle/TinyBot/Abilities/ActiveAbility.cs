@@ -6,7 +6,6 @@ using UnityEngine;
 public abstract class ActiveAbility : Ability
 {
     public AbilityType Type;
-    public int cost;
     
     public bool useAirCursor = true;
     
@@ -22,7 +21,7 @@ public abstract class ActiveAbility : Ability
     [SerializeField] AnimationController[] postAnimations;
     [SerializeField] AnimationController[] endAnimations;
     protected TargetPoint targetType;
-    DurationModule durationModule;
+    
     Trajectory trajectoryDefinition;
     TrackingAnimation trackingAnimation;
 

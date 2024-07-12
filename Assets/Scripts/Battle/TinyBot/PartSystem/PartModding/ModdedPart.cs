@@ -13,7 +13,7 @@ public class ModdedPart
     public List<PartMutator> Mutators = new();
     public int Weight { get; private set; }
     [HideInInspector] public GameObject Sample;
-    [HideInInspector] public ActiveAbility[] Abilities;
+    [HideInInspector] public Ability[] Abilities;
 
     public static readonly HashSet<StatType> PercentStats = new() { StatType.WEIGHT };
     public ModdedPart() { }
@@ -33,7 +33,7 @@ public class ModdedPart
     {
         if (Sample != null) return;
         Sample = GameObject.Instantiate(BasePart.AttachableObject);
-        Abilities = Sample.GetComponents<ActiveAbility>();
+        Abilities = Sample.GetComponent<PartModifier>().Abilities;
     }
 
     void MutatePart()
@@ -107,7 +107,7 @@ public class ModdedPart
         foreach(var mod in removeMods) Mods.Remove(mod);
     }
 
-    void ApplyMod(ActiveAbility ability, KeyValuePair<ModType, int> mod)
+    void ApplyMod(Ability ability, KeyValuePair<ModType, int> mod)
     {
         if (mod.Key == ModType.RANGE && ability.ModifiableRange) ability.range += mod.Value;
         else if (mod.Key == ModType.COOLDOWN)

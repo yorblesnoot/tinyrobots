@@ -57,6 +57,7 @@ public class UnitControl : MonoBehaviour
             else
             {
                 clickableAbilities[i].Clear();
+                clickableAbilities[i].gameObject.SetActive(false);
             }
         }
     }

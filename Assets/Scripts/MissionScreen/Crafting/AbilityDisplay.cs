@@ -3,9 +3,10 @@ using UnityEngine.UI;
 
 public class AbilityDisplay : MonoBehaviour
 {
-    [HideInInspector] public ActiveAbility Skill;
+    [HideInInspector] public Ability Skill;
     [SerializeField] protected Image image;
-    public virtual void Become(ActiveAbility ability)
+
+    public virtual void Become(Ability ability)
     {
         gameObject.SetActive(true);
         Skill = ability;

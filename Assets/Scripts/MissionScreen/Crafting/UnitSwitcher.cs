@@ -7,7 +7,7 @@ public class UnitSwitcher : MonoBehaviour
     [SerializeField] BlueprintControl blueprintControl;
     [SerializeField] CraftablePart empty;
     [SerializeField] UnitTab[] tabs;
-    [SerializeField] UnitStatsDisplay unitStatsDisplay;
+    [SerializeField] CraftBotStatsDisplay unitStatsDisplay;
     [SerializeField] TMP_Text nameDisplay;
     [SerializeField] GameObject navUI;
 

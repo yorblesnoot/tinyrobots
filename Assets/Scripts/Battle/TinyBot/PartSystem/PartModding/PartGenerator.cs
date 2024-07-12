@@ -20,7 +20,7 @@ public class PartGenerator : MonoBehaviour
 
         HashSet<StatType> partStats = partBase.PartStats.Select(ps => ps.Type).ToHashSet();
         modPart.InstantiateSample();
-        ActiveAbility[] abilities = modPart.Abilities;
+        Ability[] abilities = modPart.Abilities;
         foreach (var mutator in mutators)
         {
             if(CheckStats(partStats, mutator) && CheckMods(mutator, abilities)) availableMutators.Add(mutator);
@@ -45,20 +45,20 @@ public class PartGenerator : MonoBehaviour
         return true;
     }
 
-    bool CheckMods(PartMutator mutator, ActiveAbility[] abilities)
+    bool CheckMods(PartMutator mutator, Ability[] abilities)
     {
         if(mutator.Mods.Count() == 0) return true;
         foreach(var mod in mutator.Mods) if (!ModHasValidTarget(mod, abilities)) return false;
         return true;
     }
 
-    bool ModHasValidTarget(ModValue mod, ActiveAbility[] abilities)
+    bool ModHasValidTarget(ModValue mod, Ability[] abilities)
     {
         foreach(var ability in abilities) if (ModCanApply(ability, mod)) return true;
         return false;
     }
 
-    bool ModCanApply(ActiveAbility ability, ModValue mod)
+    bool ModCanApply(Ability ability, ModValue mod)
     {
         if (mod.Type == ModType.RANGE && ability.ModifiableRange) return true;
         else if (mod.Type == ModType.COOLDOWN && ability.cooldown + mod.Value > 0) return true;

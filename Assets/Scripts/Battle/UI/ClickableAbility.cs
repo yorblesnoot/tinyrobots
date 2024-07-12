@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class ClickableAbility : AbilityDisplay
+public class ClickableAbility : MonoBehaviour
 {
     public static UnityEvent playerUsedAbility = new();
-    
+
+    [SerializeField] protected Image image;
     [SerializeField] Button button;
     [SerializeField] TMP_Text cooldown;
     [SerializeField] Image cooldownPanel;
@@ -17,21 +18,30 @@ public class ClickableAbility : AbilityDisplay
     [SerializeField] float dislacementModifier;
     float pointWidth;
 
+    public ActiveAbility Skill;
     public static ClickableAbility Active;
     private void Awake()
     {
         pointWidth = actionPoints[0].GetComponent<RectTransform>().rect.width;
         pointWidth *= dislacementModifier;
-        playerUsedAbility.AddListener(HideIfTooExpensive);
+        playerUsedAbility.AddListener(OvercostOverlay);
     }
 
-    void HideIfTooExpensive()
+    void OvercostOverlay()
     {
         if (Skill == null) return;
         bool unusuable = Skill.cost > UnitControl.PlayerControlledBot.Stats.Current[StatType.ACTION]
             || !Skill.IsAvailable();
         cooldownPanel.gameObject.SetActive(unusuable);
         cooldown.text = "";
+    }
+
+    public void Hide()
+    {
+        button.enabled = false;
+        Active.image.color = Color.white;
+        SetPips(0);
+        Clear();
     }
 
     public static void DeactivateSelectedAbility()
@@ -50,9 +60,8 @@ public class ClickableAbility : AbilityDisplay
         DeactivateSelectedAbility();
     }
 
-    public override void Become(ActiveAbility ability)
+    public void Become(ActiveAbility ability)
     {
-        base.Become(ability);
         ability.Owner.BeganTurn.AddListener(UpdateCooldowns);
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(Activate);
@@ -86,7 +95,7 @@ public class ClickableAbility : AbilityDisplay
     {
         Skill = null;
         button.onClick.RemoveAllListeners();
-        gameObject.SetActive(false);
+        
     }
 
     public void Activate()

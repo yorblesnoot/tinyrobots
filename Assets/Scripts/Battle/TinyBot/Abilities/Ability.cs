@@ -6,11 +6,14 @@ public class Ability : MonoBehaviour
     public bool ModifiableRange = false;
     public int cooldown = 1;
     public int damage;
+    public int cost;
     public Sprite icon;
+    [SerializeField] protected DurationModule durationModule;
 
     [HideInInspector] public int currentCooldown;
     [HideInInspector] public TinyBot Owner;
     [HideInInspector] public bool locked;
+    
 
     public virtual void Initialize(TinyBot botUnit)
     {
