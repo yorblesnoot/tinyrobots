@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class HookGrapple : LinearTrajectory
+public class HookGrapple : ProjectileShot
 {
-    [SerializeField] float backDistance = 1;
-    [SerializeField] float travelTime;
-    [SerializeField] TurretTracker turretTracker;
+    [SerializeField] float backDistance = 2;
     [SerializeField] LineRenderer line;
     [SerializeField] GameObject hook;
 
@@ -19,23 +17,21 @@ public class HookGrapple : LinearTrajectory
     }
     protected override IEnumerator PerformEffects()
     {
-        
-        List<Vector3> trajectory = CastAlongPoints(targetTrajectory.ToArray(), blockingLayerMask, out var hit);
-        
         line.positionCount = 2;
         Transform parent = hook.transform.parent;
         hook.transform.SetParent(null, true);
         
-        float intervalTime = travelTime / trajectory.Count;
-        yield return StartCoroutine(LaunchWithLine(hook, trajectory, intervalTime));
-        if (hit.collider != null)
+        float intervalTime = travelTime / currentTrajectory.Count;
+        yield return StartCoroutine(LaunchWithLine(hook, currentTrajectory, intervalTime));
+        bool hitSomething = Vector3.Distance(currentTrajectory[0], currentTrajectory[^1]) < range;
+        if (hitSomething)
         {
-            if (hit.collider.TryGetComponent(out TinyBot bot)) bot.ReceiveHit(damage, Owner.transform.position, hit.point);
-            Vector3 backDirection = trajectory[1] - trajectory[0];
+            if (currentTargets.Count > 0) currentTargets[0].ReceiveHit(damage, Owner.transform.position, currentTrajectory[^1]);
+            Vector3 backDirection = currentTrajectory[1] - currentTrajectory[0];
             backDirection.Normalize();
             backDirection *= backDistance;
-            Vector3 secondTarget = trajectory[1] - backDirection;
-            List<Vector3> secondaryTrajectory = new() { trajectory[0], secondTarget };
+            Vector3 secondTarget = currentTrajectory[1] - backDirection;
+            List<Vector3> secondaryTrajectory = new() { currentTrajectory[0], secondTarget };
             yield return StartCoroutine(LaunchWithLine(Owner.gameObject, secondaryTrajectory, intervalTime));
         }
         else
@@ -46,8 +42,8 @@ public class HookGrapple : LinearTrajectory
         line.positionCount = 0;
         hook.transform.SetParent(parent);
         hook.transform.localPosition = baseHookPosition;
-        NeutralAim();
-        if (hit.collider != null)
+        EndAbility();
+        if (hitSomething)
         {
             yield return StartCoroutine(Owner.Fall());
             Pathfinder3D.GeneratePathingTree(Owner.MoveStyle, Owner.transform.position);
@@ -71,17 +67,5 @@ public class HookGrapple : LinearTrajectory
                 yield return null;
             }
         }
-    }
-
-    public override List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
-    {
-        List<Targetable> hits = base.AimAt(target, sourcePosition, aiMode);
-        if (!aiMode) turretTracker.TrackTrajectory(targetTrajectory);
-        return hits;
-    }
-
-    public override void NeutralAim()
-    {
-        turretTracker.ResetTracking();
     }
 }

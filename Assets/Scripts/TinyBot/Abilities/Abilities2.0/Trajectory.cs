@@ -13,13 +13,9 @@ public abstract class Trajectory : MonoBehaviour
     {
         blockingLayerMask = LayerMask.GetMask(blockingLayers);
     }
-    public virtual List<Vector3> GetTrajectory(GameObject target, Vector3 sourcePosition, float range, bool aiMode = false)
+    public virtual List<Vector3> GetTrajectory(Vector3 target, Vector3 sourcePosition, float range, bool aiMode = false)
     {
-        Vector3 targetPosition = target.transform.position;
-        float distance = Vector3.Distance(sourcePosition, targetPosition);
-        Vector3 direction = (targetPosition - sourcePosition).normalized;
-        Vector3 modifiedTarget = sourcePosition + direction * Mathf.Min(distance, range);
-        Vector3[] targets = CalculateTrajectory(sourcePosition, modifiedTarget);
+        Vector3[] targets = CalculateTrajectory(sourcePosition, target);
         return CastAlongPoints(targets, blockingLayerMask, out RaycastHit hit, aiMode ? BotAI.terrainCheckSize : 0);
     }
 

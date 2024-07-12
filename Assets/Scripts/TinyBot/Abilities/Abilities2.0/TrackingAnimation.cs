@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrackingAnimation : MonoBehaviour
+public abstract class TrackingAnimation : MonoBehaviour
 {
     [SerializeField] protected Transform ikTarget;
 

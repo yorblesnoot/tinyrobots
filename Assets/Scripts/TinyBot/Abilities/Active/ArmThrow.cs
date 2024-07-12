@@ -1,16 +1,10 @@
-using PrimeTween;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ArmThrow : ParabolicTrajectory
+public class ArmThrow : ProjectileShot
 {
-    [SerializeField] float thrownAirTime;
-    [SerializeField] float windupTime = 1f;
-    [SerializeField] float windDistance = 1f;
     [SerializeField] ArmGrab armGrab;
-    [SerializeField] Transform ikTarget;
-    [SerializeField] Animator animator;
+    [SerializeField] float thrownAirTime;
 
     Targetable grabbed;
     private void Start()
@@ -22,7 +16,7 @@ public class ArmThrow : ParabolicTrajectory
     {
         grabbed = target;
         Owner.Stats.Current[StatType.MOVEMENT] /= 2;
-        Owner.EndedTurn.AddListener(DropGrabbed);
+        Owner.EndedTurn.AddListener(EndAbility);
         if (Owner.Allegiance == Allegiance.PLAYER) TurnResourceCounter.Update?.Invoke();
         foreach (ActiveAbility ability in Owner.Abilities)
         {
@@ -31,46 +25,29 @@ public class ArmThrow : ParabolicTrajectory
         locked = false;
     }
 
-    public void DropGrabbed()
+    public override void EndAbility()
     {
         EndGrab();
         StartCoroutine(grabbed.Fall());
-        NeutralAim();
+        EndAbility();
     }
 
     void EndGrab()
     {
-        animator.SetBool("open", true);
+        //animator.SetBool("open", true);
         grabbed.ToggleActiveLayer(false);
         grabbed.transform.SetParent(null, true);
-        Owner.EndedTurn.RemoveListener(DropGrabbed);
+        Owner.EndedTurn.RemoveListener(EndAbility);
     }
 
     protected override IEnumerator PerformEffects()
     {
-        Vector3 windDirection = targetTrajectory[0] - targetTrajectory[1];
-        windDirection.Normalize();
-        Vector3 windTarget = (windDirection * windDistance) + ikTarget.transform.position;
-
-        yield return Tween.Position(ikTarget, endValue: windTarget, duration: windupTime)
-            .Chain(Tween.Position(ikTarget, endValue: targetTrajectory[0], duration: windupTime / 2))
-            .OnComplete(() => StartCoroutine(FinishThrow()))
-            .ToYieldInstruction();
-    }
-
-    IEnumerator FinishThrow()
-    {
         EndGrab();
         yield return StartCoroutine(LaunchAlongLine(grabbed.gameObject, thrownAirTime));
-        NeutralAim();
-        float intervalTime = thrownAirTime / targetTrajectory.Count;
-        Vector3 displacement = targetTrajectory[^1] - targetTrajectory[^2];
+        EndAbility();
+        float intervalTime = thrownAirTime / currentTrajectory.Count;
+        Vector3 displacement = currentTrajectory[^1] - currentTrajectory[^2];
         yield return StartCoroutine(grabbed.Fall(displacement / intervalTime));
         Pathfinder3D.EvaluateNodeOccupancy(Owner.transform.position);
-    }
-
-    public override void NeutralAim()
-    {
-        armGrab.NeutralAim();
     }
 }

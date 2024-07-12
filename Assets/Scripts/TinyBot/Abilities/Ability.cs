@@ -2,10 +2,9 @@ using UnityEngine;
 
 public class Ability : MonoBehaviour
 {
+    public string DisplayName;
     public int range;
     public bool ModifiableRange = false;
-    public int Duration;
-    public bool ModifiableDuration = false;
     public int cooldown = 1;
     public int damage;
     public Sprite icon;

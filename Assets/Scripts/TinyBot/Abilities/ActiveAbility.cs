@@ -17,11 +17,12 @@ public abstract class ActiveAbility : Ability
     protected List<Vector3> currentTrajectory;
     protected List<Targetable> currentTargets = new();
 
+    [SerializeField] protected TargetPoint endPoint;
     [SerializeField] Trajectory trajectoryDefinition;
-    [SerializeField] TargetPoint endPoint;
     [SerializeField] TrackingAnimation trackingAnimation;
-    [SerializeField] PartAnimation[] preAnimations;
-    [SerializeField] PartAnimation[] postAnimations;
+    [SerializeField] ToggleAnimation trackingToggle;
+    [SerializeField] ProceduralAnimation[] preAnimations;
+    [SerializeField] ProceduralAnimation[] postAnimations;
     [SerializeField] DurationModule durationModule;
 
     readonly float skillDelay = .5f;
@@ -31,10 +32,11 @@ public abstract class ActiveAbility : Ability
     {
         Vector3 rawPosition = Owner.transform.position;
         Vector3Int startPosition = Vector3Int.RoundToInt(rawPosition);
-        MainCameraControl.ActionPanTo(GetFinalAimPoint());
+        MainCameraControl.ActionPanTo(GetCameraAimPoint());
         currentCooldown = cooldown;
         PrimaryCursor.actionInProgress = true;
         yield return new WaitForSeconds(skillDelay);
+        ReleaseLockOn();
         yield return ToggleAnimations(preAnimations);
         yield return StartCoroutine(PerformEffects());
         yield return ToggleAnimations(postAnimations);
@@ -43,45 +45,29 @@ public abstract class ActiveAbility : Ability
         if (Vector3Int.RoundToInt(Owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(Owner.MoveStyle, Owner.transform.position);
     }
 
-    void ScheduleAbilityEnd()
-    {
-        if (durationModule == null) EndAbility();
-        else durationModule.SetDuration(Owner, EndAbility);
-    }
-
     public virtual void EndAbility()
     {
         trackingAnimation.ResetTracking();
-        StartCoroutine(ToggleAnimations(postAnimations, false));
-        ReleaseLockOn();
-    }
-
-    Vector3 GetFinalAimPoint()
-    {
-        if(currentTargets != null && currentTargets.Count > 0)
-        {
-            Vector3 average = Vector3.zero;
-            foreach(var target in currentTargets)
-            {
-                average += target.transform.position;
-            }
-            average /= currentTargets.Count;
-            return average;
-        }
-        else
-        {
-            Vector3 offset = PrimaryCursor.Transform.position - Owner.transform.position;
-            offset = offset.normalized;
-            offset *= Mathf.Min(range, offset.magnitude);
-            return offset + Owner.transform.position;
-        }
     }
 
     
+    protected abstract IEnumerator PerformEffects();
+
+    IEnumerator TrackTarget()
+    {
+        while (trackedTarget != null)
+        {
+            AimAt(trackedTarget, emissionPoint.transform.position, false);
+            yield return null;
+        }
+    }
+
     public List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
-        currentTrajectory = trajectoryDefinition.GetTrajectory(target, sourcePosition, range);
-        List<Targetable> newTargets = aiMode ? endPoint.FindTargetsAI(currentTrajectory) : endPoint.FindTargets(currentTrajectory);
+        Vector3 rangeTarget = GetRangeLimitedTarget(sourcePosition, target);
+        currentTrajectory = trajectoryDefinition.GetTrajectory(rangeTarget, sourcePosition, range);
+        Vector3 finalTarget = currentTrajectory[^1];
+        List<Targetable> newTargets = aiMode ? endPoint.FindTargetsAI(finalTarget) : endPoint.FindTargets(finalTarget);
 
         if (!aiMode)
         {
@@ -93,20 +79,31 @@ public abstract class ActiveAbility : Ability
         if (playerTargeting)
         {
             trajectoryDefinition.Draw(currentTrajectory);
-            endPoint.Draw(currentTrajectory);
+            endPoint.Draw(finalTarget);
             SetHighlightedTargets(newTargets);
         }
 
         return newTargets;
     }
 
-    IEnumerator ToggleAnimations(PartAnimation[] animations, bool play = true)
+    Vector3 GetRangeLimitedTarget(Vector3 sourcePosition, GameObject target)
+    {
+        Vector3 targetPosition = target.transform.position;
+        float distance = Vector3.Distance(sourcePosition, targetPosition);
+        Vector3 direction = (targetPosition - sourcePosition).normalized;
+        return sourcePosition + direction * Mathf.Min(distance, range);
+    }
+    void ScheduleAbilityEnd()
+    {
+        if (durationModule == null) EndAbility();
+        else durationModule.SetDuration(Owner, EndAbility);
+    }
+    IEnumerator ToggleAnimations(ProceduralAnimation[] animations)
     {
         if (animations == null || animations.Length == 0) yield break;
         foreach (var ani in animations)
         {
-            if(play) yield return StartCoroutine(ani.Play(Owner, currentTrajectory, currentTargets));
-            else StartCoroutine(ani.Stop());
+            yield return StartCoroutine(ani.Play(Owner, currentTrajectory, currentTargets));
         }
             
     }
@@ -124,32 +121,21 @@ public abstract class ActiveAbility : Ability
 
     public virtual void LockOnTo(GameObject target, bool draw)
     {
+        if(trackingToggle != null) StartCoroutine(trackingToggle.Play(Owner, currentTrajectory, currentTargets));
         trackedTarget = target;
         playerTargeting = draw;
         StartCoroutine(TrackTarget());
     }
     public virtual void ReleaseLockOn()
     {
+        if (trackingToggle != null) trackingToggle.Stop();
         trackedTarget = null;
         StartCoroutine(Owner.PrimaryMovement.NeutralStance());
         LineMaker.HideLine();
         SetHighlightedTargets(null);
     }
 
-    protected abstract IEnumerator PerformEffects();
-
-    public void NeutralAim()
-    {
-        trackingAnimation.ResetTracking();
-    }
-    IEnumerator TrackTarget()
-    {
-        while(trackedTarget != null)
-        {
-            AimAt(trackedTarget, emissionPoint.transform.position, false);
-            yield return null;
-        }
-    }
+    
 
     private void SetHighlightedTargets(List<Targetable> newTargets)
     {
@@ -165,6 +151,26 @@ public abstract class ActiveAbility : Ability
             if(!newTargets.Contains(bot)) bot.SetOutlineColor(Color.white);
         }
         currentTargets = new(newTargets);
+    }
+    Vector3 GetCameraAimPoint()
+    {
+        if (currentTargets != null && currentTargets.Count > 0)
+        {
+            Vector3 average = Vector3.zero;
+            foreach (var target in currentTargets)
+            {
+                average += target.transform.position;
+            }
+            average /= currentTargets.Count;
+            return average;
+        }
+        else
+        {
+            Vector3 offset = PrimaryCursor.Transform.position - Owner.transform.position;
+            offset = offset.normalized;
+            offset *= Mathf.Min(range, offset.magnitude);
+            return offset + Owner.transform.position;
+        }
     }
 }
 

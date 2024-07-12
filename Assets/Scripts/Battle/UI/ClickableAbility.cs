@@ -46,7 +46,7 @@ public class ClickableAbility : AbilityDisplay
     public static void Cancel()
     {
         if(Active == null) return;
-        Active.Skill.NeutralAim();
+        Active.Skill.EndAbility();
         DeactivateSelectedAbility();
     }
 
