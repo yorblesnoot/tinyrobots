@@ -195,6 +195,121 @@ MonoBehaviour:
     m_HintWeight: 1
     m_MaintainTargetPositionOffset: 0
     m_MaintainTargetRotationOffset: 0
+--- !u!1 &8466846767254302242
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4391442398949676919}
+  - component: {fileID: 642142236824269102}
+  - component: {fileID: 8051151855791826628}
+  - component: {fileID: 2496942783366484502}
+  - component: {fileID: 353867226109267716}
+  m_Layer: 0
+  m_Name: Leap
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4391442398949676919
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8466846767254302242}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1354746903713565203}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &642142236824269102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8466846767254302242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32a745efca3b1424d82c6c5c0af23320, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  range: 10
+  ModifiableRange: 0
+  cooldown: 1
+  damage: 0
+  icon: {fileID: 21300000, guid: d5fc92820481b43a2986103f885cef46, type: 3}
+  currentCooldown: 0
+  Owner: {fileID: 0}
+  locked: 0
+  Type: 3
+  cost: 1
+  useAirCursor: 1
+  emissionPoint: {fileID: 3893659680154581276}
+  trackingToggle: {fileID: 0}
+  preAnimations:
+  - {fileID: 8051151855791826628}
+  postAnimations:
+  - {fileID: 2496942783366484502}
+  endAnimations: []
+  projectile: {fileID: 0}
+  travelTime: 1
+  intervalTime: 0.08
+--- !u!114 &8051151855791826628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8466846767254302242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9024f05d73b5bfb4aa6af116f34301cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationName: Hop
+  animator: {fileID: 4928672511436461920}
+  duration: 0.4
+--- !u!114 &2496942783366484502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8466846767254302242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9024f05d73b5bfb4aa6af116f34301cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationName: Idle
+  animator: {fileID: 4928672511436461920}
+  duration: 0.4
+--- !u!114 &353867226109267716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8466846767254302242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32b2cfa066dd6334eb43ea45428cf760, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockingLayers:
+  - Terrain
+  - Default
+  parabolaPoints: 10
+  gravityAccel: -0.98
 --- !u!1001 &1543482867553062048
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -291,6 +406,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 551280132427253427, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4391442398949676919}
     - targetCorrespondingSourceObject: {fileID: 3453657280514900982, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       insertIndex: -1
@@ -299,12 +418,14 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3145039084063412271, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6242903822911688357}
-    - targetCorrespondingSourceObject: {fileID: 3145039084063412271, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 8481402356143250946}
   m_SourcePrefab: {fileID: 100100000, guid: efe31d825ac3a73448c7a58c0e7e6f7f, type: 3}
+--- !u!4 &1354746903713565203 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 551280132427253427, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
+    type: 3}
+  m_PrefabInstance: {fileID: 1543482867553062048}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3893659680154581276 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2549745083649439164, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
@@ -323,35 +444,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1543482867553062048}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6242903822911688357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4525802202156440719}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32a745efca3b1424d82c6c5c0af23320, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PreferredCursor: 1
-  Type: 3
-  cost: 1
-  range: 10
-  cooldown: 1
-  damage: 0
-  icon: {fileID: 21300000, guid: d5fc92820481b43a2986103f885cef46, type: 3}
-  blockingLayers:
-  - Terrain
-  emissionPoint: {fileID: 3893659680154581276}
-  locked: 0
-  currentCooldown: 0
-  Owner: {fileID: 0}
-  parabolaPoints: 10
-  gravityAccel: -0.5
-  intervalTime: 0.08
-  animator: {fileID: 4928672511436461920}
 --- !u!114 &8481402356143250946
 MonoBehaviour:
   m_ObjectHideFlags: 0

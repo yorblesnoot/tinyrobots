@@ -15,18 +15,26 @@ public abstract class ActiveAbility : Ability
     GameObject trackedTarget;
     protected bool playerTargeting;
     protected List<Vector3> currentTrajectory;
-    protected List<Targetable> currentTargets = new();
-
-    [SerializeField] protected TargetPoint endPoint;
-    [SerializeField] Trajectory trajectoryDefinition;
-    [SerializeField] TrackingAnimation trackingAnimation;
+    protected List<Targetable> currentTargets = new();    
+    
     [SerializeField] ToggleAnimation trackingToggle;
-    [SerializeField] ProceduralAnimation[] preAnimations;
-    [SerializeField] ProceduralAnimation[] postAnimations;
-    [SerializeField] DurationModule durationModule;
+    [SerializeField] AnimationController[] preAnimations;
+    [SerializeField] AnimationController[] postAnimations;
+    [SerializeField] AnimationController[] endAnimations;
+    protected TargetPoint targetType;
+    DurationModule durationModule;
+    Trajectory trajectoryDefinition;
+    TrackingAnimation trackingAnimation;
 
     readonly float skillDelay = .5f;
-
+    private void Awake()
+    {
+        durationModule = GetComponent<DurationModule>();
+        trajectoryDefinition = GetComponent<Trajectory>();
+        targetType = TryGetComponent(out TargetPoint point) ? point : gameObject.AddComponent<ImpactTarget>();
+        trackingAnimation = GetComponent<TrackingAnimation>();
+        if (emissionPoint == null) emissionPoint = transform.gameObject;
+    }
 
     public IEnumerator Execute()
     {
@@ -47,7 +55,9 @@ public abstract class ActiveAbility : Ability
 
     public virtual void EndAbility()
     {
+        if(durationModule != null) durationModule.ClearCallback();
         trackingAnimation.ResetTracking();
+        StartCoroutine(ToggleAnimations(endAnimations));
     }
 
     
@@ -65,21 +75,20 @@ public abstract class ActiveAbility : Ability
     public List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
         Vector3 rangeTarget = GetRangeLimitedTarget(sourcePosition, target);
-        currentTrajectory = trajectoryDefinition.GetTrajectory(rangeTarget, sourcePosition, range);
-        Vector3 finalTarget = currentTrajectory[^1];
-        List<Targetable> newTargets = aiMode ? endPoint.FindTargetsAI(finalTarget) : endPoint.FindTargets(finalTarget);
+        currentTrajectory = trajectoryDefinition == null ? new() { rangeTarget }
+            : trajectoryDefinition.GetTrajectory(rangeTarget, sourcePosition, range);
+        List<Targetable> newTargets = aiMode ? targetType.FindTargetsAI(currentTrajectory) : targetType.FindTargets(currentTrajectory);
 
         if (!aiMode)
         {
-            trackingAnimation.Aim(currentTrajectory);
-            
+            if(trackingAnimation != null) trackingAnimation.Aim(currentTrajectory);
             Owner.PrimaryMovement.RotateToTrackEntity(trackedTarget);
         }
         
         if (playerTargeting)
         {
             trajectoryDefinition.Draw(currentTrajectory);
-            endPoint.Draw(finalTarget);
+            targetType.Draw(currentTrajectory);
             SetHighlightedTargets(newTargets);
         }
 
@@ -98,7 +107,7 @@ public abstract class ActiveAbility : Ability
         if (durationModule == null) EndAbility();
         else durationModule.SetDuration(Owner, EndAbility);
     }
-    IEnumerator ToggleAnimations(ProceduralAnimation[] animations)
+    IEnumerator ToggleAnimations(AnimationController[] animations)
     {
         if (animations == null || animations.Length == 0) yield break;
         foreach (var ani in animations)

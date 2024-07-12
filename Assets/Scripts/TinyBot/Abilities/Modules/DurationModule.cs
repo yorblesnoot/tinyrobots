@@ -38,6 +38,11 @@ public class DurationModule : MonoBehaviour
         tickEvent.AddListener(TickDuration);
     }
 
+    public void ClearCallback()
+    {
+        tickEvent?.RemoveListener(endCallback);
+    }
+
     void TickDuration()
     {
         timePassed++;

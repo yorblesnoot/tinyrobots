@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ProjectileShot : ActiveAbility
+public class ProjectileAbility : ActiveAbility
 {
-    [SerializeField] GameObject projectile;
+    [SerializeField] protected GameObject projectile;
     [SerializeField] protected float travelTime = 1;
     protected override IEnumerator PerformEffects()
     {

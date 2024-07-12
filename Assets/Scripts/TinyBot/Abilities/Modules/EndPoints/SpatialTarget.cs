@@ -5,25 +5,28 @@ using UnityEngine;
 
 public class SpatialTarget : TargetPoint
 {
-    [SerializeField] protected SpatialTargeter indicator;
-    [SerializeField] protected int maxTargets;
+    [SerializeField] protected SpatialSensor indicator;
+    [SerializeField] protected int maxTargets = 100;
     [SerializeField] protected float aiRadius;
 
-    public override void Draw(Vector3 point)
+    public override void Draw(List<Vector3> trajectory)
     {
         indicator.ToggleVisual(true);
     }
 
-    public override List<Targetable> FindTargets(Vector3 point)
+    public override List<Targetable> FindTargets(List<Vector3> trajectory)
     {
+        Vector3 point = trajectory[^1];
+        indicator.transform.position = point;
         indicator.transform.LookAt(point);
         indicator.gameObject.SetActive(true);
         return indicator.GetIntersectingTargets().Take(maxTargets)
             .OrderBy(target => Vector3.Distance(target.transform.position, point)).ToList();
     }
 
-    public override List<Targetable> FindTargetsAI(Vector3 point)
+    public override List<Targetable> FindTargetsAI(List<Vector3> trajectory)
     {
+        Vector3 point = trajectory[^1];
         Collider[] hits = Physics.OverlapSphere(point, aiRadius);
         List<Targetable> targets = new();
         foreach (Collider hit in hits)

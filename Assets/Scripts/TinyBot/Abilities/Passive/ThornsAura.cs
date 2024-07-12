@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ThornsAura : PassiveAbility
 {
-    [SerializeField] SpatialTargeter targeter;
+    [SerializeField] SpatialSensor targeter;
     [SerializeField] ParticleSystem thornsVisual;
     List<Targetable> affectedUnits = new();
     public override void Initialize(TinyBot botUnit)

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ToggleAnimation : ProceduralAnimation
+public class ToggleAnimation : AnimationController
 {
     [SerializeField] string animatorStateName;
     [SerializeField] Animator animator;

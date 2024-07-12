@@ -4,10 +4,10 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class SpatialTargeter : MonoBehaviour
+public class SpatialSensor : MonoBehaviour
 {
     List<Targetable> intersectingTargets = new();
-    public UnityEvent<Targetable> UnitTargeted = new();
+    [HideInInspector] public UnityEvent<Targetable> UnitTargeted = new();
     MeshRenderer meshRenderer;
 
     private void Awake()

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ThrowWindupAnimation : ProceduralAnimation
+public class ThrowWindupAnimation : IKAnimation
 {
     [SerializeField] float windupTime = 1f;
     [SerializeField] float windDistance = 1f;

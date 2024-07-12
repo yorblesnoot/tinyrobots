@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class HookGrapple : ProjectileShot
+public class HookGrapple : ProjectileAbility
 {
     [SerializeField] float backDistance = 2;
     [SerializeField] LineRenderer line;

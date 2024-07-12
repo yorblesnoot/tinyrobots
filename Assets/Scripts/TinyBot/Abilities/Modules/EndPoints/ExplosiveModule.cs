@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ExplosiveModule : MonoBehaviour
 {
-    [SerializeField] GameObject baseIndicator;
     [SerializeField] GameObject explodeVfx;
     [SerializeField] float damageDelay = .3f;
 
@@ -12,7 +11,6 @@ public class ExplosiveModule : MonoBehaviour
     private void Awake()
     {
         terrainMask = LayerMask.GetMask("Terrain", "Shield");
-        baseIndicator.SetActive(false);
     }
     
     public IEnumerator Detonate(List<Targetable> targets, Vector3 explosionPosition, int damage)

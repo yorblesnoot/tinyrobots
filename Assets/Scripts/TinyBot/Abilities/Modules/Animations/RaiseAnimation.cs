@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RaiseAnimation : ProceduralAnimation
+public class RaiseAnimation : IKAnimation
 {
     [SerializeField] float raiseHeight = 1.0f;
     [SerializeField] float armMoveDuration = .5f;

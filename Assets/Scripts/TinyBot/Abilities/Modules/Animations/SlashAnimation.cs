@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SlashAnimation : ProceduralAnimation
+public class SlashAnimation : IKAnimation
 {
     [SerializeField] Transform slashPosition;
 
