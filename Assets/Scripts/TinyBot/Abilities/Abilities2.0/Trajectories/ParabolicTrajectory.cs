@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ParabolicAbility : ProjectileAbility
+public class ParabolicTrajectory : Trajectory
 {
     [SerializeField] protected int parabolaPoints = 10;
     [SerializeField] float gravityAccel = -.98f;
 
-    protected override Vector3[] GetTrajectory(Vector3 source, Vector3 target)
+    protected override Vector3[] CalculateTrajectory(Vector3 source, Vector3 target)
     {
         Vector3 localCoords = target - source;
         Vector2 flatLocal = new(localCoords.x, localCoords.z);

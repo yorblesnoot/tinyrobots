@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,21 +9,24 @@ public abstract class ActiveAbility : Ability
     public int cost;
     
     public bool useAirCursor = true;
-    public string[] blockingLayers;
+    
     public GameObject emissionPoint;
     
     GameObject trackedTarget;
     protected bool playerTargeting;
-    protected int blockingLayerMask;
+    protected List<Vector3> currentTrajectory;
+    protected List<Targetable> currentTargets = new();
 
-    private void Awake()
-    {
-        blockingLayerMask = LayerMask.GetMask(blockingLayers);
-    }
-
-    
+    [SerializeField] Trajectory trajectoryDefinition;
+    [SerializeField] TargetPoint endPoint;
+    [SerializeField] TrackingAnimation trackingAnimation;
+    [SerializeField] PartAnimation[] preAnimations;
+    [SerializeField] PartAnimation[] postAnimations;
+    [SerializeField] DurationModule durationModule;
 
     readonly float skillDelay = .5f;
+
+
     public IEnumerator Execute()
     {
         Vector3 rawPosition = Owner.transform.position;
@@ -31,9 +35,25 @@ public abstract class ActiveAbility : Ability
         currentCooldown = cooldown;
         PrimaryCursor.actionInProgress = true;
         yield return new WaitForSeconds(skillDelay);
+        yield return ToggleAnimations(preAnimations);
         yield return StartCoroutine(PerformEffects());
+        yield return ToggleAnimations(postAnimations);
+        ScheduleAbilityEnd();
         PrimaryCursor.actionInProgress = false;
         if (Vector3Int.RoundToInt(Owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(Owner.MoveStyle, Owner.transform.position);
+    }
+
+    void ScheduleAbilityEnd()
+    {
+        if (durationModule == null) EndAbility();
+        else durationModule.SetDuration(Owner, EndAbility);
+    }
+
+    public virtual void EndAbility()
+    {
+        trackingAnimation.ResetTracking();
+        StartCoroutine(ToggleAnimations(postAnimations, false));
+        ReleaseLockOn();
     }
 
     Vector3 GetFinalAimPoint()
@@ -57,8 +77,39 @@ public abstract class ActiveAbility : Ability
         }
     }
 
-    List<Targetable> currentTargets = new();
-    public abstract List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false);
+    
+    public List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
+    {
+        currentTrajectory = trajectoryDefinition.GetTrajectory(target, sourcePosition, range);
+        List<Targetable> newTargets = aiMode ? endPoint.FindTargetsAI(currentTrajectory) : endPoint.FindTargets(currentTrajectory);
+
+        if (!aiMode)
+        {
+            trackingAnimation.Aim(currentTrajectory);
+            
+            Owner.PrimaryMovement.RotateToTrackEntity(trackedTarget);
+        }
+        
+        if (playerTargeting)
+        {
+            trajectoryDefinition.Draw(currentTrajectory);
+            endPoint.Draw(currentTrajectory);
+            SetHighlightedTargets(newTargets);
+        }
+
+        return newTargets;
+    }
+
+    IEnumerator ToggleAnimations(PartAnimation[] animations, bool play = true)
+    {
+        if (animations == null || animations.Length == 0) yield break;
+        foreach (var ani in animations)
+        {
+            if(play) yield return StartCoroutine(ani.Play(Owner, currentTrajectory, currentTargets));
+            else StartCoroutine(ani.Stop());
+        }
+            
+    }
 
     public virtual bool IsUsable(Vector3 targetPosition)
     {
@@ -75,27 +126,32 @@ public abstract class ActiveAbility : Ability
     {
         trackedTarget = target;
         playerTargeting = draw;
+        StartCoroutine(TrackTarget());
     }
     public virtual void ReleaseLockOn()
     {
         trackedTarget = null;
         StartCoroutine(Owner.PrimaryMovement.NeutralStance());
         LineMaker.HideLine();
-        SetTargets(null);
+        SetHighlightedTargets(null);
     }
 
     protected abstract IEnumerator PerformEffects();
 
-    public abstract void NeutralAim();
-    void Update()
+    public void NeutralAim()
     {
-        if (trackedTarget == null) return;
-        List<Targetable> newTargets = AimAt(trackedTarget, emissionPoint.transform.position);
-        if(playerTargeting) SetTargets(newTargets);
-        Owner.PrimaryMovement.RotateToTrackEntity(trackedTarget);
+        trackingAnimation.ResetTracking();
+    }
+    IEnumerator TrackTarget()
+    {
+        while(trackedTarget != null)
+        {
+            AimAt(trackedTarget, emissionPoint.transform.position, false);
+            yield return null;
+        }
     }
 
-    private void SetTargets(List<Targetable> newTargets)
+    private void SetHighlightedTargets(List<Targetable> newTargets)
     {
         newTargets ??= new();
         for (int i = 0; i < newTargets.Count; i++)

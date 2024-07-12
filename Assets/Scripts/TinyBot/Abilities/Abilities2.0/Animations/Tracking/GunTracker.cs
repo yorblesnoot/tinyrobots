@@ -7,10 +7,10 @@ public class GunTracker : TrackingAnimation
     [SerializeField] float aimDistance = 1f;
     [SerializeField] Transform aimPoint;
 
-    public override void TrackTrajectory(List<Vector3> trajectory)
+    public override void Aim(List<Vector3> trajectory)
     {
         Vector3 direction = trajectory[1] - trajectory[0];
         direction.Normalize();
-        aimTarget.position = aimPoint.position + direction * aimDistance;
+        ikTarget.position = aimPoint.position + direction * aimDistance;
     }
 }

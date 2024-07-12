@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GrenadeLob : ParabolicAbility
+public class GrenadeLob : ParabolicTrajectory
 {
     [SerializeField] GameObject grenade;
     [SerializeField] float travelTime;

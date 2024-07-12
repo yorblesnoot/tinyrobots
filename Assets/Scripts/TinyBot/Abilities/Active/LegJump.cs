@@ -2,7 +2,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 
-public class LegJump : ParabolicAbility
+public class LegJump : ParabolicTrajectory
 {
     [SerializeField] float intervalTime = .2f;
     [SerializeField] Animator animator;

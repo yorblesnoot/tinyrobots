@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class HookGrapple : LinearAbility
+public class HookGrapple : LinearTrajectory
 {
     [SerializeField] float backDistance = 1;
     [SerializeField] float travelTime;

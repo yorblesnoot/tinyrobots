@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class ActionBoost : SelfAbility
+public class StatBoost : Ability
 {
     [SerializeField] Animator animator;
     [SerializeField] ParticleSystem smokeBurst;

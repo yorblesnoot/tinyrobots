@@ -8,12 +8,23 @@ public class SpatialTargeter : MonoBehaviour
 {
     List<Targetable> intersectingTargets = new();
     public UnityEvent<Targetable> UnitTargeted = new();
+    MeshRenderer meshRenderer;
+
+    private void Awake()
+    {
+        meshRenderer = GetComponent<MeshRenderer>();
+    }
+
+    public void ToggleVisual(bool toggle)
+    {
+        meshRenderer.enabled = toggle;
+    }
     public void ResetIntersecting()
     {
         intersectingTargets = new();
     }
 
-    public List<Targetable> GetIntersectingBots()
+    public List<Targetable> GetIntersectingTargets()
     {
         return new(intersectingTargets.Where(bot => bot != null));
     }

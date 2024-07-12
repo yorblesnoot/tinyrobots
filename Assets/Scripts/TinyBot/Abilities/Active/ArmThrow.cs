@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ArmThrow : ParabolicAbility
+public class ArmThrow : ParabolicTrajectory
 {
     [SerializeField] float thrownAirTime;
     [SerializeField] float windupTime = 1f;

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectShield : LinearAbility
+public class ProjectShield : LinearTrajectory
 {
     [SerializeField] GameObject ikTarget;
     [SerializeField] float shieldDistance = 1f;

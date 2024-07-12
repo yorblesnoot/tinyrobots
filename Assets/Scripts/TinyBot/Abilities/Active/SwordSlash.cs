@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class SwordSlash : SpatialAbility
+public class SwordSlash : ActiveAbility
 {
     [SerializeField] GameObject aimer;
     [SerializeField] Transform readyPosition;
