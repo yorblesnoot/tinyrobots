@@ -1,5 +1,6 @@
 using PrimeTween;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -34,18 +35,32 @@ public class TinyBot : Targetable
     public static UnityEvent ClearActiveBot = new();
     BotAI botAI;
 
-    public List<ActiveAbility> Abilities { get; private set; }
+    public List<ActiveAbility> ActiveAbilities { get; private set; }
+    public List<PassiveAbility> PassiveAbilities { get; private set;}
     List<GameObject> Parts;
     
-    public void Initialize(List<ActiveAbility> abilities, List<GameObject> parts, PrimaryMovement primaryMovement)
+    public void Initialize(List<Ability> abilities, List<GameObject> parts, PrimaryMovement primaryMovement)
     {
         partRenderers = GetComponentsInChildren<Renderer>();
         PhysicsBody = GetComponent<Rigidbody>();
         Parts = parts;
-        Abilities = abilities;
+        SetAbilities(abilities);
+
         PrimaryMovement = primaryMovement;
         PrimaryMovement.Owner = this;
         ClearActiveBot.AddListener(ClearActiveUnit);
+    }
+
+    private void SetAbilities(List<Ability> abilities)
+    {
+        ActiveAbilities = new();
+        PassiveAbilities = new();
+        foreach (var ability in abilities)
+        {
+            ActiveAbility active = ability as ActiveAbility;
+            if (active != null) ActiveAbilities.Add(active);
+            else PassiveAbilities.Add(ability as PassiveAbility);
+        }
     }
 
     public override MoveStyle GetMoveStyle()

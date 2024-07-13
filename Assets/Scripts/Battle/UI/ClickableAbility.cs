@@ -4,11 +4,10 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class ClickableAbility : MonoBehaviour
+public class ClickableAbility : AbilityDisplay
 {
     public static UnityEvent playerUsedAbility = new();
 
-    [SerializeField] protected Image image;
     [SerializeField] Button button;
     [SerializeField] TMP_Text cooldown;
     [SerializeField] Image cooldownPanel;
@@ -18,8 +17,8 @@ public class ClickableAbility : MonoBehaviour
     [SerializeField] float dislacementModifier;
     float pointWidth;
 
-    public ActiveAbility Skill;
-    public static ClickableAbility Active;
+    [HideInInspector] public ActiveAbility Ability;
+    public static ClickableAbility Activated;
     private void Awake()
     {
         pointWidth = actionPoints[0].GetComponent<RectTransform>().rect.width;
@@ -27,41 +26,11 @@ public class ClickableAbility : MonoBehaviour
         playerUsedAbility.AddListener(OvercostOverlay);
     }
 
-    void OvercostOverlay()
+    public override void Become(Ability ability)
     {
-        if (Skill == null) return;
-        bool unusuable = Skill.cost > UnitControl.PlayerControlledBot.Stats.Current[StatType.ACTION]
-            || !Skill.IsAvailable();
-        cooldownPanel.gameObject.SetActive(unusuable);
-        cooldown.text = "";
-    }
-
-    public void Hide()
-    {
-        button.enabled = false;
-        Active.image.color = Color.white;
-        SetPips(0);
-        Clear();
-    }
-
-    public static void DeactivateSelectedAbility()
-    {
-        if (Active == null) return;
-        Active.image.color = Color.white;
-        PrimaryCursor.ToggleAirCursor(UnitControl.PlayerControlledBot == null || UnitControl.PlayerControlledBot.PrimaryMovement.Style == MoveStyle.FLY);
-        Active.Skill.ReleaseLockOn();
-        Active = null;
-    }
-
-    public static void Cancel()
-    {
-        if(Active == null) return;
-        Active.Skill.EndAbility();
-        DeactivateSelectedAbility();
-    }
-
-    public void Become(ActiveAbility ability)
-    {
+        base.Become(ability);
+        Ability = ability as ActiveAbility;
+        button.interactable = true;
         ability.Owner.BeganTurn.AddListener(UpdateCooldowns);
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(Activate);
@@ -69,12 +38,47 @@ public class ClickableAbility : MonoBehaviour
         UpdateCooldowns();
     }
 
+    void OvercostOverlay()
+    {
+        if (Ability == null) return;
+        bool unusuable = Ability.cost > UnitControl.PlayerControlledBot.Stats.Current[StatType.ACTION]
+            || !Ability.IsAvailable();
+        cooldownPanel.gameObject.SetActive(unusuable);
+        cooldown.text = "";
+    }
+
+    void OnDisable()
+    {
+        image.color = Color.white;
+        SetPips(0);
+        Ability = null;
+        button.onClick.RemoveAllListeners();
+    }
+
+    public static void DeactivateSelectedAbility()
+    {
+        if (Activated == null) return;
+        Activated.image.color = Color.white;
+        PrimaryCursor.ToggleAirCursor(UnitControl.PlayerControlledBot == null || UnitControl.PlayerControlledBot.PrimaryMovement.Style == MoveStyle.FLY);
+        Activated.Ability.ReleaseLockOn();
+        Activated = null;
+    }
+
+    public static void Cancel()
+    {
+        if(Activated == null) return;
+        Activated.Ability.EndAbility();
+        DeactivateSelectedAbility();
+    }
+
+    
+
     public void UpdateCooldowns()
     {
-        if (Skill == null) return;
+        if (Ability == null) return;
         //Debug.Log(cooldownPanel + " panel " + Skill + " skill");
-        cooldownPanel.gameObject.SetActive(Skill.currentCooldown > 0);
-        cooldown.text = Skill.currentCooldown.ToString();
+        cooldownPanel.gameObject.SetActive(Ability.currentCooldown > 0);
+        cooldown.text = Ability.currentCooldown.ToString();
     }
 
     void SetPips(int pips)
@@ -91,20 +95,13 @@ public class ClickableAbility : MonoBehaviour
         */
     }
 
-    public void Clear()
-    {
-        Skill = null;
-        button.onClick.RemoveAllListeners();
-        
-    }
-
     public void Activate()
     {
-        if (!Skill.IsAvailable()) return;
+        if (!Ability.IsAvailable()) return;
         DeactivateSelectedAbility();
-        Active = this;
+        Activated = this;
         PrimaryCursor.ToggleAirCursor(true);
-        Skill.LockOnTo(PrimaryCursor.Transform.gameObject, true);
+        Ability.LockOnTo(PrimaryCursor.Transform.gameObject, true);
         image.color = Color.red;
     }
 }

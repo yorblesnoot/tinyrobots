@@ -16,7 +16,7 @@ public class ArmThrow : ProjectileAbility
         Owner.Stats.Current[StatType.MOVEMENT] /= 2;
         Owner.EndedTurn.AddListener(EndAbility);
         if (Owner.Allegiance == Allegiance.PLAYER) TurnResourceCounter.Update?.Invoke();
-        foreach (ActiveAbility ability in Owner.Abilities)
+        foreach (ActiveAbility ability in Owner.ActiveAbilities)
         {
             ability.locked = true;
         }

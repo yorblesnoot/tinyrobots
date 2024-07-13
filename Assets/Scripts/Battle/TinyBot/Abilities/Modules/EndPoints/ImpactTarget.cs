@@ -26,7 +26,7 @@ public class ImpactTarget : TargetPoint
         Vector3 origin = singlePoint ? trajectory[0] + Vector3.up : trajectory[^2];
         Vector3 direction = singlePoint ? Vector3.down : trajectory[^1] - origin;
         Physics.Raycast(origin, direction, out var hitInfo, direction.magnitude + overlap, layerMask);
-        if (hitInfo.collider.TryGetComponent(out Targetable target)) return new() { target };
+        if (hitInfo.collider != null && hitInfo.collider.TryGetComponent(out Targetable target)) return new() { target };
         return null;
     }
 

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum MissionType
@@ -12,6 +13,7 @@ public abstract class Mission : MonoBehaviour
 {
     [SerializeField] protected PlayerData playerData;
     [SerializeField] protected BotAssembler botAssembler;
+    [SerializeField] List<BotRecord> playerBotOverride;
     public void BeginMission()
     {
         TurnManager.Mission = this;
@@ -29,6 +31,7 @@ public abstract class Mission : MonoBehaviour
     protected List<TinyBot> SpawnPlayerBots()
     {
         List<TinyBot> bots = new();
+        if (playerBotOverride != null) bots.AddRange(playerBotOverride.Select(record => SpawnBot(Allegiance.PLAYER, record)));
         foreach (var core in playerData.CoreInventory)
         {
             if (!core.Deployable) continue;

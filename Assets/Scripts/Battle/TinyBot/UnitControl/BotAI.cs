@@ -28,7 +28,7 @@ public class BotAI
         primaries = new();
         dashes = new();
         shields = new();
-        foreach (ActiveAbility ability in thisBot.Abilities)
+        foreach (ActiveAbility ability in thisBot.ActiveAbilities)
         {
             if (ability.Type == AbilityType.DASH) dashes.Add(ability);
             else if (ability.Type == AbilityType.SHIELD) shields.Add(ability);
@@ -37,7 +37,7 @@ public class BotAI
     }
     float FindOptimalDistance()
     {
-        List<ActiveAbility> rangedAttacks = thisBot.Abilities.Where(skill => skill.range > 0 && skill.Type == AbilityType.ATTACK).ToList();
+        List<ActiveAbility> rangedAttacks = thisBot.ActiveAbilities.Where(skill => skill.range > 0 && skill.Type == AbilityType.ATTACK).ToList();
         if(rangedAttacks.Count == 0)
         {
             return 10;

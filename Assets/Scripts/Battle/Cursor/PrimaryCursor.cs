@@ -54,7 +54,7 @@ public class PrimaryCursor : MonoBehaviour
     float currentPathCost;
     private void LateUpdate()
     {
-        bool abilityActive = ClickableAbility.Active != null;
+        bool abilityActive = ClickableAbility.Activated != null;
 
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
         if (State == CursorState.FREE) ActiveBehaviour.ControlCursor();
@@ -98,7 +98,7 @@ public class PrimaryCursor : MonoBehaviour
         if (EventSystem.current.IsPointerOverGameObject()) return;
         if (anAbilityIsActive)
         {
-            ActiveAbility skill = ClickableAbility.Active.Skill;
+            ActiveAbility skill = ClickableAbility.Activated.Ability;
             if (skill.IsUsable(transform.position)
             && skill.cost <= PlayerControlledBot.Stats.Current[StatType.ACTION])
             {
@@ -106,7 +106,7 @@ public class PrimaryCursor : MonoBehaviour
                 StatDisplay.SyncStatDisplay(PlayerControlledBot);
 
                 StartCoroutine(UseSkill(skill));
-                ClickableAbility.Active.UpdateCooldowns();
+                ClickableAbility.Activated.UpdateCooldowns();
                 ClickableAbility.DeactivateSelectedAbility();
             }
         }

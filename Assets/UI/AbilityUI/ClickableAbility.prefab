@@ -444,9 +444,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9119217915258957823}
   - component: {fileID: 9119217915258957817}
-  - component: {fileID: 3069318101514615746}
   - component: {fileID: 828741525071462831}
-  - component: {fileID: 9107225137434444672}
   m_Layer: 5
   m_Name: ClickableAbility
   m_TagString: Untagged
@@ -484,22 +482,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9119217915258957820}
   m_CullTransparentMesh: 1
---- !u!114 &3069318101514615746
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9119217915258957820}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 75c9b2df54a833e459a7c7edaf9685dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Skill: {fileID: 0}
-  image: {fileID: 9119217915256258755}
-  clickable: {fileID: 828741525071462831}
-  unclickable: {fileID: 9107225137434444672}
 --- !u!114 &828741525071462831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -523,19 +505,6 @@ MonoBehaviour:
   - {fileID: 5499096771287662600}
   - {fileID: 1576960219849722405}
   dislacementModifier: 1.3
-  Skill: {fileID: 0}
---- !u!114 &9107225137434444672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9119217915258957820}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f119386a26124346a1424bd5f044fa3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   Skill: {fileID: 0}
 --- !u!1001 &646498438461885790
 PrefabInstance:

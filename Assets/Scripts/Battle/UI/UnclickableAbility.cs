@@ -1,14 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class UnclickableAbility : MonoBehaviour
+public class UnclickableAbility : AbilityDisplay
 {
-    [HideInInspector] public PassiveAbility Skill;
 
-    public virtual void Become(PassiveAbility ability)
+    public override void Become(Ability ability)
     {
-        
+        base.Become(ability);
+        PassiveAbility passive = ability as PassiveAbility;
     }
 }

@@ -8,7 +8,7 @@ public class Ability : MonoBehaviour
     public int damage;
     public int cost;
     public Sprite icon;
-    [SerializeField] protected DurationModule durationModule;
+    protected DurationModule durationModule;
 
     [HideInInspector] public int currentCooldown;
     [HideInInspector] public TinyBot Owner;

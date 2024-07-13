@@ -1,12 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class UnitControl : MonoBehaviour
 {
     [SerializeField] ClickableAbility[] clickableAbilities;
+    [SerializeField] UnclickableAbility[] unclickableAbilities;
     [SerializeField] Image unitPortrait;
     [SerializeField] Button turnEnd;
 
@@ -18,7 +17,7 @@ public class UnitControl : MonoBehaviour
     public static TinyBot PlayerControlledBot;
     private void Awake()
     {
-        ClickableAbility.Active = null;
+        ClickableAbility.Activated = null;
         turnEnd.onClick.AddListener(EndPlayerTurn);
     }
 
@@ -45,20 +44,18 @@ public class UnitControl : MonoBehaviour
         
         ClickableAbility.DeactivateSelectedAbility();
         deployedAbilities = new();
-        List<ActiveAbility> abilityList = bot.Abilities.Where(a => a != null).ToList();
-        for(int i = 0; i < clickableAbilities.Count(); i++)
+        bot.ActiveAbilities.PassDataToUI(clickableAbilities, AddActive);
+        bot.PassiveAbilities.PassDataToUI(unclickableAbilities, AddPassive);
+
+        void AddActive(ActiveAbility ability, ClickableAbility clickable)
         {
-            if(i < abilityList.Count)
-            {
-                ActiveAbility ability = abilityList[i];
-                clickableAbilities[i].Become(ability);
-                deployedAbilities.Add(clickableAbilities[i]);
-            }
-            else
-            {
-                clickableAbilities[i].Clear();
-                clickableAbilities[i].gameObject.SetActive(false);
-            }
+            clickable.Become(ability);
+            deployedAbilities.Add(clickable);
+        }
+
+        void AddPassive(PassiveAbility ability, UnclickableAbility unclickable)
+        {
+            unclickable.Become(ability);
         }
     }
 
@@ -67,10 +64,8 @@ public class UnitControl : MonoBehaviour
         if (deployedAbilities == null || !Input.anyKeyDown) return;
         for (int i = 0;i < deployedAbilities.Count; i++)
         {
-            if (Input.GetKeyDown(keyCodes[i]))
-            {
-                deployedAbilities[i].Activate();
-            }
+            if (!Input.GetKeyDown(keyCodes[i])) continue;
+            deployedAbilities[i].Activate();
         }
     }
 }
