@@ -11,4 +11,5 @@ public class TurretTracker : TrackingAnimation
         localizedTarget = transform.InverseTransformPoint(localizedTarget);
         ikTarget.localPosition = Vector3.Lerp(ikTarget.localPosition, localizedTarget, 1/slowness);
     }
+
 }

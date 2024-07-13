@@ -27,6 +27,7 @@ public class TurnManager : MonoBehaviour
     public static UnityEvent RoundEnded = new();
     private void Awake()
     {
+        TurnTakers = new();
         activeIndex = 0;
         ActiveUnitScaleFactor = activeUnitScaleFactor;
         TurnTakers = new(); activePortraits = new(); currentlyActive = new();

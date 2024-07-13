@@ -19,11 +19,6 @@ public abstract class Trajectory : MonoBehaviour
         return CastAlongPoints(targets, blockingLayerMask, out RaycastHit hit, aiMode ? BotAI.terrainCheckSize : 0);
     }
 
-    public void Draw(List<Vector3> points)
-    {
-        LineMaker.DrawLine(points.ToArray());
-    }
-
     protected abstract Vector3[] CalculateTrajectory(Vector3 source, Vector3 target);
 
     protected List<Vector3> CastAlongPoints(Vector3[] castTargets, int mask, out RaycastHit hit, float radius = 0)

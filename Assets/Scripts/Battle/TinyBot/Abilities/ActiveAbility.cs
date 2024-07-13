@@ -54,6 +54,8 @@ public abstract class ActiveAbility : Ability
 
     public virtual void EndAbility()
     {
+        LineMaker.HideLine();
+        targetType.EndTargeting();
         if(durationModule != null) durationModule.ClearCallback();
         trackingAnimation.ResetTracking();
         StartCoroutine(ToggleAnimations(endAnimations));
@@ -74,7 +76,7 @@ public abstract class ActiveAbility : Ability
     public List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
         Vector3 rangeTarget = GetRangeLimitedTarget(sourcePosition, target);
-        currentTrajectory = trajectoryDefinition == null ? new() { rangeTarget }
+        currentTrajectory = trajectoryDefinition == null ? new() { transform.position, rangeTarget }
             : trajectoryDefinition.GetTrajectory(rangeTarget, sourcePosition, range);
         List<Targetable> newTargets = aiMode ? targetType.FindTargetsAI(currentTrajectory) : targetType.FindTargets(currentTrajectory);
 
@@ -86,7 +88,7 @@ public abstract class ActiveAbility : Ability
         
         if (playerTargeting)
         {
-            trajectoryDefinition.Draw(currentTrajectory);
+            if(trajectoryDefinition != null) LineMaker.DrawLine(currentTrajectory.ToArray());
             targetType.Draw(currentTrajectory);
             SetHighlightedTargets(newTargets);
         }

@@ -16,9 +16,10 @@ public class SpatialTarget : TargetPoint
 
     public override List<Targetable> FindTargets(List<Vector3> trajectory)
     {
+        indicator.transform.SetParent(null);
         Vector3 point = trajectory[^1];
-        indicator.transform.position = point;
-        indicator.transform.LookAt(point);
+        Vector3 direction = point - trajectory[0];
+        indicator.transform.SetPositionAndRotation(point, Quaternion.LookRotation(direction));
         indicator.gameObject.SetActive(true);
         return indicator.GetIntersectingTargets().Take(maxTargets)
             .OrderBy(target => Vector3.Distance(target.transform.position, point)).ToList();

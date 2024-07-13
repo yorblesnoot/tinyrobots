@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8381779492330375688}
   - component: {fileID: 3328195909937798841}
   - component: {fileID: 8185807176413275310}
+  - component: {fileID: 3862903475833651967}
   m_Layer: 0
   m_Name: Arm Throw
   m_TagString: Untagged
@@ -45,17 +46,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c64ab2b94e883149887ddaea40501e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DisplayName: Arm Throw
   range: 10
   ModifiableRange: 0
   cooldown: 1
   damage: 0
+  cost: 1
   icon: {fileID: 21300000, guid: 64910aa9bb3a74497a5a5dbbe2f5a468, type: 3}
   currentCooldown: 0
   Owner: {fileID: 0}
   locked: 0
   Type: 3
-  cost: 1
   useAirCursor: 1
   emissionPoint: {fileID: 7519672149628714507}
   trackingToggle: {fileID: 0}
@@ -82,6 +82,23 @@ MonoBehaviour:
   ikTarget: {fileID: 2419956447974706190}
   windupTime: 1
   windDistance: 1
+--- !u!114 &3862903475833651967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215392366238916757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32b2cfa066dd6334eb43ea45428cf760, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockingLayers:
+  - Default
+  - Terrain
+  parabolaPoints: 10
+  gravityAccel: -0.98
 --- !u!1 &2994116557199998672
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,17 +342,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b844cae21ae58440a09432794831c30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DisplayName: 
   range: 2
   ModifiableRange: 0
   cooldown: 1
   damage: 0
+  cost: 1
   icon: {fileID: 21300000, guid: 0e77e93919f1e455dbefa760bc0660de, type: 3}
   currentCooldown: 0
   Owner: {fileID: 0}
   locked: 0
   Type: 0
-  cost: 1
   useAirCursor: 1
   emissionPoint: {fileID: 7519672149628714507}
   trackingToggle: {fileID: 3016547542891081560}

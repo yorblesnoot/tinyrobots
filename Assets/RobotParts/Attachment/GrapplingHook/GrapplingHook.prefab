@@ -172,6 +172,7 @@ GameObject:
   - component: {fileID: 5993407847931728567}
   - component: {fileID: 3453704067874665369}
   - component: {fileID: 645100875821679151}
+  - component: {fileID: 3808269160417413498}
   m_Layer: 0
   m_Name: Hook Grapple
   m_TagString: Untagged
@@ -210,12 +211,12 @@ MonoBehaviour:
   ModifiableRange: 0
   cooldown: 2
   damage: 5
+  cost: 1
   icon: {fileID: 21300000, guid: d5fc92820481b43a2986103f885cef46, type: 3}
   currentCooldown: 0
   Owner: {fileID: 0}
   locked: 0
   Type: 3
-  cost: 1
   useAirCursor: 1
   emissionPoint: {fileID: 1716039679318861372}
   trackingToggle: {fileID: 0}
@@ -241,6 +242,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ikTarget: {fileID: 6924268095817713486}
   slowness: 30
+--- !u!114 &3808269160417413498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3502040498531955416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23c76d3258d32254a80ccc88c481dbb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockingLayers:
+  - Terrain
+  - Default
+  - Shield
 --- !u!1 &3970723303201826508
 GameObject:
   m_ObjectHideFlags: 0

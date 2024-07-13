@@ -5,7 +5,7 @@ using UnityEngine;
 public class GunTracker : TrackingAnimation
 {
     [SerializeField] float aimDistance = 1f;
-    [SerializeField] Transform aimPoint;
+    [SerializeField] Transform aimPoint; 
 
     public override void Aim(List<Vector3> trajectory)
     {
