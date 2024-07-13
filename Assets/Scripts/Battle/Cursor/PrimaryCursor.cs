@@ -34,11 +34,11 @@ public class PrimaryCursor : MonoBehaviour
     static TurnResourceCounter StatDisplay;
     static UnitControl AbilityUI;
 
-    public static bool actionInProgress = false;
+    public static bool ActionInProgress = false;
     private void Awake()
     {
         Instance = this;
-        actionInProgress = false;
+        ActionInProgress = false;
         TinyBot.ClearActiveBot.AddListener(() => pathingLine.positionCount = 0);
     }
     private void Start()
@@ -58,7 +58,7 @@ public class PrimaryCursor : MonoBehaviour
 
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
         if (State == CursorState.FREE) ActiveBehaviour.ControlCursor();
-        if (actionInProgress) 
+        if (ActionInProgress) 
         {
             HideMovePreview();
             return; 
@@ -79,6 +79,7 @@ public class PrimaryCursor : MonoBehaviour
         {
             HideMovePreview();
         }
+
     }
 
     private void GenerateMovePreview()
@@ -87,6 +88,7 @@ public class PrimaryCursor : MonoBehaviour
         //Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
         if (!foundValidSpot || currentPosition == lastPosition) return;
 
+        
         lastPosition = currentPosition;
         List<Vector3> possiblePath = Pathfinder3D.FindVectorPath(currentPosition, out List<float> distances);
         if (possiblePath == null || possiblePath.Count == 0) return;
@@ -181,10 +183,10 @@ public class PrimaryCursor : MonoBehaviour
 
     private IEnumerator TraversePath()
     {
-        actionInProgress = true;
+        ActionInProgress = true;
         yield return StartCoroutine(PlayerControlledBot.PrimaryMovement.TraversePath(currentPath));
         Pathfinder3D.GeneratePathingTree(PlayerControlledBot.PrimaryMovement.Style, PlayerControlledBot.transform.position);
-        actionInProgress = false;
+        ActionInProgress = false;
     }
 
     public static void SelectBot(TinyBot bot)

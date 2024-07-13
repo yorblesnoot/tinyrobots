@@ -41,14 +41,14 @@ public abstract class ActiveAbility : Ability
         Vector3Int startPosition = Vector3Int.RoundToInt(rawPosition);
         MainCameraControl.ActionPanTo(GetCameraAimPoint());
         currentCooldown = cooldown;
-        PrimaryCursor.actionInProgress = true;
+        PrimaryCursor.ActionInProgress = true;
         yield return new WaitForSeconds(skillDelay);
         ReleaseLockOn();
         yield return ToggleAnimations(preAnimations);
         yield return StartCoroutine(PerformEffects());
         yield return ToggleAnimations(postAnimations);
         ScheduleAbilityEnd();
-        PrimaryCursor.actionInProgress = false;
+        PrimaryCursor.ActionInProgress = false;
         if (Vector3Int.RoundToInt(Owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(Owner.MoveStyle, Owner.transform.position);
     }
 
