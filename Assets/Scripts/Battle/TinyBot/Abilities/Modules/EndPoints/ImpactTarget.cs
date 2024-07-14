@@ -27,7 +27,7 @@ public class ImpactTarget : TargetPoint
         Vector3 direction = singlePoint ? Vector3.down : trajectory[^1] - origin;
         Physics.Raycast(origin, direction, out var hitInfo, direction.magnitude + overlap, layerMask);
         if (hitInfo.collider != null && hitInfo.collider.TryGetComponent(out Targetable target)) return new() { target };
-        return null;
+        return new();
     }
 
     public override List<Targetable> FindTargetsAI(List<Vector3> trajectory)

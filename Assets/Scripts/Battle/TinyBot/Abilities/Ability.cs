@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Ability : MonoBehaviour
 {
-    public int range;
+    public float range;
     public bool ModifiableRange = false;
     public int cooldown = 1;
     public int damage;

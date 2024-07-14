@@ -41,14 +41,14 @@ public abstract class ActiveAbility : Ability
         Vector3Int startPosition = Vector3Int.RoundToInt(rawPosition);
         MainCameraControl.ActionPanTo(GetCameraAimPoint());
         currentCooldown = cooldown;
-        PrimaryCursor.ActionInProgress = true;
+        PrimaryCursor.actionInProgress = true;
         yield return new WaitForSeconds(skillDelay);
         ReleaseLockOn();
         yield return ToggleAnimations(preAnimations);
         yield return StartCoroutine(PerformEffects());
         yield return ToggleAnimations(postAnimations);
         ScheduleAbilityEnd();
-        PrimaryCursor.ActionInProgress = false;
+        PrimaryCursor.actionInProgress = false;
         if (Vector3Int.RoundToInt(Owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(Owner.MoveStyle, Owner.transform.position);
     }
 
@@ -57,7 +57,7 @@ public abstract class ActiveAbility : Ability
         LineMaker.HideLine();
         targetType.EndTargeting();
         if(durationModule != null) durationModule.ClearCallback();
-        trackingAnimation.ResetTracking();
+        if(trackingAnimation != null) trackingAnimation.ResetTracking();
         StartCoroutine(ToggleAnimations(endAnimations));
     }
 
@@ -76,9 +76,10 @@ public abstract class ActiveAbility : Ability
     public List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
         Vector3 rangeTarget = GetRangeLimitedTarget(sourcePosition, target);
-        currentTrajectory = trajectoryDefinition == null ? new() { transform.position, rangeTarget }
+        currentTrajectory = trajectoryDefinition == null ? new() { sourcePosition, rangeTarget }
             : trajectoryDefinition.GetTrajectory(rangeTarget, sourcePosition, range);
-        List<Targetable> newTargets = aiMode ? targetType.FindTargetsAI(currentTrajectory) : targetType.FindTargets(currentTrajectory);
+        List<Targetable> newTargets = range == 0 ? new() { Owner } 
+        : aiMode ? targetType.FindTargetsAI(currentTrajectory) : targetType.FindTargets(currentTrajectory);
 
         if (!aiMode)
         {
@@ -92,7 +93,7 @@ public abstract class ActiveAbility : Ability
             targetType.Draw(currentTrajectory);
             SetHighlightedTargets(newTargets);
         }
-
+        currentTargets = new(newTargets);
         return newTargets;
     }
 
@@ -145,8 +146,6 @@ public abstract class ActiveAbility : Ability
         SetHighlightedTargets(null);
     }
 
-    
-
     private void SetHighlightedTargets(List<Targetable> newTargets)
     {
         newTargets ??= new();
@@ -160,7 +159,6 @@ public abstract class ActiveAbility : Ability
         {
             if(!newTargets.Contains(bot)) bot.SetOutlineColor(Color.white);
         }
-        currentTargets = new(newTargets);
     }
     Vector3 GetCameraAimPoint()
     {

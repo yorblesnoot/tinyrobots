@@ -187,7 +187,6 @@ public class BotAI
         yield return new WaitForSeconds(lockTime);
         thisBot.SpendResource(ability.cost, StatType.ACTION);
         yield return thisBot.StartCoroutine(ability.Execute());
-        ability.ReleaseLockOn();
         yield return new WaitForSeconds(lockTime);
     }
     #endregion

@@ -9,11 +9,12 @@ public class ThornsAura : PassiveAbility
     List<Targetable> affectedUnits = new();
     public override void Initialize(TinyBot botUnit)
     {
+        Debug.Log("spikes init");
         base.Initialize(botUnit);
-        thornsVisual.gameObject.SetActive(true);
+        thornsVisual.Play();
         ParticleSystem.ShapeModule shape = thornsVisual.shape;
         shape.radius = range;
-        targeter.transform.localScale = Vector3.one * range;
+        targeter.transform.localScale = 2 * range * Vector3.one;
         targeter.UnitTargeted.AddListener(DealSpikeDamage);
         TurnManager.RoundEnded.AddListener(ResetSpiked);
     }
