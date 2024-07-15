@@ -108,6 +108,7 @@ public class MainCameraControl : MonoBehaviour
 
     private void LateUpdate()
     {
+        if(Input.GetKeyDown(KeyCode.LeftControl)) RestrictCamera(freeCameraAvailable);
         if(freeCameraAvailable) PlayerControlCamera();
         cams.Brain.ManualUpdate();
         Cams.Automatic.m_MinDuration = 50;
