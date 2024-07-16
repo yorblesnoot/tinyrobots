@@ -7,8 +7,13 @@ public class BotAssembler : MonoBehaviour
     [SerializeField] PortraitGenerator portraitGenerator;
     [SerializeField] BotPalette palette;
 
+    static BotAssembler instance;
+    private void Awake()
+    {
+        instance = this;
+    }
 
-    public TinyBot BuildBot(TreeNode<ModdedPart> treeRoot, Allegiance allegiance)
+    public static TinyBot BuildBot(TreeNode<ModdedPart> treeRoot, Allegiance allegiance)
     {
         PrimaryMovement locomotion = null;
         AttachmentPoint initialAttachmentPoint;
@@ -25,7 +30,7 @@ public class BotAssembler : MonoBehaviour
         
         List<Ability> abilities = GetAbilityList(spawnedParts, botUnit);
         botUnit.Initialize(abilities, spawnedParts, locomotion);
-        portraitGenerator.AttachPortrait(botUnit);
+        instance.portraitGenerator.AttachPortrait(botUnit);
 
         return botUnit;
 
@@ -53,7 +58,7 @@ public class BotAssembler : MonoBehaviour
             {
                 foreach (Renderer renderer in modifier.mainRenderers)
                 {
-                    palette.RecolorPart(renderer, allegiance);
+                    instance.palette.RecolorPart(renderer, allegiance);
                 }
             }
             spawnedParts.Add(spawned);
@@ -88,17 +93,17 @@ public class BotAssembler : MonoBehaviour
         }
     }
 
-    void SetBotTallness(PrimaryMovement locomotion, AttachmentPoint initialAttachmentPoint, TinyBot bot)
+    static void SetBotTallness(PrimaryMovement locomotion, AttachmentPoint initialAttachmentPoint, TinyBot bot)
     {
         Vector3 chassisPosition = initialAttachmentPoint.transform.localPosition;
         chassisPosition.y = locomotion.chassisHeight;
         initialAttachmentPoint.transform.localPosition = chassisPosition;
         Vector3 colliderCenter = chassisPosition;
-        colliderCenter.y -= botColliderOffset;
+        colliderCenter.y -= instance.botColliderOffset;
         bot.GetComponent<CapsuleCollider>().center = colliderCenter;
     }
 
-    List<Ability> GetAbilityList(List<GameObject> spawnedParts, TinyBot botUnit)
+    static List<Ability> GetAbilityList(List<GameObject> spawnedParts, TinyBot botUnit)
     {
         List<Ability> abilities = new();
         foreach (var part in spawnedParts)

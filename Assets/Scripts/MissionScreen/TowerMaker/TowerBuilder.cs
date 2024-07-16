@@ -40,10 +40,18 @@ public class TowerBuilder : MonoBehaviour
         List<MapNode> path = GetMazePath(ends.Item1, ends.Item2);
         //DebugPath(path);
         PlaceMapPieces(path);
+        SetFixedEvents(path);
         PopulateNavigableZone();
         SaveMapData();
         PlacePlayer(zoneRooms[path[0].room]);
         
+    }
+
+    private void SetFixedEvents(List<MapNode> path)
+    {
+        zoneRooms[path[0].room].zoneEvent = null;
+        zoneRooms[path[0].room].zoneEventType = 0;
+        eventProvider.PlaceBossEvent(zoneRooms[path[^1].room]);
     }
 
     private void PlaceMapPieces(List<MapNode> path)
@@ -56,9 +64,12 @@ public class TowerBuilder : MonoBehaviour
         GeneratePieceMap(cornerPieces, corners);
         GeneratePieceMap(bodyPieces, body);
         GeneratePieceMap(sidePieces, sides);
+        
+    }
 
-        zoneRooms[path[0].room].zoneEvent = null;
-        zoneRooms[path[0].room].zoneEventType = 0;
+    private void ClearEvent(MapNode node)
+    {
+        
     }
 
     void AssignPieceIndices()
@@ -103,9 +114,7 @@ public class TowerBuilder : MonoBehaviour
             TowerPiece piece = allPieces[saved.pieceIndex];
             TowerNavZone zone = Instantiate(piece, saved.position, saved.rotation).GetComponent<TowerNavZone>();
             zone.zoneIndex = i;
-            zone.Initialize();
-            zone.zoneEventType = saved.eventType;
-            zone.zoneEvent = eventProvider[zone.zoneEventType];
+            PrimeZone(zone, saved.eventType);
             zones.Add(zone);
         }
         for (int i = 0; i < mapData.Zones.Count; i++)
@@ -192,10 +201,7 @@ public class TowerBuilder : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(0, -orientation.rotationAngle, 0);
         GameObject spawned = Instantiate(piece, GetWorldVector(node.position), rotation).gameObject;
         TowerNavZone zone = spawned.GetComponent<TowerNavZone>();
-        zone.zoneEventType = eventProvider.GetRandomWeightedEvent();
-        zone.zoneEvent = eventProvider[zone.zoneEventType];
-        zone.Initialize();
-
+        PrimeZone(zone);
 
         foreach (PlacedRoom room in placedRooms)
         {
@@ -205,7 +211,12 @@ public class TowerBuilder : MonoBehaviour
         }
     }
 
-
+    private void PrimeZone(TowerNavZone zone, int eventIndex = -1)
+    {
+        zone.zoneEventType = eventIndex < 0 ? eventProvider.GetRandomWeightedEvent() : eventIndex;
+        zone.zoneEvent = eventProvider[zone.zoneEventType];
+        zone.Initialize();
+    }
 
     List<PlacedRoom> VerifyPiecePlacableAt(MapNode baseNode, TowerPiece.Orientation orientation, List<MapNode> path, Vector2Int[] targetNodes)
     {

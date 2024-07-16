@@ -34,17 +34,16 @@ public class PlayerNavigator : MonoBehaviour
 
     public void FinishMove(TowerNavZone zone)
     {
-        
         occupiedZone = zone;
         zone.RevealNeighbors();
         mapData.Zones[zone.zoneIndex].revealed = true;
         mapData.ZoneLocation = zone.zoneIndex;
 
-        if(zone.zoneEvent != null) zone.zoneEvent.Activate(zone, ReallowMove);
+        if(zone.zoneEvent != null) zone.zoneEvent.Activate(zone, CompleteEvent);
         else moveAvailable = true;
     }
 
-    void ReallowMove()
+    void CompleteEvent()
     {
         moveAvailable = true;
         occupiedZone.zoneEvent.Clear(occupiedZone);

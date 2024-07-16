@@ -1,9 +1,11 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class EventProvider : MonoBehaviour 
 {
-    [SerializeField] ZoneEvent[] zoneEvents;
+    [SerializeField] List<ZoneEvent> zoneEvents;
+    [SerializeField] ZoneEvent bossEvent;
     public ZoneEvent this[int i]
     {
         get { return zoneEvents[i]; }
@@ -19,6 +21,12 @@ public class EventProvider : MonoBehaviour
             if(random < current) return i;
         }
         return 0;
+    }
+
+    public void PlaceBossEvent(TowerNavZone zone)
+    {
+        zone.zoneEventType = zoneEvents.IndexOf(bossEvent);
+        zone.zoneEvent = bossEvent;
     }
 }
 

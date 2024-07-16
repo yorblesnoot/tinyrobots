@@ -9,7 +9,7 @@ public class BattleEnder : MonoBehaviour
     public void PlayerWin()
     {
         if (playerData == null) Debug.LogWarning("No active Navigation Map found.");
-        playerData.MapData.Zones[playerData.MapData.ZoneLocation].eventType = 0;
+        relay.BattleComplete = true;
         dropsUI.OfferDrops(() => sceneLoader.Load(SceneType.NAVIGATION));
 
         foreach(TinyBot bot in TurnManager.TurnTakers)

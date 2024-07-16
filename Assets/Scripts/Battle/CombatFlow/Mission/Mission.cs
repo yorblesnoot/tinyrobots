@@ -12,7 +12,7 @@ public enum MissionType
 public abstract class Mission : MonoBehaviour
 {
     [SerializeField] protected PlayerData playerData;
-    [SerializeField] protected BotAssembler botAssembler;
+    [SerializeField] protected SceneRelay relay;
     [SerializeField] List<BotRecord> playerBotOverride;
     public void BeginMission()
     {
@@ -23,7 +23,7 @@ public abstract class Mission : MonoBehaviour
     public TinyBot SpawnBot(Allegiance allegiance, BotRecord botRecord)
     {
         var tree = playerData.BotConverter.StringToBot(botRecord.record);
-        TinyBot bot = botAssembler.BuildBot(tree, allegiance);
+        TinyBot bot = BotAssembler.BuildBot(tree, allegiance);
         TurnManager.AddTurnTaker(bot);
         return bot;
     }
@@ -35,7 +35,7 @@ public abstract class Mission : MonoBehaviour
         foreach (var core in playerData.CoreInventory)
         {
             if (!core.Deployable) continue;
-            TinyBot bot = botAssembler.BuildBot(core.Bot, Allegiance.PLAYER);
+            TinyBot bot = BotAssembler.BuildBot(core.Bot, Allegiance.PLAYER);
             TurnManager.AddTurnTaker(bot);
             bot.LinkedCore = core;
             bot.Stats.Current[StatType.HEALTH] = Mathf.RoundToInt(bot.Stats.Max[StatType.HEALTH] * core.HealthRatio);

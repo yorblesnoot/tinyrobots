@@ -6,15 +6,33 @@ using UnityEngine.Events;
 public class BattleEvent : ZoneEvent
 {
     [SerializeField] SceneLoader loader;
-    [SerializeField] SceneRelay relay;
+    [SerializeField] protected SceneRelay relay;
+    [SerializeField] List<SpawnTable> possibleSpawns;
     
     public override void Activate(TowerNavZone zone, UnityAction eventComplete)
     {
-        if (zone.battleMap != null)
+        if (zone.battleMap != null && !relay.BattleComplete)
         {
-            relay.battleMap = zone.battleMap;
+            PreBattle(zone);
+            relay.PrepareBattle(zone.battleMap);
             loader.Load(SceneType.BATTLE);
         }
-        else eventComplete();
+        else
+        {
+            relay.BattleComplete = false;
+            StartCoroutine(PostBattle(eventComplete));
+        }
+    }
+
+    protected virtual void PreBattle(TowerNavZone zone)
+    {
+        relay.activeSpawnTable = possibleSpawns.GrabRandomly(false);
+        
+    }
+
+    protected virtual IEnumerator PostBattle(UnityAction eventComplete)
+    {
+        eventComplete();
+        yield break;
     }
 }
