@@ -1,3 +1,4 @@
+using PrimeTween;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,11 +7,14 @@ using UnityEngine;
 public class TowerBuilder : MonoBehaviour
 {
     [Header("Settings")]
+    
+    [SerializeField] int sideLength = 6, pieceSize = 4;
+    [SerializeField] float circleRadius = 3;
+    [SerializeField] float floorRiseLength = 5;
+    [SerializeField] float floorRiseTime = 1;
     [SerializeField] List<TowerPiece> bodyPieces;
     [SerializeField] List<TowerPiece> sidePieces;
     [SerializeField] List<TowerPiece> cornerPieces;
-    [SerializeField] int sideLength = 6, pieceSize = 4;
-    [SerializeField] float circleRadius = 3;
 
     [Header("Components")]
     [SerializeField] PlayerNavigator playerNavigator;
@@ -24,18 +28,26 @@ public class TowerBuilder : MonoBehaviour
     static readonly Vector2Int[] directions = { Vector2Int.up, Vector2Int.right, Vector2Int.down, Vector2Int.left };
 
     MapData mapData;
-
-    public void DeployNavSpace(MapData mapData, bool generate)
+    private void Awake()
+    {
+        transform.position += Vector3.up * floorRiseLength;
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F)) SpawnNewFloor(mapData, true);
+    }
+    public void SpawnNewFloor(MapData mapData, bool generate)
     {
         AssignPieceIndices();
-        if (generate || mapData == null) GenerateTowerFloor();
-        else LoadMap();
+        TowerNavZone spawnPosition = generate || mapData == null ? GenerateTowerFloor() : LoadMap();
+        Tween.PositionY(transform, transform.position.y - floorRiseLength, floorRiseTime);
+        PlacePlayer(spawnPosition);
     }
 
-    void GenerateTowerFloor()
+    TowerNavZone GenerateTowerFloor()
     {
-        GenerateGrid();
-        GenerateRegions();
+        if (mapGrid == null) GenerateGrid();
+        else ClearGrid();
         var ends = GetEndPoints();
         List<MapNode> path = GetMazePath(ends.Item1, ends.Item2);
         //DebugPath(path);
@@ -43,12 +55,38 @@ public class TowerBuilder : MonoBehaviour
         SetFixedEvents(path);
         PopulateNavigableZone();
         SaveMapData();
-        PlacePlayer(zoneRooms[path[0].room]);
-        
+        return zoneRooms[path[0].room];
+    }
+
+    private void ClearGrid()
+    {
+        foreach(MapNode node in mapGrid.Values) node.room = null;
+    }
+
+    TowerNavZone LoadMap()
+    {
+        List<TowerNavZone> zones = new();
+        for (int i = 0; i < mapData.Zones.Count; i++)
+        {
+            SavedNavZone saved = mapData.Zones[i];
+            TowerPiece piece = allPieces[saved.pieceIndex];
+            TowerNavZone zone = InstantiatePiece(piece, saved.position, saved.rotation);
+            zone.zoneIndex = i;
+            PrimeZone(zone, saved.eventType);
+            zones.Add(zone);
+        }
+        for (int i = 0; i < mapData.Zones.Count; i++)
+        {
+            SavedNavZone node = mapData.Zones[i];
+            zones[i].neighbors = node.neighborIndices.Select(x => zones[x]).ToHashSet();
+            if (mapData.Zones[i].revealed) zones[i].RevealNeighbors(true);
+        }
+        return zones[mapData.ZoneLocation];
     }
 
     private void SetFixedEvents(List<MapNode> path)
     {
+        Debug.Log(path[0].room);
         zoneRooms[path[0].room].zoneEvent = null;
         zoneRooms[path[0].room].zoneEventType = 0;
         eventProvider.PlaceBossEvent(zoneRooms[path[^1].room]);
@@ -67,13 +105,9 @@ public class TowerBuilder : MonoBehaviour
         
     }
 
-    private void ClearEvent(MapNode node)
-    {
-        
-    }
-
     void AssignPieceIndices()
     {
+        if (allPieces != null) return;
         allPieces = new();
         allPieces.AddRange(bodyPieces);
         allPieces.AddRange(sidePieces);
@@ -105,39 +139,12 @@ public class TowerBuilder : MonoBehaviour
         mapData.Zones = map;
     }
 
-    void LoadMap()
-    {
-        List<TowerNavZone> zones = new();
-        for(int i = 0; i < mapData.Zones.Count; i++)
-        {
-            SavedNavZone saved = mapData.Zones[i];
-            TowerPiece piece = allPieces[saved.pieceIndex];
-            TowerNavZone zone = Instantiate(piece, saved.position, saved.rotation).GetComponent<TowerNavZone>();
-            zone.zoneIndex = i;
-            PrimeZone(zone, saved.eventType);
-            zones.Add(zone);
-        }
-        for (int i = 0; i < mapData.Zones.Count; i++)
-        {
-            SavedNavZone node = mapData.Zones[i];
-            zones[i].neighbors = node.neighborIndices.Select(x => zones[x]).ToHashSet();
-            if (mapData.Zones[i].revealed) zones[i].RevealNeighbors(true);
-        }
-        PlacePlayer(zones[mapData.ZoneLocation]);
-    }
-
-    private void GenerateRegions()
-    {
-        DefineCorners();
-        DefineSides();
-        DefineBody();
-    }
-
     void PlacePlayer(TowerNavZone zone)
     {
-        zone.Reveal(zone.unitPosition);
+        zone.Reveal(zone.UnitPosition);
         playerNavigator.Initialize(mapData);
-        playerNavigator.transform.position = zone.unitPosition;
+        playerNavigator.transform.position = zone.UnitPosition;
+        playerNavigator.transform.SetParent(transform);
         playerNavigator.FinishMove(zone);
     }
 
@@ -199,8 +206,7 @@ public class TowerBuilder : MonoBehaviour
     void PlacePiece(TowerPiece piece, MapNode node, TowerPiece.Orientation orientation, List<PlacedRoom> placedRooms)
     {
         Quaternion rotation = Quaternion.Euler(0, -orientation.rotationAngle, 0);
-        GameObject spawned = Instantiate(piece, GetWorldVector(node.position), rotation).gameObject;
-        TowerNavZone zone = spawned.GetComponent<TowerNavZone>();
+        TowerNavZone zone = InstantiatePiece(piece, GetWorldVector(node.position), rotation);
         PrimeZone(zone);
 
         foreach (PlacedRoom room in placedRooms)
@@ -209,6 +215,13 @@ public class TowerBuilder : MonoBehaviour
             MapNode targetNode = room.node;
             targetNode.room = room;
         }
+    }
+
+    private TowerNavZone InstantiatePiece(TowerPiece piece, Vector3 position, Quaternion rotation)
+    {
+        TowerNavZone zone = Instantiate(piece, position, rotation).GetComponent<TowerNavZone>();
+        zone.transform.SetParent(transform);
+        return zone;
     }
 
     private void PrimeZone(TowerNavZone zone, int eventIndex = -1)
@@ -317,6 +330,7 @@ public class TowerBuilder : MonoBehaviour
 
     void GenerateGrid()
     {
+        if (mapGrid != null) return;
         float halfLength = sideLength - 1;
         halfLength /= 2;
         Vector2 center = new(halfLength, halfLength);
@@ -345,6 +359,10 @@ public class TowerBuilder : MonoBehaviour
                 node.neighbors.Add(neighbor);
             }
         }
+
+        DefineCorners();
+        DefineSides();
+        DefineBody();
 
         bool IsCellOutsideCircle(Vector2Int coord)
         {

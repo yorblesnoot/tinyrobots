@@ -11,7 +11,7 @@ public class NavigationInitializer : MonoBehaviour
     [SerializeField] PlayerData playerData;
     void Start()
     {
-        towerBuilder.DeployNavSpace(playerData.MapData, relay.generateNavMap);
+        towerBuilder.SpawnNewFloor(playerData.MapData, relay.generateNavMap);
         relay.generateNavMap = false;
         blueprintControl.Initialize();
         originSlot.gameObject.SetActive(true);

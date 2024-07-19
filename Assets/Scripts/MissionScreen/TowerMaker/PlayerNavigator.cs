@@ -29,7 +29,7 @@ public class PlayerNavigator : MonoBehaviour
         if (occupiedZone != null && !occupiedZone.neighbors.Contains(zone)) return;
 
         moveAvailable = false;
-        Tween.Position(transform, endValue: zone.unitPosition, duration: moveTime).OnComplete(() => FinishMove(zone));
+        Tween.Position(transform, endValue: zone.UnitPosition, duration: moveTime).OnComplete(() => FinishMove(zone));
     }
 
     public void FinishMove(TowerNavZone zone)

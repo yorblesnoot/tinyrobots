@@ -9,7 +9,7 @@ public class TowerNavZone : MonoBehaviour
     [SerializeField] float revealDuration = 1;
 
     [HideInInspector] public HashSet<TowerNavZone> neighbors;
-    [HideInInspector] public Vector3 unitPosition;
+    [HideInInspector] public Vector3 UnitPosition { get { return transform.position + Vector3.up * unitHeight; } }
     [HideInInspector] public TowerPiece towerPiece;
     [HideInInspector] public int zoneIndex;
     [HideInInspector] public int zoneEventType;
@@ -21,8 +21,6 @@ public class TowerNavZone : MonoBehaviour
     public void Initialize()
     {
         neighbors = new();
-        unitPosition = transform.position;
-        unitPosition.y += unitHeight;
         towerPiece = GetComponent<TowerPiece>();
         foreach (var room in towerPiece.rooms)
         {
@@ -48,7 +46,7 @@ public class TowerNavZone : MonoBehaviour
     {
         foreach(var room in neighbors)
         {
-            room.Reveal(unitPosition, instant);
+            room.Reveal(UnitPosition, instant);
         }
     }
 
@@ -58,7 +56,7 @@ public class TowerNavZone : MonoBehaviour
         if (revealed) return;
         revealed = true;
         zoneEvent?.Visualize(this);
-        float maxDistance = source == unitPosition ? 10 : Vector3.Distance(unitPosition, source) * 2;
+        float maxDistance = source == UnitPosition ? 10 : Vector3.Distance(UnitPosition, source) * 2;
         foreach (var renderer in renderers)
         {
             renderer.material.SetVector(evaporationSource, source);

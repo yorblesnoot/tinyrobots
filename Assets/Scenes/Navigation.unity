@@ -930,6 +930,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42e426aa259fe004b8d697b564c155c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sideLength: 8
+  pieceSize: 4
+  circleRadius: 2.8
+  floorRiseLength: 20
+  floorRiseTime: 1
   bodyPieces:
   - {fileID: 717031911}
   - {fileID: 1678222114}
@@ -948,9 +953,6 @@ MonoBehaviour:
   - {fileID: 3240960104042734688}
   - {fileID: 1607771008}
   - {fileID: 503669826184238604}
-  sideLength: 8
-  pieceSize: 4
-  circleRadius: 2.8
   playerNavigator: {fileID: 516328817}
   eventProvider: {fileID: 1498754852}
 --- !u!4 &264448361
@@ -961,7 +963,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264448359}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1695,7 +1697,7 @@ Transform:
   m_GameObject: {fileID: 545266703}
   serializedVersion: 2
   m_LocalRotation: {x: 0.23911765, y: 0.3696438, z: -0.09904577, w: 0.89239913}
-  m_LocalPosition: {x: 1.91, y: 10.5, z: 1.93}
+  m_LocalPosition: {x: 1.91, y: -10, z: 1.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11275,6 +11277,7 @@ MonoBehaviour:
   - {fileID: 343545633}
   - {fileID: 1535622110}
   - {fileID: 1761965603}
+  bossEvent: {fileID: 0}
 --- !u!1001 &1507135721
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11397,6 +11400,7 @@ MonoBehaviour:
   weight: 60
   loader: {fileID: 2029315049}
   relay: {fileID: 11400000, guid: ae6e43f53999c8e47b5bb43485353f3f, type: 2}
+  possibleSpawns: []
 --- !u!1001 &1560773595
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12711,7 +12715,7 @@ Transform:
   m_GameObject: {fileID: 1938517005}
   serializedVersion: 2
   m_LocalRotation: {x: 0.23911765, y: 0.3696438, z: -0.09904577, w: 0.89239913}
-  m_LocalPosition: {x: 1.91, y: 10.5, z: 1.93}
+  m_LocalPosition: {x: 1.91, y: -10, z: 1.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
