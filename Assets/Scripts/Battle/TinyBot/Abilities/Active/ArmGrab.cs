@@ -27,6 +27,7 @@ public class ArmGrab : ActiveAbility
     public override void EndAbility()
     {
         base.EndAbility();
+        if (grabbed == null) return;
         EndGrab();
         StartCoroutine(grabbed.Fall());
     }

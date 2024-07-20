@@ -9,6 +9,6 @@ public enum ModType
 {
     RANGE,
     COOLDOWN,
-    DAMAGEPERCENT,
+    POTENCY,
     COST
 }

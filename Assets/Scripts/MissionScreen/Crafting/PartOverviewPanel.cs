@@ -60,9 +60,9 @@ public class PartOverviewPanel : MonoBehaviour
     {
         string modName = type.ToString().ToLower().FirstToUpper();
         string plus = value > 0 ? "+" : "";
-        if (type == ModType.DAMAGEPERCENT)
+        if (type == ModType.POTENCY)
         {
-            return $"{plus}{value}% Ability Damage";
+            return $"{plus}{value}% Ability Potency";
         }
         else return $"{plus}{value} {modName}";
     }

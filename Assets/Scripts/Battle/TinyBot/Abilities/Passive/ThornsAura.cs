@@ -9,7 +9,6 @@ public class ThornsAura : PassiveAbility
     List<Targetable> affectedUnits = new();
     public override void Initialize(TinyBot botUnit)
     {
-        Debug.Log("spikes init");
         base.Initialize(botUnit);
         thornsVisual.Play();
         ParticleSystem.ShapeModule shape = thornsVisual.shape;

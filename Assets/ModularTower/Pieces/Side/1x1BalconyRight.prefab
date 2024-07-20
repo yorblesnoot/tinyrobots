@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4967904666640046620}
     m_Modifications:
     - target: {fileID: 6142723451496778002, guid: 949c52ce56e5fcd45af8d4b67bc40c6c,
@@ -68,12 +69,22 @@ PrefabInstance:
       value: TowerBalcony
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 949c52ce56e5fcd45af8d4b67bc40c6c, type: 3}
+--- !u!4 &6299726370336537884 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6142723451496778002, guid: 949c52ce56e5fcd45af8d4b67bc40c6c,
+    type: 3}
+  m_PrefabInstance: {fileID: 167277153643967502}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &626535189424720305
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1710915741074409043, guid: 12d61edaa41c93d4f952e149ac0e14fa,
@@ -131,6 +142,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7409145159224159707, guid: 12d61edaa41c93d4f952e149ac0e14fa,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.07
+      objectReference: {fileID: 0}
     - target: {fileID: 8767840861287640265, guid: 12d61edaa41c93d4f952e149ac0e14fa,
         type: 3}
       propertyPath: m_Name
@@ -147,6 +163,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 5494510938132616109, guid: 12d61edaa41c93d4f952e149ac0e14fa,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5943029150929537775}
+    - targetCorrespondingSourceObject: {fileID: 5494510938132616109, guid: 12d61edaa41c93d4f952e149ac0e14fa,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6299726370336537884}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d61edaa41c93d4f952e149ac0e14fa, type: 3}
 --- !u!4 &4967904666640046620 stripped
 Transform:
@@ -159,6 +186,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4967904666640046620}
     m_Modifications:
     - target: {fileID: 2924114842224317826, guid: e0545d1241777224796146e4ba85ad65,
@@ -222,4 +250,13 @@ PrefabInstance:
       value: TowerAnchor
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0545d1241777224796146e4ba85ad65, type: 3}
+--- !u!4 &5943029150929537775 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2924114842224317826, guid: e0545d1241777224796146e4ba85ad65,
+    type: 3}
+  m_PrefabInstance: {fileID: 8857854182225878893}
+  m_PrefabAsset: {fileID: 0}

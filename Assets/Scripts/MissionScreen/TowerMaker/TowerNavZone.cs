@@ -1,5 +1,6 @@
 using PrimeTween;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TowerNavZone : MonoBehaviour
@@ -7,9 +8,10 @@ public class TowerNavZone : MonoBehaviour
     public GameObject battleMap;
     [SerializeField] float unitHeight = 1;
     [SerializeField] float revealDuration = 1;
+    [SerializeField] Transform unitPoint;
 
     [HideInInspector] public HashSet<TowerNavZone> neighbors;
-    [HideInInspector] public Vector3 UnitPosition { get { return transform.position + Vector3.up * unitHeight; } }
+    [HideInInspector] public Vector3 UnitPosition { get { return (unitPoint != null ? unitPoint : transform).position + Vector3.up * unitHeight; } }
     [HideInInspector] public TowerPiece towerPiece;
     [HideInInspector] public int zoneIndex;
     [HideInInspector] public int zoneEventType;
@@ -31,9 +33,10 @@ public class TowerNavZone : MonoBehaviour
 
     void PrepBlackout()
     {
-        renderers = GetComponentsInChildren<Renderer>();
+        
         marginDistance = Shader.PropertyToID("_MarginDistance");
         evaporationSource = Shader.PropertyToID("_EvaporationSource");
+        renderers = GetComponentsInChildren<Renderer>().Where(ren => ren.material.HasProperty(marginDistance)).ToArray();
         HideRooms();
     }
 

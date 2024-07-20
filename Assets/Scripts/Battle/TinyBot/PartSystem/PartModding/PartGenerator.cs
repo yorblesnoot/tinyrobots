@@ -62,7 +62,7 @@ public class PartGenerator : MonoBehaviour
     {
         if (mod.Type == ModType.RANGE && ability.ModifiableRange) return true;
         else if (mod.Type == ModType.COOLDOWN && ability.cooldown + mod.Value > 0) return true;
-        else if (mod.Type == ModType.DAMAGEPERCENT && ability.damage > 0) return true;
+        else if (mod.Type == ModType.POTENCY && ability.damage > 0) return true;
         else if (mod.Type == ModType.COST && ability.cost + mod.Value >= 0) return true;
         return false;
     }

@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2322213450513103620}
     m_Modifications:
     - target: {fileID: 2924114842224317826, guid: e0545d1241777224796146e4ba85ad65,
@@ -68,12 +69,22 @@ PrefabInstance:
       value: TowerAnchor
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0545d1241777224796146e4ba85ad65, type: 3}
+--- !u!4 &3941287026452605943 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2924114842224317826, guid: e0545d1241777224796146e4ba85ad65,
+    type: 3}
+  m_PrefabInstance: {fileID: 2172645283948297845}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7393199207397381398
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2322213450513103620}
     m_Modifications:
     - target: {fileID: 6142723451496778002, guid: 949c52ce56e5fcd45af8d4b67bc40c6c,
@@ -137,12 +148,22 @@ PrefabInstance:
       value: TowerBalcony
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 949c52ce56e5fcd45af8d4b67bc40c6c, type: 3}
+--- !u!4 &3721870967160675332 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6142723451496778002, guid: 949c52ce56e5fcd45af8d4b67bc40c6c,
+    type: 3}
+  m_PrefabInstance: {fileID: 7393199207397381398}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7816635154244511913
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1710915741074409043, guid: 12d61edaa41c93d4f952e149ac0e14fa,
@@ -200,6 +221,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7409145159224159707, guid: 12d61edaa41c93d4f952e149ac0e14fa,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.05
+      objectReference: {fileID: 0}
     - target: {fileID: 8767840861287640265, guid: 12d61edaa41c93d4f952e149ac0e14fa,
         type: 3}
       propertyPath: m_Name
@@ -216,6 +242,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 5494510938132616109, guid: 12d61edaa41c93d4f952e149ac0e14fa,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3941287026452605943}
+    - targetCorrespondingSourceObject: {fileID: 5494510938132616109, guid: 12d61edaa41c93d4f952e149ac0e14fa,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3721870967160675332}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 12d61edaa41c93d4f952e149ac0e14fa, type: 3}
 --- !u!4 &2322213450513103620 stripped
 Transform:

@@ -19,22 +19,22 @@ public class TinyBot : Targetable
     [SerializeField] GameObject hitSpark;
     public Transform headshotPosition;
     
-
     readonly float deathExplodeMinForce = .1f;
     [SerializeField] float deathPushMulti = 1;
-
-    [HideInInspector] public BotCore LinkedCore;
     
     [HideInInspector] public Sprite Portrait;
     
     [HideInInspector] public bool AvailableForTurn;
-    [HideInInspector] public PrimaryMovement PrimaryMovement;
+    
     [HideInInspector] public UnityEvent BeganTurn = new();
     [HideInInspector] public UnityEvent EndedTurn = new();
+    [HideInInspector] public UnityEvent ReceivedHit = new();
 
     public static UnityEvent ClearActiveBot = new();
     BotAI botAI;
 
+    [HideInInspector] public BotCore LinkedCore;
+    [HideInInspector] public PrimaryMovement PrimaryMovement;
     public List<ActiveAbility> ActiveAbilities { get; private set; }
     public List<PassiveAbility> PassiveAbilities { get; private set;}
     List<GameObject> Parts;
@@ -123,17 +123,22 @@ public class TinyBot : Targetable
 
     public override void ReceiveHit(int damage, Vector3 source, Vector3 hitPoint, bool canBackstab = true)
     {
+        //account for armor
+        float armorMultiplier = 1 - (float)Stats.Current[StatType.ARMOR] / 100;
+        damage = Mathf.RoundToInt(armorMultiplier * damage);
         //check for a backstab
         Vector3 hitDirection = (source - transform.position).normalized;
         float dot = Vector3.Dot(hitDirection, transform.forward);
         bool backstabbed = canBackstab && dot < 0;
 
+        
         feedback.QueuePopup(damage, backstabbed);
         StartCoroutine(PrimaryMovement.ApplyImpulseToBody(source, recoilDistancePerDamage * damage, hitRecoilTime, hitReturnTime));
         GameObject spark = Instantiate(hitSpark, hitPoint, Quaternion.identity);
         spark.transform.LookAt(source);
         Destroy(spark, 1f);
         ReduceHealth(backstabbed ? Mathf.RoundToInt(backstabMultiplier * damage) : damage);
+        ReceivedHit.Invoke();
     }
 
     protected override void ReduceHealth(int damage)

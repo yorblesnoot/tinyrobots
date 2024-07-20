@@ -31,17 +31,18 @@ public class TowerBuilder : MonoBehaviour
     private void Awake()
     {
         transform.position += Vector3.up * floorRiseLength;
+        AssignPieceIndices();
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F)) SpawnNewFloor(mapData, true);
+        if (Input.GetKeyDown(KeyCode.F)) BuildTowerFloor(mapData);
     }
-    public void SpawnNewFloor(MapData mapData, bool generate)
+    public MapData BuildTowerFloor(MapData data)
     {
-        AssignPieceIndices();
-        TowerNavZone spawnPosition = generate || mapData == null ? GenerateTowerFloor() : LoadMap();
+        TowerNavZone spawnPosition = data == null ? GenerateTowerFloor() : LoadTowerFloor(data);
         Tween.PositionY(transform, transform.position.y - floorRiseLength, floorRiseTime);
         PlacePlayer(spawnPosition);
+        return mapData;
     }
 
     TowerNavZone GenerateTowerFloor()
@@ -63,25 +64,26 @@ public class TowerBuilder : MonoBehaviour
         foreach(MapNode node in mapGrid.Values) node.room = null;
     }
 
-    TowerNavZone LoadMap()
+    TowerNavZone LoadTowerFloor(MapData data)
     {
+        mapData = data;
         List<TowerNavZone> zones = new();
-        for (int i = 0; i < mapData.Zones.Count; i++)
+        for (int i = 0; i < data.Zones.Count; i++)
         {
-            SavedNavZone saved = mapData.Zones[i];
+            SavedNavZone saved = data.Zones[i];
             TowerPiece piece = allPieces[saved.pieceIndex];
             TowerNavZone zone = InstantiatePiece(piece, saved.position, saved.rotation);
             zone.zoneIndex = i;
             PrimeZone(zone, saved.eventType);
             zones.Add(zone);
         }
-        for (int i = 0; i < mapData.Zones.Count; i++)
+        for (int i = 0; i < data.Zones.Count; i++)
         {
-            SavedNavZone node = mapData.Zones[i];
+            SavedNavZone node = data.Zones[i];
             zones[i].neighbors = node.neighborIndices.Select(x => zones[x]).ToHashSet();
-            if (mapData.Zones[i].revealed) zones[i].RevealNeighbors(true);
+            if (data.Zones[i].revealed) zones[i].RevealNeighbors(true);
         }
-        return zones[mapData.ZoneLocation];
+        return zones[data.ZoneLocation];
     }
 
     private void SetFixedEvents(List<MapNode> path)

@@ -115,7 +115,7 @@ public class ModdedPart
             int newCooldown = mod.Value + ability.cooldown;
             ability.cooldown = Mathf.Clamp(newCooldown, 1, newCooldown);
         }
-        else if (mod.Key == ModType.DAMAGEPERCENT)
+        else if (mod.Key == ModType.POTENCY)
         {
             float finalDamage = ability.damage;
             finalDamage *= 1 + mod.Value / 100;
