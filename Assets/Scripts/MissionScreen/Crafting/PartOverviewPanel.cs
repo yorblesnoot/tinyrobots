@@ -8,11 +8,13 @@ public class PartOverviewPanel : MonoBehaviour
 {
     [SerializeField] TMP_Text nameDisplay;
     [SerializeField] TMP_Text weightDisplay;
+    [SerializeField] MoveStyleDisplay moveStyleDisplay;
     [SerializeField] AbilityDisplay[] abilityDisplays;
     [SerializeField] TMP_Text[] modLines;
     [SerializeField] PartStatIcon[] statDisplays;
     public void Become(ModdedPart part)
     {
+        moveStyleDisplay.Become(part);
         gameObject.SetActive(true);
         nameDisplay.text = part.BasePart.name;
         SetAbilities(part);

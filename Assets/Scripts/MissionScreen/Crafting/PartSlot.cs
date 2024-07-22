@@ -19,6 +19,7 @@ public class PartSlot : MonoBehaviour
     readonly string contractionAnimation = "contract";
 
     public static UnityEvent<ModdedPart, bool> SlottedPart = new();
+    static bool primaryLocomotionSlotted;
     private void OnEnable()
     {
         partIdentity = null;
@@ -39,10 +40,11 @@ public class PartSlot : MonoBehaviour
             ClearPartIdentity(false, true);
             return;
         }
+        
 
         SlotType slotType = attachmentPoint == null ? SlotType.CHASSIS : attachmentPoint.SlotType;
         if(BlueprintControl.ActivePart == null) return;
-        Debug.Log(BlueprintControl.ActivePart.BasePart.Type + " into " + slotType);
+        //Debug.Log(BlueprintControl.ActivePart.BasePart.Type + " into " + slotType);
         SlotType partType = BlueprintControl.ActivePart.BasePart.Type;
         if (partType == slotType) SlotPart();
         else if (partType == SlotType.LATERAL)
@@ -53,7 +55,9 @@ public class PartSlot : MonoBehaviour
 
     void SlotPart()
     {
-        SetPartIdentity(BlueprintControl.ActivePart);
+        ModdedPart activePart = BlueprintControl.ActivePart;
+        if (activePart.BasePart.PrimaryLocomotion && primaryLocomotionSlotted) return;
+        SetPartIdentity(activePart);
         BlueprintControl.SlotActivePart();
     }
 
@@ -65,6 +69,7 @@ public class PartSlot : MonoBehaviour
         {
             if(toInventory) BlueprintControl.ReturnPart(partIdentity);
             if(mockup != null) mockup.SetActive(false);
+            if (partIdentity.BasePart.PrimaryLocomotion) primaryLocomotionSlotted = false;
             partIdentity = null;
             //activeIndicator.SetActive(false);
             //activePartName.text = "";
@@ -87,6 +92,7 @@ public class PartSlot : MonoBehaviour
 
     public PartSlot[] SetPartIdentity(ModdedPart part)
     {
+        primaryLocomotionSlotted |= part.BasePart.PrimaryLocomotion;
         SlottedPart.Invoke(part, true);
         slotAnimator.SetBool(contractionAnimation, true);
         mockup = part.Sample;
