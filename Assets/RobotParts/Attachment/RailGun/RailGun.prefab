@@ -180,7 +180,8 @@ MonoBehaviour:
   preAnimations: []
   postAnimations: []
   endAnimations: []
-  projectile: {fileID: 0}
+  projectile: {fileID: 5629778864400073585, guid: 29f587667119b7440b657ac1aab27250,
+    type: 3}
   travelTime: 1
 --- !u!114 &8933096971172365963
 MonoBehaviour:
@@ -210,7 +211,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ikTarget: {fileID: 7287735422693021653}
-  slowness: 20
+  slowness: 40
 --- !u!1 &6575153940852210530
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,12 +387,12 @@ PrefabInstance:
     - target: {fileID: 2859665975889210439, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 2859665975889210439, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.17
+      value: -24.64
       objectReference: {fileID: 0}
     - target: {fileID: 2859665975889210439, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
@@ -735,7 +736,7 @@ PrefabInstance:
     - target: {fileID: 3222229788524741193, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
