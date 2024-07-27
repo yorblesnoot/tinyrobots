@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "SceneRelay", menuName = "ScriptableObjects/Singletons/SceneRelay")]
 public class SceneRelay : ScriptableObject
 {
-    public GameObject BattleMap {get; private set;}
+    public GameObject BattleMap;
     public bool BattleComplete;
     public bool generateNavMap;
     public MissionType MissionType;
