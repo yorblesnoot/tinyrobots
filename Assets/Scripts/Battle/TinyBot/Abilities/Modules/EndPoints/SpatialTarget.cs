@@ -21,7 +21,6 @@ public class SpatialTarget : TargetPoint
         Vector3 direction = point - trajectory[0];
         indicator.transform.SetPositionAndRotation(point, Quaternion.LookRotation(direction));
         indicator.gameObject.SetActive(true);
-        Debug.Log(indicator.GetIntersectingTargets().Count);
         return indicator.GetIntersectingTargets().Take(maxTargets)
             .OrderBy(target => Vector3.Distance(target.transform.position, point)).ToList();
     }
