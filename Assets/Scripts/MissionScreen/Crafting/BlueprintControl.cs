@@ -14,7 +14,6 @@ public class BlueprintControl : MonoBehaviour
     [SerializeField] List<ActivatablePart> partDisplays;
     [SerializeField] PartOverviewPanel partOverviewPanel;
     public PartSlot OriginSlot;
-    public PlayerData PlayerData;
 
 
     static BlueprintControl Instance;
@@ -25,7 +24,7 @@ public class BlueprintControl : MonoBehaviour
     private void OnEnable()
     {
         craftCam.Priority = 100;
-        devMode = PlayerData.DevMode;
+        devMode = SceneGlobals.PlayerData.DevMode;
     }
 
     private void OnDisable()
@@ -59,15 +58,15 @@ public class BlueprintControl : MonoBehaviour
     public void Initialize()
     {
         Instance = this;
-        partInventory = PlayerData.PartInventory;
+        partInventory = SceneGlobals.PlayerData.PartInventory;
         NewSlot = newSlot;
         UpdatePartDisplays();
-        foreach (var core in PlayerData.CoreInventory) core.Initialize();
+        foreach (var core in SceneGlobals.PlayerData.CoreInventory) core.Initialize();
     }
 
     void UpdatePartDisplays()
     {
-        for (int i = 0; i < PlayerData.PartInventory.Count; i++)
+        for (int i = 0; i < SceneGlobals.PlayerData.PartInventory.Count; i++)
         {
             if(i == partDisplays.Count - 1)
             {
@@ -75,12 +74,12 @@ public class BlueprintControl : MonoBehaviour
                 partDisplays.Add(display);
             }
             partDisplays[i].gameObject.SetActive(true);
-            ModdedPart part = PlayerData.PartInventory[i];
+            ModdedPart part = SceneGlobals.PlayerData.PartInventory[i];
             part.InitializePart();
             partDisplays[i].DisplayPart(part, SetActivePart);
         }
 
-        for(int i = PlayerData.PartInventory.Count; i < partDisplays.Count; i++) partDisplays[i].gameObject.SetActive(false);
+        for(int i = SceneGlobals.PlayerData.PartInventory.Count; i < partDisplays.Count; i++) partDisplays[i].gameObject.SetActive(false);
     }
 
     public TreeNode<ModdedPart> BuildBot()

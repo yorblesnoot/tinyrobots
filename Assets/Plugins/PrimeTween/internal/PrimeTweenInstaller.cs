@@ -62,7 +62,12 @@ namespace PrimeTween {
 
             Space(8);
             if (Button("Open Demo", boldButtonStyle)) {
-                var rpAsset = GraphicsSettings.renderPipelineAsset;
+                var rpAsset = GraphicsSettings.
+                    #if UNITY_2019_3_OR_NEWER
+                    defaultRenderPipeline;
+                    #else
+                    renderPipelineAsset;
+                    #endif
                 bool isUrp = rpAsset != null && rpAsset.GetType().Name.Contains("Universal");
                 var demoScene = isUrp ? installer.demoSceneUrp : installer.demoScene;
                 if (demoScene == null) {
@@ -132,7 +137,7 @@ namespace PrimeTween {
     }
 
     internal static class ReviewRequest {
-        const string version = "1.1.18";
+        const string version = "1.1.19";
         const string canAskKey = "PrimeTween.canAskForReview";
         const string versionKey = "PrimeTween.version";
 

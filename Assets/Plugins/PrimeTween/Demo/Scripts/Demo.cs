@@ -17,8 +17,10 @@ namespace PrimeTweenDemo {
         [SerializeField, Range(0.5f, 5f)] float timeScale = 1;
         bool isAnimatingWithCoroutineOrAsync;
         public Sequence animateAllSequence;
+        public static Demo instance { get; private set; }
 
         void Awake() {
+            instance = this;
             PrimeTweenConfig.SetTweensCapacity(100);
         }
 
@@ -28,7 +30,9 @@ namespace PrimeTweenDemo {
         }
 
         void OnDisable() => sequenceTimelineSlider.onValueChanged.RemoveListener(SequenceTimelineSliderChanged);
-        
+
+        void OnDestroy() => instance = null;
+
         void SequenceTimelineSliderChanged(float sliderValue) {
             if (!notifySliderChanged) {
                 return;
@@ -41,7 +45,7 @@ namespace PrimeTweenDemo {
         }
 
         bool notifySliderChanged = true;
-        
+
         void UpdateSlider() {
             var isSliderVisible = animateAllType == AnimateAllType.Sequence && !isAnimatingWithCoroutineOrAsync;
             sequenceTimelineSlider.gameObject.SetActive(isSliderVisible);
@@ -60,10 +64,10 @@ namespace PrimeTweenDemo {
 
         void Update() {
             Time.timeScale = timeScale;
-            
+
             animateAllPartsButton.GetComponent<Image>().enabled = !isAnimatingWithCoroutineOrAsync;
             animateAllPartsButton.GetComponentInChildren<Text>().enabled = !isAnimatingWithCoroutineOrAsync;
-            
+
             UpdateSlider();
         }
 
@@ -93,7 +97,7 @@ namespace PrimeTweenDemo {
                 return;
             }
             animateAllSequence = Sequence.Create();
-            #if TEXT_MESH_PRO_INSTALLED
+            #if TEXT_MESH_PRO_INSTALLED || (UNITY_6000_0_OR_NEWER && UNITY_UGUI_INSTALLED)
             animateAllSequence.Group(typewriterAnimatorExample.Animate());
             #endif
             float delay = 0f;

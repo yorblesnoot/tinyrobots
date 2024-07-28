@@ -4,13 +4,12 @@ using UnityEngine;
 
 namespace PrimeTweenDemo {
     public class Wheels : Animatable {
-        [SerializeField] Demo demo;
         [SerializeField] Transform[] wheels;
         bool isAnimating;
         Sequence sequence;
 
         public override void OnClick() {
-            demo.AnimateAll(!isAnimating);
+            Demo.instance.AnimateAll(!isAnimating);
         }
 
         public override Sequence Animate(bool _isAnimating) {

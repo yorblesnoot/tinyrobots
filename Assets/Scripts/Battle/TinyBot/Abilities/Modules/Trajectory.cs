@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Trajectory : MonoBehaviour
 {
-    public string[] blockingLayers;
+    public string[] blockingLayers = { "Default", "Terrain", "Shield" };
     protected int blockingLayerMask;
 
     readonly float overlapLength = .1f;

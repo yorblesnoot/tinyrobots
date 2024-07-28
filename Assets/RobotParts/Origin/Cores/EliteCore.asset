@@ -12,11 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71ff975995ab9884b93113aa450f10c2, type: 3}
   m_Name: EliteCore
   m_EditorClassIdentifier: 
-  currentHealth: 0
-  displayName: 
-  <StarterRecord>k__BackingField: {fileID: 0}
-  corePart: {fileID: 11400000, guid: c7830c04f7842a8499cb6ef1607f649e, type: 2}
+  HealthRatioChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  CharacterPortrait: {fileID: 0}
+  Deployable: 1
   ModdedCore:
-    BasePart: {fileID: 0}
+    BasePart: {fileID: 11400000, guid: c7830c04f7842a8499cb6ef1607f649e, type: 2}
     Mutators: []
     Sample: {fileID: 0}
+    Abilities: []
+  displayName: 
+  <StarterRecord>k__BackingField: {fileID: 11400000, guid: 530115e6f53ffcc4aa96cfa090f25606,
+    type: 2}
+  corePart: {fileID: 11400000, guid: c7830c04f7842a8499cb6ef1607f649e, type: 2}

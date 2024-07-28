@@ -16,7 +16,7 @@ public class UnitSwitcher : MonoBehaviour
     [HideInInspector] public static BotCore ActiveCore { get; private set; }
     private void Awake()
     {
-        playerData = blueprintControl.PlayerData;
+        playerData = SceneGlobals.PlayerData;
         playerData.LoadRecords();
         int coreCount = playerData.CoreInventory.Count;
         for (int i = 0; i < tabs.Length; i++)

@@ -5,11 +5,10 @@ using UnityEngine;
 public class PartySidebar : MonoBehaviour
 {
     [SerializeField] PartyPortrait[] portraits;
-    [SerializeField] PlayerData playerData;
     [SerializeField] UnitSwitcher unitSwitcher;
     private void OnEnable()
     {
-        List<BotCore> cores = playerData.CoreInventory;
+        List<BotCore> cores = SceneGlobals.PlayerData.CoreInventory;
         cores.PassDataToUI(portraits, EnablePortrait);
     }
 

@@ -6,17 +6,11 @@ namespace PrimeTweenDemo {
     public class SlidingDoor : Animatable {
         [SerializeField] Transform animationAnchor;
         [SerializeField] Vector3 openedPos, midPos, closedPos;
-        Demo demo;
         bool isClosed;
         Sequence sequence;
 
-        void Awake() {
-            demo = FindObjectOfType<Demo>();
-            UnityEngine.Assertions.Assert.IsNotNull(demo);
-        }
-
         public override void OnClick() {
-            if (!demo.animateAllSequence.isAlive) {
+            if (!Demo.instance.animateAllSequence.isAlive) {
                 Animate(!isClosed);
             }
         }

@@ -51,6 +51,8 @@ public class CraftBotStatsDisplay : MonoBehaviour
         foreach(var part in activePartsPlusOrigin)
         {
             activeAbilities.AddRange(part.Abilities);
+            Debug.Log(part.BasePart.name);
+            Debug.Log(part.FinalStats);
             foreach (StatType stat in part.FinalStats.Keys)
             {
                 int increment = part.FinalStats[stat];

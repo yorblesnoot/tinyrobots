@@ -1,5 +1,5 @@
 #if PRIME_TWEEN_INSTALLED
-#if TEXT_MESH_PRO_INSTALLED
+#if TEXT_MESH_PRO_INSTALLED || (UNITY_6000_0_OR_NEWER && UNITY_UGUI_INSTALLED)
 using TMPro;
 #endif
 using JetBrains.Annotations;
@@ -10,10 +10,10 @@ namespace PrimeTweenDemo {
     [PublicAPI]
     public class TypewriterAnimatorExample : MonoBehaviour {
         enum AnimationType { Simple, WithPunctuations, ByWords }
-        [SerializeField] AnimationType animationType = AnimationType.WithPunctuations; 
+        [SerializeField] AnimationType animationType = AnimationType.WithPunctuations;
         [SerializeField] float charsPerSecond = 40f;
         [SerializeField] int pauseAfterPunctuation = 20;
-        #if TEXT_MESH_PRO_INSTALLED
+        #if TEXT_MESH_PRO_INSTALLED || (UNITY_6000_0_OR_NEWER && UNITY_UGUI_INSTALLED)
         TextMeshProUGUI text;
 
         void Awake() {
@@ -55,7 +55,7 @@ namespace PrimeTweenDemo {
             float duration = remappedCount / charsPerSecond;
             return Tween.Custom(this, 0f, remappedCount, duration, (t, x) => t.UpdateMaxVisibleCharsWithPunctuation(x), Ease.Linear);
         }
-        
+
         void UpdateMaxVisibleCharsWithPunctuation(float progress) {
             int remappedEndIndex = Mathf.RoundToInt(progress);
             RemapWithPunctuations(text, remappedEndIndex, out _, out int visibleCharsCount);
@@ -64,7 +64,7 @@ namespace PrimeTweenDemo {
                 // play keyboard typing sound here if needed
             }
         }
-        
+
         void RemapWithPunctuations([NotNull] TMP_Text text, int remappedEndIndex, out int remappedCount, out int visibleCharsCount) {
             remappedCount = 0;
             visibleCharsCount = 0;
@@ -108,7 +108,7 @@ namespace PrimeTweenDemo {
                 // play keyboard typing sound here if needed
             }
         }
-        
+
         static void RemapWords([NotNull] TMP_Text text, int remappedEndIndex, out int remappedCount, out int visibleCharsCount) {
             visibleCharsCount = 0;
             int count = text.textInfo.characterCount;
