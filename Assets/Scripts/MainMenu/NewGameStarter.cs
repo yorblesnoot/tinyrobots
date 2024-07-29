@@ -9,6 +9,7 @@ public class NewGameStarter : MonoBehaviour
     [SerializeField] BotConverter botConverter;
     [SerializeField] SceneLoader loader;
     [SerializeField] List<BotCore> starterCores;
+    [SerializeField] int startDifficulty = 6;
 
     public void NewGame()
     {
@@ -21,6 +22,7 @@ public class NewGameStarter : MonoBehaviour
         }
         sceneRelay.generateNavMap = true;
         playerData.PartInventory = new();
+        playerData.Difficulty = startDifficulty;
         loader.Load(SceneType.NAVIGATION);
     }
 }

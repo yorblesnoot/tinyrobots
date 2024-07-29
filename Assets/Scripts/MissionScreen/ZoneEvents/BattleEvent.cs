@@ -7,7 +7,7 @@ public class BattleEvent : ZoneEvent
 {
     [SerializeField] SceneLoader loader;
     [SerializeField] protected SceneRelay relay;
-    [SerializeField] List<SpawnTable> possibleSpawns;
+    [SerializeField] protected List<SpawnTable> possibleSpawns;
     
     public override void Activate(TowerNavZone zone, UnityAction eventComplete)
     {
@@ -32,6 +32,7 @@ public class BattleEvent : ZoneEvent
 
     protected virtual IEnumerator PostBattle(UnityAction eventComplete)
     {
+        SceneGlobals.PlayerData.Difficulty++;
         eventComplete();
         yield break;
     }

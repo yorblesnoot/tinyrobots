@@ -5,6 +5,7 @@ using UnityEngine;
 public class EncounterMission : Mission
 {
     [SerializeField] List<SpawnTable> spawnTables;
+    [SerializeField] int difficultyDivisor = 2;
     [HideInInspector] public List<SpawnZone> SpawnZones;
 
     public override bool MetEndCondition(TurnManager turnManager, BattleEnder battleEnder)
@@ -33,7 +34,7 @@ public class EncounterMission : Mission
     private void PlaceBotsInSpawnZones()
     {
         List<TinyBot> bots = SpawnPlayerBots();
-        List<BotRecord> enemyRecords = relay.activeSpawnTable.GetSpawnList(playerData.Difficulty);
+        List<BotRecord> enemyRecords = relay.activeSpawnTable.GetSpawnList(playerData.Difficulty/difficultyDivisor);
         bots.AddRange(enemyRecords.Select(record => SpawnBot(Allegiance.ENEMY, record)));
 
         Dictionary<MoveStyle, List<Vector3Int>> styleNodes = Pathfinder3D.GetStyleNodes();

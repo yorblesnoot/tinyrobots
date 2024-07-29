@@ -8,12 +8,13 @@ public class NavigationInitializer : MonoBehaviour
     [SerializeField] SceneRelay relay;
     [SerializeField] BlueprintControl blueprintControl;
     [SerializeField] PartSlot originSlot;
-    [SerializeField] PlayerData playerData;
+    [SerializeField] GameObject mainUI;
     void Start()
     {
-        playerData.MapData = towerBuilder.BuildTowerFloor(relay.generateNavMap ? null : playerData.MapData);
+        SceneGlobals.PlayerData.MapData = towerBuilder.BuildTowerFloor(relay.generateNavMap ? null : SceneGlobals.PlayerData.MapData);
         relay.generateNavMap = false;
         blueprintControl.Initialize();
         originSlot.gameObject.SetActive(true);
+        mainUI.SetActive(true);
     }
 }
