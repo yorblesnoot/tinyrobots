@@ -88,7 +88,6 @@ public class TowerBuilder : MonoBehaviour
 
     private void SetFixedEvents(List<MapNode> path)
     {
-        Debug.Log(path[0].room);
         zoneRooms[path[0].room].zoneEvent = null;
         zoneRooms[path[0].room].zoneEventType = 0;
         eventProvider.PlaceBossEvent(zoneRooms[path[^1].room]);

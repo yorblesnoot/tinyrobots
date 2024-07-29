@@ -26,6 +26,6 @@ public class PartyPortrait : MonoBehaviour
     }
     private void OnDisable()
     {
-        activeCore.HealthRatioChanged.RemoveListener(UpdateHealthOverlay);
+        if(activeCore != null) activeCore.HealthRatioChanged.RemoveListener(UpdateHealthOverlay);
     }
 }

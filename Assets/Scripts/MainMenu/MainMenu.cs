@@ -21,7 +21,6 @@ public class MainMenu : MonoBehaviour
 
     void NewGame()
     {
-        Debug.Log(newGameStarter);
         newGameStarter.NewGame();
     }
 
