@@ -3,29 +3,43 @@ using UnityEngine;
 
 public class HookPull : HookAbility
 {
+    [SerializeField] float dropDistance = 1;
+    [SerializeField] float pullDelay = .5f;
     protected override IEnumerator PerformEffects()
     {
         line.positionCount = 2;
         projectile.transform.SetParent(null, true);
 
         float intervalTime = travelTime / currentTrajectory.Count;
-        yield return StartCoroutine(LaunchWithLine(projectile, currentTrajectory, intervalTime));
-        Targetable target = currentTargets != null && currentTargets.Count > 0 ? currentTargets[0] : null;
-        if (target != null)
+        Targetable target = null;
+        if (currentTargets != null && currentTargets.Count > 0)
         {
+            target = currentTargets[0];
             currentTrajectory[^1] = currentTargets[0].TargetPoint.position;
-            currentTargets[0].ReceiveHit(damage, Owner.transform.position, currentTrajectory[^1]);
-            Vector3 secondTarget = currentTrajectory[1];
-            currentTrajectory = new() { currentTrajectory[^1], secondTarget };
-            StartCoroutine(LaunchAlongLine(target.gameObject, travelTime));
-            
         }
+        
         yield return StartCoroutine(LaunchWithLine(projectile, currentTrajectory, intervalTime));
-        EndAbility();
+        currentTrajectory.Reverse();
+        Vector3 direction = (currentTrajectory[0] - currentTrajectory[^1]).normalized;
+        currentTrajectory[^1] = emissionPoint.transform.position + direction * dropDistance;
+
         if (target != null)
         {
-            yield return StartCoroutine(target.Fall());
-            Pathfinder3D.GeneratePathingTree(target.MoveStyle, target.transform.position);
+            target.ReceiveHit(damage, Owner.transform.position, currentTrajectory[^1]);
+            if (target.IsDead) target = null;
+            else
+            {
+                yield return new WaitForSeconds(pullDelay);
+                StartCoroutine(LaunchAlongLine(target.gameObject, travelTime));
+            }
         }
+        yield return StartCoroutine(LaunchWithLine(projectile, currentTrajectory, intervalTime, false));
+        EndAbility();
+        if (target != null) yield return StartCoroutine(target.Fall());
+    }
+
+    protected override void CompleteTrajectory(Vector3 position, GameObject launched)
+    {
+
     }
 }

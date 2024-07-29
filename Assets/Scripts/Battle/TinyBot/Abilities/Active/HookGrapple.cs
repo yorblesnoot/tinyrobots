@@ -28,7 +28,7 @@ public class HookGrapple : HookAbility
         else
         {
             List<Vector3> reverseTrajectory = new() { projectile.transform.position, baseParent.TransformPoint(baseHookPosition) };
-            yield return StartCoroutine(LaunchWithLine(projectile, reverseTrajectory, intervalTime));
+            yield return StartCoroutine(LaunchWithLine(projectile, reverseTrajectory, intervalTime, false));
         }
         
         EndAbility();

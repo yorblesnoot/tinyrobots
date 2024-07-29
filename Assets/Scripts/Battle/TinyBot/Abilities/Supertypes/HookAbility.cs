@@ -6,17 +6,21 @@ public class HookAbility : ProjectileAbility
 {
     [SerializeField] protected LineRenderer line;
     protected Vector3 baseHookPosition;
+    protected Quaternion baseHookRotation;
     protected Transform baseParent;
+    
     private void Start()
     {
         baseHookPosition = projectile.transform.localPosition;
+        baseHookRotation = transform.localRotation;
         line.useWorldSpace = true;
         baseParent = projectile.transform.parent;
     }
-    protected IEnumerator LaunchWithLine(GameObject launched, List<Vector3> trajectory, float intervalTime)
+    protected IEnumerator LaunchWithLine(GameObject launched, List<Vector3> trajectory, float intervalTime, bool faceMove = true)
     {
         float timeElapsed;
-        launched.transform.rotation = Quaternion.LookRotation(trajectory[1] - trajectory[0]);
+        Vector3 baseDirection = trajectory[1] - trajectory[0];
+        launched.transform.rotation = Quaternion.LookRotation(faceMove ? baseDirection : -baseDirection);
         for (int i = 0; i < trajectory.Count - 1; i++)
         {
             timeElapsed = 0;
@@ -36,7 +40,7 @@ public class HookAbility : ProjectileAbility
     {
         line.positionCount = 0;
         projectile.transform.SetParent(baseParent);
-        projectile.transform.localPosition = baseHookPosition;
+        projectile.transform.SetLocalPositionAndRotation(baseHookPosition, baseHookRotation);
         base.EndAbility();
     }
 }
