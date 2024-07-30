@@ -7,7 +7,6 @@ public class SpatialTarget : TargetPoint
 {
     [SerializeField] protected SpatialSensor indicator;
     [SerializeField] protected int maxTargets = 100;
-    [SerializeField] protected float aiRadius;
 
     public override void Draw(List<Vector3> trajectory)
     {
@@ -28,7 +27,8 @@ public class SpatialTarget : TargetPoint
     public override List<Targetable> FindTargetsAI(List<Vector3> trajectory)
     {
         Vector3 point = trajectory[^1];
-        Collider[] hits = Physics.OverlapSphere(point, aiRadius);
+        Collider[] hits = Physics.OverlapSphere(point, TargetRadius);
+        Debug.Log(hits.Length + " overlapped count");
         List<Targetable> targets = new();
         foreach (Collider hit in hits)
         {

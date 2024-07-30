@@ -26,6 +26,8 @@ public abstract class ActiveAbility : Ability
     TrackingAnimation trackingAnimation;
 
     readonly float skillDelay = .5f;
+
+    public float TotalRange { get { return range + targetType.TargetRadius; } }
     private void Awake()
     {
         durationModule = GetComponent<DurationModule>();
@@ -90,6 +92,7 @@ public abstract class ActiveAbility : Ability
         
         if (playerTargeting)
         {
+            currentTrajectory.DebugContents();
             if(trajectoryDefinition != null) LineMaker.DrawLine(currentTrajectory.ToArray());
             targetType.Draw(currentTrajectory);
             SetHighlightedTargets(newTargets);

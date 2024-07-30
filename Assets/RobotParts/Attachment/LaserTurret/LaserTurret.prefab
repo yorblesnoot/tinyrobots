@@ -227,6 +227,7 @@ GameObject:
   - component: {fileID: 3777093702978273970}
   - component: {fileID: 9029231829327162900}
   - component: {fileID: 6215523326780402956}
+  - component: {fileID: 5978695959865485863}
   m_Layer: 0
   m_Name: Laser Shot
   m_TagString: Untagged
@@ -265,12 +266,12 @@ MonoBehaviour:
   ModifiableRange: 1
   cooldown: 1
   damage: 10
+  cost: 1
   icon: {fileID: 21300000, guid: d0abed84aa6f5489fb1695cbcafffef0, type: 3}
   currentCooldown: 0
   Owner: {fileID: 0}
   locked: 0
   Type: 0
-  cost: 1
   useAirCursor: 1
   emissionPoint: {fileID: 646414412058972572}
   trackingToggle: {fileID: 0}
@@ -294,6 +295,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ikTarget: {fileID: 6737096417228275589}
   slowness: 30
+--- !u!114 &5978695959865485863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6331935042606441181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23c76d3258d32254a80ccc88c481dbb7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blockingLayers:
+  - Default
+  - Terrain
+  - Shield
 --- !u!1001 &4461339206532929495
 PrefabInstance:
   m_ObjectHideFlags: 0

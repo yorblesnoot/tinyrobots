@@ -201,7 +201,7 @@ public class BotAI
         foreach (var targetBot in targets)
         {
             Transform targetPoint = targetBot.TargetPoint;
-            if (ability.range > 0 && Vector3.Distance(targetPoint.position, location) > ability.range) continue;
+            if (ability.range > 0 && Vector3.Distance(targetPoint.position, location) > ability.TotalRange) continue;
 
             List<Targetable> hits = ability.AimAt(targetPoint.gameObject, location, true);
             if (hits == null || hits.Count == 0 || !hits.Contains(targetBot)) continue;
