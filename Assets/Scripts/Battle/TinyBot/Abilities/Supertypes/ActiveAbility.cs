@@ -47,6 +47,7 @@ public abstract class ActiveAbility : Ability
         yield return ToggleAnimations(preAnimations);
         yield return StartCoroutine(PerformEffects());
         yield return ToggleAnimations(postAnimations);
+        currentTargets = new();
         ScheduleAbilityEnd();
         PrimaryCursor.actionInProgress = false;
         if (Vector3Int.RoundToInt(Owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(Owner.MoveStyle, Owner.transform.position);
@@ -155,9 +156,9 @@ public abstract class ActiveAbility : Ability
             if (bot == null) newTargets.Remove(bot);
             else if (!currentTargets.Contains(bot)) bot.SetOutlineColor(Color.red);
         }
-        foreach(Targetable bot in currentTargets)
+        foreach(Targetable target in currentTargets)
         {
-            if(!newTargets.Contains(bot)) bot.SetOutlineColor(Color.white);
+            if(!newTargets.Contains(target)) target.SetOutlineColor(Color.white);
         }
     }
     Vector3 GetCameraAimPoint()

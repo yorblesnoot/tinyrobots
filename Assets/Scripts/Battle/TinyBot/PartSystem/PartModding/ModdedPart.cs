@@ -31,9 +31,7 @@ public class ModdedPart
 
     public void InstantiateSample()
     {
-        Debug.Log("tried to instantiate sample");
         if (Sample != null) return;
-        Debug.Log("instantiated sample for " + BasePart.name);
         Sample = GameObject.Instantiate(BasePart.AttachableObject);
         Abilities = Sample.GetComponent<PartModifier>().Abilities;
     }

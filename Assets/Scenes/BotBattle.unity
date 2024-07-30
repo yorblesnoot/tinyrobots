@@ -3686,11 +3686,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: ecd93be42b3c6b041ba1697eca59d1e5, type: 2}
   relay: {fileID: 11400000, guid: ae6e43f53999c8e47b5bb43485353f3f, type: 2}
-  playerBotOverride:
-  - {fileID: 11400000, guid: 2d04b442a5e92754e9e6f78c68c54d17, type: 2}
-  - {fileID: 11400000, guid: a7b10f2a2eedf2148939c90e6a80ed86, type: 2}
-  - {fileID: 11400000, guid: 9c569d50c9bf6374a870a17667f6f69c, type: 2}
+  playerBotOverride: []
   spawnTables: []
+  difficultyDivisor: 2
   SpawnZones: []
 --- !u!1001 &551735183
 PrefabInstance:
@@ -5699,8 +5697,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28ca3bc70732cd340b833a98a2e7ed48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mutators: []
-  botConverter: {fileID: 0}
+  mutators:
+  - {fileID: 11400000, guid: abc03b0a2a3779541b4c1126de3e500c, type: 2}
+  - {fileID: 11400000, guid: 2beed468559443c4b9c36c15a3bc15df, type: 2}
+  - {fileID: 11400000, guid: a5a585eed82396f4b8b30f0a9d78c7c5, type: 2}
+  - {fileID: 11400000, guid: 241eb2fa17afc4743929eb177c8d2d73, type: 2}
+  - {fileID: 11400000, guid: 43f69d4c7ac102d4db4d4f48363d2bc1, type: 2}
+  - {fileID: 11400000, guid: 7caba883eedf3c34097833cdbeddd528, type: 2}
+  - {fileID: 11400000, guid: cc0c50fa2e5f12549a19179211ef1a69, type: 2}
+  - {fileID: 11400000, guid: dd82cfe6c6c6b7d4bb1424eeca350817, type: 2}
+  - {fileID: 11400000, guid: e0ff797174b462146a308478adab5bad, type: 2}
+  - {fileID: 11400000, guid: 736be240985782b45b41622c5c1924f0, type: 2}
+  - {fileID: 11400000, guid: e028f155881faab4da9bae811ea5caf7, type: 2}
+  - {fileID: 11400000, guid: f75ffd2fa71b45d4cb61697de9380854, type: 2}
+  - {fileID: 11400000, guid: da9834840f13ba143a1d012741ac9628, type: 2}
+  - {fileID: 11400000, guid: d43570d0b3bd47f44b8078aa383890de, type: 2}
+  botConverter: {fileID: 11400000, guid: efd80f4536a76904d8f8a1a5b13e844c, type: 2}
 --- !u!1 &945171441
 GameObject:
   m_ObjectHideFlags: 0
@@ -8267,7 +8279,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cursorLoadout: {fileID: 1418882854}
-  scrollRate: 35
+  scrollRate: 20
   minimumCameraDistance: 5
   maximumCameraDistance: 100
 --- !u!114 &1251433162
@@ -9017,7 +9029,7 @@ MonoBehaviour:
     Automatic: {fileID: 1980537371}
     Brain: {fileID: 1414972263}
     FocalPoint: {fileID: 1329150492}
-  scrollSpeed: 0.002
+  scrollSpeed: 0.001
   scrollZoneX: 100
   scrollZoneY: 50
   zoomSpeed: 0.2
