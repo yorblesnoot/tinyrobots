@@ -29,6 +29,7 @@ public class PrimaryCursor : MonoBehaviour
     [SerializeField] LineRenderer pathingLine;
     [SerializeField] LineRenderer redLine;
     [SerializeField] GameObject numRotator;
+    [SerializeField] BotSelector botSelector;
     [SerializeField] TMP_Text moveCostPreview;
 
     static TurnResourceCounter StatDisplay;
@@ -158,11 +159,12 @@ public class PrimaryCursor : MonoBehaviour
             currentPath.Add(midPoint);
             redPath.Add(midPoint);
         }
-        while (pathIndex < possiblePath.Count && distances[pathIndex] > currentMove)
+        while (pathIndex < possiblePath.Count && distances[pathIndex] >= currentMove)
         {
             redPath.Add(possiblePath[pathIndex]);
             pathIndex++;
         }
+        
 
         pathingLine.positionCount = currentPath.Count;
         pathingLine.SetPositions(currentPath.ToArray());
@@ -193,6 +195,7 @@ public class PrimaryCursor : MonoBehaviour
         if (!bot.AvailableForTurn) return;
         TinyBot.ClearActiveBot.Invoke();
         bot.BecomeActiveUnit();
+        Instance.botSelector.Select(bot);
         MoveStyle botStyle = bot.PrimaryMovement.Style;
         ToggleAirCursor(botStyle == MoveStyle.FLY);
         Pathfinder3D.GeneratePathingTree(botStyle, bot.transform.position);

@@ -14,7 +14,6 @@ public class TinyBot : Targetable
     [SerializeField] float hitReturnTime;
     [SerializeField] float recoilDistancePerDamage;
     [SerializeField] float backstabMultiplier = 1.5f;
-    [SerializeField] GameObject selectBrackets;
     [SerializeField] BotStateFeedback feedback;
     [SerializeField] GameObject hitSpark;
     public Transform headshotPosition;
@@ -90,7 +89,6 @@ public class TinyBot : Targetable
 
     public void BecomeActiveUnit()
     {
-        selectBrackets.SetActive(true);
         UnitControl.PlayerControlledBot = this;
         ToggleActiveLayer(true);
     }
@@ -100,7 +98,6 @@ public class TinyBot : Targetable
     public void ClearActiveUnit()
     {
         UnitControl.PlayerControlledBot = null;
-        selectBrackets.SetActive(false);
         ToggleActiveLayer(false);
     }
 

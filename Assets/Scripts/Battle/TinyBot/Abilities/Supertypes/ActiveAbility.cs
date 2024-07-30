@@ -92,7 +92,6 @@ public abstract class ActiveAbility : Ability
         
         if (playerTargeting)
         {
-            currentTrajectory.DebugContents();
             if(trajectoryDefinition != null) LineMaker.DrawLine(currentTrajectory.ToArray());
             targetType.Draw(currentTrajectory);
             SetHighlightedTargets(newTargets);
