@@ -6,7 +6,6 @@ using UnityEngine.Events;
 public class BossEvent : BattleEvent
 {
     [SerializeField] TowerBuilder towerBuilder;
-    [SerializeField] PlayerData playerData;
     protected override void PreBattle(TowerNavZone zone)
     {
         relay.activeSpawnTable = possibleSpawns[0];
@@ -14,7 +13,7 @@ public class BossEvent : BattleEvent
 
     protected override IEnumerator PostBattle(UnityAction eventComplete)
     {
-        playerData.MapData = towerBuilder.BuildTowerFloor(null);
+        SceneGlobals.PlayerData.MapData = towerBuilder.BuildTowerFloor(null);
         eventComplete();
         yield break;
     }

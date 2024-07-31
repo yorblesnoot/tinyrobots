@@ -15,6 +15,7 @@ public class NewGameStarter : MonoBehaviour
     {
         botConverter.Initialize();
         playerData.CoreInventory = new(starterCores);
+        foreach (var core in playerData.CoreInventory) core.HealthRatio = 1;
         sceneRelay.generateNavMap = true;
         playerData.PartInventory = new();
         playerData.Difficulty = startDifficulty;

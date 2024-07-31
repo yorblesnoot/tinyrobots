@@ -45,7 +45,7 @@ public abstract class PrimaryMovement : MonoBehaviour
             yield return null;
         }
     }
-    protected virtual void AnimateToOrientation() { }
+    protected virtual void AnimateToOrientation(bool inPlace = false) { }
     public virtual Quaternion GetRotationAtPosition(Vector3 moveTarget)
     {
         moveTarget.y = transform.position.y;

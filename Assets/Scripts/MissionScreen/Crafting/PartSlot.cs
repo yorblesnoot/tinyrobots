@@ -95,6 +95,7 @@ public class PartSlot : MonoBehaviour
         primaryLocomotionSlotted |= part.BasePart.PrimaryLocomotion;
         SlottedPart.Invoke(part, true);
         slotAnimator.SetBool(contractionAnimation, true);
+        part.InstantiateSample();
         mockup = part.Sample;
         if (mockup.TryGetComponent(out Collider collider)) collider.enabled = false;
         mockup.SetActive(true);

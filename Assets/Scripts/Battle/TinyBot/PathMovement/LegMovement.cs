@@ -32,7 +32,7 @@ public abstract class LegMovement : PrimaryMovement
     public override void RotateToTrackEntity(GameObject trackingTarget)
     {
         base.RotateToTrackEntity(trackingTarget);
-        AnimateToOrientation();
+        AnimateToOrientation(true);
     }
 
     protected override void HandleImpulse()
@@ -44,7 +44,7 @@ public abstract class LegMovement : PrimaryMovement
     }
 
     protected abstract void InitializeParameters();
-    protected override void AnimateToOrientation()
+    protected override void AnimateToOrientation(bool inPlace = false)
     {
         foreach (var anchor in anchors)
         {
@@ -58,7 +58,7 @@ public abstract class LegMovement : PrimaryMovement
         {
             if (anchors[i].distanceFromDeadZone > anchorZoneRadius)
             {
-                TryStepToBase(anchors[i]);
+                TryStepToBase(anchors[i], inPlace);
             }
             if(stepping) return;
         }

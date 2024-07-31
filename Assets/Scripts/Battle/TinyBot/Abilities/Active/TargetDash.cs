@@ -11,6 +11,7 @@ public class TargetDash : ProjectileAbility
         {
             yield return StartCoroutine(Owner.gameObject.LerpTo(point, intervalTime));
         }
+        yield return StartCoroutine(Owner.Fall());
         EndAbility();
         Pathfinder3D.GeneratePathingTree(Owner.MoveStyle, Owner.transform.position);
     }

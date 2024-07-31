@@ -38,6 +38,7 @@ public class ModdedPart
 
     void MutatePart()
     {
+        if (FinalStats != null) return;
         List<StatValue> statValues = new();
         List<ModValue> modValues = new();
         if (Mutators != null)
@@ -53,7 +54,6 @@ public class ModdedPart
         ApplyMods(modValues);
 
         if (!FinalStats.TryGetValue(StatType.WEIGHT, out int extraWeight)) return;
-
         FinalStats.Remove(StatType.WEIGHT);
         Weight += extraWeight;
     }
