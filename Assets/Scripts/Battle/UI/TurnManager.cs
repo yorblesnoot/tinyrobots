@@ -85,6 +85,7 @@ public class TurnManager : MonoBehaviour
         {
             TinyBot turnTaker = TurnTakers[activeIndex];
             currentlyActive.Add(TurnTakers[activeIndex]);
+            if(currentlyActive.Count == 1) MainCameraControl.CutToUnit(turnTaker);
             turnTaker.BeginTurn();
             activeIndex++;
             if (turnTaker.Allegiance == Allegiance.PLAYER

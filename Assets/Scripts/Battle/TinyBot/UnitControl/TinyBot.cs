@@ -114,7 +114,7 @@ public class TinyBot : Targetable
             rigidPart.velocity = explodeForce + hitPush;
         }
         TurnManager.RemoveTurnTaker(this);
-        
+        LinkedCore.HealthRatio = 0;
         Destroy(gameObject, 5f);
     }
 

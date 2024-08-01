@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class EventProvider : MonoBehaviour 
 {
-    [SerializeField] List<ZoneEvent> zoneEvents;
+    List<ZoneEvent> zoneEvents;
     [SerializeField] ZoneEvent bossEvent;
+
+    private void Awake()
+    {
+        zoneEvents = GetComponentsInChildren<ZoneEvent>().ToList();
+    }
     public ZoneEvent this[int i]
     {
         get { return zoneEvents[i]; }
