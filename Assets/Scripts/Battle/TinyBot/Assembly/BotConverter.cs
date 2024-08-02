@@ -6,10 +6,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BotConverter", menuName = "ScriptableObjects/Singletons/BotConverter")]
 public class BotConverter : ScriptableObject
 {
+    public List<BotCore> CoreLibrary;
     public List<CraftablePart> PartLibrary;
     public List<PartMutator> MutatorLibrary;
     Dictionary<string, CraftablePart> partMap;
     Dictionary<string, PartMutator> mutatorMap;
+    Dictionary<string, BotCore> coreMap;
 
     public void Initialize()
     {
@@ -100,7 +102,8 @@ public class BotConverter : ScriptableObject
     void BuildConversionDictionaries()
     {
         partMap = PartLibrary.ToDictionary(p => p.Id, p => p);
-        mutatorMap = MutatorLibrary.ToDictionary(m => m.Id, m => m);    
+        mutatorMap = MutatorLibrary.ToDictionary(m => m.Id, m => m);
+        coreMap = CoreLibrary.ToDictionary(c => c.Id, c => c);
     }
 
 

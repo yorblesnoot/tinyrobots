@@ -34,25 +34,8 @@ public class SaveContainer
 
     public void LoadGame()
     {
-        //EventManager.loadSceneWithScreen.Invoke(1);
-        //get JSON from file or elsewhere
         saveJSON = File.ReadAllText(savePath);
-        JsonUtility.FromJsonOverwrite(saveJSON, this);
-
-        LoadNums();
-        LoadGUIDs();
-
-        //EventManager.loadSceneWithScreen.Invoke(-1);
-    }
-
-    void LoadNums()
-    {
-        //RunData.randomState = randomState;
-    }
-
-    void LoadGUIDs()
-    {
-        //loadLibrary.Initialize();
+        Save save = JsonUtility.FromJson<Save>(saveJSON);
     }
 
     class Save
