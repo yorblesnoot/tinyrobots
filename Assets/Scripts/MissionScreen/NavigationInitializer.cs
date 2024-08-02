@@ -10,6 +10,7 @@ public class NavigationInitializer : MonoBehaviour
     [SerializeField] GameObject mainUI;
     void Start()
     {
+        Debug.Log("initialized nav");
         SceneGlobals.PlayerData.MapData = towerBuilder.BuildTowerFloor(SceneGlobals.SceneRelay.generateNavMap ? null : SceneGlobals.PlayerData.MapData);
         SceneGlobals.SceneRelay.generateNavMap = false;
         unitSwitcher.Initialize();

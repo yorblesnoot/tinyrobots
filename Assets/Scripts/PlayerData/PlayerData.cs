@@ -21,6 +21,8 @@ public class PlayerData : ScriptableObject
     public MapData MapData;
     
     public int Difficulty = 3;
+
+
     public bool DevMode;
 
     [Header("Components")]

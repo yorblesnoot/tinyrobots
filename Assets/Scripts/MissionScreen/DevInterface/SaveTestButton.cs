@@ -11,6 +11,6 @@ public class SaveTestButton : MonoBehaviour
     private void SaveGame()
     {
         SaveContainer saveContainer = new(SceneGlobals.PlayerData);
-        saveContainer.SaveGame();
+        saveContainer.SavePlayerData();
     }
 }

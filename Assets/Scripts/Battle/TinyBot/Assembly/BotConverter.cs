@@ -15,7 +15,9 @@ public class BotConverter : ScriptableObject
 
     public void Initialize()
     {
-        BuildConversionDictionaries();
+        partMap = PartLibrary.ToDictionary(p => p.Id, p => p);
+        mutatorMap = MutatorLibrary.ToDictionary(m => m.Id, m => m);
+        coreMap = CoreLibrary.ToDictionary(c => c.Id, c => c);
     }
     public static string BotToString(TreeNode<ModdedPart> botTreeOriginNode)
     {
@@ -82,11 +84,12 @@ public class BotConverter : ScriptableObject
         return output;
     }
 
-    int GetPartFromSequence(string input, int textCursor, out ModdedPart modPart)
+    public int GetPartFromSequence(string input, int textCursor, out ModdedPart modPart)
     {
         string sub = input.Substring(textCursor, guidSkip);
         modPart = new(partMap[sub]);
         textCursor += guidSkip;
+        if (textCursor >= input.Length) return textCursor;
         while(input[textCursor] == '!')
         {
             textCursor++;
@@ -99,13 +102,8 @@ public class BotConverter : ScriptableObject
         return textCursor;
     }
 
-    void BuildConversionDictionaries()
+    public BotCore GetCore(string guid)
     {
-        partMap = PartLibrary.ToDictionary(p => p.Id, p => p);
-        mutatorMap = MutatorLibrary.ToDictionary(m => m.Id, m => m);
-        coreMap = CoreLibrary.ToDictionary(c => c.Id, c => c);
+        return coreMap[guid];
     }
-
-
-
 }

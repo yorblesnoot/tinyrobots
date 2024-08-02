@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewGameStarter : MonoBehaviour
+public class GameStarter : MonoBehaviour
 {
     [SerializeField] PlayerData playerData;
     [SerializeField] SceneRelay sceneRelay;
@@ -19,6 +19,14 @@ public class NewGameStarter : MonoBehaviour
         sceneRelay.generateNavMap = true;
         playerData.PartInventory = new();
         playerData.Difficulty = startDifficulty;
+        loader.Load(SceneType.NAVIGATION);
+    }
+
+    public void LoadGame()
+    {
+        SaveContainer container = new(playerData);
+        container.LoadPlayerData();
+        sceneRelay.generateNavMap = false;
         loader.Load(SceneType.NAVIGATION);
     }
 }
