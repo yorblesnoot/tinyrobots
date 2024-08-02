@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "BotConverter", menuName = "ScriptableObjects/Singletons/BotConverter")]
@@ -21,12 +22,7 @@ public class BotConverter : ScriptableObject
 
         void ConvertNode(TreeNode<ModdedPart> node)
         {
-            output += node.Value.BasePart.Id;
-            foreach(var mutator in node.Value.Mutators)
-            {
-                output += "!";
-                output += mutator.Id;
-            }
+            output += PartToString(node.Value);
             if (node.Children.Count == 0) return;
             output += "{";
             foreach (var child in node.Children)
@@ -36,6 +32,17 @@ public class BotConverter : ScriptableObject
             output += "}";
         }
 
+        return output;
+    }
+
+    public static string PartToString(ModdedPart part)
+    {
+        string output = part.BasePart.Id;
+        foreach (var mutator in part.Mutators)
+        {
+            output += "!";
+            output += mutator.Id;
+        }
         return output;
     }
 

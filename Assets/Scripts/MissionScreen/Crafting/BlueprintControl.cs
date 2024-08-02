@@ -1,6 +1,9 @@
 using Cinemachine;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public class BlueprintControl : MonoBehaviour
@@ -17,9 +20,25 @@ public class BlueprintControl : MonoBehaviour
 
 
     static BlueprintControl Instance;
-    static List<ModdedPart> partInventory;
     static bool devMode;
+    [Serializable]
+    class FilterButton
+    {
+        public Button Button;
+        public SlotType Type;
+    }
 
+    [SerializeField] List<FilterButton> filters;
+    FilterButton activeFilter;
+
+    public void Initialize()
+    {
+        Instance = this;
+        foreach (var filter in filters) filter.Button.onClick.AddListener(() => ApplyFilter(filter));
+        NewSlot = newSlot;
+        UpdatePartDisplays();
+        foreach (var core in SceneGlobals.PlayerData.CoreInventory) core.Initialize();
+    }
 
     private void OnEnable()
     {
@@ -41,7 +60,7 @@ public class BlueprintControl : MonoBehaviour
     public static void SlotActivePart()
     {
         if (devMode) return;
-        partInventory.Remove(ActivePart);
+        SceneGlobals.PlayerData.PartInventory.Remove(ActivePart);
         ActivePart = null;
         Instance.partOverviewPanel.Hide();
         ActivatablePart.resetActivation.Invoke();
@@ -51,22 +70,22 @@ public class BlueprintControl : MonoBehaviour
     public static void ReturnPart(ModdedPart part)
     {
         if (devMode) return;
-        partInventory.Add(part);
+        SceneGlobals.PlayerData.PartInventory.Add(part);
         Instance.UpdatePartDisplays();
     }
 
-    public void Initialize()
+    void ApplyFilter(FilterButton filter)
     {
-        Instance = this;
-        partInventory = SceneGlobals.PlayerData.PartInventory;
-        NewSlot = newSlot;
+        activeFilter = filter;
         UpdatePartDisplays();
-        foreach (var core in SceneGlobals.PlayerData.CoreInventory) core.Initialize();
     }
 
     void UpdatePartDisplays()
     {
-        for (int i = 0; i < SceneGlobals.PlayerData.PartInventory.Count; i++)
+        List<ModdedPart> filteredParts = activeFilter != null 
+            ? SceneGlobals.PlayerData.PartInventory.Where(part => part.BasePart.Type == activeFilter.Type).ToList() 
+            : SceneGlobals.PlayerData.PartInventory;
+        for (int i = 0; i < filteredParts.Count; i++)
         {
             if(i == partDisplays.Count - 1)
             {
@@ -74,12 +93,12 @@ public class BlueprintControl : MonoBehaviour
                 partDisplays.Add(display);
             }
             partDisplays[i].gameObject.SetActive(true);
-            ModdedPart part = SceneGlobals.PlayerData.PartInventory[i];
+            ModdedPart part = filteredParts[i];
             part.InitializePart();
             partDisplays[i].DisplayPart(part, SetActivePart);
         }
 
-        for(int i = SceneGlobals.PlayerData.PartInventory.Count; i < partDisplays.Count; i++) partDisplays[i].gameObject.SetActive(false);
+        for(int i = filteredParts.Count; i < partDisplays.Count; i++) partDisplays[i].gameObject.SetActive(false);
     }
 
     public TreeNode<ModdedPart> BuildBot()

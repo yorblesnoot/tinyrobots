@@ -14,7 +14,7 @@ public class UnitSwitcher : MonoBehaviour
     PlayerData playerData;
 
     [HideInInspector] public static BotCore ActiveCore { get; private set; }
-    private void Awake()
+    public void Initialize()
     {
         playerData = SceneGlobals.PlayerData;
         playerData.LoadRecords();
@@ -27,6 +27,7 @@ public class UnitSwitcher : MonoBehaviour
             BotCore core = playerData.CoreInventory[i];
             tabs[i].AssignTab(() => SwitchCharacter(core), core);
         }
+        blueprintControl.Initialize();
     }
 
     private void OnDisable()

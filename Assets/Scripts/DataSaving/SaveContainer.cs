@@ -1,23 +1,18 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class SaveContainer
 {
     PlayerData playerData;
-    string saveJSON;
-    //LoadLibrary loadLibrary;
-
     string savePath;
+    string saveJSON;
 
-    public SaveContainer(PlayerData data /*, LoadLibrary load*/)
+
+    public SaveContainer(PlayerData data)
     {
         playerData = data;
-        //loadLibrary = load;
-        Initialize();
-    }
-
-    void Initialize()
-    {
         savePath = Application.persistentDataPath + Path.DirectorySeparatorChar + "runData.json";
     }
 
@@ -25,26 +20,16 @@ public class SaveContainer
 
     public void SaveGame()
     {
-
-        SaveNums();
-        SaveGUIDs();
-        saveJSON = JsonUtility.ToJson(this, false);
+        Save save = new()
+        {
+            partInventory = playerData.PartInventory.Select(part => BotConverter.PartToString(part)).ToList(),
+            coreInventory = playerData.CoreInventory.Select(core => core.Id).ToList(),
+            bots = playerData.CoreInventory.Select(core => BotConverter.BotToString(core.Bot)).ToList(),
+            map = playerData.MapData
+        };
+        saveJSON = JsonUtility.ToJson(save, true);
         File.WriteAllText(savePath, saveJSON);
         //Debug.Log(saveJSON);
-    }
-
-    void SaveNums()
-    {
-        /*RunData.randomState = Random.state;
-        randomState = RunData.randomState;*/
-    }
-
-    void SaveGUIDs()
-    {
-
-        /*playerDeck = RunData.playerDeck.deckContents.Select(x => x.Id).ToList();
-        items = RunData.itemInventory.Select(x => x.Id).ToList();
-        essenceInventory = RunData.essenceInventory.Select(x => x.Id).ToList();*/
     }
 
     public void LoadGame()
@@ -68,5 +53,13 @@ public class SaveContainer
     void LoadGUIDs()
     {
         //loadLibrary.Initialize();
+    }
+
+    class Save
+    {
+        public List<string> partInventory;
+        public List<string> coreInventory;
+        public List<string> bots;
+        public MapData map;
     }
 }
