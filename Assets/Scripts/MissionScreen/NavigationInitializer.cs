@@ -10,11 +10,17 @@ public class NavigationInitializer : MonoBehaviour
     [SerializeField] GameObject mainUI;
     void Start()
     {
-        Debug.Log("initialized nav");
+        PlayerNavigator.MoveComplete.AddListener(SaveGame);
         SceneGlobals.PlayerData.MapData = towerBuilder.BuildTowerFloor(SceneGlobals.SceneRelay.generateNavMap ? null : SceneGlobals.PlayerData.MapData);
         SceneGlobals.SceneRelay.generateNavMap = false;
         unitSwitcher.Initialize();
         originSlot.gameObject.SetActive(true);
         mainUI.SetActive(true);
+    }
+
+    void SaveGame()
+    {
+        SaveContainer saver = new(SceneGlobals.PlayerData);
+        saver.SavePlayerData();
     }
 }

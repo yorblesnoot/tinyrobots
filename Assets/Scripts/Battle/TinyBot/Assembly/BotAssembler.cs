@@ -40,13 +40,9 @@ public class BotAssembler : MonoBehaviour
             GameObject spawned = currentNode.Value.Sample;
             AddPartStats(currentNode.Value);
             PartModifier modifier = spawned.GetComponent<PartModifier>();
-            if (modifier.mainRenderers != null)
-            {
-                foreach (Renderer renderer in modifier.mainRenderers)
-                {
+            if (modifier.mainRenderers != null) 
+                foreach (Renderer renderer in modifier.mainRenderers) 
                     instance.palette.RecolorPart(renderer, allegiance);
-                }
-            }
             spawnedParts.Add(spawned);
 
             if(attachmentPoint != null) spawned.transform.SetParent(attachmentPoint.transform, false);

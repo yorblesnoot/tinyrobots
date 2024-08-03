@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using PrimeTween;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerNavigator : MonoBehaviour
 {
     [SerializeField] float moveTime = 1f;
     [SerializeField] EventProvider eventProvider;
     public static PlayerNavigator Instance { get; private set; }
+    public static UnityEvent MoveComplete = new();
     [HideInInspector] public TowerNavZone occupiedZone;
     MapData mapData;
     bool moveAvailable;
@@ -46,6 +48,9 @@ public class PlayerNavigator : MonoBehaviour
     void CompleteEvent()
     {
         moveAvailable = true;
+        MoveComplete?.Invoke();
+
+        if (occupiedZone.zoneEvent == null) return;
         occupiedZone.zoneEvent.Clear(occupiedZone);
         occupiedZone.zoneEvent = null;
         occupiedZone.zoneEventType = 0;

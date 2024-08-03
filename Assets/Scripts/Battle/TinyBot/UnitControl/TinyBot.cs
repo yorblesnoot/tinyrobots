@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 
 public class TinyBot : Targetable
 {
+    [SerializeField] float deathPushMulti = 1;
     [SerializeField] float landingDuration = .5f;
     [SerializeField] float deathExplodeMaxForce;
     [SerializeField] float hitRecoilTime;
@@ -19,7 +20,7 @@ public class TinyBot : Targetable
     public Transform headshotPosition;
     
     readonly float deathExplodeMinForce = .1f;
-    [SerializeField] float deathPushMulti = 1;
+    
     
     [HideInInspector] public Sprite Portrait;
     
