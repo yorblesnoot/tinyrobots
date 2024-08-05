@@ -2,7 +2,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 
-public class TargetDash : ProjectileAbility
+public class TargetDash : ActiveAbility
 {
     [SerializeField] float intervalTime = .2f;
     protected override IEnumerator PerformEffects()

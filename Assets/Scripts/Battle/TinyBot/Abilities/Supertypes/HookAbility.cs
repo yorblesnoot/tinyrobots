@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HookAbility : ProjectileAbility
+public abstract class HookAbility : ActiveAbility
 {
     [SerializeField] protected LineRenderer line;
+    [SerializeField] protected GameObject projectile;
+    [SerializeField] protected float travelTime = 1;
     protected Vector3 baseHookPosition;
     protected Quaternion baseHookRotation;
     protected Transform baseParent;

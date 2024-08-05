@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class ArmThrow : ProjectileAbility
+public class ArmThrow : ActiveAbility
 {
     [SerializeField] ArmGrab armGrab;
     [SerializeField] float thrownAirTime;
@@ -26,7 +26,7 @@ public class ArmThrow : ProjectileAbility
     protected override IEnumerator PerformEffects()
     {
         armGrab.EndGrab();
-        yield return StartCoroutine(LaunchAlongLine(armGrab.grabbed.gameObject, thrownAirTime));
+        yield return StartCoroutine(ProjectileMovement.LaunchAlongLine(armGrab.grabbed.gameObject, thrownAirTime, currentTrajectory));
         EndAbility();
         float intervalTime = thrownAirTime / currentTrajectory.Count;
         Vector3 displacement = currentTrajectory[^1] - currentTrajectory[^2];

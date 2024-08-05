@@ -5,6 +5,7 @@ public class HookPull : HookAbility
 {
     [SerializeField] float dropDistance = 1;
     [SerializeField] float pullDelay = .5f;
+    
     protected override IEnumerator PerformEffects()
     {
         line.positionCount = 2;
@@ -30,16 +31,11 @@ public class HookPull : HookAbility
             else
             {
                 yield return new WaitForSeconds(pullDelay);
-                StartCoroutine(LaunchAlongLine(target.gameObject, travelTime));
+                StartCoroutine(ProjectileMovement.LaunchAlongLine(target.gameObject, travelTime, currentTrajectory));
             }
         }
         yield return StartCoroutine(LaunchWithLine(projectile, currentTrajectory, intervalTime, false));
         EndAbility();
         if (target != null) yield return StartCoroutine(target.Fall());
-    }
-
-    protected override void CompleteTrajectory(Vector3 position, GameObject launched)
-    {
-
     }
 }

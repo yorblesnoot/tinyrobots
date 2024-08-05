@@ -1,19 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-public class ProjectileAbility : ActiveAbility
+public static class ProjectileMovement 
 {
-    [SerializeField] protected GameObject projectile;
-    [SerializeField] protected float travelTime = 1;
-    protected override IEnumerator PerformEffects()
-    {
-        GameObject spawned = Instantiate(projectile);
-        yield return StartCoroutine(LaunchAlongLine(spawned, travelTime));
-    }
-
-    protected IEnumerator LaunchAlongLine(GameObject launched, float travelTime)
+    public static IEnumerator LaunchAlongLine(GameObject launched, float travelTime, List<Vector3> currentTrajectory, Action<Vector3, GameObject> CompleteTrajectory = null)
     {
         float intervalTime = travelTime / currentTrajectory.Count;
         float timeElapsed;
@@ -33,15 +25,6 @@ public class ProjectileAbility : ActiveAbility
                 yield return null;
             }
         }
-        CompleteTrajectory(currentTrajectory.Last(), launched);
-    }
-
-    protected virtual void CompleteTrajectory(Vector3 position, GameObject launched)
-    {
-        Destroy(launched);
-        foreach (var targetable in currentTargets)
-        {
-            targetable.ReceiveHit(damage, Owner.transform.position, currentTrajectory[^1]);
-        }
+        CompleteTrajectory?.Invoke(currentTrajectory[^1], launched);
     }
 }
