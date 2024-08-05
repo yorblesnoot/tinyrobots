@@ -19,6 +19,8 @@ public class UnitControl : MonoBehaviour
     {
         ClickableAbility.Activated = null;
         turnEnd.onClick.AddListener(EndPlayerTurn);
+        PrimaryCursor.PlayerSelectedBot.AddListener(ShowControlForUnit);
+        gameObject.SetActive(false);
     }
 
     readonly static KeyCode[] keyCodes = {KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9 };

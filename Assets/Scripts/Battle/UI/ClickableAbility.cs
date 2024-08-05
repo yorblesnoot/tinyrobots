@@ -59,7 +59,6 @@ public class ClickableAbility : AbilityDisplay
     {
         if (Activated == null) return;
         Activated.image.color = Color.white;
-        PrimaryCursor.ToggleAirCursor(UnitControl.PlayerControlledBot == null || UnitControl.PlayerControlledBot.PrimaryMovement.Style == MoveStyle.FLY);
         Activated.Ability.ReleaseLockOn();
         Activated = null;
     }
@@ -100,7 +99,6 @@ public class ClickableAbility : AbilityDisplay
         if (!Ability.IsAvailable()) return;
         DeactivateSelectedAbility();
         Activated = this;
-        PrimaryCursor.ToggleAirCursor(true);
         Ability.LockOnTo(PrimaryCursor.Transform.gameObject, true);
         image.color = Color.red;
     }

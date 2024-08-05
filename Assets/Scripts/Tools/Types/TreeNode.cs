@@ -33,6 +33,12 @@ public class TreeNode<T>
         _children.Add(node);
         return node;
     }
+    public TreeNode<T> AddChild(TreeNode<T> node)
+    {
+        node.Parent = this;
+        _children.Add(node);
+        return node;
+    }
 
     public TreeNode<T>[] AddChildren(params T[] values)
     {

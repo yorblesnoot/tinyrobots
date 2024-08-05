@@ -5,4 +5,5 @@ using UnityEngine;
 public class AttachmentPoint : MonoBehaviour
 {
     public SlotType SlotType;
+    public bool ContainsSubTree = false;
 }

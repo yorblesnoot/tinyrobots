@@ -3,8 +3,10 @@ using UnityEngine;
 
 public class PartModifier : MonoBehaviour
 {
-    public List<Renderer> mainRenderers;
     [SerializeField] Transform abilityContainer;
+
+    public List<TreeNode<ModdedPart>> SubTrees;
+    public List<Renderer> mainRenderers;
     [HideInInspector] public Ability[] Abilities;
 
     private void Awake()

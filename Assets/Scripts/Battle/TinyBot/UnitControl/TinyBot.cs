@@ -37,9 +37,9 @@ public class TinyBot : Targetable
     [HideInInspector] public PrimaryMovement PrimaryMovement;
     public List<ActiveAbility> ActiveAbilities { get; private set; }
     public List<PassiveAbility> PassiveAbilities { get; private set;}
-    List<GameObject> Parts;
+    List<PartModifier> Parts;
     
-    public void Initialize(List<Ability> abilities, List<GameObject> parts, PrimaryMovement primaryMovement)
+    public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement)
     {
         partRenderers = GetComponentsInChildren<Renderer>();
         PhysicsBody = GetComponent<Rigidbody>();
@@ -108,7 +108,7 @@ public class TinyBot : Targetable
         Vector3 hitPush = (transform.position - hitSource).normalized * deathPushMulti;
         foreach(var part in Parts)
         {
-            if(!part.TryGetComponent(out Rigidbody rigidPart)) rigidPart = part.AddComponent<Rigidbody>();
+            if(!part.TryGetComponent(out Rigidbody rigidPart)) rigidPart = part.gameObject.AddComponent<Rigidbody>();
             Vector3 explodeForce = new(Random.Range(deathExplodeMinForce, deathExplodeMaxForce), 
                 Random.Range(deathExplodeMinForce, deathExplodeMaxForce), 
                 Random.Range(deathExplodeMinForce, deathExplodeMaxForce));

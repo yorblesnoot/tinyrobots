@@ -20,6 +20,7 @@ public class TurnResourceCounter : MonoBehaviour
     private void Awake()
     {
         Update.AddListener(UpdateResourceDisplays);
+        PrimaryCursor.PlayerSelectedBot.AddListener(SyncStatDisplay);
     }
 
     public void SyncStatDisplay(TinyBot bot)

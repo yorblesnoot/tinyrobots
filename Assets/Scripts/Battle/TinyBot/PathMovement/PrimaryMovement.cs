@@ -7,10 +7,11 @@ public abstract class PrimaryMovement : MonoBehaviour
     public MoveStyle Style { get; protected set; }
     [HideInInspector] public TinyBot Owner;
 
-    [SerializeField] float lookSpeed = 1f;
+    
     public float chassisHeight;
     public Transform sourceBone;
 
+    [SerializeField] float lookSpeed = 1f;
     [SerializeField] protected float moveSpeed;
 
     [HideInInspector] public float speedMultiplier = 1;

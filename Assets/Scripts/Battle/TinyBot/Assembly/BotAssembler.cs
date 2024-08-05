@@ -1,3 +1,4 @@
+using PrimeTween;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ public class BotAssembler : MonoBehaviour
     {
         PrimaryMovement locomotion = null;
         AttachmentPoint initialAttachmentPoint;
-        List<GameObject> spawnedParts = new();
+        List<PartModifier> spawnedParts = new();
         UnitStats botStats = new();
         GameObject bot = RecursiveConstruction(treeRoot);
         initialAttachmentPoint = bot.GetComponentInChildren<AttachmentPoint>();
@@ -38,23 +39,24 @@ public class BotAssembler : MonoBehaviour
         {
             currentNode.Value.InitializePart();
             GameObject spawned = currentNode.Value.Sample;
-            AddPartStats(currentNode.Value);
             PartModifier modifier = spawned.GetComponent<PartModifier>();
+            AddPartStats(currentNode.Value);
             if (modifier.mainRenderers != null) 
                 foreach (Renderer renderer in modifier.mainRenderers) 
                     instance.palette.RecolorPart(renderer, allegiance);
-            spawnedParts.Add(spawned);
-
+            spawnedParts.Add(modifier);
             if(attachmentPoint != null) spawned.transform.SetParent(attachmentPoint.transform, false);
             spawned.transform.localRotation = Quaternion.identity;
-
             if (currentNode.Value.BasePart.PrimaryLocomotion) locomotion = spawned.GetComponent<PrimaryMovement>();
+
             List<TreeNode<ModdedPart>> children = currentNode.Children;
             AttachmentPoint[] attachmentPoints = spawned.GetComponentsInChildren<AttachmentPoint>();
 
             for (int i = 0; i < children.Count; i++)
             {
-                RecursiveConstruction(children[i], attachmentPoints[i]);
+                modifier.SubTrees = new();
+                if(attachmentPoints[i].ContainsSubTree) modifier.SubTrees.Add(children[i]);
+                else RecursiveConstruction(children[i], attachmentPoints[i]);
             }
             return spawned;
         }
@@ -85,14 +87,18 @@ public class BotAssembler : MonoBehaviour
         bot.GetComponent<CapsuleCollider>().center = colliderCenter;
     }
 
-    static List<Ability> GetAbilityList(List<GameObject> spawnedParts, TinyBot botUnit)
+    static List<Ability> GetAbilityList(List<PartModifier> spawnedParts, TinyBot botUnit)
     {
         List<Ability> abilities = new();
         foreach (var part in spawnedParts)
         {
-            Ability[] partAbilities = part.GetComponent<PartModifier>().Abilities;
-            if(partAbilities == null || partAbilities.Length == 0) continue;
-            foreach(var ability in partAbilities) ability.Initialize(botUnit);
+            Ability[] partAbilities = part.Abilities;
+            if(partAbilities == null) continue;
+            foreach (var ability in partAbilities)
+            {
+                if (ability is ISubTreeConsumer consumer) consumer.SubTrees = part.SubTrees;
+                ability.Initialize(botUnit);
+            }
             abilities.AddRange(partAbilities);
         }
 

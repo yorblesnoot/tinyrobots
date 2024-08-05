@@ -10,6 +10,7 @@ public class BotSelector : MonoBehaviour
         gameObject.SetActive(false);
         overlayLayer = gameObject.layer;
         TinyBot.ClearActiveBot.AddListener(Deselect);
+        PrimaryCursor.PlayerSelectedBot.AddListener(Select);
     }
     public void Select(TinyBot bot)
     {

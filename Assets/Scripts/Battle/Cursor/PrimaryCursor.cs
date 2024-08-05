@@ -4,7 +4,7 @@ using static UnitControl;
 using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
-using UnityEditor.Experimental.GraphView;
+using UnityEngine.Events;
 
 public enum CursorState
 {
@@ -14,40 +14,35 @@ public enum CursorState
 }
 public class PrimaryCursor : MonoBehaviour
 {
-    [SerializeField] AirCursor airCursor;
-    [SerializeField] GroundCursor groundCursor;
 
     public static PrimaryCursor Instance;
     static CursorBehaviour ActiveBehaviour;
+    
     
     public static Transform Transform;
     public static CursorState State;
     public static TinyBot TargetedBot;
 
-    [SerializeField] UnitControl abilityUI;
+    [SerializeField] CursorBehaviour cursorBehaviour;
     [SerializeField] TurnResourceCounter statDisplay;
     [SerializeField] LineRenderer pathingLine;
     [SerializeField] LineRenderer redLine;
     [SerializeField] GameObject numRotator;
-    [SerializeField] BotSelector botSelector;
     [SerializeField] TMP_Text moveCostPreview;
 
     static TurnResourceCounter StatDisplay;
-    static UnitControl AbilityUI;
 
     public static bool actionInProgress = false;
+
+    public static UnityEvent<TinyBot> PlayerSelectedBot = new();
     private void Awake()
     {
         Instance = this;
         actionInProgress = false;
         TinyBot.ClearActiveBot.AddListener(() => pathingLine.positionCount = 0);
-    }
-    private void Start()
-    {
+        ActiveBehaviour = cursorBehaviour;
         Transform = transform;
-        AbilityUI = abilityUI;
         StatDisplay = statDisplay;
-        ToggleAirCursor(true);
     }
 
     Vector3Int lastPosition;
@@ -194,27 +189,20 @@ public class PrimaryCursor : MonoBehaviour
     {
         if (!bot.AvailableForTurn) return;
         TinyBot.ClearActiveBot.Invoke();
+        PlayerSelectedBot.Invoke(bot);
+
         bot.BecomeActiveUnit();
-        Instance.botSelector.Select(bot);
         MoveStyle botStyle = bot.PrimaryMovement.Style;
-        ToggleAirCursor(botStyle == MoveStyle.FLY);
         Pathfinder3D.GeneratePathingTree(botStyle, bot.transform.position);
-        AbilityUI.ShowControlForUnit(bot);
-        StatDisplay.SyncStatDisplay(bot);
     }
 
-    public static void ToggleAirCursor(bool air)
-    {
-        CursorBehaviour.Reset.Invoke();
-        ActiveBehaviour = air ? Instance.airCursor : Instance.groundCursor;
-        ActiveBehaviour.ActivateCursor();
-    }
     public static void SnapToUnit(TinyBot unit)
     {
         if(State != CursorState.FREE) return;
         TargetedBot = unit;
         State = CursorState.UNITSNAPPED;
         Transform.position = unit.TargetPoint.position;
+        ActiveBehaviour.SnapToPosition(unit.TargetPoint.position);
     }
     public static void Unsnap()
     {
