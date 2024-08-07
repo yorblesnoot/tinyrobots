@@ -20,7 +20,7 @@ public class ModulePrototype : MonoBehaviour
         OrientationIndex = Mathf.RoundToInt(euler.y / 90);
     }
 
-    public List<int> GetOrientations()
+    public List<int> GetImpliedOrientations()
     {
         List<int> output = new()
         {
