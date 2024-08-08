@@ -13,6 +13,7 @@ public class ModulePrototype : MonoBehaviour
     [SerializeField] Symmetry symmetry;
     public int PieceIndex;
     public int OrientationIndex;
+    public int BaseWeight = 1;
 
     public void Initialize()
     {

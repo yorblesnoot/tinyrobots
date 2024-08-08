@@ -1,15 +1,14 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
-public class Module
+public class Module : IWeighted
 {
     public int ModuleIndex;
     public int PieceIndex;
     public int OrientationIndex;
+    public float Weight { get; set; } = 0;
     public ModulePrototype Prototype;
     public FaceConnections[] FaceConnections;
     public Vector3Int GridPosition;

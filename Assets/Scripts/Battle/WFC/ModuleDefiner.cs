@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class ModuleDefiner : MonoBehaviour
 {
+    [SerializeField] int emptyWeight = 5;
     [SerializeField] Vector3Int dimensions = new(10, 10, 10);
     public List<Module> Modules;
     readonly float centerOffset = .5f;
@@ -13,17 +14,17 @@ public class ModuleDefiner : MonoBehaviour
     Dictionary<int, Module[]> moduleDefinitions;
     Dictionary<Vector3Int, ModulePrototype> prototypeMap;
 
-    readonly Vector3Int[] directions = { Vector3Int.forward, Vector3Int.right, Vector3Int.back, Vector3Int.left, Vector3Int.up, Vector3Int.down  };
+    public static readonly Vector3Int[] Directions = { Vector3Int.forward, Vector3Int.right, Vector3Int.back, Vector3Int.left, Vector3Int.up, Vector3Int.down  };
     int directionCount;
     public void DeriveModuleDefinitions()
     {
-        directionCount = directions.Length;
+        directionCount = Directions.Length;
         prototypeMap = new();
         moduleDefinitions = new()
         {
             { 0, new Module[1] } //empty module
         };
-        moduleDefinitions[0][0] = new Module() { ModuleIndex = 0 };
+        moduleDefinitions[0][0] = new Module() { ModuleIndex = 0, Weight = emptyWeight };
         ModulePrototype[] prototypes = GetComponentsInChildren<ModulePrototype>();
         int moduleCount = 1;
         foreach (ModulePrototype prototype in prototypes)
@@ -42,11 +43,16 @@ public class ModuleDefiner : MonoBehaviour
                         ModuleIndex = moduleCount,
                         OrientationIndex = i,
                         PieceIndex = prototype.PieceIndex,
-                        Prototype = prototype
+                        Prototype = prototype,
+                        Weight = prototype.BaseWeight
                     };
                     moduleCount++;
                 }
                 moduleDefinitions.Add(prototype.PieceIndex, orientations);
+            }
+            else
+            {
+                foreach (var module in moduleDefinitions[prototype.PieceIndex]) module.Weight += prototype.BaseWeight;
             }
         }
         Modules = new();
@@ -68,7 +74,7 @@ public class ModuleDefiner : MonoBehaviour
             baseModule.FaceConnections.DebugContents();
             for (int i = 0; i < directionCount; i++)
             {
-                Vector3Int position = entry.Key + directions[i];
+                Vector3Int position = entry.Key + Directions[i];
                 if (!prototypeMap.TryGetValue(position, out ModulePrototype adjacentPrototype)) baseModule.FaceConnections[i].ModuleLinks.Add(0);
                 else baseModule.FaceConnections[i].ModuleLinks.AddRange(adjacentPrototype.GetImpliedOrientations().Select(p => moduleDefinitions[adjacentPrototype.PieceIndex][p].ModuleIndex));
             }
