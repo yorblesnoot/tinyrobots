@@ -23,14 +23,34 @@ public class ModuleDefiner : MonoBehaviour
         {
             { 0, new Module[1] } //empty module
         };
+        moduleDefinitions[0][0] = new Module() { ModuleIndex = 0 };
         ModulePrototype[] prototypes = GetComponentsInChildren<ModulePrototype>();
+        int moduleCount = 1;
         foreach (ModulePrototype prototype in prototypes)
         {
             prototype.Initialize();
             Vector3Int position = Vector3Int.FloorToInt(prototype.transform.position);
             prototypeMap.Add(position, prototype);
-            if (!moduleDefinitions.ContainsKey(prototype.PieceIndex)) moduleDefinitions.Add(prototype.PieceIndex, new Module[4]);
+            if (!moduleDefinitions.ContainsKey(prototype.PieceIndex))
+            {
+                Module[] orientations = new Module[4];
+                for (int i = 0; i < 4; i++)
+                {
+                    orientations[i] = new Module()
+                    {
+                        GridPosition = position,
+                        ModuleIndex = moduleCount,
+                        OrientationIndex = i,
+                        PieceIndex = prototype.PieceIndex,
+                        Prototype = prototype
+                    };
+                    moduleCount++;
+                }
+                moduleDefinitions.Add(prototype.PieceIndex, orientations);
+            }
         }
+        Modules = new();
+        foreach (var pair in moduleDefinitions) Modules.AddRange(pair.Value);
         EstablishPrototypeConnections();
         //Modules = moduleDefinitions.Values.ToList();
         DebugConnections();
@@ -38,51 +58,55 @@ public class ModuleDefiner : MonoBehaviour
 
     private void EstablishPrototypeConnections()
     {
+        
         foreach (var entry in prototypeMap)
         {
             ModulePrototype prototype = entry.Value;
             Module[] associatedModules = moduleDefinitions[prototype.PieceIndex];
             int prototypeOrientation = prototype.OrientationIndex;
-            associatedModules[prototypeOrientation] ??= new Module() { Prototype = prototype, GridPosition = entry.Key, PieceIndex = prototype.PieceIndex };
             Module baseModule = associatedModules[prototypeOrientation];
+            baseModule.FaceConnections.DebugContents();
             for (int i = 0; i < directionCount; i++)
             {
                 Vector3Int position = entry.Key + directions[i];
-                if (!prototypeMap.TryGetValue(position, out ModulePrototype adjacentPrototype)) baseModule.FaceConnections[i].Add(new Connection() { pieceId = 0, orientation = 0 });
-                else baseModule.FaceConnections[i].UnionWith(adjacentPrototype.GetImpliedOrientations().Select(p => new Connection() { pieceId = adjacentPrototype.PieceIndex, orientation = p }));
+                if (!prototypeMap.TryGetValue(position, out ModulePrototype adjacentPrototype)) baseModule.FaceConnections[i].ModuleLinks.Add(0);
+                else baseModule.FaceConnections[i].ModuleLinks.AddRange(adjacentPrototype.GetImpliedOrientations().Select(p => moduleDefinitions[adjacentPrototype.PieceIndex][p].ModuleIndex));
             }
 
             for (int orientationModifier = 1; orientationModifier < orientationCount; orientationModifier++)
             {
                 //for each other orientation, generate a module set of face connections
                 
-
-                //use modulus to keep the final orientation within 4
                 int newOrientationIndex = WrapMod(prototypeOrientation);
-                associatedModules[newOrientationIndex] = new() { GridPosition = baseModule.GridPosition, PieceIndex = prototype.PieceIndex, Prototype = prototype };
+                associatedModules[newOrientationIndex] ??= new Module() 
+                { GridPosition = baseModule.GridPosition, PieceIndex = prototype.PieceIndex, Prototype = prototype, OrientationIndex = newOrientationIndex };
+                Module targetModule = associatedModules[newOrientationIndex];
 
                 //for each face of the orientation, rotate its connections by the orientation modifier
 
-                for (int face = 0; face < 4; face++)
+                for (int face = 0; face < 6; face++)
                 {
-                    int targetFace = WrapMod(face);
                     //copy connections from the base orientation faces to the rotated faces
-                    associatedModules[newOrientationIndex].FaceConnections[targetFace]
-                        .UnionWith(baseModule.FaceConnections[face]
-                        .Select(con => new Connection() { pieceId = con.pieceId, orientation = WrapMod(con.orientation) }));
+                    int targetFace = WrapMod(face);
+                    foreach(var link in baseModule.FaceConnections[face].ModuleLinks)
+                    {
+                        int piece = Modules[link].PieceIndex;
+                        int orientation = Modules[link].OrientationIndex;
+                        int newOrientation = WrapMod(orientation);
+                        int finalLink = piece == 0 ? 0 : moduleDefinitions[piece][newOrientation].ModuleIndex;
+                        targetModule.FaceConnections[face < 4 ? targetFace: face].ModuleLinks.Add(finalLink);
+                    }
+                    
                 }
 
                 int WrapMod(int value)
                 {
+                    //use modulus to keep the final orientation within 4
                     return (value + orientationModifier) % orientationCount;
                 }
             }
         }
-        Modules = new();
-        foreach(var pair in moduleDefinitions)
-        {
-            Modules.AddRange(pair.Value);
-        }
+        
     }
 
     private void DebugConnections()
@@ -92,7 +116,7 @@ public class ModuleDefiner : MonoBehaviour
             Debug.Log(module.PieceIndex + " Connections");
             foreach (var connect in module.FaceConnections)
             {
-                connect.DebugContents();
+                connect.ModuleLinks.DebugContents();
             }
         }
     }

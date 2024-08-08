@@ -24,7 +24,7 @@ public class Generator : MonoBehaviour
                 {
                     Vector3 center = new(x + centerOffset, y + centerOffset, z + centerOffset);
                     center += transform.position;
-                    generationSpace[x,y,z] = new() { WorldPosition = center, ModuleDomain = definer.Modules.ToHashSet() };
+                    //generationSpace[x,y,z] = new() { WorldPosition = center, ModuleDomain = definer.Modules.ToHashSet() };
                 }
             }
         }
