@@ -31,7 +31,9 @@ public class GenerationSlot
             Debug.LogError("Tried to collapse empty domain");
         }
         else module = (Module)ModuleDomain.RandomByWeight();
+        Debug.LogWarning(VoxelPosition + " collapsed " + ModuleDomain.Count  + " modules to module index " + module.ModuleIndex);
         ModuleDomain = new() { module };
+        
         Quaternion rotation = Quaternion.Euler(0, module.OrientationIndex * 90, 0);
         if(module.Prototype != null) Object.Instantiate(module.Prototype, WorldPosition, rotation);
     }

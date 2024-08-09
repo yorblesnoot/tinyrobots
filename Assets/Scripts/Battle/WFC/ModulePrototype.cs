@@ -23,6 +23,7 @@ public class ModulePrototype : MonoBehaviour
 
     public List<int> GetImpliedOrientations()
     {
+        return new() { 0 };
         List<int> output = new()
         {
             OrientationIndex

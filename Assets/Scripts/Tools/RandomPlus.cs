@@ -14,9 +14,9 @@ public static class RandomPlus
 
     public static IWeighted RandomByWeight(this IEnumerable<IWeighted> list)
     {
-        float totalWeight = list.Sum(x => x.Weight);
-        float random = Random.Range(0, totalWeight);
-        float current = 0;
+        int totalWeight = list.Sum(x => x.Weight);
+        int random = Random.Range(0, totalWeight);
+        int current = 0;
         int count = list.Count();
         foreach(IWeighted weighted in list) 
         {
@@ -27,4 +27,4 @@ public static class RandomPlus
     }
 }
 
-public interface IWeighted {  public float Weight { get; } }
+public interface IWeighted {  public int Weight { get; } }
