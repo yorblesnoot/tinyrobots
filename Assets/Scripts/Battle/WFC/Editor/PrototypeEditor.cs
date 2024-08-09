@@ -11,9 +11,7 @@ public class PrototypeEditor : Editor
         ModulePrototype prototype = (ModulePrototype)target;
         if (GUILayout.Button("Snap To Grid"))
         {
-            Vector3Int cleaned = Vector3Int.FloorToInt(prototype.gameObject.transform.position);
-            Vector3 final = cleaned + Vector3.one * .5f;
-            prototype.gameObject.transform.position = final;
+            prototype.gameObject.transform.position = Vector3Int.RoundToInt(prototype.gameObject.transform.position);
         }
         DrawDefaultInspector();
     }

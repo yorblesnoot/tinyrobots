@@ -12,7 +12,7 @@ public class ModulePrototype : MonoBehaviour
     }
     [SerializeField] Symmetry symmetry;
     public int PieceIndex;
-    public int OrientationIndex;
+    [HideInInspector] public int OrientationIndex;
     public int BaseWeight = 1;
 
     public void Initialize()
@@ -23,7 +23,6 @@ public class ModulePrototype : MonoBehaviour
 
     public List<int> GetImpliedOrientations()
     {
-        return new() { 0 };
         List<int> output = new()
         {
             OrientationIndex

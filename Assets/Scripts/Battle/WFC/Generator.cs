@@ -15,12 +15,28 @@ public class Generator : MonoBehaviour
     readonly float centerOffset = .5f;
 
     public static Module[] Modules;
+    public static List<GameObject> Generated = new();
     int directionCount;
 
-    private void Awake()
+    void Regenerate()
     {
+        DestroyChildren();
         BuildGenerationSpace();
         Generate();
+    }
+
+    private void DestroyChildren()
+    {
+        foreach(var piece in Generated)
+        {
+            Destroy(piece);
+        }
+        Generated.Clear();
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.G)) Regenerate();
     }
 
     private void BuildGenerationSpace()
@@ -75,10 +91,10 @@ public class Generator : MonoBehaviour
             {
                 if(ModuleIsCompatible(module, baseSlot, i)) newDomain.Add(module);
             }
-            Debug.Log("domains for direction " + i + " at "  + baseSlot.VoxelPosition);
+            /*Debug.Log("domains for direction " + i + " at "  + baseSlot.VoxelPosition);
             baseSlot.ModuleDomain.DebugContents();
             adjacentSlot.ModuleDomain.DebugContents();
-            newDomain.DebugContents();
+            newDomain.DebugContents();*/
             if (newDomain.Count < initialCount)
             {
                 adjacentSlot.ModuleDomain = newDomain;

@@ -11,7 +11,6 @@ public class Module : IWeighted
     [field: SerializeField] public int Weight { get; set; } = 0;
     public ModulePrototype Prototype;
     public FaceConnections[] FaceConnections;
-    public Vector3Int GridPosition;
 
     public Module()
     {
