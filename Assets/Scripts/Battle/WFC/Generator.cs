@@ -25,16 +25,19 @@ public class Generator : MonoBehaviour
 
     private void Generate()
     {
-        GenerationSlot lowestEntropy = GenerationSpace.Values.OrderBy(slot => slot.Entropy).First();
-        Collapse(lowestEntropy);
+        while(GenerationSpace.Count > 0)
+        {
+            GenerationSlot lowestEntropy = GenerationSpace.Values.OrderBy(slot => slot.Entropy).FirstOrDefault();
+            Collapse(lowestEntropy);
+        }
     }
-
     void Collapse(GenerationSlot slot)
     {
-        Module selectedModule = (Module)slot.ModuleDomain.RandomByWeight();
-        slot.SetModule(selectedModule);
+        slot.CollapseDomain();
+        GenerationSpace.Remove(slot.VoxelPosition);
         PropagateConstraints(slot);
     }
+
 
     private void PropagateConstraints(GenerationSlot baseSlot)
     {
@@ -52,6 +55,7 @@ public class Generator : MonoBehaviour
             }
             if (newDomain.Count < initialCount)
             {
+                adjacentSlot.ModuleDomain = newDomain;
                 adjacentSlot.CalculateEntropy();
                 PropagateConstraints(adjacentSlot);
             }
@@ -72,9 +76,10 @@ public class Generator : MonoBehaviour
                 {
                     Vector3 center = new(x + centerOffset, y + centerOffset, z + centerOffset);
                     center += transform.position;
-                    GenerationSlot slot = new() { VoxelPosition = new(x,y,z), WorldPosition = center, ModuleDomain = Modules.ToHashSet() };
+                    Vector3Int vox = new(x, y, z);
+                    GenerationSlot slot = new() { VoxelPosition = vox, WorldPosition = center, ModuleDomain = Modules.ToHashSet() };
                     slot.CalculateEntropy();
-                    GenerationSpace.Add(new(x, y, z), slot);
+                    GenerationSpace.Add(vox, slot);
                 }
             }
         }

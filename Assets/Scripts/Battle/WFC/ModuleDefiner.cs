@@ -75,7 +75,11 @@ public class ModuleDefiner : MonoBehaviour
             for (int i = 0; i < directionCount; i++)
             {
                 Vector3Int position = entry.Key + Directions[i];
-                if (!prototypeMap.TryGetValue(position, out ModulePrototype adjacentPrototype)) baseModule.FaceConnections[i].ModuleLinks.Add(0);
+                if (!prototypeMap.TryGetValue(position, out ModulePrototype adjacentPrototype))
+                {
+                    baseModule.FaceConnections[i].ModuleLinks.Add(0);
+                    AddConnectionToEmptyModule(baseModule);
+                }
                 else baseModule.FaceConnections[i].ModuleLinks.AddRange(adjacentPrototype.GetImpliedOrientations().Select(p => moduleDefinitions[adjacentPrototype.PieceIndex][p].ModuleIndex));
             }
 
@@ -112,7 +116,14 @@ public class ModuleDefiner : MonoBehaviour
                 }
             }
         }
-        
+    }
+
+    void AddConnectionToEmptyModule(Module module)
+    {
+        foreach(FaceConnections connects in moduleDefinitions[0][0].FaceConnections)
+        {
+            connects.ModuleLinks.Add(module.ModuleIndex);
+        }
     }
 
     private void DebugConnections()

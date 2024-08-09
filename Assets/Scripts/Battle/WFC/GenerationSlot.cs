@@ -22,9 +22,18 @@ public class GenerationSlot
         Entropy = Mathf.Log(sum) - (Mathf.Log(logsum) / sum);
     }
 
-    public void SetModule(Module module)
+    public void CollapseDomain()
     {
+        Module module;
+        if (ModuleDomain.Count == 0)
+        {
+            module = Generator.Modules[0];
+            Debug.LogError("Tried to collapse empty domain");
+        }
+        else module = (Module)ModuleDomain.RandomByWeight();
         ModuleDomain = new() { module };
+        Quaternion rotation = Quaternion.Euler(0, module.OrientationIndex * 90, 0);
+        if(module.Prototype != null) Object.Instantiate(module.Prototype, WorldPosition, rotation);
     }
 
     
