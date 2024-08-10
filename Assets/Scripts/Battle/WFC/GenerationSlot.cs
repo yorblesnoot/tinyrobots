@@ -9,6 +9,7 @@ public class GenerationSlot
     public Vector3 WorldPosition;
     public float Entropy { get; private set; }
     public HashSet<Module> ModuleDomain;
+    public static GameObject Error;
 
     public void CalculateEntropy()
     {
@@ -22,13 +23,15 @@ public class GenerationSlot
         Entropy = Mathf.Log(sum) - (Mathf.Log(logsum) / sum);
     }
 
-    public void CollapseDomain()
+    public bool CollapseDomain()
     {
         Module module;
         if (ModuleDomain.Count == 0)
         {
-            module = WaveFunctionGenerator.Modules[0];
-            Debug.LogError("Tried to collapse empty domain");
+            Error.SetActive(true);
+            Error.transform.position = WorldPosition;
+            Debug.LogError("Tried to collapse empty domain.");
+            return false;
         }
         else module = (Module)ModuleDomain.RandomByWeight();
         //Debug.LogWarning(VoxelPosition + " collapsed " + ModuleDomain.Count  + " modules to module index " + module.ModuleIndex);
@@ -36,5 +39,6 @@ public class GenerationSlot
         
         Quaternion rotation = Quaternion.Euler(0, module.OrientationIndex * 90, 0);
         if(module.Prototype != null) WaveFunctionGenerator.Generated.Add(Object.Instantiate(module.Prototype, WorldPosition, rotation).gameObject);
+        return true;
     }
 }

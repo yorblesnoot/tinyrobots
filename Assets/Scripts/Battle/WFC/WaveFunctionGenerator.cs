@@ -9,6 +9,7 @@ public class WaveFunctionGenerator : MonoBehaviour
 {
     [SerializeField] ModuleDefiner definer;
     [SerializeField] Vector3Int dimensions;
+    [SerializeField] GameObject errorModule;
 
     Dictionary<Vector3Int, GenerationSlot> GenerationSpace;
 
@@ -41,10 +42,13 @@ public class WaveFunctionGenerator : MonoBehaviour
 
     private void BuildGenerationSpace()
     {
+        GenerationSlot.Error = errorModule;
+        errorModule.SetActive(false);
         directionCount = ModuleDefiner.Directions.Length;
         GenerationSpace = new();
         HashSet<int> mainDomain = definer.Modules.Select(module => module.ModuleIndex).ToHashSet();
         Modules = definer.Modules.ToArray();
+        
         for (int x = 0; x < dimensions.x; x++)
         {
             for (int y = 0; y < dimensions.y; y++)
@@ -67,14 +71,15 @@ public class WaveFunctionGenerator : MonoBehaviour
         while(GenerationSpace.Count > 0)
         {
             GenerationSlot lowestEntropy = GenerationSpace.Values.OrderBy(slot => slot.Entropy).FirstOrDefault();
-            Collapse(lowestEntropy);
+            if(!Collapse(lowestEntropy)) return;
         }
     }
-    void Collapse(GenerationSlot slot)
+    bool Collapse(GenerationSlot slot)
     {
-        slot.CollapseDomain();
+        bool success = slot.CollapseDomain();
         GenerationSpace.Remove(slot.VoxelPosition);
         PropagateConstraints(slot);
+        return success;
     }
 
 

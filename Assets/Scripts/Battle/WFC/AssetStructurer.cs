@@ -26,7 +26,7 @@ public class AssetStructurer : MonoBehaviour
             }
             string currentName = Path.GetFileNameWithoutExtension(Application.dataPath + "/" + path);
             int underscore = currentName.IndexOf("_");
-            if(underscore > 0) currentName = currentName[..(underscore - 1)];
+            if(underscore > 0) currentName = currentName[..(underscore)];
             string newName = currentName + "_" + newIndex;
             AssetDatabase.RenameAsset(path, newName);
         }

@@ -107,6 +107,9 @@ public class ModuleDefiner : MonoBehaviour
                     //if the face is top or bottom, apply base piece rotations to the connecting piece
                     if(i > 3) faceLinks.AddRange(prototype.GetImpliedOrientations()
                         .Select(p => moduleDefinitions[adjacentPrototype.PieceIndex][p].ModuleIndex));
+
+                    //TODO: prototypes aren't accounting for their own symmetry when adding face links. possible solutions: rotate links to faces based on symmetry
+                    //or add matching links on target module with implied orientations
                 }
             }
 
