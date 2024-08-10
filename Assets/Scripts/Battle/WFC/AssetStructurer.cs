@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,7 +12,8 @@ public class AssetStructurer : MonoBehaviour
 
     public void ModifyAssets()
     {
-        string[] assets = Directory.GetFiles(Application.dataPath + "/" + prototypePath);
+        
+        string[] assets = AssetDatabase.FindAssets("", new string[] { prototypePath }).Select(guid => AssetDatabase.GUIDToAssetPath(guid)).ToArray();
         for (int i = 0; i < assets.Length; i++)
         {
             string path = assets[i];
@@ -22,9 +24,9 @@ public class AssetStructurer : MonoBehaviour
                 if (!prefabRoot.TryGetComponent(out ModulePrototype prototype)) continue;
                 prototype.PieceIndex = newIndex;
             }
-            string currentName = Path.GetFileNameWithoutExtension(path);
+            string currentName = Path.GetFileNameWithoutExtension(Application.dataPath + "/" + path);
             int underscore = currentName.IndexOf("_");
-            currentName = currentName[(underscore - 1)..];
+            if(underscore > 0) currentName = currentName[..(underscore - 1)];
             string newName = currentName + "_" + newIndex;
             AssetDatabase.RenameAsset(path, newName);
         }
