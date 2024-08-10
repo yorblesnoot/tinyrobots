@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-public class Generator : MonoBehaviour
+public class WaveFunctionGenerator : MonoBehaviour
 {
     [SerializeField] ModuleDefiner definer;
     [SerializeField] Vector3Int dimensions;

@@ -10,11 +10,12 @@ public class ModuleDefiner : MonoBehaviour
     [SerializeField] int emptyWeight = 5;
     [SerializeField] Vector3Int dimensions = new(10, 10, 10);
     public List<Module> Modules;
-    readonly int orientationCount = 4;
+    
     Dictionary<int, Module[]> moduleDefinitions;
-    Dictionary<Vector3Int, ModulePrototype> prototypeMap;
     Bounds moduleBounds;
 
+    readonly int orientationCount = 4;
+    public static readonly int EmptyIndex = 0;
     public static readonly Vector3Int[] Directions = { Vector3Int.forward, Vector3Int.right, Vector3Int.back, Vector3Int.left, Vector3Int.up, Vector3Int.down  };
     int directionCount;
     public void DeriveModuleDefinitions()
@@ -22,7 +23,7 @@ public class ModuleDefiner : MonoBehaviour
         Vector3 transformCorner = transform.position - Vector3.one / 2;
         moduleBounds = new(Vector3.Lerp(transformCorner, transformCorner + dimensions, .5f), dimensions);
         directionCount = Directions.Length;
-        prototypeMap = new();
+        Dictionary<Vector3Int, ModulePrototype> prototypeMap = new();
         CreateEmptyModule();
         ModulePrototype[] prototypes = GetComponentsInChildren<ModulePrototype>();
         int moduleCount = 1;
@@ -40,7 +41,6 @@ public class ModuleDefiner : MonoBehaviour
                     {
                         ModuleIndex = moduleCount,
                         OrientationIndex = i,
-                        PieceIndex = prototype.PieceIndex,
                         Prototype = prototype,
                         Weight = prototype.BaseWeight
                     };
@@ -55,7 +55,7 @@ public class ModuleDefiner : MonoBehaviour
         }
         Modules = new();
         foreach (var pair in moduleDefinitions) Modules.AddRange(pair.Value);
-        EstablishPrototypeConnections();
+        EstablishPrototypeConnections(prototypeMap);
         CleanFaceLists();
     }
 
@@ -74,14 +74,14 @@ public class ModuleDefiner : MonoBehaviour
     {
         moduleDefinitions = new()
         {
-            { 0, new Module[1] } //empty module
+            { EmptyIndex, new Module[1] } //empty module
         };
         Module empty = new() { ModuleIndex = 0, Weight = emptyWeight };
-        foreach (FaceConnections face in empty.FaceConnections) face.ModuleLinks.Add(0);
-        moduleDefinitions[0][0] = empty;
+        foreach (FaceConnections face in empty.FaceConnections) face.ModuleLinks.Add(EmptyIndex);
+        moduleDefinitions[EmptyIndex][0] = empty;
     }
 
-    private void EstablishPrototypeConnections()
+    private void EstablishPrototypeConnections(Dictionary<Vector3Int, ModulePrototype> prototypeMap)
     {
         
         foreach (var entry in prototypeMap)
@@ -89,22 +89,23 @@ public class ModuleDefiner : MonoBehaviour
             ModulePrototype prototype = entry.Value;
             Module[] associatedModules = moduleDefinitions[prototype.PieceIndex];
             int prototypeOrientation = prototype.OrientationIndex;
-            //Module baseModule = associatedModules[0];
             Module baseModule = associatedModules[prototypeOrientation];
             for (int i = 0; i < directionCount; i++)
             {
                 Vector3Int position = entry.Key + Directions[i];
+                List<int> faceLinks = baseModule.FaceConnections[i].ModuleLinks;
                 if (!moduleBounds.Contains(position)) continue;
                 if (!prototypeMap.TryGetValue(position, out ModulePrototype adjacentPrototype))
                 {
-                    baseModule.FaceConnections[i].ModuleLinks.Add(0);
+                    faceLinks.Add(EmptyIndex);
                     AddConnectionToEmptyModule(baseModule.ModuleIndex, i);
                 }
                 else
                 {
-                    baseModule.FaceConnections[i].ModuleLinks.AddRange(adjacentPrototype.GetImpliedOrientations()
+                    faceLinks.AddRange(adjacentPrototype.GetImpliedOrientations()
                         .Select(p => moduleDefinitions[adjacentPrototype.PieceIndex][p].ModuleIndex));
-                    if(i > 3) baseModule.FaceConnections[i].ModuleLinks.AddRange(prototype.GetImpliedOrientations()
+                    //if the face is top or bottom, apply base piece rotations to the connecting piece
+                    if(i > 3) faceLinks.AddRange(prototype.GetImpliedOrientations()
                         .Select(p => moduleDefinitions[adjacentPrototype.PieceIndex][p].ModuleIndex));
                 }
             }
@@ -121,7 +122,7 @@ public class ModuleDefiner : MonoBehaviour
 
             int newOrientationIndex = WrapMod(prototypeOrientation);
             associatedModules[newOrientationIndex] ??= new Module()
-            { PieceIndex = prototype.PieceIndex, Prototype = prototype, OrientationIndex = newOrientationIndex };
+            { Prototype = prototype, OrientationIndex = newOrientationIndex };
             Module targetModule = associatedModules[newOrientationIndex];
 
             //for each face of the orientation, rotate its connections by the orientation modifier
@@ -132,12 +133,12 @@ public class ModuleDefiner : MonoBehaviour
                 int targetFace = WrapMod(face);
                 foreach (var link in baseModule.FaceConnections[face].ModuleLinks)
                 {
-                    int piece = Modules[link].PieceIndex;
+                    int piece = Modules[link].Prototype == null ? EmptyIndex : Modules[link].Prototype.PieceIndex;
                     int finalLink;
                     int finalFace = face < 4 ? targetFace : face;
-                    if (piece == 0)
+                    if (piece == EmptyIndex)
                     {
-                        finalLink = 0;
+                        finalLink = EmptyIndex;
                         AddConnectionToEmptyModule(targetModule.ModuleIndex, finalFace);
                     }
                     else

@@ -6,7 +6,6 @@ using UnityEngine;
 public class Module : IWeighted
 {
     public int ModuleIndex;
-    public int PieceIndex;
     public int OrientationIndex;
     [field: SerializeField] public int Weight { get; set; } = 0;
     public ModulePrototype Prototype;

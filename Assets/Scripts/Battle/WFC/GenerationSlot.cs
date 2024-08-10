@@ -27,7 +27,7 @@ public class GenerationSlot
         Module module;
         if (ModuleDomain.Count == 0)
         {
-            module = Generator.Modules[0];
+            module = WaveFunctionGenerator.Modules[0];
             Debug.LogError("Tried to collapse empty domain");
         }
         else module = (Module)ModuleDomain.RandomByWeight();
@@ -35,8 +35,6 @@ public class GenerationSlot
         ModuleDomain = new() { module };
         
         Quaternion rotation = Quaternion.Euler(0, module.OrientationIndex * 90, 0);
-        if(module.Prototype != null) Generator.Generated.Add(Object.Instantiate(module.Prototype, WorldPosition, rotation).gameObject);
+        if(module.Prototype != null) WaveFunctionGenerator.Generated.Add(Object.Instantiate(module.Prototype, WorldPosition, rotation).gameObject);
     }
-
-    
 }
