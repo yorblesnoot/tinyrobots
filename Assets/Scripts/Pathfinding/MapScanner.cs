@@ -8,6 +8,7 @@ public class MapScanner
     int mask;
 
     readonly int margin = 3;
+    readonly float sphereRadius = .1f;
 
     struct DirectedHit
     {
@@ -24,6 +25,7 @@ public class MapScanner
     public byte[,,] GetVoxelGrid(GameObject mapObject)
     {
         Vector3Int mapBounds = mapObject.GetComponent<MapBounds>().GetMapSize();
+        Debug.Log(mapBounds);
         sideLengths[0] = mapBounds.x;
         sideLengths[1] = mapBounds.y;
         sideLengths[2] = mapBounds.z;
@@ -100,8 +102,8 @@ public class MapScanner
 
 
 #pragma warning disable UNT0028 // Use non-allocating physics APIs
-            RaycastHit[] fronts = Physics.RaycastAll(origin, rayDirection, cSize + margin * 2, mask);
-            RaycastHit[] backs = Physics.RaycastAll(end, -rayDirection, cSize + margin * 2, mask);
+            RaycastHit[] fronts = Physics.SphereCastAll(origin, sphereRadius, rayDirection, cSize + margin * 2, mask);
+            RaycastHit[] backs = Physics.SphereCastAll(end, sphereRadius, - rayDirection, cSize + margin * 2, mask);
             directedHits.AddRange(ParseHits(fronts, true));
             directedHits.AddRange(ParseHits(backs, false));
             return directedHits;

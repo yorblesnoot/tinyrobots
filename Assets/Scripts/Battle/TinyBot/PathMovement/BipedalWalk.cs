@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BipedalWalk : LegMovement
@@ -12,7 +9,6 @@ public class BipedalWalk : LegMovement
 
     protected override Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral, Vector3 localStartPosition)
     {
-
         Vector3 initialPosition = anchor.localBasePosition + (goToNeutral ? Vector3.zero : (anchorZoneRadius + forwardBias) * Vector3.forward);
         Vector3 rayPosition = legModel.transform.TransformPoint(initialPosition);
         rayPosition.y += anchorUpwardLimit;

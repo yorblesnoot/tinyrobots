@@ -1,10 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class MapBounds : MonoBehaviour
 {
     [SerializeField] Transform outerCorner;
+    public Transform MapContainer;
     private void Awake()
     {
         gameObject.GetComponent<Renderer>().enabled = false;

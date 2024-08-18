@@ -36,7 +36,7 @@ public class BattleInitializer : MonoBehaviour
         }
         else
         {
-            GameObject map = Instantiate(relay.BattleMap);
+            GameObject map = Instantiate(relay.BattleMap, Vector3.zero, Quaternion.identity);
             MapScanner voxelizer = new();
             mapGrid = voxelizer.GetVoxelGrid(map);
         }

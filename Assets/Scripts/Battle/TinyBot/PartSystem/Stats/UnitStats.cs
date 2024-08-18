@@ -39,4 +39,10 @@ public class UnitStats
     {
         Current[type] = Max[type];
     }
+
+    public void TestMode()
+    {
+        Max[StatType.MOVEMENT] = 100000;
+        Max[StatType.ACTION] = 1000;
+    }
 }

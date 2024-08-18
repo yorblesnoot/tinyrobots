@@ -74,7 +74,7 @@ public abstract class LegMovement : PrimaryMovement
 
     protected virtual float LegDistanceFromDeadZone(Anchor anchor)
     {
-        Vector3 localForward = anchor.ikTarget.parent.InverseTransformPoint(Owner.transform.forward);
+        Vector3 localForward = anchor.ikTarget.parent.InverseTransformDirection(Owner.transform.forward);
         localForward.Normalize();
         return Vector3.Distance(anchor.ikTarget.localPosition, anchor.localBasePosition + localForward * forwardBias);
     }
@@ -111,7 +111,7 @@ public abstract class LegMovement : PrimaryMovement
     {
         return Pathfinder3D.GetCrawlOrientation(Vector3Int.RoundToInt(target));
     }
-    protected static bool CheckSphereExtra(Collider target_collider, SphereCollider sphere_collider, out Vector3 closestPoint, out Vector3 surfaceNormal)
+    /*protected static bool CheckSphereExtra(Collider target_collider, SphereCollider sphere_collider, out Vector3 closestPoint, out Vector3 surfaceNormal)
     {
         closestPoint = Vector3.zero;
         Vector3 sphere_pos = sphere_collider.transform.position;
@@ -124,12 +124,13 @@ public abstract class LegMovement : PrimaryMovement
             return true;
         }
         return false;
-    }
+    }*/
     [Serializable]
     protected class Anchor
     {
-        [HideInInspector] public bool stepping;
+        
         public Transform ikTarget;
+        [HideInInspector] public bool stepping;
         [HideInInspector] public Vector3 localBasePosition;
         [HideInInspector] public float distanceFromDeadZone;
         [HideInInspector] public Vector3 gluedWorldPosition;
