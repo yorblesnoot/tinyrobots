@@ -8,7 +8,7 @@ public abstract class PrimaryMovement : MonoBehaviour
     [HideInInspector] public TinyBot Owner;
 
     
-    public float chassisHeight;
+    public float locomotionHeight;
     public Transform sourceBone;
 
     [SerializeField] float lookSpeed = 1f;

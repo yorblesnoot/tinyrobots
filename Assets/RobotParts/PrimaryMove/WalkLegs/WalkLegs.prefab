@@ -260,8 +260,6 @@ MonoBehaviour:
   postAnimations:
   - {fileID: 2496942783366484502}
   endAnimations: []
-  projectile: {fileID: 0}
-  travelTime: 1
   intervalTime: 0.08
 --- !u!114 &8051151855791826628
 MonoBehaviour:
@@ -467,21 +465,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Owner: {fileID: 0}
-  lookSpeed: 1
-  chassisHeight: 1.3
+  locomotionHeight: 0.5
   sourceBone: {fileID: 1365928021841588218}
+  lookSpeed: 1
   moveSpeed: 3
   speedMultiplier: 1
   legStepDuration: 0.3
   lookHeightModifier: 1
   anchors:
-  - stepping: 0
-    ikTarget: {fileID: 5476163026689878025}
+  - ikTarget: {fileID: 5476163026689878025}
+    stepping: 0
     localBasePosition: {x: 0, y: 0, z: 0}
     distanceFromDeadZone: 0
     gluedWorldPosition: {x: 0, y: 0, z: 0}
-  - stepping: 0
-    ikTarget: {fileID: 7394775066713002943}
+  - ikTarget: {fileID: 7394775066713002943}
+    stepping: 0
     localBasePosition: {x: 0, y: 0, z: 0}
     distanceFromDeadZone: 0
     gluedWorldPosition: {x: 0, y: 0, z: 0}
