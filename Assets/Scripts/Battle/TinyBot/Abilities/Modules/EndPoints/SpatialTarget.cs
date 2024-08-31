@@ -5,22 +5,22 @@ using UnityEngine;
 
 public class SpatialTarget : TargetPoint
 {
-    [SerializeField] protected SpatialSensor indicator;
     [SerializeField] protected int maxTargets = 100;
+    [Range(0, 360)][SerializeField] int spatialDegree = 45;
 
     public override void Draw(List<Vector3> trajectory)
     {
-        indicator.ToggleVisual(true);
+        SliceTargeter.ToggleVisual(true);
     }
 
     public override List<Targetable> FindTargets(List<Vector3> trajectory)
     {
-        indicator.transform.SetParent(null);
+        SliceTargeter.SetShape(spatialDegree, TargetRadius);
         Vector3 point = trajectory[^1];
         Vector3 direction = point - trajectory[0];
-        indicator.transform.SetPositionAndRotation(point, Quaternion.LookRotation(direction));
-        indicator.gameObject.SetActive(true);
-        return indicator.GetIntersectingTargets().Take(maxTargets)
+        SliceTargeter.Transform.SetPositionAndRotation(point, Quaternion.LookRotation(direction));
+        SliceTargeter.Transform.gameObject.SetActive(true);
+        return SliceTargeter.Sensor.GetIntersectingTargets().Take(maxTargets)
             .OrderBy(target => Vector3.Distance(target.transform.position, point)).ToList();
     }
 
@@ -39,8 +39,8 @@ public class SpatialTarget : TargetPoint
 
     public override void EndTargeting()
     {
-        indicator.ToggleVisual(false);
-        indicator.gameObject.SetActive(false);
-        indicator.ResetIntersecting();
+        SliceTargeter.ToggleVisual(false);
+        SliceTargeter.Hide();
+        SliceTargeter.Sensor.ResetIntersecting();
     }
 }
