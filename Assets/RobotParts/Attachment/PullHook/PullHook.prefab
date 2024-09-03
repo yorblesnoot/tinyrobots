@@ -534,6 +534,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 714a1afd7354c1e4b833e3c0844d8bce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Description: Launches a hook at the target location. If the hook hits a movable
+    target, pulls the target to the user's position.
   range: 15
   ModifiableRange: 1
   cooldown: 2
@@ -550,9 +552,9 @@ MonoBehaviour:
   preAnimations: []
   postAnimations: []
   endAnimations: []
+  line: {fileID: 7463231680969825189}
   projectile: {fileID: 4549332990311462824}
   travelTime: 1
-  line: {fileID: 7463231680969825189}
   dropDistance: 2
   pullDelay: 0.5
 --- !u!114 &3015369353320182564

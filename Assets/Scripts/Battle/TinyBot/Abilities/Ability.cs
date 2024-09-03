@@ -1,7 +1,8 @@
 using UnityEngine;
 
-public class Ability : MonoBehaviour
+public abstract class Ability : MonoBehaviour
 {
+    [TextArea(3, 10)] public string Description;
     public float range;
     public bool ModifiableRange = false;
     public int cooldown = 1;
@@ -20,6 +21,8 @@ public class Ability : MonoBehaviour
         Owner = botUnit;
         Owner.BeganTurn.AddListener(LapseCooldown);
     }
+
+    public abstract bool IsActive();
 
     void LapseCooldown()
     {

@@ -183,6 +183,11 @@ public abstract class ActiveAbility : Ability
             return offset + Owner.transform.position;
         }
     }
+
+    public override bool IsActive()
+    {
+        return true;
+    }
 }
 
 public enum AbilityType

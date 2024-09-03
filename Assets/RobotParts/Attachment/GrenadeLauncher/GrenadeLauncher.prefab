@@ -137,6 +137,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5804629f9d3cee429e512789e5387aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Description: Launch a grenade that explodes on impact, damaging multiple targets.
   range: 10
   ModifiableRange: 1
   cooldown: 1
@@ -217,9 +218,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 230ce290bec7b4746888e91dd6a7cf23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  indicator: {fileID: 8399827767088261990}
+  TargetRadius: 0
   maxTargets: 100
-  aiRadius: 1
+  spatialDegree: 45
 --- !u!1 &7199797187575493042
 GameObject:
   m_ObjectHideFlags: 0
@@ -341,18 +342,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 467979853248272125}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8399827767088261990 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8281196038617120155, guid: 29c67b6ceb68f7f4ea90dc92e430204a,
-    type: 3}
-  m_PrefabInstance: {fileID: 467979853248272125}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7abefd68e34c06f4c9b549402f976aa2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1252920345815420660
 PrefabInstance:
   m_ObjectHideFlags: 0

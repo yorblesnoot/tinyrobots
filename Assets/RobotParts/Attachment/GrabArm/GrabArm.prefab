@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c64ab2b94e883149887ddaea40501e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Description: Throws a carried object to the target location. Can only be used after
+    carrying a target with [Arm Grab].
   range: 10
   ModifiableRange: 0
   cooldown: 1
@@ -63,8 +65,6 @@ MonoBehaviour:
   - {fileID: 8185807176413275310}
   postAnimations: []
   endAnimations: []
-  projectile: {fileID: 0}
-  travelTime: 1
   armGrab: {fileID: 6213933421517428230}
   thrownAirTime: 0.5
 --- !u!114 &8185807176413275310
@@ -342,6 +342,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b844cae21ae58440a09432794831c30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Description: Grabs and carries the target. While carrying, the user can't use active
+    abilities and has halved Move Speed. The user will drop a carried target at the
+    end of the turn.
   range: 1.5
   ModifiableRange: 0
   cooldown: 1
@@ -375,9 +378,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 230ce290bec7b4746888e91dd6a7cf23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  indicator: {fileID: 2936317473077055898}
+  TargetRadius: 0
   maxTargets: 1
-  aiRadius: 1
+  spatialDegree: 45
 --- !u!114 &2931565364048482511
 MonoBehaviour:
   m_ObjectHideFlags: 0

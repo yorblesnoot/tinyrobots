@@ -207,6 +207,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 989c6e8297770704db614d0cda15e35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Description: Launch a grappling hook to the target location, dealing low damage.
+    If the hook hits any target, the user pulls themself to the target.
   range: 15
   ModifiableRange: 0
   cooldown: 2
@@ -223,9 +225,9 @@ MonoBehaviour:
   preAnimations: []
   postAnimations: []
   endAnimations: []
+  line: {fileID: 8709156930818878667}
   projectile: {fileID: 8858788719128827533}
   travelTime: 1
-  line: {fileID: 8709156930818878667}
   backDistance: 2
 --- !u!114 &645100875821679151
 MonoBehaviour:

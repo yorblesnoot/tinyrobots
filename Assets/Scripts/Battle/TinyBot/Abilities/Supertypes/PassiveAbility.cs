@@ -4,5 +4,8 @@ using UnityEngine;
 
 public class PassiveAbility : Ability
 {
-    
+    public override bool IsActive()
+    {
+        return false;
+    }
 }
