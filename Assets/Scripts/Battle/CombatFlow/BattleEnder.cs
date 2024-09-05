@@ -6,11 +6,17 @@ public class BattleEnder : MonoBehaviour
     [SerializeField] SceneRelay relay;
     [SerializeField] PlayerData playerData;
     [SerializeField] DropsUI dropsUI;
-    public void PlayerWin()
+
+    static BattleEnder instance;
+    private void Awake()
     {
-        if (playerData == null) Debug.LogWarning("No active Navigation Map found.");
-        relay.BattleComplete = true;
-        dropsUI.OfferDrops(() => sceneLoader.Load(SceneType.NAVIGATION));
+        instance = this;
+    }
+    public static void PlayerWin()
+    {
+        if (instance.playerData == null) Debug.LogWarning("No active Navigation Map found.");
+        instance.relay.BattleComplete = true;
+        instance.dropsUI.OfferDrops(() => instance.sceneLoader.Load(SceneType.NAVIGATION));
 
         foreach(TinyBot bot in TurnManager.TurnTakers)
         {
@@ -19,9 +25,9 @@ public class BattleEnder : MonoBehaviour
         }
     }
 
-    public void GameOver()
+    public static void GameOver()
     {
-        relay.generateNavMap = true;
-        sceneLoader.Load(SceneType.MAINMENU);
+        instance.relay.generateNavMap = true;
+        instance.sceneLoader.Load(SceneType.MAINMENU);
     }
 }

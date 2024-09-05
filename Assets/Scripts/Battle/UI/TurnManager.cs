@@ -105,7 +105,7 @@ public class TurnManager : MonoBehaviour
         TinyBot.ClearActiveBot.Invoke();
         bot.EndedTurn.Invoke();
 
-        if (Mission.MetEndCondition(Singleton, Singleton.battleEnder)) return;
+        if (Mission.MetEndCondition(Singleton)) return;
         QueueNextTurnTaker();
     }
 

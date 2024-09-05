@@ -1,0 +1,483 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1946feaec865d344dabf0419b1c94973, type: 3}
+  m_Name: IFDialogue
+  m_EditorClassIdentifier: 
+  AllowDialogueSave: 0
+  BlockingReopeningDialogue: 0
+  NodeLinkDatas:
+  - BaseNodeGuid: 2a1617f2-10aa-4fbc-8b52-bec865548bb6
+    TargetNodeGuid: 1bc2693b-eeaf-4e77-960c-57bc0bfbf41a
+  - BaseNodeGuid: c739ff4d-5358-43a7-9f51-f3e03e0ba213
+    TargetNodeGuid: 4b1535ee-f51f-4ea8-addb-393d8a98f209
+  - BaseNodeGuid: 7e69817f-5785-47fc-ab80-ed760bb14982
+    TargetNodeGuid: 7e2a9a54-1a9f-4bf8-9201-4fe9ff2004c4
+  - BaseNodeGuid: 87506697-cb08-4b36-a18f-90133e538925
+    TargetNodeGuid: 550e313d-57ad-4f5d-8a5e-e8470bdd0b83
+  - BaseNodeGuid: ca6efb95-2bca-4cc1-b0e0-6deca05ed0d3
+    TargetNodeGuid: 550e313d-57ad-4f5d-8a5e-e8470bdd0b83
+  - BaseNodeGuid: 2d8c30d0-968e-4ad1-97fe-fbd4a87b7d80
+    TargetNodeGuid: 550e313d-57ad-4f5d-8a5e-e8470bdd0b83
+  - BaseNodeGuid: f942ce9f-3de5-451f-aa2e-35c27b899e4b
+    TargetNodeGuid: bd1a8dc9-e649-46f7-9742-e52523729c71
+  - BaseNodeGuid: f942ce9f-3de5-451f-aa2e-35c27b899e4b
+    TargetNodeGuid: 69a4c687-53cd-4594-b369-af0041296e1b
+  - BaseNodeGuid: bd1a8dc9-e649-46f7-9742-e52523729c71
+    TargetNodeGuid: 5e0df5d7-49e4-4ac1-9fee-b9021a96f4ea
+  - BaseNodeGuid: bd1a8dc9-e649-46f7-9742-e52523729c71
+    TargetNodeGuid: 587bc023-f8b4-4560-be1a-49181a214ee4
+  - BaseNodeGuid: 1bc2693b-eeaf-4e77-960c-57bc0bfbf41a
+    TargetNodeGuid: f942ce9f-3de5-451f-aa2e-35c27b899e4b
+  - BaseNodeGuid: 5e0df5d7-49e4-4ac1-9fee-b9021a96f4ea
+    TargetNodeGuid: a2299a79-c555-4531-ba1e-c093df8f82cc
+  - BaseNodeGuid: 4b1535ee-f51f-4ea8-addb-393d8a98f209
+    TargetNodeGuid: 6ace3c14-60af-4bd4-b201-c8e60f6b7771
+  - BaseNodeGuid: 7814b69a-2510-4220-82c1-9b2c5ccf51fd
+    TargetNodeGuid: df42080f-3954-4048-b352-9183035af2bf
+  - BaseNodeGuid: 6a366284-3e9b-4e38-b689-c91cd52fed11
+    TargetNodeGuid: 40a279d2-3d5f-4436-be97-c23994c000e1
+  - BaseNodeGuid: 587bc023-f8b4-4560-be1a-49181a214ee4
+    TargetNodeGuid: 7e69817f-5785-47fc-ab80-ed760bb14982
+  - BaseNodeGuid: 7e2a9a54-1a9f-4bf8-9201-4fe9ff2004c4
+    TargetNodeGuid: 98077c92-5e3a-4646-86e1-5a44eebc2bd4
+  - BaseNodeGuid: 98077c92-5e3a-4646-86e1-5a44eebc2bd4
+    TargetNodeGuid: 55c77c60-b402-44c2-baed-d7dc91b190e3
+  - BaseNodeGuid: 0d8e0755-c146-4606-8d09-a2e8e12f0bc9
+    TargetNodeGuid: 21abe787-d943-4b79-9dfa-2f464df19260
+  - BaseNodeGuid: 69a4c687-53cd-4594-b369-af0041296e1b
+    TargetNodeGuid: 08a374fb-44aa-408d-b97b-d32bc2407ab3
+  - BaseNodeGuid: 21abe787-d943-4b79-9dfa-2f464df19260
+    TargetNodeGuid: a071d820-d99c-4fea-b317-afdd3781d0cc
+  - BaseNodeGuid: 6395c5cc-0f49-459c-a533-59a2786b6cae
+    TargetNodeGuid: 29a26011-9bdd-43b4-ade1-641ac006be63
+  - BaseNodeGuid: 550e313d-57ad-4f5d-8a5e-e8470bdd0b83
+    TargetNodeGuid: 6395c5cc-0f49-459c-a533-59a2786b6cae
+  - BaseNodeGuid: df42080f-3954-4048-b352-9183035af2bf
+    TargetNodeGuid: 6a366284-3e9b-4e38-b689-c91cd52fed11
+  - BaseNodeGuid: a2299a79-c555-4531-ba1e-c093df8f82cc
+    TargetNodeGuid: c739ff4d-5358-43a7-9f51-f3e03e0ba213
+  - BaseNodeGuid: a2299a79-c555-4531-ba1e-c093df8f82cc
+    TargetNodeGuid: 7814b69a-2510-4220-82c1-9b2c5ccf51fd
+  - BaseNodeGuid: 08a374fb-44aa-408d-b97b-d32bc2407ab3
+    TargetNodeGuid: 87506697-cb08-4b36-a18f-90133e538925
+  - BaseNodeGuid: 08a374fb-44aa-408d-b97b-d32bc2407ab3
+    TargetNodeGuid: ca6efb95-2bca-4cc1-b0e0-6deca05ed0d3
+  - BaseNodeGuid: 08a374fb-44aa-408d-b97b-d32bc2407ab3
+    TargetNodeGuid: 2d8c30d0-968e-4ad1-97fe-fbd4a87b7d80
+  - BaseNodeGuid: 08a374fb-44aa-408d-b97b-d32bc2407ab3
+    TargetNodeGuid: 0d8e0755-c146-4606-8d09-a2e8e12f0bc9
+  DialogueChoiceNodeDatas:
+  - NodeGuid: a2299a79-c555-4531-ba1e-c093df8f82cc
+    Position: {x: 1364, y: 244.00002}
+    DialogueNodePorts:
+    - PortGuid: 92565e3d-59e2-46bc-be75-1fb23c5f89c3
+      InputGuid: c739ff4d-5358-43a7-9f51-f3e03e0ba213
+      OutputGuid: a2299a79-c555-4531-ba1e-c093df8f82cc
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Reset
+      - languageEnum: 1
+        LanguageGenericType: Zresetuj
+    - PortGuid: b6e3f50d-b5f2-474e-8d18-c8c44b88ae48
+      InputGuid: 7814b69a-2510-4220-82c1-9b2c5ccf51fd
+      OutputGuid: a2299a79-c555-4531-ba1e-c093df8f82cc
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Do not reset
+      - languageEnum: 1
+        LanguageGenericType: Nie resetuj
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 0}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Do you want to reset the level?
+    - languageEnum: 1
+      LanguageGenericType: "Czy chcesz zresetowa\u0107 poziom?"
+    Duration: 2
+  - NodeGuid: 08a374fb-44aa-408d-b97b-d32bc2407ab3
+    Position: {x: 1126.3999, y: 1300.8}
+    DialogueNodePorts:
+    - PortGuid: 06570afd-3687-4a21-a92c-a3088cb820ed
+      InputGuid: 87506697-cb08-4b36-a18f-90133e538925
+      OutputGuid: 08a374fb-44aa-408d-b97b-d32bc2407ab3
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Set level 5
+      - languageEnum: 1
+        LanguageGenericType: Ustaw 5 poziom
+    - PortGuid: e80495fc-6a48-4637-a84e-1745fe45d611
+      InputGuid: ca6efb95-2bca-4cc1-b0e0-6deca05ed0d3
+      OutputGuid: 08a374fb-44aa-408d-b97b-d32bc2407ab3
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Set level 20
+      - languageEnum: 1
+        LanguageGenericType: Ustaw 20 poziom
+    - PortGuid: 514b49b1-2009-4da9-b216-9a10ac573b57
+      InputGuid: 2d8c30d0-968e-4ad1-97fe-fbd4a87b7d80
+      OutputGuid: 08a374fb-44aa-408d-b97b-d32bc2407ab3
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Add 10 levels
+      - languageEnum: 1
+        LanguageGenericType: "Dodaj 10 poziom\xF3w"
+    - PortGuid: 6835e14e-783f-4ffe-9e6e-19a19a6caf7e
+      InputGuid: 0d8e0755-c146-4606-8d09-a2e8e12f0bc9
+      OutputGuid: 08a374fb-44aa-408d-b97b-d32bc2407ab3
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Do nothing
+      - languageEnum: 1
+        LanguageGenericType: "Nic nie r\xF3b"
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 0}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: It gives you the opportunity to add levels for yourself,
+        do you want to take advantage?
+    - languageEnum: 1
+      LanguageGenericType: "Daje ci mo\u017Cliwo\u015B\u0107 dodania sobie poziom\xF3w,
+        chcesz skorzysta\u0107?"
+    Duration: 5
+  DialogueNodeDatas:
+  - NodeGuid: 1bc2693b-eeaf-4e77-960c-57bc0bfbf41a
+    Position: {x: 444, y: 244.00002}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: e916db5d586e8314d8bf677855d54ea6, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: This is a demonstration of how Global Value works
+    - languageEnum: 1
+      LanguageGenericType: "Jest to pokaz dzia\u0142ania Global Value"
+    Duration: 4
+  - NodeGuid: 5e0df5d7-49e4-4ac1-9fee-b9021a96f4ea
+    Position: {x: 1140, y: 244.00002}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: e916db5d586e8314d8bf677855d54ea6, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: You will see this part of the dialogue until you change
+        Global Value
+    - languageEnum: 1
+      LanguageGenericType: "T\u0105 cze\u015B\u0107 dialogu b\u0119dziesz widzia\u0142
+        do momentu a\u017C nie zmienisz Global Value"
+    Duration: 5
+  - NodeGuid: 4b1535ee-f51f-4ea8-addb-393d8a98f209
+    Position: {x: 2013.6, y: 244.00002}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 0}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: And you see, you no longer have access to this dialogue....
+    - languageEnum: 1
+      LanguageGenericType: "I widzisz, nie masz juz dost\u0119pu do tego dialogu..."
+    Duration: 4
+  - NodeGuid: 7814b69a-2510-4220-82c1-9b2c5ccf51fd
+    Position: {x: 1685.6, y: 532}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 6c7c2303cba66254eb2469508683ee61, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Do not reset
+    - languageEnum: 1
+      LanguageGenericType: Nie resetuj
+    Duration: 2
+  - NodeGuid: 6a366284-3e9b-4e38-b689-c91cd52fed11
+    Position: {x: 2138.4, y: 532}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 0}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Can you go now?
+    - languageEnum: 1
+      LanguageGenericType: "Mo\u017Cesz ju\u017C i\u015B\u0107?"
+    Duration: 3
+  - NodeGuid: 587bc023-f8b4-4560-be1a-49181a214ee4
+    Position: {x: 1140, y: 900}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: e916db5d586e8314d8bf677855d54ea6, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: I know that you are here for the first time
+    - languageEnum: 1
+      LanguageGenericType: "WIdze, \u017Ce jeste\u015B tu piewszy raz"
+    Duration: 3
+  - NodeGuid: 7e2a9a54-1a9f-4bf8-9201-4fe9ff2004c4
+    Position: {x: 1685.6, y: 900}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: e916db5d586e8314d8bf677855d54ea6, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: This is the last time you see this text
+    - languageEnum: 1
+      LanguageGenericType: To jest ostani raz, jak widzisz ten tekst
+    Duration: 4
+  - NodeGuid: 98077c92-5e3a-4646-86e1-5a44eebc2bd4
+    Position: {x: 1913.6, y: 900}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 0}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Well, unless you reset Global Value, then we'll see you
+        again someday
+    - languageEnum: 1
+      LanguageGenericType: "No chyba, \u017Ce zresetujesz Global Value, to zn\xF3w
+        kiedy\u015B si\u0119 zobaczymy"
+    Duration: 5
+  - NodeGuid: 0d8e0755-c146-4606-8d09-a2e8e12f0bc9
+    Position: {x: 1496, y: 1900}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 6c7c2303cba66254eb2469508683ee61, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: No thanks
+    - languageEnum: 1
+      LanguageGenericType: "Nie dzi\u0119kuje"
+    Duration: 3
+  - NodeGuid: 69a4c687-53cd-4594-b369-af0041296e1b
+    Position: {x: 895.2, y: 1300.8}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: e916db5d586e8314d8bf677855d54ea6, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: You don't have level 5 yet
+    - languageEnum: 1
+      LanguageGenericType: Nie masz jeszcze 5 poziomu
+    Duration: 3
+  - NodeGuid: 21abe787-d943-4b79-9dfa-2f464df19260
+    Position: {x: 1749.6, y: 1900}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: e916db5d586e8314d8bf677855d54ea6, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Good, then I have nothing to say to you
+    - languageEnum: 1
+      LanguageGenericType: Dobra, to nie mam Ci nic do powiedzenia
+    Duration: 4
+  - NodeGuid: 6395c5cc-0f49-459c-a533-59a2786b6cae
+    Position: {x: 2130.4, y: 1499.2001}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 0}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Good riddance...
+    - languageEnum: 1
+      LanguageGenericType: Dobra juz spadaj...
+    Duration: 3
+  - NodeGuid: 550e313d-57ad-4f5d-8a5e-e8470bdd0b83
+    Position: {x: 1898.3999, y: 1499.2001}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: e916db5d586e8314d8bf677855d54ea6, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: In the upper right corner, you can already see the level
+        change
+    - languageEnum: 1
+      LanguageGenericType: "W prawym g\xF3rnym rogu, mo\u017Cesz ju\u017C zobaczy\u0107
+        zmiane poziomu"
+    Duration: 5
+  - NodeGuid: df42080f-3954-4048-b352-9183035af2bf
+    Position: {x: 1913.6, y: 532}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: e916db5d586e8314d8bf677855d54ea6, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Okej
+    - languageEnum: 1
+      LanguageGenericType: Dobra, dobra
+    Duration: 2
+  TimerChoiceNodeDatas: []
+  EndNodeDatas:
+  - NodeGuid: 40a279d2-3d5f-4436-be97-c23994c000e1
+    Position: {x: 2362.4, y: 532}
+    EndNodeType: 0
+    Dialogue: {fileID: 0}
+  - NodeGuid: 6ace3c14-60af-4bd4-b201-c8e60f6b7771
+    Position: {x: 2233.5999, y: 244.00002}
+    EndNodeType: 0
+    Dialogue: {fileID: 0}
+  - NodeGuid: 55c77c60-b402-44c2-baed-d7dc91b190e3
+    Position: {x: 2138.4, y: 900}
+    EndNodeType: 0
+    Dialogue: {fileID: 0}
+  - NodeGuid: a071d820-d99c-4fea-b317-afdd3781d0cc
+    Position: {x: 1998.3999, y: 1900}
+    EndNodeType: 0
+    Dialogue: {fileID: 0}
+  - NodeGuid: 29a26011-9bdd-43b4-ade1-641ac006be63
+    Position: {x: 2358.4, y: 1499.2001}
+    EndNodeType: 0
+    Dialogue: {fileID: 0}
+  EventNodeDatas:
+  - NodeGuid: c739ff4d-5358-43a7-9f51-f3e03e0ba213
+    Position: {x: 1685.6, y: 244.00002}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: 9ea6a7ff4e9acc947b02656f7feb30d0, type: 2}
+    - DialogueEventSO: {fileID: 11400000, guid: a415fe71d113ec34496ea3d291cacdf4, type: 2}
+  - NodeGuid: 7e69817f-5785-47fc-ab80-ed760bb14982
+    Position: {x: 1364, y: 900}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: 19d96f3f8db378942859b029206f4f8b, type: 2}
+  - NodeGuid: 87506697-cb08-4b36-a18f-90133e538925
+    Position: {x: 1496, y: 1300.8}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: 8a0264905e4c232408b09dcf85f4c384, type: 2}
+  - NodeGuid: ca6efb95-2bca-4cc1-b0e0-6deca05ed0d3
+    Position: {x: 1496, y: 1499.2001}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: 75cad4299927db44b8489a923597ad5c, type: 2}
+  - NodeGuid: 2d8c30d0-968e-4ad1-97fe-fbd4a87b7d80
+    Position: {x: 1496, y: 1696.8}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: 7ac8d6c29f4beb34ab2719c7abc3c534, type: 2}
+  StartNodeDatas:
+  - NodeGuid: 2a1617f2-10aa-4fbc-8b52-bec865548bb6
+    Position: {x: 350.40002, y: 244.00002}
+    startID: 
+  RandomNodeDatas: []
+  CommandNodeDatas:
+  - NodeGuid: 90a35055-0236-4932-9cad-fe65f35df41c
+    Position: {x: 1140, y: 131.2}
+    commmand: If you are level 5 or above and have already had this dialogue once
+      having at least level 5, this path will always appear again
+  - NodeGuid: d8c34d28-b579-4269-8354-be558cd8a6ed
+    Position: {x: 1140, y: 808}
+    commmand: This path will be displayed only once, after reaching at least level
+      5
+  - NodeGuid: 75b9a21d-64a9-4175-a2d8-c541aecb06bc
+    Position: {x: 895.2, y: 1228}
+    commmand: This Path appears when the level is lower than 5
+  IfNodeDatas:
+  - NodeGuid: f942ce9f-3de5-451f-aa2e-35c27b899e4b
+    Position: {x: 665.60004, y: 244.00002}
+    ValueName: DEMO_Level
+    Operations: 4
+    OperationValue: 5
+    TrueGUID: bd1a8dc9-e649-46f7-9742-e52523729c71
+    FalseGUID: 69a4c687-53cd-4594-b369-af0041296e1b
+  - NodeGuid: bd1a8dc9-e649-46f7-9742-e52523729c71
+    Position: {x: 895.2, y: 244.00002}
+    ValueName: DEMO_Unl_Dialog
+    Operations: 0
+    OperationValue: 
+    TrueGUID: 5e0df5d7-49e4-4ac1-9fee-b9021a96f4ea
+    FalseGUID: 587bc023-f8b4-4560-be1a-49181a214ee4

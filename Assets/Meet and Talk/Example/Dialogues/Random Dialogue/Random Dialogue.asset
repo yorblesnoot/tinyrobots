@@ -1,0 +1,166 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1946feaec865d344dabf0419b1c94973, type: 3}
+  m_Name: Random Dialogue
+  m_EditorClassIdentifier: 
+  AllowDialogueSave: 0
+  BlockingReopeningDialogue: 0
+  NodeLinkDatas:
+  - BaseNodeGuid: 42b9be1b-b421-4403-9a9b-6bda13e3d8cd
+    TargetNodeGuid: 9a35a278-8236-4347-8d4a-f48326fe100f
+  - BaseNodeGuid: 6fecca69-289f-4698-89fd-1f0dba46ea02
+    TargetNodeGuid: e62adf7d-3bb5-4822-967b-4321fcc33b34
+  - BaseNodeGuid: 6fecca69-289f-4698-89fd-1f0dba46ea02
+    TargetNodeGuid: 368aeab0-4a9d-4b12-9b19-6377731daa84
+  - BaseNodeGuid: 6fecca69-289f-4698-89fd-1f0dba46ea02
+    TargetNodeGuid: af68b57e-fb86-48d0-a3be-d057b8a9378b
+  - BaseNodeGuid: e62adf7d-3bb5-4822-967b-4321fcc33b34
+    TargetNodeGuid: ad7a5ad3-b19b-4575-896b-f5448f8bdda5
+  - BaseNodeGuid: 368aeab0-4a9d-4b12-9b19-6377731daa84
+    TargetNodeGuid: ad7a5ad3-b19b-4575-896b-f5448f8bdda5
+  - BaseNodeGuid: af68b57e-fb86-48d0-a3be-d057b8a9378b
+    TargetNodeGuid: ad7a5ad3-b19b-4575-896b-f5448f8bdda5
+  - BaseNodeGuid: ad7a5ad3-b19b-4575-896b-f5448f8bdda5
+    TargetNodeGuid: c5301e7d-91c5-4ab1-b94f-27175e7b3472
+  - BaseNodeGuid: 9a35a278-8236-4347-8d4a-f48326fe100f
+    TargetNodeGuid: 6fecca69-289f-4698-89fd-1f0dba46ea02
+  DialogueChoiceNodeDatas: []
+  DialogueNodeDatas:
+  - NodeGuid: 9a35a278-8236-4347-8d4a-f48326fe100f
+    Position: {x: -221, y: 71}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: fd1f60c396615934b8f45decfba0984a, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Now it will draw one of three possible dialogues
+    - languageEnum: 1
+      LanguageGenericType: "Teraz wylosuje jeden z trzech mo\uFFFDliwych dialog\uFFFDw"
+    Duration: 0
+  - NodeGuid: ad7a5ad3-b19b-4575-896b-f5448f8bdda5
+    Position: {x: 598, y: 97}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: fd1f60c396615934b8f45decfba0984a, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Simple? Simple
+    - languageEnum: 1
+      LanguageGenericType: Proste? Proste, a teraz spadaj
+    Duration: 3
+  - NodeGuid: e62adf7d-3bb5-4822-967b-4321fcc33b34
+    Position: {x: 284, y: -177}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: f33057471ba7cb745bb1196124241ef4, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Random Dialogue 1
+    - languageEnum: 1
+      LanguageGenericType: Losowy Dialog Nr. 1
+    Duration: 0
+  - NodeGuid: 368aeab0-4a9d-4b12-9b19-6377731daa84
+    Position: {x: 284, y: 96}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: f33057471ba7cb745bb1196124241ef4, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Random Dialogue 2
+    - languageEnum: 1
+      LanguageGenericType: Losowy Dialog Nr. 2
+    Duration: 0
+  - NodeGuid: af68b57e-fb86-48d0-a3be-d057b8a9378b
+    Position: {x: 284, y: 386}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: f33057471ba7cb745bb1196124241ef4, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Random Dialogue 3
+    - languageEnum: 1
+      LanguageGenericType: Losowy Dialog Nr. 3
+    Duration: 0
+  TimerChoiceNodeDatas: []
+  EndNodeDatas:
+  - NodeGuid: c5301e7d-91c5-4ab1-b94f-27175e7b3472
+    Position: {x: 832, y: 97}
+    EndNodeType: 0
+    Dialogue: {fileID: 0}
+  EventNodeDatas: []
+  StartNodeDatas:
+  - NodeGuid: 42b9be1b-b421-4403-9a9b-6bda13e3d8cd
+    Position: {x: -317, y: 73}
+    startID: 
+  RandomNodeDatas:
+  - NodeGuid: 6fecca69-289f-4698-89fd-1f0dba46ea02
+    Position: {x: 0, y: 73}
+    DialogueNodePorts:
+    - PortGuid: 
+      InputGuid: e62adf7d-3bb5-4822-967b-4321fcc33b34
+      OutputGuid: 6fecca69-289f-4698-89fd-1f0dba46ea02
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Choice 01
+      - languageEnum: 1
+        LanguageGenericType: Choice 01
+    - PortGuid: 
+      InputGuid: 368aeab0-4a9d-4b12-9b19-6377731daa84
+      OutputGuid: 6fecca69-289f-4698-89fd-1f0dba46ea02
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Choice 02
+      - languageEnum: 1
+        LanguageGenericType: Choice 02
+    - PortGuid: 
+      InputGuid: af68b57e-fb86-48d0-a3be-d057b8a9378b
+      OutputGuid: 6fecca69-289f-4698-89fd-1f0dba46ea02
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Choice 03
+      - languageEnum: 1
+        LanguageGenericType: Choice 03
+  CommandNodeDatas:
+  - NodeGuid: f0d2e569-0f2b-436c-b498-19e3501b64f1
+    Position: {x: -100, y: -41}
+    commmand: "This Dialogue Shows the Basic Capabilities \r\nRandom Node"
+  IfNodeDatas: []

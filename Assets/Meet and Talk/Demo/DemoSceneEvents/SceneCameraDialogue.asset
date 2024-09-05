@@ -1,0 +1,221 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1946feaec865d344dabf0419b1c94973, type: 3}
+  m_Name: SceneCameraDialogue
+  m_EditorClassIdentifier: 
+  AllowDialogueSave: 0
+  BlockingReopeningDialogue: 0
+  NodeLinkDatas:
+  - BaseNodeGuid: 985b4cfc-cc09-4149-b81b-6762673ca086
+    TargetNodeGuid: 651f3eb2-0d80-4f37-b1ee-7ed6db642937
+  - BaseNodeGuid: 2dbfd5ed-bf68-4a06-be30-9f3786384b71
+    TargetNodeGuid: 58dbf66d-2ca4-4608-8968-48b405cc8e78
+  - BaseNodeGuid: 651f3eb2-0d80-4f37-b1ee-7ed6db642937
+    TargetNodeGuid: 533837fb-a25f-4c35-a37a-c6cd1ac9c923
+  - BaseNodeGuid: f107650a-61de-4e1d-bc7e-ab245c002479
+    TargetNodeGuid: 158180ba-2148-4763-92e9-0c27d4d9377f
+  - BaseNodeGuid: 58dbf66d-2ca4-4608-8968-48b405cc8e78
+    TargetNodeGuid: b39b15d1-d0f5-4797-9463-6080fed87755
+  - BaseNodeGuid: 446f1bf5-542e-4821-b2d5-c916cef45d37
+    TargetNodeGuid: 74b9d4db-aba0-4d3c-be24-ec9c40ed39a5
+  - BaseNodeGuid: f396dfc2-5ec9-4f5d-88f4-2a8043e5c720
+    TargetNodeGuid: e65965af-ea53-4d06-a8bc-de751a345833
+  - BaseNodeGuid: 31dadd6e-5032-4033-a450-9eff538b3733
+    TargetNodeGuid: cd68daef-e0bb-494e-b495-b6b6e4781321
+  - BaseNodeGuid: 152b85a0-e351-40e8-83fc-383d49b1eaef
+    TargetNodeGuid: ad53bdd7-4474-4111-b047-e2ce44aceb78
+  - BaseNodeGuid: 533837fb-a25f-4c35-a37a-c6cd1ac9c923
+    TargetNodeGuid: f107650a-61de-4e1d-bc7e-ab245c002479
+  - BaseNodeGuid: 158180ba-2148-4763-92e9-0c27d4d9377f
+    TargetNodeGuid: f396dfc2-5ec9-4f5d-88f4-2a8043e5c720
+  - BaseNodeGuid: b39b15d1-d0f5-4797-9463-6080fed87755
+    TargetNodeGuid: 446f1bf5-542e-4821-b2d5-c916cef45d37
+  - BaseNodeGuid: 74b9d4db-aba0-4d3c-be24-ec9c40ed39a5
+    TargetNodeGuid: f396dfc2-5ec9-4f5d-88f4-2a8043e5c720
+  - BaseNodeGuid: e65965af-ea53-4d06-a8bc-de751a345833
+    TargetNodeGuid: 31dadd6e-5032-4033-a450-9eff538b3733
+  - BaseNodeGuid: cd68daef-e0bb-494e-b495-b6b6e4781321
+    TargetNodeGuid: 152b85a0-e351-40e8-83fc-383d49b1eaef
+  - BaseNodeGuid: ad53bdd7-4474-4111-b047-e2ce44aceb78
+    TargetNodeGuid: 6e95e409-455e-42f1-a4fd-a5938b8751ac
+  - BaseNodeGuid: 6e95e409-455e-42f1-a4fd-a5938b8751ac
+    TargetNodeGuid: 3b820cc9-6cc9-4d88-b500-c58d81b5a965
+  DialogueChoiceNodeDatas: []
+  DialogueNodeDatas:
+  - NodeGuid: 533837fb-a25f-4c35-a37a-c6cd1ac9c923
+    Position: {x: 509, y: 198}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 678429d34fece414fa04048861ddea01, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Hi, I'm Jay
+    - languageEnum: 1
+      LanguageGenericType: "Cze\u015B\u0107, jestem Jay"
+    Duration: 3
+  - NodeGuid: 158180ba-2148-4763-92e9-0c27d4d9377f
+    Position: {x: 1036, y: 198}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 678429d34fece414fa04048861ddea01, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: And this is my sister Ross
+    - languageEnum: 1
+      LanguageGenericType: A to moja siostra Ross
+    Duration: 3
+  - NodeGuid: b39b15d1-d0f5-4797-9463-6080fed87755
+    Position: {x: 509, y: 462}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 50cee5780230b184398241e45880d759, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Hi, I'm Ross
+    - languageEnum: 1
+      LanguageGenericType: "Cze\u015B\u0107, jestem Ross"
+    Duration: 3
+  - NodeGuid: 74b9d4db-aba0-4d3c-be24-ec9c40ed39a5
+    Position: {x: 1036, y: 462}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 50cee5780230b184398241e45880d759, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: And this is my brother Jay
+    - languageEnum: 1
+      LanguageGenericType: "A to jest m\xF3j brat Jay"
+    Duration: 3
+  - NodeGuid: e65965af-ea53-4d06-a8bc-de751a345833
+    Position: {x: 1617, y: 333}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 678429d34fece414fa04048861ddea01, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Now see if anyone else is in the room
+    - languageEnum: 1
+      LanguageGenericType: "Teraz sprawd\u017A, czy kto\u015B jeszcze jest w pokoju"
+    Duration: 5
+  - NodeGuid: cd68daef-e0bb-494e-b495-b6b6e4781321
+    Position: {x: 2154, y: 333}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 50cee5780230b184398241e45880d759, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: How's that? nice view?
+    - languageEnum: 1
+      LanguageGenericType: "I jak? \u0141adny widok?"
+    Duration: 4
+  - NodeGuid: ad53bdd7-4474-4111-b047-e2ce44aceb78
+    Position: {x: 2694, y: 333}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 50cee5780230b184398241e45880d759, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: That's all for now...
+    - languageEnum: 1
+      LanguageGenericType: Na razie to wszystko...
+    Duration: 3
+  TimerChoiceNodeDatas: []
+  EndNodeDatas:
+  - NodeGuid: 3b820cc9-6cc9-4d88-b500-c58d81b5a965
+    Position: {x: 3229, y: 333}
+    EndNodeType: 0
+    Dialogue: {fileID: 0}
+  EventNodeDatas:
+  - NodeGuid: 651f3eb2-0d80-4f37-b1ee-7ed6db642937
+    Position: {x: 187, y: 198}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: ca26a3bfc697ee84da4c0c8c0437f35a, type: 2}
+  - NodeGuid: f107650a-61de-4e1d-bc7e-ab245c002479
+    Position: {x: 725, y: 198}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: 8d64955a967584e498506b2a73e0d48a, type: 2}
+  - NodeGuid: 58dbf66d-2ca4-4608-8968-48b405cc8e78
+    Position: {x: 187, y: 462}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: 6310e11f6fe73dc46a4a214100f86777, type: 2}
+  - NodeGuid: 446f1bf5-542e-4821-b2d5-c916cef45d37
+    Position: {x: 725, y: 462}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: ca26a3bfc697ee84da4c0c8c0437f35a, type: 2}
+  - NodeGuid: f396dfc2-5ec9-4f5d-88f4-2a8043e5c720
+    Position: {x: 1297, y: 333}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: ca26a3bfc697ee84da4c0c8c0437f35a, type: 2}
+  - NodeGuid: 31dadd6e-5032-4033-a450-9eff538b3733
+    Position: {x: 1840, y: 333}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: 6310e11f6fe73dc46a4a214100f86777, type: 2}
+  - NodeGuid: 152b85a0-e351-40e8-83fc-383d49b1eaef
+    Position: {x: 2375, y: 333}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: 8d64955a967584e498506b2a73e0d48a, type: 2}
+  - NodeGuid: 6e95e409-455e-42f1-a4fd-a5938b8751ac
+    Position: {x: 2910, y: 333}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: 4fa2237387d7b06499f985e9b1d4ace3, type: 2}
+  StartNodeDatas:
+  - NodeGuid: 985b4cfc-cc09-4149-b81b-6762673ca086
+    Position: {x: 97, y: 198}
+    startID: Jay
+  - NodeGuid: 2dbfd5ed-bf68-4a06-be30-9f3786384b71
+    Position: {x: 97, y: 462}
+    startID: Ross
+  RandomNodeDatas: []
+  CommandNodeDatas: []
+  IfNodeDatas: []

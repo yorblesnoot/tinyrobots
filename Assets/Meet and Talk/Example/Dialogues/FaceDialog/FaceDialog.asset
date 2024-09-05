@@ -1,0 +1,254 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1946feaec865d344dabf0419b1c94973, type: 3}
+  m_Name: FaceDialog
+  m_EditorClassIdentifier: 
+  AllowDialogueSave: 0
+  BlockingReopeningDialogue: 0
+  NodeLinkDatas:
+  - BaseNodeGuid: 691a51a1-6684-41e4-b495-c7dd67a945d3
+    TargetNodeGuid: 9d5a6736-03cb-486d-b422-6253bb9de288
+  - BaseNodeGuid: 5f38d0e2-89c3-43b6-bd10-713200f73bc6
+    TargetNodeGuid: 5db23a8e-9812-4659-a642-82a4e7ad6797
+  - BaseNodeGuid: 5f38d0e2-89c3-43b6-bd10-713200f73bc6
+    TargetNodeGuid: 5db23a8e-9812-4659-a642-82a4e7ad6797
+  - BaseNodeGuid: 9d5a6736-03cb-486d-b422-6253bb9de288
+    TargetNodeGuid: 060b698b-3d61-447d-8984-62eb82ad59fd
+  - BaseNodeGuid: 060b698b-3d61-447d-8984-62eb82ad59fd
+    TargetNodeGuid: 5f4b0d1e-866c-4d5a-987e-85f3260fc0f8
+  - BaseNodeGuid: 5f4b0d1e-866c-4d5a-987e-85f3260fc0f8
+    TargetNodeGuid: 44a457ab-84a3-4531-9312-15dc5cd1a047
+  - BaseNodeGuid: 44a457ab-84a3-4531-9312-15dc5cd1a047
+    TargetNodeGuid: 0186faa6-302e-4653-8ce7-c7afc2b93b27
+  - BaseNodeGuid: 0186faa6-302e-4653-8ce7-c7afc2b93b27
+    TargetNodeGuid: 04e0ec48-86e0-472a-84b9-acc993e3e034
+  - BaseNodeGuid: 04e0ec48-86e0-472a-84b9-acc993e3e034
+    TargetNodeGuid: c474f21f-9cc6-4487-9a33-055992c7168d
+  - BaseNodeGuid: c474f21f-9cc6-4487-9a33-055992c7168d
+    TargetNodeGuid: 99965b48-19c5-487d-915e-668e4bad2382
+  - BaseNodeGuid: 99965b48-19c5-487d-915e-668e4bad2382
+    TargetNodeGuid: 1327adfb-42a4-459a-9b53-6dd6ff348398
+  - BaseNodeGuid: 1327adfb-42a4-459a-9b53-6dd6ff348398
+    TargetNodeGuid: 5f38d0e2-89c3-43b6-bd10-713200f73bc6
+  DialogueChoiceNodeDatas:
+  - NodeGuid: 1327adfb-42a4-459a-9b53-6dd6ff348398
+    Position: {x: 3950, y: 300}
+    DialogueNodePorts:
+    - PortGuid: fefc1086-0369-4b4d-97c1-19621509c4bb
+      InputGuid: 5f38d0e2-89c3-43b6-bd10-713200f73bc6
+      OutputGuid: 1327adfb-42a4-459a-9b53-6dd6ff348398
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: I understand
+      - languageEnum: 1
+        LanguageGenericType: Rozumiem
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 6c7c2303cba66254eb2469508683ee61, type: 2}
+    AvatarPos: 2
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Avatars also work in Choice Node
+    - languageEnum: 1
+      LanguageGenericType: "Awatary dzia\u0142aj\u0105 r\xF3wnie\u017C w Choice Node"
+    Duration: 2
+  DialogueNodeDatas:
+  - NodeGuid: 9d5a6736-03cb-486d-b422-6253bb9de288
+    Position: {x: 2196, y: 300}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 52bf713ca2c3ac34995eb97495258ba0, type: 2}
+    AvatarPos: 1
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: This Dialog shows an example use of Avatar Sprite
+    - languageEnum: 1
+      LanguageGenericType: "Ten Dialog pokazuje przyk\u0142adowe u\u017Cycie Avatar
+        Sprite"
+    Duration: 3
+  - NodeGuid: 060b698b-3d61-447d-8984-62eb82ad59fd
+    Position: {x: 2425, y: 300}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 6c7c2303cba66254eb2469508683ee61, type: 2}
+    AvatarPos: 2
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Supports various positions of the Avatar
+    - languageEnum: 1
+      LanguageGenericType: "Obs\u0142uguje r\xF3\u017Cne pozycje Awatara"
+    Duration: 2
+  - NodeGuid: 5f4b0d1e-866c-4d5a-987e-85f3260fc0f8
+    Position: {x: 2640, y: 300}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 6c7c2303cba66254eb2469508683ee61, type: 2}
+    AvatarPos: 2
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Now how about some sample emotions
+    - languageEnum: 1
+      LanguageGenericType: "To teraz mo\u017Ce kilka przyk\u0142adowych emocji"
+    Duration: 2
+  - NodeGuid: 44a457ab-84a3-4531-9312-15dc5cd1a047
+    Position: {x: 2858, y: 300}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 52bf713ca2c3ac34995eb97495258ba0, type: 2}
+    AvatarPos: 1
+    AvatarType: 1
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Smile
+    - languageEnum: 1
+      LanguageGenericType: "U\u015Bmiech"
+    Duration: 3
+  - NodeGuid: 0186faa6-302e-4653-8ce7-c7afc2b93b27
+    Position: {x: 3075, y: 300}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 6c7c2303cba66254eb2469508683ee61, type: 2}
+    AvatarPos: 2
+    AvatarType: 2
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Surprised
+    - languageEnum: 1
+      LanguageGenericType: Zaskoczony
+    Duration: 3
+  - NodeGuid: 04e0ec48-86e0-472a-84b9-acc993e3e034
+    Position: {x: 3294, y: 300}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 52bf713ca2c3ac34995eb97495258ba0, type: 2}
+    AvatarPos: 1
+    AvatarType: 3
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Disgusted
+    - languageEnum: 1
+      LanguageGenericType: Zniesmaczony
+    Duration: 3
+  - NodeGuid: c474f21f-9cc6-4487-9a33-055992c7168d
+    Position: {x: 3517, y: 300}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 6c7c2303cba66254eb2469508683ee61, type: 2}
+    AvatarPos: 2
+    AvatarType: 4
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Cry
+    - languageEnum: 1
+      LanguageGenericType: "P\u0142acz"
+    Duration: 3
+  - NodeGuid: 99965b48-19c5-487d-915e-668e4bad2382
+    Position: {x: 3737, y: 300}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 52bf713ca2c3ac34995eb97495258ba0, type: 2}
+    AvatarPos: 1
+    AvatarType: 5
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Anger
+    - languageEnum: 1
+      LanguageGenericType: "Z\u0142o\u015B\u0107"
+    Duration: 3
+  TimerChoiceNodeDatas:
+  - NodeGuid: 5f38d0e2-89c3-43b6-bd10-713200f73bc6
+    Position: {x: 4274, y: 300}
+    DialogueNodePorts:
+    - PortGuid: 1217acff-645c-4e0d-981b-73ae2349cbd2
+      InputGuid: 5db23a8e-9812-4659-a642-82a4e7ad6797
+      OutputGuid: 5f38d0e2-89c3-43b6-bd10-713200f73bc6
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Choice 01
+      - languageEnum: 1
+        LanguageGenericType: Choice 01
+    - PortGuid: 5b242a4e-01fc-4e58-a660-6d9b514d1b65
+      InputGuid: 5db23a8e-9812-4659-a642-82a4e7ad6797
+      OutputGuid: 5f38d0e2-89c3-43b6-bd10-713200f73bc6
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: I understand that too
+      - languageEnum: 1
+        LanguageGenericType: "To te\u017C rozumiem"
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 52bf713ca2c3ac34995eb97495258ba0, type: 2}
+    AvatarPos: 1
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Avatars also work in Timer Choice Node
+    - languageEnum: 1
+      LanguageGenericType: "Awatary r\xF3wnie\u017C dzia\u0142aj\u0105 w Timer Choice
+        Node"
+    Duration: 2
+    time: 4
+  EndNodeDatas:
+  - NodeGuid: 5db23a8e-9812-4659-a642-82a4e7ad6797
+    Position: {x: 4600, y: 300}
+    EndNodeType: 0
+    Dialogue: {fileID: 0}
+  EventNodeDatas: []
+  StartNodeDatas:
+  - NodeGuid: 691a51a1-6684-41e4-b495-c7dd67a945d3
+    Position: {x: 2099, y: 300}
+    startID: 
+  RandomNodeDatas: []
+  CommandNodeDatas: []
+  IfNodeDatas: []

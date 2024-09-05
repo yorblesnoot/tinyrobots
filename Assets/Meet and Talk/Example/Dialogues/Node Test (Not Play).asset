@@ -1,0 +1,172 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1946feaec865d344dabf0419b1c94973, type: 3}
+  m_Name: Node Test (Not Play)
+  m_EditorClassIdentifier: 
+  AllowDialogueSave: 0
+  BlockingReopeningDialogue: 0
+  NodeLinkDatas: []
+  DialogueChoiceNodeDatas:
+  - NodeGuid: ba35f36e-65d7-488d-9dea-364b80238d26
+    Position: {x: -173.6, y: 293.6}
+    DialogueNodePorts:
+    - PortGuid: 4c0ecf9c-2fd0-4db0-9ad6-e28569c8511c
+      InputGuid: 
+      OutputGuid: 
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Choice 01
+      - languageEnum: 1
+        LanguageGenericType: "Wyb\xF3r 01"
+    - PortGuid: 6ae65fad-33ed-41d5-9543-41503f3e22a9
+      InputGuid: 
+      OutputGuid: 
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Choice 02
+      - languageEnum: 1
+        LanguageGenericType: "Wyb\xF3r 02"
+    - PortGuid: e0e1b72e-c717-4923-9c89-085570a53e67
+      InputGuid: 
+      OutputGuid: 
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Choice 03
+      - languageEnum: 1
+        LanguageGenericType: "Wyb\xF3r 03"
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 0}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Choice List
+    - languageEnum: 1
+      LanguageGenericType: Lista wyboru
+    Duration: 5
+  DialogueNodeDatas:
+  - NodeGuid: 18b6e493-da96-466b-ac9e-95b8e63a9885
+    Position: {x: 567.2, y: -66.399994}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 0}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Hellish Battle
+    - languageEnum: 1
+      LanguageGenericType: Piekielna bitwa
+    Duration: 10
+  TimerChoiceNodeDatas:
+  - NodeGuid: c9af7116-7b71-4217-a575-e7d29a83ca2d
+    Position: {x: 467.2, y: 293.6}
+    DialogueNodePorts:
+    - PortGuid: 4818a527-40c1-466c-81b7-182cb19b93ae
+      InputGuid: 
+      OutputGuid: 
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Choice 01
+      - languageEnum: 1
+        LanguageGenericType: Choice 01
+    - PortGuid: 7d373f4e-350c-4a59-9269-29f26d33d373
+      InputGuid: 
+      OutputGuid: 
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Choice 01
+      - languageEnum: 1
+        LanguageGenericType: Choice 01
+    - PortGuid: eae66ff9-eb14-45a9-9dfb-d0659f8fbb3e
+      InputGuid: 
+      OutputGuid: 
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Choice 01
+      - languageEnum: 1
+        LanguageGenericType: Choice 01
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 0}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: 
+    - languageEnum: 1
+      LanguageGenericType: 
+    Duration: 5
+    time: 10
+  EndNodeDatas:
+  - NodeGuid: 99370ade-0484-4c83-a84b-64ecf0ebf5c1
+    Position: {x: 66.4, y: -164}
+    EndNodeType: 0
+    Dialogue: {fileID: 11400000, guid: 55535d57830217f44aa4aefda36499b7, type: 2}
+  EventNodeDatas:
+  - NodeGuid: e9346e2b-6ab0-4fff-a105-4e44650950e1
+    Position: {x: 148.8, y: 293.6}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: 7ac8d6c29f4beb34ab2719c7abc3c534,
+        type: 2}
+    - DialogueEventSO: {fileID: 0}
+  StartNodeDatas:
+  - NodeGuid: dcb57306-3d99-4679-baf6-602102448712
+    Position: {x: 203.2, y: 56.8}
+    startID: 
+  RandomNodeDatas:
+  - NodeGuid: 09d34ce1-34bf-4f14-85d2-04da0d8e4b7c
+    Position: {x: -173.6, y: 50.399998}
+    DialogueNodePorts:
+    - PortGuid: 
+      InputGuid: 
+      OutputGuid: 
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Choice 01
+      - languageEnum: 1
+        LanguageGenericType: Choice 01
+    - PortGuid: 
+      InputGuid: 
+      OutputGuid: 
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Choice 02
+      - languageEnum: 1
+        LanguageGenericType: Choice 02
+  CommandNodeDatas:
+  - NodeGuid: bc58ee2c-8cb0-43c2-9c09-9d4bc8008209
+    Position: {x: 248.8, y: -268.8}
+    commmand: 'Dialogue Validation
+
+
+      there will be an option to disable in
+      Project Settings'
+  IfNodeDatas:
+  - NodeGuid: 37d7e035-c1ab-423c-84b4-ce2965551c19
+    Position: {x: 348.8, y: -6.3999996}
+    ValueName: DEMO_GOLD
+    Operations: 0
+    OperationValue: 55
+    TrueGUID: 
+    FalseGUID: 

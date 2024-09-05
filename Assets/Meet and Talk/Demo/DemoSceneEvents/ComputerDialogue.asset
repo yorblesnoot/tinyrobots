@@ -1,0 +1,421 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1946feaec865d344dabf0419b1c94973, type: 3}
+  m_Name: ComputerDialogue
+  m_EditorClassIdentifier: 
+  AllowDialogueSave: 0
+  BlockingReopeningDialogue: 0
+  NodeLinkDatas:
+  - BaseNodeGuid: 3511c8c8-d689-407a-b73d-bf9ef1cd8e97
+    TargetNodeGuid: da9f49da-1b96-4da4-8daf-62a4c1da38d8
+  - BaseNodeGuid: dd4b1916-a8c4-48a2-abdf-d51af02a9d16
+    TargetNodeGuid: 52507d20-700d-4e8e-a339-38e911ba2b29
+  - BaseNodeGuid: 7aa98719-5108-4116-ad8b-c2a3acec4cb6
+    TargetNodeGuid: 3c07bb61-a6bc-4d08-924d-cd2a72688b5b
+  - BaseNodeGuid: 3d331b81-cfbd-4ba8-82ff-a410be988325
+    TargetNodeGuid: 3c07bb61-a6bc-4d08-924d-cd2a72688b5b
+  - BaseNodeGuid: 3c07bb61-a6bc-4d08-924d-cd2a72688b5b
+    TargetNodeGuid: 7aa417cc-684d-43ca-803b-01d9c05883ba
+  - BaseNodeGuid: 3c07bb61-a6bc-4d08-924d-cd2a72688b5b
+    TargetNodeGuid: b072c73d-fe30-4dd8-8208-802311c5995b
+  - BaseNodeGuid: 43d6e621-fb84-4f17-be28-86ebd0b8193d
+    TargetNodeGuid: 7aa98719-5108-4116-ad8b-c2a3acec4cb6
+  - BaseNodeGuid: 43d6e621-fb84-4f17-be28-86ebd0b8193d
+    TargetNodeGuid: 7aa98719-5108-4116-ad8b-c2a3acec4cb6
+  - BaseNodeGuid: 4438a834-d2ae-443b-8cc8-806f99e7fc57
+    TargetNodeGuid: 3d331b81-cfbd-4ba8-82ff-a410be988325
+  - BaseNodeGuid: 4438a834-d2ae-443b-8cc8-806f99e7fc57
+    TargetNodeGuid: 3d331b81-cfbd-4ba8-82ff-a410be988325
+  - BaseNodeGuid: 3dd58bf0-4a2d-4bb1-8523-3938cdad3e90
+    TargetNodeGuid: 1de1ad12-501f-4f2c-b1da-ff597fe5466d
+  - BaseNodeGuid: 3dd58bf0-4a2d-4bb1-8523-3938cdad3e90
+    TargetNodeGuid: 986980db-d072-47e7-a179-72440c3f68c9
+  - BaseNodeGuid: 3dd58bf0-4a2d-4bb1-8523-3938cdad3e90
+    TargetNodeGuid: 3c9e0c9a-3e49-4a03-844b-e2b6ba267401
+  - BaseNodeGuid: 3c9e0c9a-3e49-4a03-844b-e2b6ba267401
+    TargetNodeGuid: 101cc03a-2613-4e7f-9df5-218c79eefaab
+  - BaseNodeGuid: 1de1ad12-501f-4f2c-b1da-ff597fe5466d
+    TargetNodeGuid: 101cc03a-2613-4e7f-9df5-218c79eefaab
+  - BaseNodeGuid: 986980db-d072-47e7-a179-72440c3f68c9
+    TargetNodeGuid: 101cc03a-2613-4e7f-9df5-218c79eefaab
+  - BaseNodeGuid: 101cc03a-2613-4e7f-9df5-218c79eefaab
+    TargetNodeGuid: 3c07bb61-a6bc-4d08-924d-cd2a72688b5b
+  - BaseNodeGuid: 52507d20-700d-4e8e-a339-38e911ba2b29
+    TargetNodeGuid: b072c73d-fe30-4dd8-8208-802311c5995b
+  - BaseNodeGuid: da9f49da-1b96-4da4-8daf-62a4c1da38d8
+    TargetNodeGuid: 7aa417cc-684d-43ca-803b-01d9c05883ba
+  - BaseNodeGuid: 78f2c49f-95a9-4d8f-b6a4-359683ff25da
+    TargetNodeGuid: 29f6b6a4-44b5-4c93-9a28-943ad594554b
+  - BaseNodeGuid: 95e7eff7-5583-44fc-ad7f-7425457e87d8
+    TargetNodeGuid: 3c07bb61-a6bc-4d08-924d-cd2a72688b5b
+  - BaseNodeGuid: 86a60284-7555-480f-8e20-7d43bbaef150
+    TargetNodeGuid: 3c07bb61-a6bc-4d08-924d-cd2a72688b5b
+  - BaseNodeGuid: 7aa417cc-684d-43ca-803b-01d9c05883ba
+    TargetNodeGuid: 3511c8c8-d689-407a-b73d-bf9ef1cd8e97
+  - BaseNodeGuid: 7aa417cc-684d-43ca-803b-01d9c05883ba
+    TargetNodeGuid: 43d6e621-fb84-4f17-be28-86ebd0b8193d
+  - BaseNodeGuid: 7aa417cc-684d-43ca-803b-01d9c05883ba
+    TargetNodeGuid: 4438a834-d2ae-443b-8cc8-806f99e7fc57
+  - BaseNodeGuid: 7aa417cc-684d-43ca-803b-01d9c05883ba
+    TargetNodeGuid: 78f2c49f-95a9-4d8f-b6a4-359683ff25da
+  - BaseNodeGuid: b072c73d-fe30-4dd8-8208-802311c5995b
+    TargetNodeGuid: dd4b1916-a8c4-48a2-abdf-d51af02a9d16
+  - BaseNodeGuid: b072c73d-fe30-4dd8-8208-802311c5995b
+    TargetNodeGuid: 43d6e621-fb84-4f17-be28-86ebd0b8193d
+  - BaseNodeGuid: b072c73d-fe30-4dd8-8208-802311c5995b
+    TargetNodeGuid: 4438a834-d2ae-443b-8cc8-806f99e7fc57
+  - BaseNodeGuid: b072c73d-fe30-4dd8-8208-802311c5995b
+    TargetNodeGuid: 78f2c49f-95a9-4d8f-b6a4-359683ff25da
+  - BaseNodeGuid: d5d9dc81-0fee-416a-b415-cf2fbcdc28f7
+    TargetNodeGuid: 3dd58bf0-4a2d-4bb1-8523-3938cdad3e90
+  - BaseNodeGuid: 99945981-8e18-4bdd-b1ac-19923b6d0e76
+    TargetNodeGuid: d5d9dc81-0fee-416a-b415-cf2fbcdc28f7
+  DialogueChoiceNodeDatas:
+  - NodeGuid: 7aa417cc-684d-43ca-803b-01d9c05883ba
+    Position: {x: 1155, y: 200}
+    DialogueNodePorts:
+    - PortGuid: d66c8322-c74f-4093-9abd-242e7fb4e3a2
+      InputGuid: 3511c8c8-d689-407a-b73d-bf9ef1cd8e97
+      OutputGuid: 7aa417cc-684d-43ca-803b-01d9c05883ba
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Switch off alarm
+      - languageEnum: 1
+        LanguageGenericType: "Wy\u0142\u0105czanie alarmu"
+    - PortGuid: b7162b0d-904f-4a04-8631-cdc7ca5fb46e
+      InputGuid: 43d6e621-fb84-4f17-be28-86ebd0b8193d
+      OutputGuid: 7aa417cc-684d-43ca-803b-01d9c05883ba
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Open Doors
+      - languageEnum: 1
+        LanguageGenericType: Otwarte drzwi
+    - PortGuid: de545e94-3e39-4148-8d53-6c628a47e5c8
+      InputGuid: 4438a834-d2ae-443b-8cc8-806f99e7fc57
+      OutputGuid: 7aa417cc-684d-43ca-803b-01d9c05883ba
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Close the Door
+      - languageEnum: 1
+        LanguageGenericType: Zamknij drzwi
+    - PortGuid: 023b6c87-dc92-41c7-8bc7-0500bdd8dd28
+      InputGuid: 78f2c49f-95a9-4d8f-b6a4-359683ff25da
+      OutputGuid: 7aa417cc-684d-43ca-803b-01d9c05883ba
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Close Program
+      - languageEnum: 1
+        LanguageGenericType: "Program zamkni\u0119cia"
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 1f96ff5ff4f1bf449a577ae22d5ebd93, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: What can I do for you?
+    - languageEnum: 1
+      LanguageGenericType: "Co mog\u0119 dla ciebie zrobi\u0107?"
+    Duration: 2
+  - NodeGuid: b072c73d-fe30-4dd8-8208-802311c5995b
+    Position: {x: 1155, y: 555}
+    DialogueNodePorts:
+    - PortGuid: 481db435-0c6f-4367-ad2a-d0ba9beb6969
+      InputGuid: dd4b1916-a8c4-48a2-abdf-d51af02a9d16
+      OutputGuid: b072c73d-fe30-4dd8-8208-802311c5995b
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Activate alarm
+      - languageEnum: 1
+        LanguageGenericType: Aktywacja alarmu
+    - PortGuid: d23935dd-bf91-4610-95dc-5dce13b8543c
+      InputGuid: 43d6e621-fb84-4f17-be28-86ebd0b8193d
+      OutputGuid: b072c73d-fe30-4dd8-8208-802311c5995b
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Open Doors
+      - languageEnum: 1
+        LanguageGenericType: Otwarte drzwi
+    - PortGuid: 9fa376bc-d77b-478b-b381-e1c4f329a1ed
+      InputGuid: 4438a834-d2ae-443b-8cc8-806f99e7fc57
+      OutputGuid: b072c73d-fe30-4dd8-8208-802311c5995b
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Close the Door
+      - languageEnum: 1
+        LanguageGenericType: Zamknij drzwi
+    - PortGuid: f3da73f8-a169-47e4-a11e-8efdef4cb5e3
+      InputGuid: 78f2c49f-95a9-4d8f-b6a4-359683ff25da
+      OutputGuid: b072c73d-fe30-4dd8-8208-802311c5995b
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Close Program
+      - languageEnum: 1
+        LanguageGenericType: "Program zamkni\u0119cia"
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 1f96ff5ff4f1bf449a577ae22d5ebd93, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: What can I do for you?
+    - languageEnum: 1
+      LanguageGenericType: "Co mog\u0119 dla ciebie zrobi\u0107?"
+    Duration: 2
+  DialogueNodeDatas:
+  - NodeGuid: 3c9e0c9a-3e49-4a03-844b-e2b6ba267401
+    Position: {x: 441, y: -124}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 1f96ff5ff4f1bf449a577ae22d5ebd93, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Version 1.3.324.234.2a
+    - languageEnum: 1
+      LanguageGenericType: Wersja 1.3.324.234.2a
+    Duration: 2
+  - NodeGuid: 1de1ad12-501f-4f2c-b1da-ff597fe5466d
+    Position: {x: 441, y: 200}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 1f96ff5ff4f1bf449a577ae22d5ebd93, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Loading...
+    - languageEnum: 1
+      LanguageGenericType: "\u0141adowanie..."
+    Duration: 2
+  - NodeGuid: 986980db-d072-47e7-a179-72440c3f68c9
+    Position: {x: 441, y: 523}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 1f96ff5ff4f1bf449a577ae22d5ebd93, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: .... . .-.. .-.. .. ... .... / -... .- - - .-.. .
+    - languageEnum: 1
+      LanguageGenericType: .... . .-.. .-.. .. ... .... / -... .- - - .-.. .
+    Duration: 4
+  - NodeGuid: 101cc03a-2613-4e7f-9df5-218c79eefaab
+    Position: {x: 702, y: 200}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 1f96ff5ff4f1bf449a577ae22d5ebd93, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Hello User!
+    - languageEnum: 1
+      LanguageGenericType: "Witaj u\u017Cytkowniku!"
+    Duration: 2
+  - NodeGuid: 52507d20-700d-4e8e-a339-38e911ba2b29
+    Position: {x: 1797, y: 523}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 1f96ff5ff4f1bf449a577ae22d5ebd93, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Alarm on
+    - languageEnum: 1
+      LanguageGenericType: "Alarm w\u0142\u0105czony"
+    Duration: 2
+  - NodeGuid: da9f49da-1b96-4da4-8daf-62a4c1da38d8
+    Position: {x: 1797, y: 200}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 1f96ff5ff4f1bf449a577ae22d5ebd93, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Alarm disabled
+    - languageEnum: 1
+      LanguageGenericType: "Alarm wy\u0142\u0105czony"
+    Duration: 2
+  - NodeGuid: 78f2c49f-95a9-4d8f-b6a4-359683ff25da
+    Position: {x: 2462, y: 423}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 1f96ff5ff4f1bf449a577ae22d5ebd93, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Goodbye
+    - languageEnum: 1
+      LanguageGenericType: Do widzenia
+    Duration: 2
+  - NodeGuid: 95e7eff7-5583-44fc-ad7f-7425457e87d8
+    Position: {x: 2462, y: -64}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 1f96ff5ff4f1bf449a577ae22d5ebd93, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: The doors are already open
+    - languageEnum: 1
+      LanguageGenericType: "Drzwi s\u0105 ju\u017C otwarte"
+    Duration: 3
+  - NodeGuid: 86a60284-7555-480f-8e20-7d43bbaef150
+    Position: {x: 2462, y: 1085}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 1f96ff5ff4f1bf449a577ae22d5ebd93, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: The door is already closed
+    - languageEnum: 1
+      LanguageGenericType: "Drzwi s\u0105 ju\u017C zamkni\u0119te"
+    Duration: 3
+  TimerChoiceNodeDatas: []
+  EndNodeDatas:
+  - NodeGuid: 29f6b6a4-44b5-4c93-9a28-943ad594554b
+    Position: {x: 2679, y: 423}
+    EndNodeType: 0
+    Dialogue: {fileID: 0}
+  EventNodeDatas:
+  - NodeGuid: 3511c8c8-d689-407a-b73d-bf9ef1cd8e97
+    Position: {x: 1476, y: 200}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: b5ceca9f2b5fa5e4a9ea646349303d72, type: 2}
+    - DialogueEventSO: {fileID: 11400000, guid: bbff8bccb82f43c4f8cbe8cc811caaff, type: 2}
+  - NodeGuid: dd4b1916-a8c4-48a2-abdf-d51af02a9d16
+    Position: {x: 1476, y: 523}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: 23db907e64d1f5546a77695b1af33a95, type: 2}
+    - DialogueEventSO: {fileID: 11400000, guid: cdffed4532a8aa540bd3dd2aca55bc6d, type: 2}
+  - NodeGuid: 7aa98719-5108-4116-ad8b-c2a3acec4cb6
+    Position: {x: 2462, y: -312}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: 3e34ca9f6d6a89040a7c14bec2a1c8ef, type: 2}
+    - DialogueEventSO: {fileID: 11400000, guid: cb3d4b438dba2e742803b33fe724eb2d, type: 2}
+  - NodeGuid: 3d331b81-cfbd-4ba8-82ff-a410be988325
+    Position: {x: 2462, y: 835}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: 4fa4a83cca44c9f47a34c431d3df53b2, type: 2}
+    - DialogueEventSO: {fileID: 11400000, guid: c82d47cd19b3a5b489ddf95bccaf1519, type: 2}
+  - NodeGuid: d5d9dc81-0fee-416a-b415-cf2fbcdc28f7
+    Position: {x: -116, y: 200}
+    EventScriptableObjects:
+    - DialogueEventSO: {fileID: 11400000, guid: bbff8bccb82f43c4f8cbe8cc811caaff, type: 2}
+    - DialogueEventSO: {fileID: 11400000, guid: c82d47cd19b3a5b489ddf95bccaf1519, type: 2}
+  StartNodeDatas:
+  - NodeGuid: 99945981-8e18-4bdd-b1ac-19923b6d0e76
+    Position: {x: -202, y: 200}
+    startID: 
+  RandomNodeDatas:
+  - NodeGuid: 3dd58bf0-4a2d-4bb1-8523-3938cdad3e90
+    Position: {x: 197, y: 200}
+    DialogueNodePorts:
+    - PortGuid: 
+      InputGuid: 1de1ad12-501f-4f2c-b1da-ff597fe5466d
+      OutputGuid: 3dd58bf0-4a2d-4bb1-8523-3938cdad3e90
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Choice 01
+      - languageEnum: 1
+        LanguageGenericType: Choice 01
+    - PortGuid: 
+      InputGuid: 986980db-d072-47e7-a179-72440c3f68c9
+      OutputGuid: 3dd58bf0-4a2d-4bb1-8523-3938cdad3e90
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Choice 02
+      - languageEnum: 1
+        LanguageGenericType: Choice 02
+    - PortGuid: 
+      InputGuid: 3c9e0c9a-3e49-4a03-844b-e2b6ba267401
+      OutputGuid: 3dd58bf0-4a2d-4bb1-8523-3938cdad3e90
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Choice 03
+      - languageEnum: 1
+        LanguageGenericType: Choice 03
+  CommandNodeDatas: []
+  IfNodeDatas:
+  - NodeGuid: 3c07bb61-a6bc-4d08-924d-cd2a72688b5b
+    Position: {x: 929, y: 200}
+    ValueName: SceneEvent_Alarm
+    Operations: 0
+    OperationValue: 
+    TrueGUID: 7aa417cc-684d-43ca-803b-01d9c05883ba
+    FalseGUID: b072c73d-fe30-4dd8-8208-802311c5995b
+  - NodeGuid: 43d6e621-fb84-4f17-be28-86ebd0b8193d
+    Position: {x: 2216, y: -312}
+    ValueName: SceneEvent_Door
+    Operations: 0
+    OperationValue: 
+    TrueGUID: 7aa98719-5108-4116-ad8b-c2a3acec4cb6
+    FalseGUID: 7aa98719-5108-4116-ad8b-c2a3acec4cb6
+  - NodeGuid: 4438a834-d2ae-443b-8cc8-806f99e7fc57
+    Position: {x: 2216, y: 915}
+    ValueName: SceneEvent_Door
+    Operations: 0
+    OperationValue: 
+    TrueGUID: 3d331b81-cfbd-4ba8-82ff-a410be988325
+    FalseGUID: 3d331b81-cfbd-4ba8-82ff-a410be988325

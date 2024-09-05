@@ -8,16 +8,16 @@ public class EncounterMission : Mission
     [SerializeField] int difficultyDivisor = 2;
     [HideInInspector] public List<SpawnZone> SpawnZones;
 
-    public override bool MetEndCondition(TurnManager turnManager, BattleEnder battleEnder)
+    public override bool MetEndCondition(TurnManager turnManager)
     {
         if (TurnManager.TurnTakers.Where(bot => bot.Allegiance == Allegiance.PLAYER).Count() == 0)
         {
-            battleEnder.GameOver();
+            BattleEnder.GameOver();
             return true;
         }
         else if (TurnManager.TurnTakers.Where(bot => bot.Allegiance == Allegiance.ENEMY).Count() == 0)
         {
-            battleEnder.PlayerWin();
+            BattleEnder.PlayerWin();
             return true;
         }
         return false;

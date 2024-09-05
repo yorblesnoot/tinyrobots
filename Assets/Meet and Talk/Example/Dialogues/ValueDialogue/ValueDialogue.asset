@@ -1,0 +1,329 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1946feaec865d344dabf0419b1c94973, type: 3}
+  m_Name: ValueDialogue
+  m_EditorClassIdentifier: 
+  AllowDialogueSave: 0
+  BlockingReopeningDialogue: 0
+  NodeLinkDatas:
+  - BaseNodeGuid: 65ed98cd-469f-4d35-89ee-862cf0f8f308
+    TargetNodeGuid: cba74740-57e7-430a-88f3-36cef6321a43
+  - BaseNodeGuid: 794f2518-e80c-4124-b2b6-3909681c3ed7
+    TargetNodeGuid: 7d8a8646-911b-418b-bb43-5d102b052afb
+  - BaseNodeGuid: 794f2518-e80c-4124-b2b6-3909681c3ed7
+    TargetNodeGuid: e71eeffa-93f2-4243-a62f-3ebb780a71be
+  - BaseNodeGuid: dae22c02-60ce-45db-be54-23b7c93afbca
+    TargetNodeGuid: baabf076-a943-4067-8dae-d330ac44ba3f
+  - BaseNodeGuid: baabf076-a943-4067-8dae-d330ac44ba3f
+    TargetNodeGuid: 182c15af-2063-427f-a51f-c01d2e9da663
+  - BaseNodeGuid: aeb33eb9-9725-4b52-bb50-5801f85a9f5c
+    TargetNodeGuid: 375a8047-0f4c-462e-8dee-2da1ad5fa88f
+  - BaseNodeGuid: 182c15af-2063-427f-a51f-c01d2e9da663
+    TargetNodeGuid: f33f9ad7-5fbe-4e86-8282-d37ae6d5c75f
+  - BaseNodeGuid: 7d24ef3e-0661-4afa-ab8f-944f3152b983
+    TargetNodeGuid: e71de102-e8b8-405d-a08c-a62b24596d56
+  - BaseNodeGuid: e71de102-e8b8-405d-a08c-a62b24596d56
+    TargetNodeGuid: 92b97e3d-152d-4f15-b6fd-5e2e63d8e4e4
+  - BaseNodeGuid: 375a8047-0f4c-462e-8dee-2da1ad5fa88f
+    TargetNodeGuid: 794f2518-e80c-4124-b2b6-3909681c3ed7
+  - BaseNodeGuid: 7d8a8646-911b-418b-bb43-5d102b052afb
+    TargetNodeGuid: 502d9370-3cb6-4529-b219-b616620d12d1
+  - BaseNodeGuid: e71eeffa-93f2-4243-a62f-3ebb780a71be
+    TargetNodeGuid: 502d9370-3cb6-4529-b219-b616620d12d1
+  - BaseNodeGuid: f33f9ad7-5fbe-4e86-8282-d37ae6d5c75f
+    TargetNodeGuid: 928dbb1a-6b10-4e4f-9865-cb5a5b6f585f
+  - BaseNodeGuid: 928dbb1a-6b10-4e4f-9865-cb5a5b6f585f
+    TargetNodeGuid: 5deff867-f0b9-415d-b9e0-567f0cf10a18
+  - BaseNodeGuid: 5deff867-f0b9-415d-b9e0-567f0cf10a18
+    TargetNodeGuid: 7d24ef3e-0661-4afa-ab8f-944f3152b983
+  - BaseNodeGuid: cba74740-57e7-430a-88f3-36cef6321a43
+    TargetNodeGuid: dae22c02-60ce-45db-be54-23b7c93afbca
+  - BaseNodeGuid: cba74740-57e7-430a-88f3-36cef6321a43
+    TargetNodeGuid: aeb33eb9-9725-4b52-bb50-5801f85a9f5c
+  DialogueChoiceNodeDatas:
+  - NodeGuid: cba74740-57e7-430a-88f3-36cef6321a43
+    Position: {x: -196, y: 185.6}
+    DialogueNodePorts:
+    - PortGuid: de219fa6-eb17-4adb-8944-d16916353002
+      InputGuid: dae22c02-60ce-45db-be54-23b7c93afbca
+      OutputGuid: cba74740-57e7-430a-88f3-36cef6321a43
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Variables in the dialogue
+      - languageEnum: 1
+        LanguageGenericType: Zmienne w dialogu
+    - PortGuid: 72921e9d-9457-4220-8132-0fe4451ea21f
+      InputGuid: aeb33eb9-9725-4b52-bb50-5801f85a9f5c
+      OutputGuid: cba74740-57e7-430a-88f3-36cef6321a43
+      TextLanguage:
+      - languageEnum: 0
+        LanguageGenericType: Currency Demo
+      - languageEnum: 1
+        LanguageGenericType: Demo Waluty
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: e916db5d586e8314d8bf677855d54ea6, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: What do you want to try out?
+    - languageEnum: 1
+      LanguageGenericType: "Co chcesz wypr\xF3bowa\u0107?"
+    Duration: 5
+  DialogueNodeDatas:
+  - NodeGuid: dae22c02-60ce-45db-be54-23b7c93afbca
+    Position: {x: 125.6, y: 191.2}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: e916db5d586e8314d8bf677855d54ea6, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: From now on you can use Global Value in Dialogues
+    - languageEnum: 1
+      LanguageGenericType: "Od teraz mo\u017Cesz u\u017Cywa\u0107 Global Value w
+        Dialogach"
+    Duration: 10
+  - NodeGuid: baabf076-a943-4067-8dae-d330ac44ba3f
+    Position: {x: 341.6, y: 191.2}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 0}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: This now goes to the variables
+    - languageEnum: 1
+      LanguageGenericType: To teraz przechodzimy do zmiennych
+    Duration: 10
+  - NodeGuid: aeb33eb9-9725-4b52-bb50-5801f85a9f5c
+    Position: {x: 125.6, y: 509.59998}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: e916db5d586e8314d8bf677855d54ea6, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: You have <color=#d4af37>{DEMO_GOLD}</color> Gold
+    - languageEnum: 1
+      LanguageGenericType: "Masz <color=#d4af37> {DEMO_GOLD}</color> Z\u0142ota"
+    Duration: 10
+  - NodeGuid: 182c15af-2063-427f-a51f-c01d2e9da663
+    Position: {x: 557.60004, y: 185.6}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 2e32fce93d6416647a0d4fd3c2ad917c, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: "Player level: {DEMO_Level} Int variable \u2018DEMO_Level\u2019"
+    - languageEnum: 1
+      LanguageGenericType: 'Poziom Gracza: {DEMO_Level}
+
+        Zmienna Int "DEMO_Level"'
+    Duration: 10
+  - NodeGuid: 7d24ef3e-0661-4afa-ab8f-944f3152b983
+    Position: {x: 1453.6, y: 185.6}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 0}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Now watch this
+    - languageEnum: 1
+      LanguageGenericType: A teraz patrz na to
+    Duration: 10
+  - NodeGuid: e71de102-e8b8-405d-a08c-a62b24596d56
+    Position: {x: 1686.3999, y: 185.6}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: f33057471ba7cb745bb1196124241ef4, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: You can use String variables as character names
+    - languageEnum: 1
+      LanguageGenericType: "Zmienne String mo\u017Cesz u\u017Cywa\u0107 jako nazwe
+        postaci"
+    Duration: 10
+  - NodeGuid: 375a8047-0f4c-462e-8dee-2da1ad5fa88f
+    Position: {x: 341.6, y: 509.59998}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 0}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Gold Dialogue Costs <color=#d4af37>399</color> gold
+    - languageEnum: 1
+      LanguageGenericType: "Z\u0142oty Dialog Kosztuje <color=#d4af37>399</color>
+        golda"
+    Duration: 10
+  - NodeGuid: 7d8a8646-911b-418b-bb43-5d102b052afb
+    Position: {x: 777.60004, y: 509.59998}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 0}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: You have enough Gold to buy the Golden Dialogue
+    - languageEnum: 1
+      LanguageGenericType: "Masz wystarczaj\u0105c\u0105 ilo\u015B\u0107 Golda na
+        zakup Z\u0142otego Dialogu"
+    Duration: 10
+  - NodeGuid: e71eeffa-93f2-4243-a62f-3ebb780a71be
+    Position: {x: 777.60004, y: 804}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 0}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: You are missing <color=#d4af37>{DEMO_GOLD,399}</color>
+        Gold
+    - languageEnum: 1
+      LanguageGenericType: "Brakuje ci <color=#d4af37>{DEMO_GOLD,399}</color> Z\u0142ota"
+    Duration: 10
+  - NodeGuid: f33f9ad7-5fbe-4e86-8282-d37ae6d5c75f
+    Position: {x: 777.60004, y: 185.6}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 52bf713ca2c3ac34995eb97495258ba0, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: 'Pi Number: {Demo_PI} Float variable "Demo_PI"'
+    - languageEnum: 1
+      LanguageGenericType: 'Liczba PI: {Demo_PI}
+
+        Zmienna Float "Demo_PI"'
+    Duration: 10
+  - NodeGuid: 928dbb1a-6b10-4e4f-9865-cb5a5b6f585f
+    Position: {x: 995.2, y: 191.2}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: 6c7c2303cba66254eb2469508683ee61, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: 'Unlocked: {DEMO_Unl_Dialog} Bool variable "DEMO_Unl_Dialog"'
+    - languageEnum: 1
+      LanguageGenericType: 'Odblokowane: {DEMO_Unl_Dialog}
+
+        Zmienna Bool
+        "DEMO_Unl_Dialog"'
+    Duration: 10
+  - NodeGuid: 5deff867-f0b9-415d-b9e0-567f0cf10a18
+    Position: {x: 1223.2, y: 185.6}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: bb3fb7831a4429c469058c0f3f52f52f, type: 2}
+    AvatarPos: 0
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: "PlayerName: {PlayerName} Variable string \u2018PlayerName\u2019"
+    - languageEnum: 1
+      LanguageGenericType: 'Nazwa Gracza: {PlayerName}
+
+        Zmienna string "PlayerName"'
+    Duration: 10
+  TimerChoiceNodeDatas: []
+  EndNodeDatas:
+  - NodeGuid: 92b97e3d-152d-4f15-b6fd-5e2e63d8e4e4
+    Position: {x: 1914.3999, y: 185.6}
+    EndNodeType: 0
+    Dialogue: {fileID: 0}
+  - NodeGuid: 502d9370-3cb6-4529-b219-b616620d12d1
+    Position: {x: 995.2, y: 509.59998}
+    EndNodeType: 0
+    Dialogue: {fileID: 0}
+  EventNodeDatas: []
+  StartNodeDatas:
+  - NodeGuid: 65ed98cd-469f-4d35-89ee-862cf0f8f308
+    Position: {x: -296, y: 191.2}
+    startID: 
+  RandomNodeDatas: []
+  CommandNodeDatas: []
+  IfNodeDatas:
+  - NodeGuid: 794f2518-e80c-4124-b2b6-3909681c3ed7
+    Position: {x: 557.60004, y: 509.59998}
+    ValueName: DEMO_GOLD
+    Operations: 4
+    OperationValue: 399
+    TrueGUID: 7d8a8646-911b-418b-bb43-5d102b052afb
+    FalseGUID: e71eeffa-93f2-4243-a62f-3ebb780a71be
