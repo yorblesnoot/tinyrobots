@@ -4,10 +4,9 @@ using UnityEngine;
 
 public class TutorialMission : Mission
 {
-    public TutorialSequence TutorialSequence;
     public override bool MetEndCondition(TurnManager turnManager)
     {
-        return TutorialSequence.Complete;
+        return TutorialSequence.Instance.Complete;
     }
 
     protected override void InitializeMission()

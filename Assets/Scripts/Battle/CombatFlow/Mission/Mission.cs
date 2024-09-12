@@ -7,7 +7,7 @@ public enum MissionType
 {
     ENCOUNTER,
     AMBUSH,
-    SCRIPTED
+    TUTORIAL
 }
 public abstract class Mission : MonoBehaviour
 {

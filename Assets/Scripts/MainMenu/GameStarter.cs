@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class GameStarter : MonoBehaviour
 {
-    [SerializeField] PlayerData playerData;
-    [SerializeField] SceneRelay sceneRelay;
     [SerializeField] BotConverter botConverter;
     [SerializeField] SceneLoader loader;
     [SerializeField] List<BotCore> starterCores;
@@ -14,19 +12,19 @@ public class GameStarter : MonoBehaviour
     public void NewGame()
     {
         botConverter.Initialize();
-        playerData.CoreInventory = new(starterCores);
-        foreach (var core in playerData.CoreInventory) core.HealthRatio = 1;
-        sceneRelay.generateNavMap = true;
-        playerData.PartInventory = new();
-        playerData.Difficulty = startDifficulty;
+        SceneGlobals.PlayerData.CoreInventory = new(starterCores);
+        foreach (var core in SceneGlobals.PlayerData.CoreInventory) core.HealthRatio = 1;
+        SceneGlobals.SceneRelay.generateNavMap = true;
+        SceneGlobals.PlayerData.PartInventory = new();
+        SceneGlobals.PlayerData.Difficulty = startDifficulty;
         loader.Load(SceneType.NAVIGATION);
     }
 
     public void LoadGame()
     {
-        SaveContainer container = new(playerData);
+        SaveContainer container = new(SceneGlobals.PlayerData);
         container.LoadPlayerData();
-        sceneRelay.generateNavMap = false;
+        SceneGlobals.SceneRelay.generateNavMap = false;
         loader.Load(SceneType.NAVIGATION);
     }
 }

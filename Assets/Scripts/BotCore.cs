@@ -4,9 +4,8 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "BotCore", menuName = "ScriptableObjects/BotCore")]
 public class BotCore : SOWithGUID
 {
-    public void Initialize(BotConverter converter = null)
+    public void Initialize()
     {
-        if(StarterRecord != null && converter != null) Bot = converter.StringToBot(StarterRecord.record);
         ModdedCore = new(corePart);
         ModdedCore.InitializePart();
     }
@@ -16,7 +15,7 @@ public class BotCore : SOWithGUID
     float _healthRatio = 1f;
     public float HealthRatio { 
         get { return _healthRatio; } 
-        set { HealthRatioChanged?.Invoke(); _healthRatio = value; } 
+        set {  _healthRatio = value; HealthRatioChanged?.Invoke(); } 
     }
     [HideInInspector] public UnityEvent HealthRatioChanged = new();
 

@@ -5,12 +5,16 @@ using UnityEngine;
 public class TutorialSequence : MonoBehaviour
 {
     [SerializeField] List<TutorialAction> Actions;
+    public static TutorialSequence Instance;
 
     public bool Complete { get; private set; } = false;
-
-    public void Begin()
+    private void Awake()
     {
-        StartCoroutine(RunSequence());
+        Instance = this;
+    }
+    public static void Begin()
+    {
+        Instance.StartCoroutine(Instance.RunSequence());
     }
 
     IEnumerator RunSequence()

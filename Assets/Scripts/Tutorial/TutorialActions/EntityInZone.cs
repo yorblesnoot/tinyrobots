@@ -6,6 +6,11 @@ public class EntityInZone : TutorialAction
 {
     [SerializeField] GameObject zone;
     bool touched = false;
+
+    private void Awake()
+    {
+        zone.SetActive(false);
+    }
     public override IEnumerator Execute()
     {
         zone.SetActive(true);
