@@ -136,12 +136,14 @@ public static class Pathfinder3D
             node.G = float.PositiveInfinity;
             node.parent = null;
         }
-        PriorityQueue<Node, float> frontier = new();
-        frontier.EnsureCapacity(xSize * ySize * zSize / 4);
+        Queue<Node> frontier = new();
+        //PriorityQueue<Node, float> frontier = new();
+        //frontier.EnsureCapacity(xSize * ySize * zSize / 4);
 
         start.G = 0;
 
-        frontier.Enqueue(start, start.G);
+        frontier.Enqueue(start);
+        //frontier.Enqueue(start, start.G);
 
         int nodeCount = nodeMap.Values.Count;
         while (visited.Count < nodeCount)
@@ -160,7 +162,8 @@ public static class Pathfinder3D
                 {
                     neighbor.G = possibleG;
                     neighbor.parent = current;
-                    frontier.Enqueue(neighbor, neighbor.G);
+                    frontier.Enqueue(neighbor);
+                    //frontier.Enqueue(neighbor, neighbor.G);
                 }
             }
         }
