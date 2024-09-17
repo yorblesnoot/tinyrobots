@@ -35,10 +35,10 @@ public static class Pathfinder3D
                 }
             }
         }
-        directionMagnitudes = new float[directions.Length];
-        for (int i = 0; i < directions.Length; i++)
+        directionMagnitudes = new float[Directions.Length];
+        for (int i = 0; i < Directions.Length; i++)
         {
-            directionMagnitudes[i] = directions[i].magnitude;
+            directionMagnitudes[i] = Directions[i].magnitude;
         }
 
         foreach (Node node in nodeMap.Values)
@@ -49,9 +49,9 @@ public static class Pathfinder3D
     static void SetNeighbors(Node current)
     {
         current.edges = new();
-        for (int i = 0; i < directions.Length; i++)
+        for (int i = 0; i < Directions.Length; i++)
         {
-            Vector3Int direction = directions[i];
+            Vector3Int direction = Directions[i];
             Vector3Int locationCheck = direction + current.location;
             if (nodeMap.TryGetValue(locationCheck, out Node val))
             {
@@ -106,18 +106,18 @@ public static class Pathfinder3D
             return !PointIsOffMap(x, y, z) && byteMap[x, y, z] == 1;
         }
     }
-    static Vector3Int[] directions = {
-            new Vector3Int(-1, 0, 0), new Vector3Int(1, 0, 0),    // Faces along x-axis
-            new Vector3Int(0, -1, 0), new Vector3Int(0, 1, 0),    // Faces along y-axis
-            new Vector3Int(0, 0, -1), new Vector3Int(0, 0, 1),    // Faces along z-axis
-            new Vector3Int(-1, -1, 0), new Vector3Int(1, -1, 0),  // Edges along xy-plane
-            new Vector3Int(-1, 1, 0), new Vector3Int(1, 1, 0),    // Edges along xy-plane
-            new Vector3Int(-1, 0, -1), new Vector3Int(1, 0, -1),  // Edges along xz-plane
-            new Vector3Int(0, -1, -1), new Vector3Int(0, 1, -1),  // Edges along yz-plane
-            new Vector3Int(-1, -1, -1), new Vector3Int(1, -1, -1),  // Corners
-            new Vector3Int(-1, 1, -1), new Vector3Int(1, 1, -1),    // Corners
-            new Vector3Int(-1, -1, 1), new Vector3Int(1, -1, 1),    // Corners
-            new Vector3Int(-1, 1, 1), new Vector3Int(1, 1, 1)        // Corners
+    public static Vector3Int[] Directions = {
+            new(-1, 0, 0), new(1, 0, 0),    // Faces along x-axis
+            new(0, -1, 0), new(0, 1, 0),    // Faces along y-axis
+            new(0, 0, -1), new(0, 0, 1),    // Faces along z-axis
+            new(-1, -1, 0), new(1, -1, 0),  // Edges along xy-plane
+            new(-1, 1, 0), new(1, 1, 0),    // Edges along xy-plane
+            new(-1, 0, -1), new(1, 0, -1),  // Edges along xz-plane
+            new(0, -1, -1), new(0, 1, -1),  // Edges along yz-plane
+            new(-1, -1, -1), new(1, -1, -1),  // Corners
+            new(-1, 1, -1), new(1, 1, -1),    // Corners
+            new(-1, -1, 1), new(1, -1, 1),    // Corners
+            new(-1, 1, 1), new(1, 1, 1)        // Corners
     };
     static float[] directionMagnitudes;
     #endregion
