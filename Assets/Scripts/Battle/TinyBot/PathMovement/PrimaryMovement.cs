@@ -60,7 +60,7 @@ public abstract class PrimaryMovement : MonoBehaviour
     }
     protected Vector3 GetCenterColumn()
     {
-        return new(Pathfinder3D.xSize / 2, transform.position.y, Pathfinder3D.zSize / 2);
+        return new(Pathfinder3D.XSize / 2, transform.position.y, Pathfinder3D.ZSize / 2);
     }
     public abstract IEnumerator NeutralStance();
 

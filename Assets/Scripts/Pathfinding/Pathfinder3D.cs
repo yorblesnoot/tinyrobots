@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -16,20 +15,20 @@ public enum MoveStyle
 public static class Pathfinder3D
 {
     static Dictionary<Vector3Int, Node> nodeMap = new();
-    public static int xSize, ySize, zSize;
+    public static int XSize, YSize, ZSize;
     static byte[,,] byteMap;
     static Dictionary<MoveStyle, List<Vector3Int>> styleSpots;
     #region Initialization
     public static void Initialize(byte[,,] map)
     {
         byteMap = map;
-        xSize = map.GetLength(0); ySize = map.GetLength(1); zSize = map.GetLength(2);
+        XSize = map.GetLength(0); YSize = map.GetLength(1); ZSize = map.GetLength(2);
         nodeMap = new();
-        for (int x = 0; x < xSize; x++)
+        for (int x = 0; x < XSize; x++)
         {
-            for (int y = 0; y < ySize; y++)
+            for (int y = 0; y < YSize; y++)
             {
-                for (int z = 0; z < zSize; z++)
+                for (int z = 0; z < ZSize; z++)
                 {
                    ClassifyNode(x, y, z);
                 }
@@ -48,14 +47,14 @@ public static class Pathfinder3D
     }
     static void SetNeighbors(Node current)
     {
-        current.edges = new();
+        current.Edges = new();
         for (int i = 0; i < Directions.Length; i++)
         {
             Vector3Int direction = Directions[i];
-            Vector3Int locationCheck = direction + current.location;
+            Vector3Int locationCheck = direction + current.Location;
             if (nodeMap.TryGetValue(locationCheck, out Node val))
             {
-                current.edges.Add(new() { neighbor = val, magnitude = directionMagnitudes[i] });
+                current.Edges.Add(new() { Neighbor = val, Magnitude = directionMagnitudes[i] });
             }
         }
     }
@@ -65,24 +64,24 @@ public static class Pathfinder3D
         byte value = byteMap[x, y, z];
         Node node = new()
         {
-            location = location,
-            modeAccess = new bool[Enum.GetNames(typeof(MoveStyle)).Length]
+            Location = location,
+            ModeAccess = new bool[Enum.GetNames(typeof(MoveStyle)).Length]
         };
         foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle)))
         {
-            node.modeAccess[(int)style] = false;
+            node.ModeAccess[(int)style] = false;
         }
-        if (value == 1) { node.blocked = true; }
+        if (value == 1) { node.Blocked = true; }
         else
         {
-            if (NodeIsWalkable(x, y, z)) { node.modeAccess[(int)MoveStyle.WALK] = true; node.modeAccess[(int)MoveStyle.CRAWL] = true; }
+            if (NodeIsWalkable(x, y, z)) { node.ModeAccess[(int)MoveStyle.WALK] = true; node.ModeAccess[(int)MoveStyle.CRAWL] = true; }
 
             else if (NeighborIsTerrain(x, y - 1, z)
                 || NeighborIsTerrain(x, y + 1, z) || NeighborIsTerrain(x - 1, y, z)
                 || NeighborIsTerrain(x + 1, y, z) || NeighborIsTerrain(x, y, z + 1)
-                || NeighborIsTerrain(x, y, z - 1)) node.modeAccess[(int)MoveStyle.CRAWL] = true;
+                || NeighborIsTerrain(x, y, z - 1)) node.ModeAccess[(int)MoveStyle.CRAWL] = true;
 
-            else if (!NeighborIsTerrain(x, y + 2, z)) node.modeAccess[(int)MoveStyle.FLY] = true;
+            else if (!NeighborIsTerrain(x, y + 2, z)) node.ModeAccess[(int)MoveStyle.FLY] = true;
         }
 
         nodeMap.Add(location, node);
@@ -130,11 +129,12 @@ public static class Pathfinder3D
         if (!nodeMap.TryGetValue(startCoords, out Node start)) return;
         EvaluateNodeOccupancy(position);
 
-        HashSet<Node> visited = new();
+        //HashSet<Node> visited = new();
         foreach (Node node in nodeMap.Values)
         {
             node.G = float.PositiveInfinity;
-            node.parent = null;
+            node.Parent = null;
+            node.Visited = false;
         }
         Queue<Node> frontier = new();
         //PriorityQueue<Node, float> frontier = new();
@@ -146,22 +146,21 @@ public static class Pathfinder3D
         //frontier.Enqueue(start, start.G);
 
         int nodeCount = nodeMap.Values.Count;
-        while (visited.Count < nodeCount)
+        while (frontier.Count > 0)
         {
-            if (frontier.Count == 0) return;
             Node current = frontier.Dequeue();
-            visited.Add(current);
+            current.Visited = true;
             if (current.G == float.PositiveInfinity) return;
 
-            foreach (Node.Edge edge in current.edges)
+            foreach (Node.Edge edge in current.Edges)
             {
-                Node neighbor = edge.neighbor;
-                if (neighbor.blocked || neighbor.occupied || neighbor.modeAccess[(int)style] == false || visited.Contains(neighbor)) continue;
-                float possibleG = current.G + edge.magnitude;
+                Node neighbor = edge.Neighbor;
+                if (neighbor.Blocked || neighbor.Occupied || neighbor.Visited || neighbor.ModeAccess[(int)style] == false) continue;
+                float possibleG = current.G + edge.Magnitude;
                 if (possibleG < neighbor.G)
                 {
                     neighbor.G = possibleG;
-                    neighbor.parent = current;
+                    neighbor.Parent = current;
                     frontier.Enqueue(neighbor);
                     //frontier.Enqueue(neighbor, neighbor.G);
                 }
@@ -176,18 +175,18 @@ public static class Pathfinder3D
         if (path == null || path.Count == 0) return null;
         foreach (var node in path)
         {
-            worldPath.Add(node.location.ToWorldVector());
+            worldPath.Add(node.Location.ToWorldVector());
             gValues.Add(node.G);
         }
         return worldPath;
     }
     public static List<Vector3Int> GetPathableLocations(int moveBudget)
     {
-        return nodeMap.Values.Where(node => node.G <= moveBudget).OrderBy(node => node.G).Select(node => node.location).ToList();
+        return nodeMap.Values.Where(node => node.G <= moveBudget).OrderBy(node => node.G).Select(node => node.Location).ToList();
     }
     public static List<Vector3Int> GetPathableLocations()
     {
-        return nodeMap.Values.Where(node => node.G < float.PositiveInfinity).Select(node => node.location).ToList();
+        return nodeMap.Values.Where(node => node.G < float.PositiveInfinity).Select(node => node.Location).ToList();
     }
     public static List<Vector3Int> GetCompatibleLocations(Vector3 position, float range, MoveStyle style)
     {
@@ -203,7 +202,7 @@ public static class Pathfinder3D
         foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle))) styleSpots.Add(style, new());
         foreach (var node in nodeMap.Values)
         {
-            foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle))) if (node.modeAccess[(int)style]) styleSpots[style].Add(node.location);
+            foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle))) if (node.ModeAccess[(int)style]) styleSpots[style].Add(node.Location);
         }
         return styleSpots;
     }
@@ -212,13 +211,13 @@ public static class Pathfinder3D
     {
         coords = Vector3Int.RoundToInt(target);
         if (!nodeMap.ContainsKey(coords)) return false;
-        if (nodeMap[coords].modeAccess[(int)style]) return true;
+        if (nodeMap[coords].ModeAccess[(int)style]) return true;
         else
         {
-            foreach (var edge in nodeMap[coords].edges)
+            foreach (var edge in nodeMap[coords].Edges)
             {
-                if (!nodeMap[edge.neighbor.location].modeAccess[(int)style]) continue;
-                coords = edge.neighbor.location;
+                if (!nodeMap[edge.Neighbor.Location].ModeAccess[(int)style]) continue;
+                coords = edge.Neighbor.Location;
                 return true;
             }
             return false;
@@ -229,11 +228,11 @@ public static class Pathfinder3D
         Vector3 total = Vector3.zero;
         int number = 0;
         Node source = nodeMap[node];
-        foreach(var edge in source.edges)
+        foreach(var edge in source.Edges)
         {
-            if (!edge.neighbor.blocked) continue;
+            if (!edge.Neighbor.Blocked) continue;
 
-            total += edge.neighbor.location - source.location;
+            total += edge.Neighbor.Location - source.Location;
             number++;
         }
         return -total/number;
@@ -241,7 +240,7 @@ public static class Pathfinder3D
     public static bool PointIsOffMap(int x, int y, int z)
     {
         if (x < 0 || y < 0 || z < 0) return true;
-        if (x >= xSize || y >= ySize || z >= zSize) return true;
+        if (x >= XSize || y >= YSize || z >= ZSize) return true;
         return false;
     }
     #endregion
@@ -265,38 +264,24 @@ public static class Pathfinder3D
     {
         if(status) lastOccupied.Add(position);
         Node node = nodeMap[position];
-        node.occupied = status;
-        foreach(var edge in node.edges)
+        node.Occupied = status;
+        foreach(var edge in node.Edges)
         {
-            edge.neighbor.occupied = status;
+            edge.Neighbor.Occupied = status;
         }
     }
     #endregion
 
-    #region Jobs
-    public static void GeneratePathingTreeWithJob()
-    {
-        var job = new PathmapJob();
-        job.Schedule();
-    }
-    public struct PathmapJob : IJob
-    {
-        public void Execute()
-        {
-            throw new NotImplementedException();
-        }
-    }
-    #endregion
     static List<Node> FindPath(Vector3Int endCoords)
     {
         List<Node> finishedList = new();
         if (!nodeMap.TryGetValue(endCoords, out var currentNode)) return null;
 
 
-        while (currentNode.parent != null)
+        while (currentNode.Parent != null)
         {
             finishedList.Add(currentNode);
-            currentNode = currentNode.parent;
+            currentNode = currentNode.Parent;
         }
 
         finishedList.Reverse();
@@ -306,20 +291,21 @@ public static class Pathfinder3D
     {
         public float G = float.PositiveInfinity;
 
-        public Vector3Int location;
+        public Vector3Int Location;
 
-        public bool blocked;
-        public bool occupied;
-        public bool[] modeAccess;
+        public bool Visited;
+        public bool Blocked;
+        public bool Occupied;
+        public bool[] ModeAccess;
 
-        public Node parent;
+        public Node Parent;
 
         public class Edge
         {
-            public Node neighbor;
-            public float magnitude;
+            public Node Neighbor;
+            public float Magnitude;
         }
-        public List<Edge> edges;
+        public List<Edge> Edges;
     }
 }
 
