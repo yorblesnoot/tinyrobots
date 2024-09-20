@@ -34,16 +34,9 @@ public static class Pathfinder3D
                 }
             }
         }
-        directionMagnitudes = new float[Directions.Length];
-        for (int i = 0; i < Directions.Length; i++)
-        {
-            directionMagnitudes[i] = Directions[i].magnitude;
-        }
+        directionMagnitudes = Directions.Select(d => d.magnitude).ToArray();
 
-        foreach (Node node in nodeMap.Values)
-        {
-            SetNeighbors(node);
-        }
+        foreach (Node node in nodeMap.Values) SetNeighbors(node);
     }
     static void SetNeighbors(Node current)
     {
@@ -65,23 +58,20 @@ public static class Pathfinder3D
         Node node = new()
         {
             Location = location,
-            ModeAccess = new bool[Enum.GetNames(typeof(MoveStyle)).Length]
+            StyleAccess = new bool[Enum.GetNames(typeof(MoveStyle)).Length]
         };
-        foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle)))
-        {
-            node.ModeAccess[(int)style] = false;
-        }
-        if (value == 1) { node.Blocked = true; }
+        //foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle))) node.StyleAccess[(int)style] = false;
+        if (value == 1) node.Terrain = true;
         else
         {
-            if (NodeIsWalkable(x, y, z)) { node.ModeAccess[(int)MoveStyle.WALK] = true; node.ModeAccess[(int)MoveStyle.CRAWL] = true; }
+            if (NodeIsWalkable(x, y, z)) { node.StyleAccess[(int)MoveStyle.WALK] = true; node.StyleAccess[(int)MoveStyle.CRAWL] = true; }
 
             else if (NeighborIsTerrain(x, y - 1, z)
                 || NeighborIsTerrain(x, y + 1, z) || NeighborIsTerrain(x - 1, y, z)
                 || NeighborIsTerrain(x + 1, y, z) || NeighborIsTerrain(x, y, z + 1)
-                || NeighborIsTerrain(x, y, z - 1)) node.ModeAccess[(int)MoveStyle.CRAWL] = true;
+                || NeighborIsTerrain(x, y, z - 1)) node.StyleAccess[(int)MoveStyle.CRAWL] = true;
 
-            else if (!NeighborIsTerrain(x, y + 2, z)) node.ModeAccess[(int)MoveStyle.FLY] = true;
+            else if (!NeighborIsTerrain(x, y + 2, z)) node.StyleAccess[(int)MoveStyle.FLY] = true;
         }
 
         nodeMap.Add(location, node);
@@ -155,7 +145,7 @@ public static class Pathfinder3D
             foreach (Node.Edge edge in current.Edges)
             {
                 Node neighbor = edge.Neighbor;
-                if (neighbor.Blocked || neighbor.Occupied || neighbor.Visited || neighbor.ModeAccess[(int)style] == false) continue;
+                if (neighbor.Terrain || neighbor.Occupied || neighbor.Visited || neighbor.StyleAccess[(int)style] == false) continue;
                 float possibleG = current.G + edge.Magnitude;
                 if (possibleG < neighbor.G)
                 {
@@ -202,7 +192,7 @@ public static class Pathfinder3D
         foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle))) styleSpots.Add(style, new());
         foreach (var node in nodeMap.Values)
         {
-            foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle))) if (node.ModeAccess[(int)style]) styleSpots[style].Add(node.Location);
+            foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle))) if (node.StyleAccess[(int)style]) styleSpots[style].Add(node.Location);
         }
         return styleSpots;
     }
@@ -211,12 +201,12 @@ public static class Pathfinder3D
     {
         coords = Vector3Int.RoundToInt(target);
         if (!nodeMap.ContainsKey(coords)) return false;
-        if (nodeMap[coords].ModeAccess[(int)style]) return true;
+        if (nodeMap[coords].StyleAccess[(int)style]) return true;
         else
         {
             foreach (var edge in nodeMap[coords].Edges)
             {
-                if (!nodeMap[edge.Neighbor.Location].ModeAccess[(int)style]) continue;
+                if (!nodeMap[edge.Neighbor.Location].StyleAccess[(int)style]) continue;
                 coords = edge.Neighbor.Location;
                 return true;
             }
@@ -230,7 +220,7 @@ public static class Pathfinder3D
         Node source = nodeMap[node];
         foreach(var edge in source.Edges)
         {
-            if (!edge.Neighbor.Blocked) continue;
+            if (!edge.Neighbor.Terrain) continue;
 
             total += edge.Neighbor.Location - source.Location;
             number++;
@@ -294,9 +284,9 @@ public static class Pathfinder3D
         public Vector3Int Location;
 
         public bool Visited;
-        public bool Blocked;
+        public bool Terrain;
         public bool Occupied;
-        public bool[] ModeAccess;
+        public bool[] StyleAccess;
 
         public Node Parent;
 
