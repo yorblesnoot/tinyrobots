@@ -48,10 +48,4 @@ public abstract class Mission : MonoBehaviour
     public virtual void RoundEnd() { }
     public abstract bool MetEndCondition(TurnManager turnManager);
     protected abstract void InitializeMission();
-    protected void OrientBot(TinyBot bot, Vector3 position)
-    {
-        bot.transform.position = position;
-        bot.PrimaryMovement.SpawnOrientation();
-        bot.StartCoroutine(bot.PrimaryMovement.NeutralStance());
-    }
 }

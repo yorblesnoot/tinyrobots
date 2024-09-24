@@ -5,7 +5,7 @@ public class SceneRelay : ScriptableObject
 {
     public GameObject BattleMap;
     public bool BattleComplete;
-    public bool generateNavMap;
+    public bool GenerateNavMap;
     public MissionType MissionType;
     public SpawnTable activeSpawnTable;
 

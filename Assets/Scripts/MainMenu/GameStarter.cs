@@ -14,7 +14,7 @@ public class GameStarter : MonoBehaviour
         botConverter.Initialize();
         SceneGlobals.PlayerData.CoreInventory = new(starterCores);
         foreach (var core in SceneGlobals.PlayerData.CoreInventory) core.HealthRatio = 1;
-        SceneGlobals.SceneRelay.generateNavMap = true;
+        SceneGlobals.SceneRelay.GenerateNavMap = true;
         SceneGlobals.PlayerData.PartInventory = new();
         SceneGlobals.PlayerData.Difficulty = startDifficulty;
         loader.Load(SceneType.NAVIGATION);
@@ -24,7 +24,7 @@ public class GameStarter : MonoBehaviour
     {
         SaveContainer container = new(SceneGlobals.PlayerData);
         container.LoadPlayerData();
-        SceneGlobals.SceneRelay.generateNavMap = false;
+        SceneGlobals.SceneRelay.GenerateNavMap = false;
         loader.Load(SceneType.NAVIGATION);
     }
 }

@@ -27,7 +27,7 @@ public class BattleEnder : MonoBehaviour
 
     public static void GameOver()
     {
-        instance.relay.generateNavMap = true;
+        instance.relay.GenerateNavMap = true;
         instance.sceneLoader.Load(SceneType.MAINMENU);
     }
 }

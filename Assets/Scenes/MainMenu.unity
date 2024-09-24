@@ -1458,6 +1458,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 900445470}
+  - component: {fileID: 900445471}
   m_Layer: 0
   m_Name: TutorialStarter
   m_TagString: Untagged
@@ -1480,6 +1481,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1838807480}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &900445471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 900445469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d22c8b78178a94949bda19c933b91f1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startDifficulty: 6
+  tutorialCore: {fileID: 11400000, guid: 860feb0d5dc177a488b6a2eb42305b4a, type: 2}
+  tutorialRecord: {fileID: 11400000, guid: fe19837f073ad694881ba229c87dd8f5, type: 2}
+  tutorialMap: {fileID: 2427373214473166646, guid: 05e03bdc2443ae14485b6313c06bbeed,
+    type: 3}
+  botConverter: {fileID: 11400000, guid: efd80f4536a76904d8f8a1a5b13e844c, type: 2}
+  loader: {fileID: 488833867}
 --- !u!1 &977185250
 GameObject:
   m_ObjectHideFlags: 0

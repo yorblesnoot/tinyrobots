@@ -196,6 +196,17 @@ public static class Pathfinder3D
         }
         return styleSpots;
     }
+
+    public static List<MoveStyle> GetNodeStyles(Vector3Int position)
+    {
+        Node node = nodeMap[position];
+        List<MoveStyle> styles = new();
+        for(int i = 0; i < node.StyleAccess.Count(); i++)
+        {
+            if (node.StyleAccess[i]) styles.Add((MoveStyle)i);
+        }
+        return styles;
+    }
     
     public static bool GetLandingPointBy(Vector3 target, MoveStyle style, out Vector3Int coords)
     {
