@@ -18,6 +18,7 @@ public static class Pathfinder3D
     public static int XSize, YSize, ZSize;
     static byte[,,] byteMap;
     static Dictionary<MoveStyle, List<Vector3Int>> styleSpots;
+    public static UnityEvent MapInitialized = new();
     #region Initialization
     public static void Initialize(byte[,,] map)
     {
@@ -35,8 +36,8 @@ public static class Pathfinder3D
             }
         }
         directionMagnitudes = Directions.Select(d => d.magnitude).ToArray();
-
         foreach (Node node in nodeMap.Values) SetNeighbors(node);
+        MapInitialized.Invoke();
     }
     static void SetNeighbors(Node current)
     {
@@ -135,7 +136,6 @@ public static class Pathfinder3D
         frontier.Enqueue(start);
         //frontier.Enqueue(start, start.G);
 
-        int nodeCount = nodeMap.Values.Count;
         while (frontier.Count > 0)
         {
             Node current = frontier.Dequeue();
@@ -199,6 +199,7 @@ public static class Pathfinder3D
 
     public static List<MoveStyle> GetNodeStyles(Vector3Int position)
     {
+        if (PointIsOffMap(position.x, position.y, position.z)) return new(); //problem here
         Node node = nodeMap[position];
         List<MoveStyle> styles = new();
         for(int i = 0; i < node.StyleAccess.Count(); i++)

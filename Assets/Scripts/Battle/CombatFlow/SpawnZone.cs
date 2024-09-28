@@ -7,10 +7,11 @@ public class SpawnZone : MonoBehaviour
     public Allegiance Allegiance;
     public int Radius = 1;
     public Vector3 Position { get { return transform.position; } }
-    static Dictionary<Allegiance, Dictionary<MoveStyle, List<Vector3>>> styleNodes = new();
+    static Dictionary<Allegiance, Dictionary<MoveStyle, List<Vector3>>> styleNodes;
     private void Awake()
     {
-        CalculateZoneNodes();
+        Pathfinder3D.MapInitialized.AddListener(CalculateZoneNodes);
+        gameObject.SetActive(false);
     }
 
     void CalculateZoneNodes()
@@ -35,6 +36,8 @@ public class SpawnZone : MonoBehaviour
     void BuildStyleNodes()
     {
         if (styleNodes != null) return;
+
+        Debug.Log("built nodes");
         styleNodes = new();
         foreach (Allegiance allegiance in Enum.GetValues(typeof(Allegiance)))
         {
@@ -46,6 +49,7 @@ public class SpawnZone : MonoBehaviour
     public static void PlaceBot(TinyBot bot)
     {
         List<Vector3> availableSpaces = styleNodes[bot.Allegiance][bot.MoveStyle];
+        Debug.Log(bot.Allegiance + "-" +  bot.MoveStyle);
         bot.transform.position = availableSpaces.GrabRandomly();
         bot.PrimaryMovement.SpawnOrientation();
         bot.StartCoroutine(bot.PrimaryMovement.NeutralStance());
