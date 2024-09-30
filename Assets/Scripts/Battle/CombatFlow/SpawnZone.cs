@@ -49,8 +49,10 @@ public class SpawnZone : MonoBehaviour
     public static void PlaceBot(TinyBot bot)
     {
         List<Vector3> availableSpaces = styleNodes[bot.Allegiance][bot.MoveStyle];
-        Debug.Log(bot.Allegiance + "-" +  bot.MoveStyle);
-        bot.transform.position = availableSpaces.GrabRandomly();
+        Vector3 targetSpace =  availableSpaces.GrabRandomly();
+        bot.transform.position = targetSpace;
+        foreach(var allegiance in styleNodes.Values) 
+            foreach (var mode in allegiance.Values) mode.Remove(targetSpace);
         bot.PrimaryMovement.SpawnOrientation();
         bot.StartCoroutine(bot.PrimaryMovement.NeutralStance());
     }

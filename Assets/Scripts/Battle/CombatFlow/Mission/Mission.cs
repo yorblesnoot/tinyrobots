@@ -11,9 +11,8 @@ public enum MissionType
 }
 public abstract class Mission : MonoBehaviour
 {
-    [SerializeField] protected PlayerData playerData;
-    [SerializeField] protected SceneRelay relay;
     [SerializeField] List<BotRecord> playerBotOverride;
+    readonly int difficultyDivisor = 2;
     public void BeginMission()
     {
         TurnManager.Mission = this;
@@ -22,7 +21,7 @@ public abstract class Mission : MonoBehaviour
     }
     public TinyBot SpawnBot(Allegiance allegiance, BotRecord botRecord)
     {
-        var tree = playerData.BotConverter.StringToBot(botRecord.record);
+        var tree = SceneGlobals.PlayerData.BotConverter.StringToBot(botRecord.record);
         TinyBot bot = BotAssembler.BuildBot(tree, allegiance);
         TurnManager.AddTurnTaker(bot);
         return bot;
@@ -32,7 +31,7 @@ public abstract class Mission : MonoBehaviour
     {
         List<TinyBot> bots = new();
         if (playerBotOverride != null) bots.AddRange(playerBotOverride.Select(record => SpawnBot(Allegiance.PLAYER, record)));
-        foreach (var core in playerData.CoreInventory)
+        foreach (var core in SceneGlobals.PlayerData.CoreInventory)
         {
             if (!core.Deployable || core.HealthRatio == 0) continue;
             TinyBot bot = BotAssembler.BuildBot(core.Bot, Allegiance.PLAYER);
@@ -47,5 +46,23 @@ public abstract class Mission : MonoBehaviour
     
     public virtual void RoundEnd() { }
     public abstract bool MetEndCondition(TurnManager turnManager);
-    protected abstract void InitializeMission();
+    protected virtual void InitializeMission()
+    {
+        SceneGlobals.PlayerData.BotConverter.Initialize();
+        SceneGlobals.PlayerData.LoadRecords();
+        PlaceBotsInSpawnZones();
+    }
+
+    private void PlaceBotsInSpawnZones()
+    {
+        List<TinyBot> bots = SpawnPlayerBots();
+        SpawnTable table = SceneGlobals.SceneRelay.activeSpawnTable;
+        if (table != null)
+        {
+            List<BotRecord> enemyRecords = table.GetSpawnList(SceneGlobals.PlayerData.Difficulty / difficultyDivisor);
+            bots.AddRange(enemyRecords.Select(record => SpawnBot(Allegiance.ENEMY, record)));
+        }
+
+        foreach (TinyBot bot in bots) SpawnZone.PlaceBot(bot);
+    }
 }

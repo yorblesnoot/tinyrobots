@@ -11,6 +11,7 @@ public class TutorialMission : Mission
 
     protected override void InitializeMission()
     {
+        base.InitializeMission();
         TutorialSequence.Begin();
     }
 }

@@ -1,14 +1,17 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MapScanner
 {
     int[] sideLengths = new int[3];
-    int mask;
+    int terrainMask;
+    int interiorMask;
 
     readonly int margin = 3;
-    readonly float sphereRadius = .1f;
+    readonly float sphereRadius = .0001f;
 
     struct DirectedHit
     {
@@ -18,23 +21,21 @@ public class MapScanner
 
     public MapScanner()
     {
-        mask = LayerMask.GetMask("Terrain");
+        terrainMask = LayerMask.GetMask("Terrain");
+        interiorMask = LayerMask.GetMask("TerrainInterior");
     }
 
     readonly int[] dimensions = {0, 1, 2};
     public byte[,,] GetVoxelGrid(GameObject mapObject)
     {
         Vector3Int mapBounds = mapObject.GetComponent<MapBounds>().GetMapSize();
-        Debug.Log(mapBounds);
         sideLengths[0] = mapBounds.x;
         sideLengths[1] = mapBounds.y;
         sideLengths[2] = mapBounds.z;
         byte[,,] outputGrid = new byte[mapBounds.x, mapBounds.y, mapBounds.z];
-        for (int i = 0; i <= 2; i++)
-        {
-            ScanDimension(outputGrid, i);
-        }
-        
+        for (int i = 0; i <= 2; i++) ScanDimension(outputGrid, i);
+        MeshCollider[] interiors = mapObject.GetComponentsInChildren<MeshCollider>().Where(i => i.gameObject.layer == interiorMask).ToArray();
+        foreach (MeshCollider interior in interiors) interior.gameObject.layer = terrainMask;
         return outputGrid;
     }
 
@@ -89,6 +90,7 @@ public class MapScanner
                 Debug.DrawLine(coord, coord + rayDirection / 5, Color.blue, 20f);
             }
         }
+
         List<DirectedHit> GetHitProfile(int a, int b, int dimension)
         {
             List<DirectedHit> directedHits = new();
@@ -99,13 +101,9 @@ public class MapScanner
 
             Vector3 end = origin;
             end[dimension] = cSize + margin;
-
-
-#pragma warning disable UNT0028 // Use non-allocating physics APIs
-            RaycastHit[] fronts = Physics.SphereCastAll(origin, sphereRadius, rayDirection, cSize + margin * 2, mask);
-            RaycastHit[] backs = Physics.SphereCastAll(end, sphereRadius, - rayDirection, cSize + margin * 2, mask);
-            directedHits.AddRange(ParseHits(fronts, true));
-            directedHits.AddRange(ParseHits(backs, false));
+            float rayLength = cSize + margin * 2;
+            GetHits(terrainMask, Physics.SphereCastAll);
+            GetHits(interiorMask, ChainSphereCast);
             return directedHits;
 
             static List<DirectedHit> ParseHits(RaycastHit[] hits, bool front)
@@ -118,10 +116,27 @@ public class MapScanner
                 }
                 return parsed;
             }
+
+            void GetHits(int mask, Func<Vector3, float, Vector3, float, int, RaycastHit[]> cast)
+            {
+                RaycastHit[] fronts = cast(origin, sphereRadius, rayDirection, rayLength, mask);
+                RaycastHit[] backs = cast(end, sphereRadius, -rayDirection, rayLength, mask);
+                directedHits.AddRange(ParseHits(fronts, true));
+                directedHits.AddRange(ParseHits(backs, false));
+            }
         }
     }
 
-    
+    RaycastHit[] ChainSphereCast(Vector3 origin, float radius, Vector3 direction, float maxDistance, int mask)
+    {
+        List<RaycastHit> hits = new();
+        while (Physics.Raycast(origin, direction, out RaycastHit hitPoint, maxDistance, mask))
+        {
+            origin = hitPoint.point + direction * radius;
+            maxDistance -= hitPoint.distance;
+            hits.Add(hitPoint);
+        }
+        return hits.ToArray();
+    }
 
-    
 }
