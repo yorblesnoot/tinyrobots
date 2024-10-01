@@ -1,0 +1,105 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1946feaec865d344dabf0419b1c94973, type: 3}
+  m_Name: Tutorial1
+  m_EditorClassIdentifier: 
+  AllowDialogueSave: 0
+  BlockingReopeningDialogue: 0
+  NodeLinkDatas:
+  - BaseNodeGuid: ea1d9f54-8533-461e-88f5-80e22a803b41
+    TargetNodeGuid: 503a7581-bfcc-479b-81c4-2ddad2e1edd1
+  - BaseNodeGuid: 29627ab9-f262-4ecc-9273-54b819213a9b
+    TargetNodeGuid: bef12c3c-9457-44b0-ad93-129a8ad3c4d4
+  - BaseNodeGuid: 503a7581-bfcc-479b-81c4-2ddad2e1edd1
+    TargetNodeGuid: f6d3eda4-5617-4f72-89e9-c3cf94db87e9
+  - BaseNodeGuid: bef12c3c-9457-44b0-ad93-129a8ad3c4d4
+    TargetNodeGuid: f6d3eda4-5617-4f72-89e9-c3cf94db87e9
+  - BaseNodeGuid: 7efa9160-5071-476a-ba6a-48085d801a3c
+    TargetNodeGuid: 85ab101a-9b47-4890-b528-c45c0e1bcbdf
+  - BaseNodeGuid: 85ab101a-9b47-4890-b528-c45c0e1bcbdf
+    TargetNodeGuid: f6d3eda4-5617-4f72-89e9-c3cf94db87e9
+  DialogueChoiceNodeDatas: []
+  DialogueNodeDatas:
+  - NodeGuid: 503a7581-bfcc-479b-81c4-2ddad2e1edd1
+    Position: {x: 167, y: 199}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: c6c09c70fd5abb9418fd7f37f555fb9c, type: 2}
+    AvatarPos: 1
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: Praise be. A Transmuter wakes. O wayward fragment of will,
+        bless this one with your gaze.
+    - languageEnum: 1
+      LanguageGenericType: 
+    Duration: 10
+  - NodeGuid: bef12c3c-9457-44b0-ad93-129a8ad3c4d4
+    Position: {x: 167, y: 498}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: c6c09c70fd5abb9418fd7f37f555fb9c, type: 2}
+    AvatarPos: 1
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: We must leave this place. I am yours to command, Transmuter.
+        Show me the way forward.
+    - languageEnum: 1
+      LanguageGenericType: 
+    Duration: 10
+  - NodeGuid: 85ab101a-9b47-4890-b528-c45c0e1bcbdf
+    Position: {x: 167, y: 828}
+    DialogueNodePorts: []
+    AudioClips:
+    - languageEnum: 0
+      LanguageGenericType: {fileID: 0}
+    - languageEnum: 1
+      LanguageGenericType: {fileID: 0}
+    Character: {fileID: 11400000, guid: c6c09c70fd5abb9418fd7f37f555fb9c, type: 2}
+    AvatarPos: 1
+    AvatarType: 0
+    TextType:
+    - languageEnum: 0
+      LanguageGenericType: I can march no further. At your command, I might rest
+        for a moment; then I shall move and act with renewed vigor.
+    - languageEnum: 1
+      LanguageGenericType: 
+    Duration: 10
+  TimerChoiceNodeDatas: []
+  EndNodeDatas:
+  - NodeGuid: f6d3eda4-5617-4f72-89e9-c3cf94db87e9
+    Position: {x: 475, y: 216}
+    EndNodeType: 0
+    Dialogue: {fileID: 0}
+  EventNodeDatas: []
+  StartNodeDatas:
+  - NodeGuid: ea1d9f54-8533-461e-88f5-80e22a803b41
+    Position: {x: 23, y: 199}
+    startID: 0
+  - NodeGuid: 29627ab9-f262-4ecc-9273-54b819213a9b
+    Position: {x: -15, y: 548}
+    startID: 1
+  - NodeGuid: 7efa9160-5071-476a-ba6a-48085d801a3c
+    Position: {x: -15, y: 879}
+    startID: 2
+  RandomNodeDatas: []
+  CommandNodeDatas: []
+  IfNodeDatas: []

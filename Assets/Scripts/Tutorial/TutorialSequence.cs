@@ -2,27 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TutorialSequence : MonoBehaviour
+public class TutorialSequence : TutorialAction
 {
-    [SerializeField] List<TutorialAction> Actions;
-    public static TutorialSequence Instance;
+    [SerializeField] bool isMainSequence = false;
+    [SerializeField] List<TutorialAction> actions;
+    public static TutorialSequence Main;
 
     public bool Complete { get; private set; } = false;
     private void Awake()
     {
-        Instance = this;
-    }
-    public static void Begin()
-    {
-        Instance.StartCoroutine(Instance.RunSequence());
+        if(isMainSequence) Main = this;
     }
 
     IEnumerator RunSequence()
     {
-        foreach (var action in Actions)
+        foreach (var action in actions)
         {
             yield return action.Execute();
         }
         Complete = true;
+    }
+
+    public override IEnumerator Execute()
+    {
+        StartCoroutine(RunSequence());
+        yield break;
     }
 }

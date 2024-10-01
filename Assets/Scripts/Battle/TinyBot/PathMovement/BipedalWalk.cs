@@ -4,7 +4,7 @@ using UnityEngine;
 public class BipedalWalk : LegMovement
 {
     List<Vector3> sanitizationPositions;
-    readonly float sanOffset = 1;
+    readonly float sanOffset = 1.5f;
     readonly float pathHeight = .3f;
     readonly float legScanHeight = 2f;
     readonly float scanOriginHeight = 1;
@@ -18,6 +18,7 @@ public class BipedalWalk : LegMovement
 
     public override List<Vector3> SanitizePath(List<Vector3> path)
     {
+        //TODO: something here is causing lots of assertion errors
         List<Vector3> newPath = new();
         Vector3 castDirection = Vector3.down;
         foreach (var point in path)
@@ -28,7 +29,8 @@ public class BipedalWalk : LegMovement
             {
                 if(Physics.Raycast(target + offset, castDirection, out RaycastHit hit, legScanHeight, terrainMask)) hitpoints.Add(hit.point);
             }
-            newPath.Add(hitpoints.Average() + -castDirection * pathHeight);
+            Vector3 newPoint = hitpoints.Count > 0 ? hitpoints.Average() + -castDirection * pathHeight : point;
+            newPath.Add(newPoint);
         }
         return newPath;
     }

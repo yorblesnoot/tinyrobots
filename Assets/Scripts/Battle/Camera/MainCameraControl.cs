@@ -101,7 +101,7 @@ public class MainCameraControl : MonoBehaviour
     }
 
     static bool freeCameraAvailable = true;
-    public static void RestrictCamera(bool value)
+    public static void RestrictCamera(bool value = true)
     {
         freeCameraAvailable = !value;
     }
@@ -200,7 +200,7 @@ public class MainCameraControl : MonoBehaviour
     public static void CutToUnit(TinyBot bot)
     {
         Cams.Automatic.gameObject.SetActive(true);
-        Cams.FocalPoint.transform.position = bot.transform.position;
+        Cams.FocalPoint.transform.position = bot.TargetPoint.position;
         
         Cams.Strafe.Priority = 0;
         Cams.Pivot.Priority = 0;

@@ -18,11 +18,11 @@ public class SpawnZone : MonoBehaviour
     {
         BuildStyleNodes();
         Vector3Int position = Vector3Int.RoundToInt(transform.position);
-        for(int x = position.x - Radius; x < position.x + Radius; x++)
+        for(int x = position.x - Radius; x <= position.x + Radius; x++)
         {
-            for(int y = position.y - Radius; y < position.y + Radius; y++)
+            for(int y = position.y - Radius; y <= position.y + Radius; y++)
             {
-                for(int z = position.z - Radius; z < position.z + Radius; z++)
+                for(int z = position.z - Radius; z <= position.z + Radius; z++)
                 {
                     Vector3Int checkedPosition = new(x, y, z);
                     if (Vector3.Distance(checkedPosition, position) > Radius) continue;

@@ -17,7 +17,9 @@ public abstract class Mission : MonoBehaviour
     {
         TurnManager.Mission = this;
         InitializeMission();
+        
         TurnManager.BeginTurnSequence();
+
     }
     public TinyBot SpawnBot(Allegiance allegiance, BotRecord botRecord)
     {

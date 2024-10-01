@@ -13,8 +13,7 @@ public class TurnManager : MonoBehaviour
     [SerializeField] float activeUnitScaleFactor = 1.5f;
     [SerializeField] BattleEnder battleEnder;
     
-    static float ActiveUnitScaleFactor = 1.5f;
-    static List<TurnPortrait> PortraitStock;
+    static List<TurnPortrait> portraitStock;
     static float cardWidth;
     static float cardHeight;
     static int activeIndex = 0;
@@ -29,9 +28,8 @@ public class TurnManager : MonoBehaviour
     {
         TurnTakers = new();
         activeIndex = 0;
-        ActiveUnitScaleFactor = activeUnitScaleFactor;
         TurnTakers = new(); activePortraits = new(); currentlyActive = new();
-        PortraitStock = turnPortraitList;
+        portraitStock = turnPortraitList;
         Singleton = this;
         RectTransform rectTransform = turnPortraitList[0].GetComponent<RectTransform>();
         cardWidth = rectTransform.rect.width;
@@ -39,9 +37,9 @@ public class TurnManager : MonoBehaviour
     }
     public static void AddTurnTaker(TinyBot bot)
     {
-        PortraitStock[0].Become(bot);
-        activePortraits.Add(bot, PortraitStock[0]);
-        PortraitStock.RemoveAt(0);       
+        portraitStock[0].Become(bot);
+        activePortraits.Add(bot, portraitStock[0]);
+        portraitStock.RemoveAt(0);       
         TurnTakers.Add(bot);
     }
 
@@ -61,14 +59,22 @@ public class TurnManager : MonoBehaviour
     {
         yield return new WaitForSeconds(wait);
         removed.Clear();
-        PortraitStock.Add(removed);
+        portraitStock.Add(removed);
         ArrangePortraits(currentlyActive);
     }
 
     public static void BeginTurnSequence()
     {
+        MainCameraControl.RestrictCamera();
         TurnTakers.OrderByDescending(bot => bot.Stats.Max[StatType.INITIATIVE]);
         GetActiveBots();
+        Singleton.StartCoroutine(Singleton.WaitToFreeCamera());
+    }
+
+    IEnumerator WaitToFreeCamera()
+    {
+        yield return null;
+        MainCameraControl.RestrictCamera(false);
     }
 
     public static void UpdateHealth(TinyBot bot)
@@ -116,7 +122,6 @@ public class TurnManager : MonoBehaviour
             if (activeIndex == TurnTakers.Count) StartNewRound();
             GetActiveBots();
         }
-
         TinyBot next = currentlyActive.First();
         MainCameraControl.CutToUnit(next);
         PrimaryCursor.SelectBot(next);
@@ -140,8 +145,8 @@ public class TurnManager : MonoBehaviour
             RectTransform portraitRect = activePortraits[turnTaker].GetComponent<RectTransform>();
             if (active.Contains(turnTaker))
             {
-                height *= ActiveUnitScaleFactor;
-                width *= ActiveUnitScaleFactor;
+                height *= Singleton.activeUnitScaleFactor;
+                width *= Singleton.activeUnitScaleFactor;
             }
             float currentY = -height / 2;
             portraitRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);

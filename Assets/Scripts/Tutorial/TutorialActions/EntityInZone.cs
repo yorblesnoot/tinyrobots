@@ -9,6 +9,8 @@ public class EntityInZone : TutorialAction
 
     private void Awake()
     {
+        Rigidbody body = gameObject.AddComponent<Rigidbody>();
+        body.isKinematic = true;
         zone.SetActive(false);
     }
     public override IEnumerator Execute()
