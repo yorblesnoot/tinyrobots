@@ -120,7 +120,6 @@ public static class Pathfinder3D
         if (!nodeMap.TryGetValue(startCoords, out Node start)) return;
         EvaluateNodeOccupancy(position);
 
-        //HashSet<Node> visited = new();
         foreach (Node node in nodeMap.Values)
         {
             node.G = float.PositiveInfinity;

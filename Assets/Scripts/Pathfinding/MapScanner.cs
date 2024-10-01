@@ -9,7 +9,8 @@ public class MapScanner
     int[] sideLengths = new int[3];
     int terrainMask;
     int interiorMask;
-
+    string terrain = "Terrain";
+    string interior = "TerrainInterior";
     readonly int margin = 3;
     readonly float sphereRadius = .0001f;
 
@@ -21,8 +22,8 @@ public class MapScanner
 
     public MapScanner()
     {
-        terrainMask = LayerMask.GetMask("Terrain");
-        interiorMask = LayerMask.GetMask("TerrainInterior");
+        terrainMask = LayerMask.GetMask(terrain);
+        interiorMask = LayerMask.GetMask(interior);
     }
 
     readonly int[] dimensions = {0, 1, 2};
@@ -34,8 +35,8 @@ public class MapScanner
         sideLengths[2] = mapBounds.z;
         byte[,,] outputGrid = new byte[mapBounds.x, mapBounds.y, mapBounds.z];
         for (int i = 0; i <= 2; i++) ScanDimension(outputGrid, i);
-        MeshCollider[] interiors = mapObject.GetComponentsInChildren<MeshCollider>().Where(i => i.gameObject.layer == interiorMask).ToArray();
-        foreach (MeshCollider interior in interiors) interior.gameObject.layer = terrainMask;
+        MeshCollider[] interiors = mapObject.GetComponentsInChildren<MeshCollider>().Where(i => i.gameObject.layer == LayerMask.NameToLayer(interior)).ToArray();
+        foreach (MeshCollider interior in interiors) interior.gameObject.layer = LayerMask.NameToLayer(terrain);
         return outputGrid;
     }
 

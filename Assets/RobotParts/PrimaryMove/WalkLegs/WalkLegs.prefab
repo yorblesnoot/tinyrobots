@@ -469,8 +469,9 @@ MonoBehaviour:
   locomotionHeight: 0.9
   sourceBone: {fileID: 1365928021841588218}
   lookSpeed: 1
-  moveSpeed: 3
-  speedMultiplier: 1
+  MoveSpeed: 3
+  PivotSpeed: 360
+  SpeedMultiplier: 1
   legStepDuration: 0.3
   lookHeightModifier: 1
   anchors:
@@ -484,7 +485,7 @@ MonoBehaviour:
     localBasePosition: {x: 0, y: 0, z: 0}
     distanceFromDeadZone: 0
     gluedWorldPosition: {x: 0, y: 0, z: 0}
-  anchorZoneRadius: 1
+  anchorZoneRadius: 1.5
   legModel: {fileID: 5779783543885095998}
   anchorUpwardLimit: 3
   anchorDownwardLength: 4
@@ -521,7 +522,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  forwardBias: 10
+  forwardBias: 5
 --- !u!1001 &1718307309410784872
 PrefabInstance:
   m_ObjectHideFlags: 0

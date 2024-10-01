@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class SpiderCrawl : LegMovement
@@ -21,6 +22,25 @@ public class SpiderCrawl : LegMovement
     protected override void InitializeParameters()
     {
         Style = MoveStyle.CRAWL;
+    }
+
+    protected override IEnumerator InterpolatePositionAndRotation(Transform unit, Vector3 target)
+    {
+        Quaternion startRotation = unit.rotation;
+        Quaternion targetRotation = GetRotationAtPosition(target);
+
+        Vector3 startPosition = unit.position;
+        float timeElapsed = 0;
+        float pathStepDuration = Vector3.Distance(unit.transform.position, target) / (MoveSpeed * SpeedMultiplier);
+        while (timeElapsed < pathStepDuration)
+        {
+            unit.SetPositionAndRotation(Vector3.Lerp(startPosition, target, timeElapsed / pathStepDuration), 
+                Quaternion.Slerp(startRotation, targetRotation, timeElapsed / pathStepDuration));
+            timeElapsed += Time.deltaTime;
+
+            AnimateToOrientation();
+            yield return null;
+        }
     }
     protected override Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral, Vector3 localStartPosition)
     {

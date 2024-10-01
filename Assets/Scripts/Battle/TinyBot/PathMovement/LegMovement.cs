@@ -111,20 +111,7 @@ public abstract class LegMovement : PrimaryMovement
     {
         return Pathfinder3D.GetCrawlOrientation(Vector3Int.RoundToInt(target));
     }
-    /*protected static bool CheckSphereExtra(Collider target_collider, SphereCollider sphere_collider, out Vector3 closestPoint, out Vector3 surfaceNormal)
-    {
-        closestPoint = Vector3.zero;
-        Vector3 sphere_pos = sphere_collider.transform.position;
-        if (Physics.ComputePenetration(target_collider, target_collider.transform.position, target_collider.transform.rotation, sphere_collider, sphere_pos, Quaternion.identity, out surfaceNormal, out float surfacePenetrationDepth))
-        {
-            closestPoint = sphere_pos + (surfaceNormal * (sphere_collider.radius - surfacePenetrationDepth));
 
-            surfaceNormal = -surfaceNormal;
-
-            return true;
-        }
-        return false;
-    }*/
     [Serializable]
     protected class Anchor
     {

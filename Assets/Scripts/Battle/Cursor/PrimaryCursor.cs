@@ -133,6 +133,7 @@ public class PrimaryCursor : MonoBehaviour
     {
         numRotator.SetActive(true);
         numRotator.transform.SetParent(null);
+        possiblePath = PlayerControlledBot.PrimaryMovement.SanitizePath(possiblePath);
         numRotator.transform.position = possiblePath[^1];
         moveCostPreview.text = Mathf.CeilToInt(distances[^1]).ToString() + " ft";
         currentPath = new();

@@ -12,9 +12,10 @@ public abstract class PrimaryMovement : MonoBehaviour
     public Transform sourceBone;
 
     [SerializeField] float lookSpeed = 1f;
-    [SerializeField] protected float moveSpeed;
+    [SerializeField] protected float MoveSpeed = 2;
+    [SerializeField] protected float PivotSpeed = 180f;
 
-    [HideInInspector] public float speedMultiplier = 1;
+    [HideInInspector] public float SpeedMultiplier = 1;
 
     public IEnumerator TraversePath(List<Vector3> path)
     {
@@ -27,19 +28,33 @@ public abstract class PrimaryMovement : MonoBehaviour
         MainCameraControl.ReleaseTracking();
     }
 
-    protected IEnumerator InterpolatePositionAndRotation(Transform unit, Vector3 target)
+    public virtual List<Vector3> SanitizePath(List<Vector3> path)
+    {
+        return path;
+    }
+
+    protected virtual IEnumerator InterpolatePositionAndRotation(Transform unit, Vector3 target)
     {
         Quaternion startRotation = unit.rotation;
         Quaternion targetRotation = GetRotationAtPosition(target);
 
         Vector3 startPosition = unit.position;
         float timeElapsed = 0;
+        float pivotDuration = Quaternion.Angle(startRotation, targetRotation) / (PivotSpeed * SpeedMultiplier);
+        while (timeElapsed < pivotDuration)
+        {
+            unit.rotation = Quaternion.Slerp(startRotation, targetRotation, timeElapsed / pivotDuration);
+            timeElapsed += Time.deltaTime;
+            AnimateToOrientation();
+            yield return null;
+        }
+        unit.rotation = targetRotation;
 
-        float pathStepDuration = Vector3.Distance(unit.transform.position, target) / (moveSpeed * speedMultiplier);
+        timeElapsed = 0;
+        float pathStepDuration = Vector3.Distance(unit.transform.position, target) / (MoveSpeed * SpeedMultiplier);
         while (timeElapsed < pathStepDuration)
         {
-            unit.SetPositionAndRotation(Vector3.Lerp(startPosition, target, timeElapsed / pathStepDuration),
-                Quaternion.Slerp(startRotation, targetRotation, timeElapsed / pathStepDuration));
+            unit.position = Vector3.Lerp(startPosition, target, timeElapsed / pathStepDuration);
             timeElapsed += Time.deltaTime;
 
             AnimateToOrientation();
