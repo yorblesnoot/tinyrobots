@@ -40,6 +40,11 @@ public class ActivatablePart : PartButton
         weightDisplay.text = part.Weight.ToString();
     }
 
+    public void SetTextColor(Color color)
+    {
+        nameDisplay.color = color;
+    }
+
     void BecomeActive()
     {
         resetActivation.Invoke();

@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -6.546, y: -20.137}
+  m_AnchoredPosition: {x: -6.54599, y: -20.136997}
   m_SizeDelta: {x: 180.5751, y: 63.425095}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &406752287811660173
@@ -126,16 +126,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df82cae6b1ddf854c8c65ed446614829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Group: {fileID: 0}
+  selectButton: {fileID: 7003806303355975362}
   nameDisplay: {fileID: 7003806302782758608}
   weightDisplay: {fileID: 7828048040712471996}
-  selectButton: {fileID: 7003806303355975362}
   buttonImage: {fileID: 7003806303355975363}
   activeColor: {r: 0, g: 0.93309736, b: 1, a: 1}
   statDisplays:
   - {fileID: 1735023617143482025}
   - {fileID: 1596401920263760665}
   - {fileID: 3982681649698278743}
-  group: {fileID: 0}
 --- !u!225 &6316871307068470610
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -188,7 +188,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 260.3717, y: 21.63129}
+  m_AnchoredPosition: {x: 273.3717, y: -26.3687}
   m_SizeDelta: {x: 546.7434, y: 52.7374}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7003806303355975388
@@ -242,7 +242,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}

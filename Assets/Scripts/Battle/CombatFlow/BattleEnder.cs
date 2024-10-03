@@ -16,7 +16,7 @@ public class BattleEnder : MonoBehaviour
     {
         if (instance.playerData == null) Debug.LogWarning("No active Navigation Map found.");
         instance.relay.BattleComplete = true;
-        instance.dropsUI.OfferDrops(() => instance.sceneLoader.Load(SceneType.NAVIGATION));
+        instance.dropsUI.ShowDrops(() => instance.sceneLoader.Load(SceneType.NAVIGATION));
 
         foreach(TinyBot bot in TurnManager.TurnTakers)
         {

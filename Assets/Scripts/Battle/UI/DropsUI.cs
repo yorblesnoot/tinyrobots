@@ -1,43 +1,46 @@
-using PrimeTween;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class DropsUI : MonoBehaviour
 {
-    [SerializeField] int modNumber = 3;
+    
     [SerializeField] float partFadeDuration = .5f;
-    [SerializeField] float missionEndDelay = 2;
-    [SerializeField] BotConverter botConverter;
-    [SerializeField] DropButtonDetailed[] dropDisplays;
+
+    [SerializeField] ActivatablePart[] dropDisplays;
+    [SerializeField] PartOverviewPanel partPreview;
     [SerializeField] PlayerData playerData;
     [SerializeField] PartGenerator partGenerator;
+    [SerializeField] PartRarityPalette rarityPalette;
+    [SerializeField] Button continueButton;
 
-    UnityAction enderCallback;
-    public void OfferDrops(UnityAction doneCallback)
+    [SerializeField] int minDrops = 2;
+    [SerializeField] int maxDrops = 4;
+    [SerializeField] int maxMods = 3;
+    public void ShowDrops(UnityAction doneCallback)
     {
-        enderCallback = doneCallback;
+        continueButton.onClick.AddListener(doneCallback);
         gameObject.SetActive(true);
-        for(int i = 0; i < dropDisplays.Length; i++)
+        int dropCount = Random.Range(minDrops, maxDrops);
+
+        for (int i = 0; i < dropDisplays.Length; i++)
         {
-            ModdedPart modPart = partGenerator.Generate(modNumber);
-            dropDisplays[i].DisplayPart(modPart, GivePart);
-            Tween.Alpha(dropDisplays[i].Group, startValue: 0, endValue: 1, duration: partFadeDuration);
+            bool generate = i < dropCount;
+            dropDisplays[i].gameObject.SetActive(generate);
+            if (!generate) continue;
+            int modCount = Random.Range(0, maxMods);
+            ModdedPart modPart = partGenerator.Generate(modCount);
+            playerData.PartInventory.Add(modPart);
+            dropDisplays[i].DisplayPart(modPart, PreviewPart);
+            dropDisplays[i].SetTextColor(rarityPalette.GetModColor(modCount));
+            dropDisplays[i].gameObject.SetActive(true);
         }
     }
 
-    void GivePart(ModdedPart part)
+    void PreviewPart(ModdedPart part)
     {
-        playerData.PartInventory.Add(part);
-        Sequence sequence = Sequence.Create();
-        foreach(var display in dropDisplays)
-        {
-            display.Group.interactable = false;
-            if (display.PartIdentity != part) sequence.Group(Tween.Alpha(display.Group, endValue: 0, duration: partFadeDuration));
-        }
-        if(enderCallback != null) 
-            sequence.Chain(Tween.Delay(2)).OnComplete(() => enderCallback());
+        partPreview.Become(part);
+        partPreview.gameObject.SetActive(true);
     }
 
     private void Update()
