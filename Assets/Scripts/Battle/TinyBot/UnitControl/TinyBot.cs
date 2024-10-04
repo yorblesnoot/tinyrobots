@@ -141,6 +141,7 @@ public class TinyBot : Targetable
     {
         base.ReduceHealth(damage);
         TurnManager.UpdateHealth(this);
+        BattleEnder.IsMissionOver();
     }
 
     protected override void Land(Vector3Int coords, float startHeight)

@@ -1,6 +1,6 @@
 public class TutorialMission : Mission
 {
-    public override bool MetEndCondition(TurnManager turnManager)
+    public override bool MetVictoryCondition()
     {
         return TutorialSequence.Main.Complete;
     }

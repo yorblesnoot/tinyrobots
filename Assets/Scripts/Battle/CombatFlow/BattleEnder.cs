@@ -1,3 +1,5 @@
+
+using System.Linq;
 using UnityEngine;
 
 public class BattleEnder : MonoBehaviour
@@ -8,12 +10,30 @@ public class BattleEnder : MonoBehaviour
     [SerializeField] DropsUI dropsUI;
 
     static BattleEnder instance;
+    static bool ended = false;
     private void Awake()
     {
         instance = this;
     }
-    public static void PlayerWin()
+
+    public static bool IsMissionOver()
     {
+        if (TurnManager.TurnTakers.Where(bot => bot.Allegiance == Allegiance.PLAYER).Count() == 0)
+        {
+            GameOver();
+            return true;
+        }
+        else if (Mission.Active.MetVictoryCondition())
+        {
+            PlayerWin();
+            return true;
+        }
+        return false;
+    }
+
+    static void PlayerWin()
+    {
+        if(ended) return;
         if (instance.playerData == null) Debug.LogWarning("No active Navigation Map found.");
         instance.relay.BattleComplete = true;
         instance.dropsUI.ShowDrops(() => instance.sceneLoader.Load(SceneType.NAVIGATION));
@@ -25,8 +45,9 @@ public class BattleEnder : MonoBehaviour
         }
     }
 
-    public static void GameOver()
+    static void GameOver()
     {
+        if (ended) return;
         instance.relay.GenerateNavMap = true;
         instance.sceneLoader.Load(SceneType.MAINMENU);
     }

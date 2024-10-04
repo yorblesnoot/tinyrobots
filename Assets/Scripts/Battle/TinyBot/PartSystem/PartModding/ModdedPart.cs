@@ -14,6 +14,7 @@ public class ModdedPart
     public int Weight { get; private set; }
     [HideInInspector] public GameObject Sample;
     [HideInInspector] public Ability[] Abilities;
+    [HideInInspector] public RarityDefinition Rarity;
 
     public static readonly HashSet<StatType> PercentStats = new() { StatType.WEIGHT };
     public ModdedPart() { }

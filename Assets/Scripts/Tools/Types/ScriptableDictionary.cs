@@ -27,14 +27,16 @@ public class ScriptableDictionary<K, V> : ScriptableObject
 
     V GetOutput(K key)
     {
-        if (dictionary == null)
-        {
-            dictionary = new();
-            foreach (Entry entry in entries)
-            {
-                dictionary.Add(entry.key, entry.value);
-            }
-        }
+        if (dictionary == null) Initialize();
         return dictionary[key];
+    }
+
+    protected virtual void Initialize()
+    {
+        dictionary = new();
+        foreach (Entry entry in entries)
+        {
+            dictionary.Add(entry.key, entry.value);
+        }
     }
 }

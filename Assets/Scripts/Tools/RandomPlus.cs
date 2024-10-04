@@ -12,13 +12,13 @@ public static class RandomPlus
         else return false;
     }
 
-    public static IWeighted RandomByWeight(this IEnumerable<IWeighted> list)
+    public static T RandomByWeight<T>(this IEnumerable<T> list) where T : IWeighted
     {
         int totalWeight = list.Sum(x => x.Weight);
         int random = Random.Range(0, totalWeight);
         int current = 0;
         int count = list.Count();
-        foreach(IWeighted weighted in list) 
+        foreach(T weighted in list) 
         {
             current += weighted.Weight;
             if (random <= current) return weighted;

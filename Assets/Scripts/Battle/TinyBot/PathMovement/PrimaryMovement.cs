@@ -60,6 +60,7 @@ public abstract class PrimaryMovement : MonoBehaviour
             AnimateToOrientation();
             yield return null;
         }
+        BattleEnder.IsMissionOver();
     }
     protected virtual void AnimateToOrientation(bool inPlace = false) { }
     public virtual Quaternion GetRotationAtPosition(Vector3 moveTarget)

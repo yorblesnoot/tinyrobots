@@ -110,10 +110,10 @@ public class TurnManager : MonoBehaviour
         bot.AvailableForTurn = false;
         TinyBot.ClearActiveBot.Invoke();
         bot.EndedTurn.Invoke();
-
-        if (Mission.MetEndCondition(Singleton)) return;
         QueueNextTurnTaker();
     }
+
+    
 
     private static void QueueNextTurnTaker()
     {

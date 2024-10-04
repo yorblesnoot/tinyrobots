@@ -13,9 +13,10 @@ public abstract class Mission : MonoBehaviour
 {
     [SerializeField] List<BotRecord> playerBotOverride;
     readonly int difficultyDivisor = 2;
+    public static Mission Active;
     public void BeginMission()
     {
-        TurnManager.Mission = this;
+        Active = this;
         InitializeMission();
         
         TurnManager.BeginTurnSequence();
@@ -47,7 +48,7 @@ public abstract class Mission : MonoBehaviour
 
     
     public virtual void RoundEnd() { }
-    public abstract bool MetEndCondition(TurnManager turnManager);
+    public abstract bool MetVictoryCondition();
     protected virtual void InitializeMission()
     {
         SceneGlobals.PlayerData.BotConverter.Initialize();

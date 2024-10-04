@@ -12,23 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd6ca3b3ff82abe468b4ecafecaddd93, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
-  PartInventory:
-  - BasePart: {fileID: 11400000, guid: f84ee6b59ca19f645829853a6bfac108, type: 2}
-    Mutators: []
-    Sample: {fileID: 0}
-    Abilities: []
-  - BasePart: {fileID: 11400000, guid: 6be34fc373213034a82942b6efd10b8c, type: 2}
-    Mutators:
-    - {fileID: 11400000, guid: 7caba883eedf3c34097833cdbeddd528, type: 2}
-    - {fileID: 11400000, guid: f75ffd2fa71b45d4cb61697de9380854, type: 2}
-    - {fileID: 11400000, guid: da9834840f13ba143a1d012741ac9628, type: 2}
-    Sample: {fileID: 0}
-    Abilities:
-    - {fileID: 0}
+  PartInventory: []
   CoreInventory:
   - {fileID: 11400000, guid: 860feb0d5dc177a488b6a2eb42305b4a, type: 2}
   - {fileID: 11400000, guid: a7692aba40afcd24ea4f5f7bcfa5e710, type: 2}
   - {fileID: 11400000, guid: f86c8696ca2c68f4b9ec558f25fc51ba, type: 2}
-  Difficulty: 7
+  MapData:
+    ZoneLocation: 0
+    Zones: []
+  Difficulty: 1
   DevMode: 1
   BotConverter: {fileID: 11400000, guid: efd80f4536a76904d8f8a1a5b13e844c, type: 2}

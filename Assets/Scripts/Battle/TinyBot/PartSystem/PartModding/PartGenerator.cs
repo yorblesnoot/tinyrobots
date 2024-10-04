@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,15 +6,36 @@ public class PartGenerator : MonoBehaviour
 {
     [SerializeField] List<PartMutator> mutators;
     [SerializeField] BotConverter botConverter;
+    [SerializeField] PartRarityDefinitions rarityPalette;
     List<CraftablePart> generableBases;
+
+    [SerializeField] int minDrops = 2;
+    [SerializeField] int maxDrops = 4;
     private void Awake()
     {
         generableBases = botConverter.PartLibrary.Where(part => part.Type != SlotType.CORE).ToList();
     }
-    public ModdedPart Generate(int modNumber)
+
+    public List<ModdedPart> GenerateDropList()
     {
-        CraftablePart partBase = generableBases.GrabRandomly(false);
-        ModdedPart modPart = new(partBase);
+        int tier = GetTier();
+        int dropCount = Random.Range(minDrops, maxDrops);
+        List<RarityDefinition> droppedRarities = new();
+        while (droppedRarities.Count < dropCount) droppedRarities.Add(rarityPalette.GetWeightedRarity(tier));
+        droppedRarities = droppedRarities.OrderByDescending(x => x.ModCounts[0]).ToList();
+
+        List<ModdedPart> output = droppedRarities.Select(r => Generate(r)).ToList();
+        SceneGlobals.PlayerData.PartInventory.AddRange(output);
+        return output;
+    }
+    public ModdedPart Generate(RarityDefinition rarity, CraftablePart partBase = null)
+    {
+        int modNumber = rarity.ModCounts.GrabRandomly(false);
+        partBase = partBase != null ? partBase : generableBases.GrabRandomly(false);
+        ModdedPart modPart = new(partBase)
+        {
+            Rarity = rarity
+        };
         List<PartMutator> availableMutators = new();
 
         HashSet<StatType> partStats = partBase.PartStats.Select(ps => ps.Type).ToHashSet();
@@ -33,6 +53,11 @@ public class PartGenerator : MonoBehaviour
 
         modPart.InitializePart();
         return modPart;
+    }
+
+    int GetTier()
+    {
+        return SceneGlobals.PlayerData.Difficulty;
     }
 
     bool CheckStats(HashSet<StatType> partStats, PartMutator mutator)
