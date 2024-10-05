@@ -17,7 +17,6 @@ public static class Pathfinder3D
     static Dictionary<Vector3Int, Node> nodeMap = new();
     public static int XSize, YSize, ZSize;
     static byte[,,] byteMap;
-    static Dictionary<MoveStyle, List<Vector3Int>> styleSpots;
     public static UnityEvent MapInitialized = new();
     #region Initialization
     public static void Initialize(byte[,,] map)
@@ -179,22 +178,12 @@ public static class Pathfinder3D
     }
     public static List<Vector3Int> GetCompatibleLocations(Vector3 position, float range, MoveStyle style)
     {
-        return styleSpots[style].Where(x => Vector3.Distance(position, x) < range).ToList();
+        return nodeMap.Values.Where(x => x.StyleAccess[(int)style] 
+        && Vector3.Distance(position, x.Location) < range).Select(n => n.Location).ToList();
     } 
     #endregion
 
     #region Map Services
-    public static Dictionary<MoveStyle, List<Vector3Int>> GetStyleNodes()
-    {
-        if(styleSpots != null) return styleSpots;
-        styleSpots = new();
-        foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle))) styleSpots.Add(style, new());
-        foreach (var node in nodeMap.Values)
-        {
-            foreach (MoveStyle style in Enum.GetValues(typeof(MoveStyle))) if (node.StyleAccess[(int)style]) styleSpots[style].Add(node.Location);
-        }
-        return styleSpots;
-    }
 
     public static List<MoveStyle> GetNodeStyles(Vector3Int position)
     {

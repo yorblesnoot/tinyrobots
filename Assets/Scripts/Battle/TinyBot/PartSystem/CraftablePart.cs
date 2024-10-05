@@ -19,4 +19,5 @@ public class CraftablePart : SOWithGUID
     public int Weight = 20;
     public GameObject AttachableObject;
     public bool PrimaryLocomotion;
+    public bool Collectible = true;
 }

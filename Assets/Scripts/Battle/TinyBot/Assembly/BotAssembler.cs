@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BotAssembler : MonoBehaviour
 {
-    [SerializeField] bool testMode;
     [SerializeField] float botColliderOffset = 1;
     [SerializeField] PortraitGenerator portraitGenerator;
     [SerializeField] BotPalette palette;
@@ -24,7 +23,7 @@ public class BotAssembler : MonoBehaviour
         GameObject bot = RecursiveConstruction(treeRoot);
         initialAttachmentPoint = bot.GetComponentInChildren<AttachmentPoint>();
         TinyBot botUnit = bot.GetComponent<TinyBot>();
-        if (instance.testMode && allegiance == Allegiance.PLAYER) botStats.TestMode();
+        if (SceneGlobals.PlayerData.DevMode && allegiance == Allegiance.PLAYER) botStats.TestMode();
         botStats.MaxAll();
         botUnit.Stats = botStats;
         botUnit.Allegiance = allegiance;

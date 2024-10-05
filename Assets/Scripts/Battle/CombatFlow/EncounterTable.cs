@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "EnemyEncounter", menuName = "ScriptableObjects/EnemyEncounter")]
-public class SpawnTable : ScriptableObject
+public class EncounterTable : EncounterGenerator
 {
     [SerializeField] List<Spawn> enemies;
 
-    public List<BotRecord> GetSpawnList(int size)
+    public override List<BotRecord> GetSpawnList(int tier)
     {
         List<BotRecord> enemyOutput = new();
         for(int i = 0; i < enemies.Count; i++)
         {
             Spawn spawn = enemies[i];
-            if (spawn.value > size) continue;
+            if (spawn.value > tier) continue;
 
             enemyOutput.Add(spawn.unit);
-            size -= spawn.value;
+            tier -= spawn.value;
         }
         return enemyOutput;
     }

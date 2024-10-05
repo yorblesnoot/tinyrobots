@@ -12,7 +12,6 @@ public enum MissionType
 public abstract class Mission : MonoBehaviour
 {
     [SerializeField] List<BotRecord> playerBotOverride;
-    readonly int difficultyDivisor = 2;
     public static Mission Active;
     public void BeginMission()
     {
@@ -59,10 +58,10 @@ public abstract class Mission : MonoBehaviour
     private void PlaceBotsInSpawnZones()
     {
         List<TinyBot> bots = SpawnPlayerBots();
-        SpawnTable table = SceneGlobals.SceneRelay.activeSpawnTable;
+        EncounterGenerator table = SceneGlobals.SceneRelay.ActiveSpawnTable;
         if (table != null)
         {
-            List<BotRecord> enemyRecords = table.GetSpawnList(SceneGlobals.PlayerData.Difficulty / difficultyDivisor);
+            List<BotRecord> enemyRecords = table.GetSpawnList(SceneGlobals.PlayerData.Difficulty);
             bots.AddRange(enemyRecords.Select(record => SpawnBot(Allegiance.ENEMY, record)));
         }
 

@@ -132,7 +132,7 @@ public class BotAI
             if (path.Count == 0) yield break;
 
             thisBot.SpendResource(Mathf.RoundToInt(moveCosts[endIndex]), StatType.MOVEMENT);
-
+            path = thisBot.PrimaryMovement.SanitizePath(path);
             yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.TraversePath(path));
             yield return ShieldPhase();
         }
@@ -172,10 +172,10 @@ public class BotAI
 
     IEnumerator PathToCastingPosition(Vector3Int location)
     {
-        bool moveRequired = Vector3Int.RoundToInt(thisBot.transform.position) != location;
-        if (moveRequired)
+        if (Vector3Int.RoundToInt(thisBot.transform.position) != location)
         {
             List<Vector3> path = Pathfinder3D.FindVectorPath(location, out var moveCosts);
+            if(path == null || path.Count == 0) yield break;
             thisBot.SpendResource(Mathf.RoundToInt(moveCosts[^1]), StatType.MOVEMENT);
             yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.TraversePath(path));
             Pathfinder3D.GeneratePathingTree(thisBot.MoveStyle, thisBot.transform.position);

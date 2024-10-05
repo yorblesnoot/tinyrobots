@@ -130,7 +130,7 @@ public class TurnManager : MonoBehaviour
     private static void StartNewRound()
     {
         RoundEnded.Invoke();
-        Mission.RoundEnd();
+        Mission.Active.RoundEnd();
         activeIndex = 0;
         foreach(var portrait in activePortraits.Values) portrait.ToggleGrayOut(false);
     }

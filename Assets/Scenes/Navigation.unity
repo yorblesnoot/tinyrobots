@@ -11727,6 +11727,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1428761081}
     m_Modifications:
+    - target: {fileID: 594880694491139441, guid: 915cbc3bb85a7454b9a779343e3b1cd6,
+        type: 3}
+      propertyPath: battleMap
+      value: 
+      objectReference: {fileID: 8623205703598572278, guid: e7827bc40de82494ea256003ecb17876,
+        type: 3}
     - target: {fileID: 2320523636865609531, guid: 915cbc3bb85a7454b9a779343e3b1cd6,
         type: 3}
       propertyPath: m_RootOrder
@@ -11888,8 +11894,7 @@ MonoBehaviour:
   loader: {fileID: 2029315049}
   relay: {fileID: 11400000, guid: ae6e43f53999c8e47b5bb43485353f3f, type: 2}
   possibleSpawns:
-  - {fileID: 11400000, guid: e929e5bd3ae93144a882e11947d27fc5, type: 2}
-  - {fileID: 11400000, guid: 5ba117d336622f94f99b18a96916f8bb, type: 2}
+  - {fileID: 11400000, guid: 609ecaf8f0e90c641b64fd00dae409cc, type: 2}
 --- !u!1001 &1560773595
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15957,6 +15962,11 @@ MonoBehaviour:
     Mutators: []
     Sample: {fileID: 0}
     Abilities: []
+    Rarity:
+      TextColor: {r: 0, g: 0, b: 0, a: 0}
+      ModCounts: 
+      BaseWeight: 0
+      TierWeight: 0
   newSlot: {fileID: 4929582602251879122, guid: d9c38f15f59535e48b0f60a7fab45b74, type: 3}
   craftCam: {fileID: 1488201771}
   partDisplays:
@@ -18215,6 +18225,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1428761081}
     m_Modifications:
+    - target: {fileID: 1793953309606890672, guid: 02ba4040599e93347af0d66e794f9944,
+        type: 3}
+      propertyPath: battleMap
+      value: 
+      objectReference: {fileID: 8623205703598572278, guid: e7827bc40de82494ea256003ecb17876,
+        type: 3}
     - target: {fileID: 3499349836281753338, guid: 02ba4040599e93347af0d66e794f9944,
         type: 3}
       propertyPath: m_RootOrder
@@ -19108,6 +19124,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: 1x1Closet
       objectReference: {fileID: 0}
+    - target: {fileID: 5391567727270380365, guid: 50cffc6a770fc804f8a01623f8a9e6b9,
+        type: 3}
+      propertyPath: battleMap
+      value: 
+      objectReference: {fileID: 8623205703598572278, guid: e7827bc40de82494ea256003ecb17876,
+        type: 3}
     - target: {fileID: 7108902794161889543, guid: 50cffc6a770fc804f8a01623f8a9e6b9,
         type: 3}
       propertyPath: m_RootOrder

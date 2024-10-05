@@ -13,7 +13,7 @@ public class PartGenerator : MonoBehaviour
     [SerializeField] int maxDrops = 4;
     private void Awake()
     {
-        generableBases = botConverter.PartLibrary.Where(part => part.Type != SlotType.CORE).ToList();
+        generableBases = botConverter.PartLibrary.Where(part => part.Type != SlotType.CORE && part.Collectible).ToList();
     }
 
     public List<ModdedPart> GenerateDropList()

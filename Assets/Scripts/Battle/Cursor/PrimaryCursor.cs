@@ -64,7 +64,7 @@ public class PrimaryCursor : MonoBehaviour
         {
             ProcessClick(abilityActive);
         }
-        else if (Input.GetMouseButtonDown(1)) ClickableAbility.Cancel();
+        else if (Input.GetMouseButtonDown(1)) ClickableAbility.CancelAbility();
 
 
         if (PlayerControlledBot != null)
@@ -126,7 +126,7 @@ public class PrimaryCursor : MonoBehaviour
     IEnumerator UseSkill(ActiveAbility ability)
     {
         yield return StartCoroutine(ability.Execute());
-        ClickableAbility.playerUsedAbility?.Invoke();
+        ClickableAbility.PlayerUsedAbility?.Invoke();
     }
 
     void ProcessAndPreviewPath(List<Vector3> possiblePath, List<float> distances)

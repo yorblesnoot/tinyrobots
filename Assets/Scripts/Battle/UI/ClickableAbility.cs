@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ClickableAbility : AbilityDisplay
 {
-    public static UnityEvent playerUsedAbility = new();
+    public static UnityEvent PlayerUsedAbility = new();
 
     [SerializeField] Button button;
     [SerializeField] TMP_Text cooldown;
@@ -14,16 +14,12 @@ public class ClickableAbility : AbilityDisplay
     [SerializeField] Transform pipHolder;
     [SerializeField] List<Image> actionPoints;
 
-    [SerializeField] float dislacementModifier;
-    float pointWidth;
-
     [HideInInspector] public ActiveAbility Ability;
     public static ClickableAbility Activated;
     private void Awake()
     {
-        pointWidth = actionPoints[0].GetComponent<RectTransform>().rect.width;
-        pointWidth *= dislacementModifier;
-        playerUsedAbility.AddListener(OvercostOverlay);
+        PlayerUsedAbility.AddListener(OvercostOverlay);
+        TinyBot.ClearActiveBot.AddListener(CancelAbility);
     }
 
     public override void Become(Ability ability)
@@ -63,7 +59,7 @@ public class ClickableAbility : AbilityDisplay
         Activated = null;
     }
 
-    public static void Cancel()
+    public static void CancelAbility()
     {
         if(Activated == null) return;
         Activated.Ability.EndAbility();
@@ -75,7 +71,6 @@ public class ClickableAbility : AbilityDisplay
     public void UpdateCooldowns()
     {
         if (Ability == null) return;
-        //Debug.Log(cooldownPanel + " panel " + Skill + " skill");
         cooldownPanel.gameObject.SetActive(Ability.currentCooldown > 0);
         cooldown.text = Ability.currentCooldown.ToString();
     }
@@ -86,12 +81,6 @@ public class ClickableAbility : AbilityDisplay
         {
             actionPoints[i].gameObject.SetActive(i < pips);
         }
-        /*
-        float newX = -pips * pointWidth / 2;
-        Vector3 pos = pipHolder.transform.localPosition;
-        pos.x = newX;
-        pipHolder.transform.localPosition = pos;
-        */
     }
 
     public void Activate()

@@ -12,7 +12,7 @@ public abstract class PrimaryMovement : MonoBehaviour
     public Transform sourceBone;
 
     [SerializeField] float lookSpeed = 1f;
-    [SerializeField] protected float MoveSpeed = 2;
+    [SerializeField] protected float MoveSpeed = 3;
     [SerializeField] protected float PivotSpeed = 180f;
 
     [HideInInspector] public float SpeedMultiplier = 1;

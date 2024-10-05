@@ -10,6 +10,7 @@ public class SpawnZone : MonoBehaviour
     static Dictionary<Allegiance, Dictionary<MoveStyle, List<Vector3>>> styleNodes;
     private void Awake()
     {
+        if(styleNodes != null) styleNodes = null;
         Pathfinder3D.MapInitialized.AddListener(CalculateZoneNodes);
         gameObject.SetActive(false);
     }
@@ -37,7 +38,6 @@ public class SpawnZone : MonoBehaviour
     {
         if (styleNodes != null) return;
 
-        Debug.Log("built nodes");
         styleNodes = new();
         foreach (Allegiance allegiance in Enum.GetValues(typeof(Allegiance)))
         {

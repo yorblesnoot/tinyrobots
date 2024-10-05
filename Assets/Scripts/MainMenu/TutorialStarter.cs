@@ -22,7 +22,7 @@ public class TutorialStarter : MonoBehaviour
         playerData.CoreInventory = new() { tutorialCore };
         SceneGlobals.SceneRelay.MissionType = MissionType.TUTORIAL;
         SceneGlobals.SceneRelay.BattleMap = tutorialMap;
-        SceneGlobals.SceneRelay.activeSpawnTable = null;
+        SceneGlobals.SceneRelay.ActiveSpawnTable = null;
         loader.Load(SceneType.BATTLE);
     }
 }
