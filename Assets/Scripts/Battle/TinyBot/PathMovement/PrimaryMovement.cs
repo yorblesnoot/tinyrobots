@@ -33,6 +33,11 @@ public abstract class PrimaryMovement : MonoBehaviour
         return path;
     }
 
+    public Vector3 SanitizePoint(Vector3 point)
+    {
+        return SanitizePath(new() { point })[0];
+    }
+
     protected virtual IEnumerator InterpolatePositionAndRotation(Transform unit, Vector3 target)
     {
         Quaternion startRotation = unit.rotation;
@@ -91,6 +96,7 @@ public abstract class PrimaryMovement : MonoBehaviour
 
         Quaternion toRotation = Quaternion.LookRotation(direction, Owner.transform.up);
         Owner.transform.rotation = Quaternion.Slerp(Owner.transform.rotation, toRotation, lookSpeed * Time.deltaTime);
+        AnimateToOrientation(true);
     }
 
     public IEnumerator ApplyImpulseToBody(Vector3 source, float distance, float snapTime, float returnTime)

@@ -38,13 +38,13 @@ public class UnitControl : MonoBehaviour
         if (PrimaryCursor.actionInProgress) return;
         gameObject.SetActive(false);
         TurnManager.EndTurn(PlayerControlledBot);
-        ClickableAbility.DeactivateSelectedAbility();
+        ClickableAbility.EndUsableAbilityState();
     }
 
     void VisualizeAbilityList(TinyBot bot)
     {
         
-        ClickableAbility.DeactivateSelectedAbility();
+        ClickableAbility.EndUsableAbilityState();
         deployedAbilities = new();
         bot.ActiveAbilities.PassDataToUI(clickableAbilities, AddActive);
         bot.PassiveAbilities.PassDataToUI(unclickableAbilities, AddPassive);

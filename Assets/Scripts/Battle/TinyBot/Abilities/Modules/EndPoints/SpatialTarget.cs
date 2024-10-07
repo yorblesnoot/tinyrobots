@@ -28,7 +28,6 @@ public class SpatialTarget : TargetPoint
     {
         Vector3 point = trajectory[^1];
         Collider[] hits = Physics.OverlapSphere(point, TargetRadius);
-        Debug.Log(hits.Length + " overlapped count");
         List<Targetable> targets = new();
         foreach (Collider hit in hits)
         {

@@ -29,12 +29,6 @@ public abstract class LegMovement : PrimaryMovement
         }
     }
 
-    public override void RotateToTrackEntity(GameObject trackingTarget)
-    {
-        base.RotateToTrackEntity(trackingTarget);
-        AnimateToOrientation(true);
-    }
-
     protected override void HandleImpulse()
     {
         foreach(var anchor in anchors)

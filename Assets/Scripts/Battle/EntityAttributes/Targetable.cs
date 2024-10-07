@@ -75,6 +75,7 @@ public abstract class Targetable : MonoBehaviour
             }
             if (Pathfinder3D.GetLandingPointBy(transform.position, MoveStyle, out Vector3Int coords))
             {
+
                 Land(coords, startHeight);
                 break;
             }

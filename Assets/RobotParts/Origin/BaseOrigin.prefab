@@ -126,7 +126,7 @@ PrefabInstance:
     - target: {fileID: 3145039084063412271, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: m_Name
-      value: TinyBot
+      value: BaseOrigin
       objectReference: {fileID: 0}
     - target: {fileID: 3145039084063412271, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
@@ -319,18 +319,17 @@ MonoBehaviour:
   TargetPoint: {fileID: 8869698945485623094}
   PhysicsBody: {fileID: 0}
   Allegiance: 0
+  deathPushMulti: 1
   landingDuration: 0.3
   deathExplodeMaxForce: 3
   hitRecoilTime: 0.1
   hitReturnTime: 0.5
   recoilDistancePerDamage: 0.03
   backstabMultiplier: 1.5
-  selectBrackets: {fileID: 0}
   feedback: {fileID: 3745691473234048856}
   hitSpark: {fileID: 2635817547006723021, guid: 4779673784276bd41b3e7f295ad79d19,
     type: 3}
   headshotPosition: {fileID: 1977403559975929643}
-  deathPushMulti: 1
   Portrait: {fileID: 0}
   AvailableForTurn: 0
   BeganTurn:
@@ -457,7 +456,7 @@ PrefabInstance:
     - target: {fileID: 6841550347340354651, guid: cf37322916f26de45b29416e4dd76b9f,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8644332899358455636, guid: cf37322916f26de45b29416e4dd76b9f,
         type: 3}

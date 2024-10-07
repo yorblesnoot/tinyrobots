@@ -149,17 +149,12 @@ public class TinyBot : Targetable
     {
         PhysicsBody.isKinematic = true;
         Vector3 surfaceNormal = MoveStyle == MoveStyle.CRAWL ? Pathfinder3D.GetCrawlOrientation(coords) : Vector3.up;
+        Vector3 finalPosition = PrimaryMovement.SanitizePoint(coords);
         Quaternion rotationTarget = Quaternion.FromToRotation(transform.up, surfaceNormal) * transform.rotation;
-        Tween.Position(transform, endValue: coords, duration: landingDuration).Group(
+        StartCoroutine(PrimaryMovement.NeutralStance());
+        Tween.Position(transform, endValue: finalPosition, duration: landingDuration).Group(
                 Tween.Rotation(transform, endValue: rotationTarget, duration: landingDuration))
                     .OnComplete(() => EndFall(startHeight));
-    }
-
-    protected override void EndFall(float startHeight)
-    {
-        base.EndFall(startHeight);
-        if(IsDead) return;
-        StartCoroutine(PrimaryMovement.NeutralStance());
     }
 
     private void OnMouseEnter()

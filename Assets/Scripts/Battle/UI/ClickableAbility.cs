@@ -51,7 +51,7 @@ public class ClickableAbility : AbilityDisplay
         button.onClick.RemoveAllListeners();
     }
 
-    public static void DeactivateSelectedAbility()
+    public static void EndUsableAbilityState()
     {
         if (Activated == null) return;
         Activated.image.color = Color.white;
@@ -63,7 +63,7 @@ public class ClickableAbility : AbilityDisplay
     {
         if(Activated == null) return;
         Activated.Ability.EndAbility();
-        DeactivateSelectedAbility();
+        EndUsableAbilityState();
     }
 
     
@@ -86,7 +86,7 @@ public class ClickableAbility : AbilityDisplay
     public void Activate()
     {
         if (!Ability.IsAvailable()) return;
-        DeactivateSelectedAbility();
+        CancelAbility();
         Activated = this;
         Ability.LockOnTo(PrimaryCursor.Transform.gameObject, true);
         image.color = Color.red;

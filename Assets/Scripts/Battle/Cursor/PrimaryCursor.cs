@@ -16,7 +16,7 @@ public class PrimaryCursor : MonoBehaviour
 {
 
     public static PrimaryCursor Instance;
-    static CursorBehaviour ActiveBehaviour;
+    static CursorBehaviour activeBehaviour;
     
     
     public static Transform Transform;
@@ -40,7 +40,7 @@ public class PrimaryCursor : MonoBehaviour
         Instance = this;
         actionInProgress = false;
         TinyBot.ClearActiveBot.AddListener(() => pathingLine.positionCount = 0);
-        ActiveBehaviour = cursorBehaviour;
+        activeBehaviour = cursorBehaviour;
         Transform = transform;
         StatDisplay = statDisplay;
     }
@@ -53,7 +53,7 @@ public class PrimaryCursor : MonoBehaviour
         bool abilityActive = ClickableAbility.Activated != null;
 
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
-        if (State == CursorState.FREE) ActiveBehaviour.ControlCursor();
+        if (State == CursorState.FREE) activeBehaviour.ControlCursor();
         if (actionInProgress) 
         {
             HideMovePreview();
@@ -104,7 +104,7 @@ public class PrimaryCursor : MonoBehaviour
 
                 StartCoroutine(UseSkill(skill));
                 ClickableAbility.Activated.UpdateCooldowns();
-                ClickableAbility.DeactivateSelectedAbility();
+                ClickableAbility.EndUsableAbilityState();
             }
         }
         else if (TargetedBot != null)
@@ -203,7 +203,7 @@ public class PrimaryCursor : MonoBehaviour
         TargetedBot = unit;
         State = CursorState.UNITSNAPPED;
         Transform.position = unit.TargetPoint.position;
-        ActiveBehaviour.SnapToPosition(unit.TargetPoint.position);
+        activeBehaviour.SnapToPosition(unit.TargetPoint.position);
     }
     public static void Unsnap()
     {

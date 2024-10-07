@@ -42,7 +42,7 @@ public abstract class ActiveAbility : Ability
         Vector3 rawPosition = Owner.transform.position;
         Vector3Int startPosition = Vector3Int.RoundToInt(rawPosition);
         MainCameraControl.ActionPanTo(GetCameraAimPoint());
-        currentCooldown = cooldown;
+        currentCooldown = SceneGlobals.PlayerData.DevMode ? 0 : cooldown;
         PrimaryCursor.actionInProgress = true;
         yield return new WaitForSeconds(skillDelay);
         ReleaseLockOn();
@@ -144,7 +144,6 @@ public abstract class ActiveAbility : Ability
     {
         if (trackingToggle != null) trackingToggle.Stop();
         trackedTarget = null;
-        StartCoroutine(Owner.PrimaryMovement.NeutralStance());
         LineMaker.HideLine();
         SetHighlightedTargets(null);
     }
