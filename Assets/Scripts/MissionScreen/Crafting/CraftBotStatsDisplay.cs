@@ -16,7 +16,6 @@ public class CraftBotStatsDisplay : MonoBehaviour
     Dictionary<StatType, StatEntry> entries;
     List<ModdedPart> activeParts = new();
     int totalWeight;
-    int maxWeight;
     float totalHealth;
 
     public void Initialize()
@@ -35,14 +34,14 @@ public class CraftBotStatsDisplay : MonoBehaviour
 
     public bool IsDeployable()
     {
-        return totalWeight <= maxWeight;
+        return totalWeight <= UnitSwitcher.ActiveCore.EnergyCapacity;
     }
 
     public void RefreshDisplays()
     {
         foreach (var entry in entries.Values) entry.Value = 0;
-        totalHealth = totalWeight = maxWeight = 0;
-        List<Ability> activeAbilities = new();
+        totalHealth = totalWeight = 0;
+        List <Ability> activeAbilities = new();
 
         List<ModdedPart> activePartsPlusOrigin = new(activeParts)
         {
@@ -58,13 +57,12 @@ public class CraftBotStatsDisplay : MonoBehaviour
                 else entries[stat].Value += increment;
             }
             
-            if(part.Weight < 0) maxWeight -= part.Weight;
-            else totalWeight += part.Weight;
+            totalWeight += part.EnergyCost;
         }
 
         foreach(var entry in entries.Values) entry.Display.text = entry.Value.ToString();
         healthDisplay.text = $"{UnitSwitcher.ActiveCore.HealthRatio * totalHealth} / {totalHealth}";
-        weightDisplay.text = $"{totalWeight} / {(maxWeight == 0 ? "-" : maxWeight)}";
+        weightDisplay.text = $"{totalWeight} / {UnitSwitcher.ActiveCore.EnergyCapacity}";
         weightDisplay.color = IsDeployable() ?  Color.white : Color.red;
 
         activeAbilities.PassDataToUI(abilityDisplays, (ability, display) => display.Become(ability));

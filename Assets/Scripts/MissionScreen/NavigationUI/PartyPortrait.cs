@@ -16,7 +16,7 @@ public class PartyPortrait : MonoBehaviour
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => coreCallback(core));
         UpdateHealthOverlay();
-        weightOverlay.SetActive(!core.Deployable);
+        weightOverlay.SetActive(!core.Energized);
         core.HealthRatioChanged.AddListener(UpdateHealthOverlay);
     }
 

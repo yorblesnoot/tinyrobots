@@ -16,7 +16,7 @@ public class CraftablePart : SOWithGUID
 {
     public StatValue[] PartStats;
     public SlotType Type;
-    public int Weight = 20;
+    public int EnergyCost = 20;
     public GameObject AttachableObject;
     public bool PrimaryLocomotion;
     public bool Collectible = true;

@@ -37,7 +37,7 @@ public class ActivatablePart : PartButton
             }
             else statDisplays[i].Hide();
         }
-        weightDisplay.text = part.Weight.ToString();
+        weightDisplay.text = part.EnergyCost.ToString();
     }
 
     public void SetTextColor(Color color)

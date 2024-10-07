@@ -20,7 +20,7 @@ public class SliceTargeter : MonoBehaviour
 
     public static void SetShape(int degree, float radius)
     {
-        
+        instance.gameObject.SetActive(true);
         int count = instance.Slices.Count;
         float mod = 1 - (float)degree / 360;
         mod *= count;

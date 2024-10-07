@@ -199,6 +199,7 @@ GameObject:
   - component: {fileID: 5513254970727348}
   - component: {fileID: 449424067534177295}
   - component: {fileID: 1678144688368226067}
+  - component: {fileID: 8481281637002415656}
   - component: {fileID: 188292235470090148}
   - component: {fileID: 6697166036674859764}
   m_Layer: 0
@@ -250,7 +251,7 @@ MonoBehaviour:
   emissionPoint: {fileID: 4121413900738104645}
   trackingToggle: {fileID: 5513254970727348}
   preAnimations:
-  - {fileID: 188292235470090148}
+  - {fileID: 8481281637002415656}
   postAnimations: []
   endAnimations:
   - {fileID: 449424067534177295}
@@ -299,6 +300,23 @@ MonoBehaviour:
   ikTarget: {fileID: 8265051676045458903}
   readyPosition: {fileID: 3814424009209204189}
   aimLag: 30
+--- !u!114 &8481281637002415656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8098520941806732672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d6f7aeac8060ab45bf36642d8d75847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ikTarget: {fileID: 8265051676045458903}
+  thrustLength: 3
+  thrustDuration: 0.1
+  thrustLinger: 0.1
+  returnDuration: 0.5
 --- !u!114 &188292235470090148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,7 +349,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TargetRadius: 3
-  maxTargets: 100
+  maxTargets: 5
   spatialDegree: 20
 --- !u!1 &8658645440822617628
 GameObject:

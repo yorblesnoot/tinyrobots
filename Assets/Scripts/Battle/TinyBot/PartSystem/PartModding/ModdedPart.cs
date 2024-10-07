@@ -11,12 +11,12 @@ public class ModdedPart
     public Dictionary<ModType, int> Mods;
     //public int[] ExtraAbilities;
     public List<PartMutator> Mutators = new();
-    public int Weight { get; private set; }
+    public int EnergyCost { get; private set; }
     [HideInInspector] public GameObject Sample;
     [HideInInspector] public Ability[] Abilities;
     [HideInInspector] public RarityDefinition Rarity;
 
-    public static readonly HashSet<StatType> PercentStats = new() { StatType.WEIGHT };
+    public static readonly HashSet<StatType> PercentStats = new() { StatType.ENERGY };
     public ModdedPart() { }
     public ModdedPart(CraftablePart part)
     {
@@ -26,7 +26,7 @@ public class ModdedPart
     public void InitializePart()
     {
         InstantiateSample();
-        Weight = BasePart.Weight;
+        EnergyCost = BasePart.EnergyCost;
         MutatePart();
     }
 
@@ -54,9 +54,9 @@ public class ModdedPart
         ApplyStats(statValues);
         ApplyMods(modValues);
 
-        if (!FinalStats.TryGetValue(StatType.WEIGHT, out int extraWeight)) return;
-        FinalStats.Remove(StatType.WEIGHT);
-        Weight += extraWeight;
+        if (!FinalStats.TryGetValue(StatType.ENERGY, out int extraEnergy)) return;
+        FinalStats.Remove(StatType.ENERGY);
+        EnergyCost += extraEnergy;
     }
 
     void ApplyStats(List<StatValue> statValues)

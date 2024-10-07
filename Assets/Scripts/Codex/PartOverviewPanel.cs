@@ -80,7 +80,7 @@ public class PartOverviewPanel : MonoBehaviour
             }
             else statDisplays[i].Hide();
         }
-        weightDisplay.text = part.Weight.ToString();
+        weightDisplay.text = part.EnergyCost.ToString();
     }
 
     void SetAbilities(ModdedPart part)

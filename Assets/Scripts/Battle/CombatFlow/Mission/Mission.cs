@@ -35,7 +35,7 @@ public abstract class Mission : MonoBehaviour
         if (playerBotOverride != null) bots.AddRange(playerBotOverride.Select(record => SpawnBot(Allegiance.PLAYER, record)));
         foreach (var core in SceneGlobals.PlayerData.CoreInventory)
         {
-            if (!core.Deployable || core.HealthRatio == 0) continue;
+            if (core.HealthRatio == 0) continue;
             TinyBot bot = BotAssembler.BuildBot(core.Bot, Allegiance.PLAYER);
             TurnManager.AddTurnTaker(bot);
             bot.LinkedCore = core;

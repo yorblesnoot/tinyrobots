@@ -103,6 +103,7 @@ public class TinyBot : Targetable
     public override void Die(Vector3 hitSource = default)
     {
         base.Die(hitSource);
+        if(PrimaryCursor.TargetedBot == this) PrimaryCursor.Unsnap();
         Vector3 hitPush = (transform.position - hitSource).normalized * deathPushMulti;
         foreach(var part in parts)
         {

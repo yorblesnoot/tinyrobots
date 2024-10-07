@@ -61,7 +61,7 @@ public class UnitSwitcher : MonoBehaviour
     {
         if (ActiveCore == null) return;
 
-        ActiveCore.Deployable = unitStatsDisplay.IsDeployable();
+        ActiveCore.Energized = unitStatsDisplay.IsDeployable();
         ActiveCore.Bot = blueprintControl.BuildBot();
         blueprintControl.OriginSlot.ClearPartIdentity(false, false);
     }

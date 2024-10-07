@@ -11,16 +11,16 @@ public class BotCore : SOWithGUID
     }
 
     public TreeNode<ModdedPart> Bot;
-
-    float _healthRatio = 1f;
+    public readonly int EnergyCapacity = 100;
+    float healthRatio = 1f;
     public float HealthRatio { 
-        get { return _healthRatio; } 
-        set {  _healthRatio = value; HealthRatioChanged?.Invoke(); } 
+        get { return healthRatio; } 
+        set {  healthRatio = value; HealthRatioChanged?.Invoke(); } 
     }
     [HideInInspector] public UnityEvent HealthRatioChanged = new();
 
     public Sprite CharacterPortrait;
-    [HideInInspector] public bool Deployable = true;
+    [HideInInspector] public bool Energized = true;
     [HideInInspector] public ModdedPart ModdedCore;
 
     [Header("Characteristics")]

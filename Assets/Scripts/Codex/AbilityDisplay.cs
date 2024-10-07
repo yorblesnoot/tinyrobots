@@ -16,11 +16,11 @@ public class AbilityDisplay : MonoBehaviour, IPointerEnterHandler, IPointerExitH
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        AbilityOverviewPanel.Show(Skill, transform.position);
+        AbilityTooltip.Show(Skill, transform.position);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        AbilityOverviewPanel.Hide();
+        AbilityTooltip.Hide();
     }
 }
