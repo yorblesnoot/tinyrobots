@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4252352802015858937}
   - component: {fileID: 8947374775925128031}
-  m_Layer: 0
+  - component: {fileID: 6614097775514792187}
+  m_Layer: 8
   m_Name: Buto Fog Density Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -48,6 +49,28 @@ MonoBehaviour:
   mode: 0
   densityMultiplier: 0
   blendDistance: 28
+--- !u!64 &6614097775514792187
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766520403390744545}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 0}
 --- !u!1001 &6461112411301799
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12381,11 +12404,48 @@ PrefabInstance:
       propertyPath: m_Name
       value: SM__Flask_02
       objectReference: {fileID: 0}
+    - target: {fileID: 1004899350350975005, guid: b106739cccd011444a9fd589979aa81e,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1004899350350975005, guid: b106739cccd011444a9fd589979aa81e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7657136390499600616}
   m_SourcePrefab: {fileID: 100100000, guid: b106739cccd011444a9fd589979aa81e, type: 3}
+--- !u!1 &4815737279324446327 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1004899350350975005, guid: b106739cccd011444a9fd589979aa81e,
+    type: 3}
+  m_PrefabInstance: {fileID: 5703511136055168618}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &7657136390499600616
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4815737279324446327}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 163822457706012046, guid: 0c8f768d00f239042adf5446301cbc7d, type: 3}
 --- !u!4 &5305028322584757453 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 484644994813037223, guid: b106739cccd011444a9fd589979aa81e,

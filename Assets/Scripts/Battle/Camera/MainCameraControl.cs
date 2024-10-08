@@ -21,6 +21,8 @@ public class MainCameraControl : MonoBehaviour
 
     Vector3Int mapCorner;
     static CameraSet Cams;
+    string xInput;
+    string yInput;
 
     public static MainCameraControl Instance;
     public void Initialize(byte[,,] map)
@@ -31,6 +33,8 @@ public class MainCameraControl : MonoBehaviour
         Cams.FocalPoint = transform;
         Instance = this;
         RestrictCamera(false);
+        xInput = Cams.Free.m_XAxis.m_InputAxisName;
+        yInput = Cams.Free.m_YAxis.m_InputAxisName;
     }
 
     void ConfineCameras(Vector3Int corner)
@@ -81,18 +85,11 @@ public class MainCameraControl : MonoBehaviour
     void BeginFocusRotation(InputAction.CallbackContext context)
     {
         if (!freeCameraAvailable) return;
-        Cams.Pivot.Priority = 3;
+        Cams.Free.Priority = 3;
         Cams.Automatic.gameObject.SetActive(false);
-        float coreRadius = Cams.Pivot.m_Orbits[1].m_Radius;
-        float targetDistance = Vector3.Distance(Camera.main.transform.position, Cams.FocalPoint.position);
-        float scaleFactor = targetDistance/coreRadius;
 
-        for (int i = 0; i < Cams.Pivot.m_Orbits.Count(); i++)
-        {
-            Cams.Pivot.m_Orbits[i].m_Radius *= scaleFactor;
-            Cams.Pivot.m_Orbits[i].m_Height *= scaleFactor;
-        }
-        
+        Cams.Free.m_XAxis.m_InputAxisName = xInput;
+        Cams.Free.m_YAxis.m_InputAxisName = yInput;
     }
 
     void EndFocusRotation(InputAction.CallbackContext context)
@@ -159,10 +156,6 @@ public class MainCameraControl : MonoBehaviour
 
     private void SlideCamera(Vector3 moveOffset)
     {
-        Vector3 offset = Camera.main.transform.position - Cams.FocalPoint.position;
-        Vector3 slideDirection = Vector3.Cross(offset, Vector3.up);
-
-
         CameraStrafe();
         Quaternion yRotation = Camera.main.transform.rotation;
 
@@ -185,9 +178,10 @@ public class MainCameraControl : MonoBehaviour
 
     static void CameraStrafe()
     {
-        Cams.Pivot.Priority = 0;
-        Cams.Strafe.Priority = 2;
-        Cams.Automatic.gameObject.SetActive(false);
+        Cams.Free.m_YAxis.m_InputAxisName = "";
+        Cams.Free.m_XAxis.m_InputAxisName = "";
+        Cams.Free.m_YAxis.m_InputAxisValue = 0f;
+        Cams.Free.m_XAxis.m_InputAxisValue = 0f;
     }
 
     void ClampFocusInMap()
@@ -202,8 +196,7 @@ public class MainCameraControl : MonoBehaviour
         Cams.Automatic.gameObject.SetActive(true);
         Cams.FocalPoint.transform.position = bot.TargetPoint.position;
         
-        Cams.Strafe.Priority = 0;
-        Cams.Pivot.Priority = 0;
+        Cams.Free.Priority = 0;
         Cams.Automatic.m_MinDuration = 0;
     }
 
@@ -256,8 +249,7 @@ public class MainCameraControl : MonoBehaviour
     [System.Serializable]
     class CameraSet
     {
-        public CinemachineVirtualCamera Strafe;
-        public CinemachineFreeLook Pivot;
+        public CinemachineFreeLook Free;
         public CinemachineClearShot Automatic;
         public CinemachineBrain Brain;
         public Transform FocalPoint;
