@@ -63,18 +63,10 @@ public class TurnManager : MonoBehaviour
         ArrangePortraits(currentlyActive);
     }
 
-    public static void BeginTurnSequence()
+    public static void BeginTurnSequence(bool select = true)
     {
-        MainCameraControl.RestrictCamera();
         TurnTakers.OrderByDescending(bot => bot.Stats.Max[StatType.INITIATIVE]);
-        GetActiveBots();
-        Singleton.StartCoroutine(Singleton.WaitToFreeCamera());
-    }
-
-    IEnumerator WaitToFreeCamera()
-    {
-        yield return null;
-        MainCameraControl.RestrictCamera(false);
+        QueueNextTurnTaker(select);
     }
 
     public static void UpdateHealth(TinyBot bot)
@@ -91,7 +83,6 @@ public class TurnManager : MonoBehaviour
         {
             TinyBot turnTaker = TurnTakers[activeIndex];
             currentlyActive.Add(TurnTakers[activeIndex]);
-            if(currentlyActive.Count == 1) MainCameraControl.CutToUnit(turnTaker);
             turnTaker.BeginTurn();
             activeIndex++;
             if (turnTaker.Allegiance == Allegiance.PLAYER
@@ -115,7 +106,7 @@ public class TurnManager : MonoBehaviour
 
     
 
-    private static void QueueNextTurnTaker()
+    private static void QueueNextTurnTaker(bool select = true)
     {
         if (currentlyActive.Count == 0)
         {
@@ -123,8 +114,8 @@ public class TurnManager : MonoBehaviour
             GetActiveBots();
         }
         TinyBot next = currentlyActive.First();
-        MainCameraControl.CutToUnit(next);
-        PrimaryCursor.SelectBot(next);
+        MainCameraControl.CutToUnit(next, select);
+        if (select) PrimaryCursor.SelectBot(next);
     }
 
     private static void StartNewRound()

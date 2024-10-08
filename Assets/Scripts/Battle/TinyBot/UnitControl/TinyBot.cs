@@ -83,7 +83,6 @@ public class TinyBot : Targetable
         else
         {
             botAI ??= new(this);
-            MainCameraControl.CutToUnit(this);
             StartCoroutine(botAI.TakeTurn());
         }
     }

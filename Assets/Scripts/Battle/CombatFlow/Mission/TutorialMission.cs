@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class TutorialMission : Mission
 {
     public override bool MetVictoryCondition()

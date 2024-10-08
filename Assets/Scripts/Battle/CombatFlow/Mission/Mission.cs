@@ -12,15 +12,16 @@ public enum MissionType
 public abstract class Mission : MonoBehaviour
 {
     [SerializeField] List<BotRecord> playerBotOverride;
+    [SerializeField] bool selectFirstBot = true;
     public static Mission Active;
     public void BeginMission()
     {
         Active = this;
         InitializeMission();
-        
-        TurnManager.BeginTurnSequence();
-
+        TurnManager.BeginTurnSequence(selectFirstBot);
     }
+
+    
     public TinyBot SpawnBot(Allegiance allegiance, BotRecord botRecord)
     {
         var tree = SceneGlobals.PlayerData.BotConverter.StringToBot(botRecord.record);

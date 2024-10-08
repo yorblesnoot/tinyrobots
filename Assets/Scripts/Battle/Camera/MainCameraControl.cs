@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class MainCameraControl : MonoBehaviour
 {
@@ -12,8 +13,6 @@ public class MainCameraControl : MonoBehaviour
     [SerializeField] float scrollZoneX;
     [SerializeField] float scrollZoneY;
     [SerializeField] float zoomSpeed;
-    [SerializeField] int maxZoom;
-    [SerializeField] int minZoom;
     [SerializeField] float actionCutDuration = 2f;
     [SerializeField] float actionCutMaxZoom = 5f;
     [SerializeField] int focalPointDeadzone = 5;
@@ -25,6 +24,12 @@ public class MainCameraControl : MonoBehaviour
     string yInput;
 
     public static MainCameraControl Instance;
+    private void OnEnable()
+    {
+        EnableInputSystem();
+    }
+
+    #region Initialization
     public void Initialize(byte[,,] map)
     {
         mapCorner = new(map.GetLength(0), map.GetLength(1), map.GetLength(2));
@@ -35,8 +40,8 @@ public class MainCameraControl : MonoBehaviour
         RestrictCamera(false);
         xInput = Cams.Free.m_XAxis.m_InputAxisName;
         yInput = Cams.Free.m_YAxis.m_InputAxisName;
+        LockCameraPivot();
     }
-
     void ConfineCameras(Vector3Int corner)
     {
         GameObject boundingBox = new();
@@ -61,12 +66,6 @@ public class MainCameraControl : MonoBehaviour
     InputAction rotator;
     InputAction rotateHold;
     InputAction rotateOn;
-
-    private void OnEnable()
-    {
-        EnableInputSystem();
-    }
-
     private void EnableInputSystem()
     {
         playerInput = new();
@@ -81,12 +80,12 @@ public class MainCameraControl : MonoBehaviour
         rotateOn.Enable();
         rotateOn.performed += BeginFocusRotation;
     }
+    #endregion
 
     void BeginFocusRotation(InputAction.CallbackContext context)
     {
         if (!freeCameraAvailable) return;
-        Cams.Free.Priority = 3;
-        Cams.Automatic.gameObject.SetActive(false);
+        ToggleAutoCam(false);
 
         Cams.Free.m_XAxis.m_InputAxisName = xInput;
         Cams.Free.m_YAxis.m_InputAxisName = yInput;
@@ -94,7 +93,7 @@ public class MainCameraControl : MonoBehaviour
 
     void EndFocusRotation(InputAction.CallbackContext context)
     {
-        CameraStrafe();
+        LockCameraPivot();
     }
 
     static bool freeCameraAvailable = true;
@@ -131,11 +130,7 @@ public class MainCameraControl : MonoBehaviour
         {
             SlideCamera(new Vector3(scrollZoneX / 2, 0f, 0f));
         }
-        else if (rotateHold.inProgress)
-        {
-            //PivotCameraAroundFocus(mouse);
-        }
-        else
+        else if(!rotateHold.inProgress)
         {
             PanCamera(mouse);
         }
@@ -152,23 +147,19 @@ public class MainCameraControl : MonoBehaviour
         if (moveOffset != Vector3.zero) SlideCamera(moveOffset);
     }
 
-    [SerializeField] float originReturnTime;
-
     private void SlideCamera(Vector3 moveOffset)
     {
-        CameraStrafe();
+        if(!freeCameraAvailable) return;
         Quaternion yRotation = Camera.main.transform.rotation;
 
         moveOffset *= scrollSpeed;
         Vector3 slidPosition = transform.position + yRotation * moveOffset;
-        //clamp focus point within map bounds
         transform.position = slidPosition;
         ClampFocusInMap();
     }
 
     private void Zoom(float factor)
     {
-        CameraStrafe();
         Vector3 direction = Cams.FocalPoint.position - Camera.main.transform.position;
         direction.Normalize();
         direction *= factor;
@@ -176,7 +167,7 @@ public class MainCameraControl : MonoBehaviour
         ClampFocusInMap();
     }
 
-    static void CameraStrafe()
+    static void LockCameraPivot()
     {
         Cams.Free.m_YAxis.m_InputAxisName = "";
         Cams.Free.m_XAxis.m_InputAxisName = "";
@@ -191,12 +182,16 @@ public class MainCameraControl : MonoBehaviour
         transform.position = transform.position.Clamp(minimum, maximum);
     }
 
-    public static void CutToUnit(TinyBot bot)
+    public static void CutToUnit(TinyBot bot, bool autoCam = true)
     {
-        Cams.Automatic.gameObject.SetActive(true);
         Cams.FocalPoint.transform.position = bot.TargetPoint.position;
-        
-        Cams.Free.Priority = 0;
+        if (autoCam) ToggleAutoCam();
+    }
+
+    static void ToggleAutoCam(bool on = true)
+    {
+        Cams.Automatic.gameObject.SetActive(on);
+        Cams.Free.Priority = on ? 0 : 3;
         Cams.Automatic.m_MinDuration = 0;
     }
 
