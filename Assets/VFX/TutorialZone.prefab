@@ -88,6 +88,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: guidering
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 68c7b68b9392ea84092ad259393002ff,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -112,10 +117,20 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 5.03
       objectReference: {fileID: 0}
+    - target: {fileID: 3403175383178852547, guid: 2f4c13b1829617d4e86b6a0378681a85,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 4290083979738564122, guid: 2f4c13b1829617d4e86b6a0378681a85,
         type: 3}
       propertyPath: m_Name
-      value: TutorialZone Variant
+      value: TutorialZone
+      objectReference: {fileID: 0}
+    - target: {fileID: 4290083979738564122, guid: 2f4c13b1829617d4e86b6a0378681a85,
+        type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 5691767370485185999, guid: 2f4c13b1829617d4e86b6a0378681a85,
         type: 3}
@@ -217,7 +232,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
