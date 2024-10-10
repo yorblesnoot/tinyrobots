@@ -5,7 +5,6 @@ using UnityEngine;
 public class GameStarter : MonoBehaviour
 {
     [SerializeField] BotConverter botConverter;
-    [SerializeField] SceneLoader loader;
     [SerializeField] List<BotCore> starterCores;
     [SerializeField] int startDifficulty = 6;
 
@@ -17,7 +16,7 @@ public class GameStarter : MonoBehaviour
         SceneGlobals.SceneRelay.GenerateNavMap = true;
         SceneGlobals.PlayerData.PartInventory = new();
         SceneGlobals.PlayerData.Difficulty = startDifficulty;
-        loader.Load(SceneType.NAVIGATION);
+        SceneLoader.Load(SceneType.NAVIGATION);
     }
 
     public void LoadGame()
@@ -25,6 +24,6 @@ public class GameStarter : MonoBehaviour
         SaveContainer container = new(SceneGlobals.PlayerData);
         container.LoadPlayerData();
         SceneGlobals.SceneRelay.GenerateNavMap = false;
-        loader.Load(SceneType.NAVIGATION);
+        SceneLoader.Load(SceneType.NAVIGATION);
     }
 }

@@ -10,9 +10,11 @@ public class PlayerNavigator : MonoBehaviour
     [SerializeField] EventProvider eventProvider;
     public static PlayerNavigator Instance { get; private set; }
     public static UnityEvent MoveComplete = new();
-    [HideInInspector] public TowerNavZone occupiedZone;
+    [HideInInspector] public TowerNavZone OccupiedZone;
     MapData mapData;
     bool moveAvailable;
+
+    public static UnityEvent<TowerNavZone> EnteredZone = new();
 
     private void Awake()
     {
@@ -28,7 +30,7 @@ public class PlayerNavigator : MonoBehaviour
     public void TryMoveToZone(TowerNavZone zone)
     {
         if (!moveAvailable) return;
-        if (occupiedZone != null && !occupiedZone.neighbors.Contains(zone)) return;
+        if (OccupiedZone != null && !OccupiedZone.Neighbors.Contains(zone)) return;
 
         moveAvailable = false;
         Tween.Position(transform, endValue: zone.UnitPosition, duration: moveTime).OnComplete(() => FinishMove(zone));
@@ -36,12 +38,13 @@ public class PlayerNavigator : MonoBehaviour
 
     public void FinishMove(TowerNavZone zone)
     {
-        occupiedZone = zone;
+        OccupiedZone = zone;
+        EnteredZone.Invoke(zone);
         zone.RevealNeighbors();
-        mapData.Zones[zone.zoneIndex].revealed = true;
-        mapData.ZoneLocation = zone.zoneIndex;
+        mapData.Zones[zone.ZoneIndex].revealed = true;
+        mapData.ZoneLocation = zone.ZoneIndex;
 
-        if(zone.zoneEvent != null) zone.zoneEvent.Activate(zone, CompleteEvent);
+        if(zone.ZoneEvent != null) zone.ZoneEvent.Activate(zone, CompleteEvent);
         else moveAvailable = true;
     }
 
@@ -50,10 +53,10 @@ public class PlayerNavigator : MonoBehaviour
         moveAvailable = true;
         MoveComplete?.Invoke();
 
-        if (occupiedZone.zoneEvent == null) return;
-        occupiedZone.zoneEvent.Clear(occupiedZone);
-        occupiedZone.zoneEvent = null;
-        occupiedZone.zoneEventType = 0;
+        if (OccupiedZone.ZoneEvent == null) return;
+        OccupiedZone.ZoneEvent.Clear(OccupiedZone);
+        OccupiedZone.ZoneEvent = null;
+        OccupiedZone.ZoneEventType = 0;
         mapData.Zones[mapData.ZoneLocation].eventType = 0;
     }
 }

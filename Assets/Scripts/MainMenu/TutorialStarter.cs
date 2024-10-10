@@ -23,6 +23,6 @@ public class TutorialStarter : MonoBehaviour
         SceneGlobals.SceneRelay.MissionType = MissionType.TUTORIAL;
         SceneGlobals.SceneRelay.BattleMap = tutorialMap;
         SceneGlobals.SceneRelay.ActiveSpawnTable = null;
-        loader.Load(SceneType.BATTLE);
+        SceneLoader.Load(SceneType.BATTLE);
     }
 }

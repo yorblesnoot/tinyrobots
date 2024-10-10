@@ -19,7 +19,7 @@ public class BlueprintControl : MonoBehaviour
     public PartSlot OriginSlot;
 
 
-    static BlueprintControl Instance;
+    static BlueprintControl instance;
     static bool devMode;
     [Serializable]
     class FilterButton
@@ -33,8 +33,8 @@ public class BlueprintControl : MonoBehaviour
 
     public void Initialize()
     {
-        Instance = this;
-        foreach (var filter in filters) filter.Button.onClick.AddListener(() => ApplyFilter(filter));
+        instance = this;
+        foreach (var filter in filters) filter.Button.onClick.AddListener(() => ApplyInventoryFilter(filter));
         NewSlot = newSlot;
         UpdatePartDisplays();
         foreach (var core in SceneGlobals.PlayerData.CoreInventory) core.Initialize();
@@ -51,30 +51,43 @@ public class BlueprintControl : MonoBehaviour
         craftCam.Priority = 0;
     }
 
-    void SetActivePart(ModdedPart part)
+    static void SetActivePart(ModdedPart part)
     {
         ActivePart = part;
-        partOverviewPanel.Become(part);
+        instance.partOverviewPanel.Become(part);
+        FilterAvailableSlots();
+    }
+
+    public static void FilterAvailableSlots()
+    {
+        instance.OriginSlot.Traverse(HideIfIncompatible);
+
+        void HideIfIncompatible(PartSlot slot)
+        {
+            if(ActivePart == null) slot.Hide(false);
+            else slot.Hide(!slot.IsCompatibleWithType(ActivePart.BasePart.Type));
+        }
     }
 
     public static void SlotActivePart()
     {
         if (devMode) return;
         SceneGlobals.PlayerData.PartInventory.Remove(ActivePart);
-        ActivePart = null;
-        Instance.partOverviewPanel.Hide();
+        SetActivePart(null);
+
         ActivatablePart.resetActivation.Invoke();
-        Instance.UpdatePartDisplays();
+        instance.UpdatePartDisplays();
     }
 
     public static void ReturnPart(ModdedPart part)
     {
         if (devMode) return;
         SceneGlobals.PlayerData.PartInventory.Add(part);
-        Instance.UpdatePartDisplays();
+        instance.UpdatePartDisplays();
+        
     }
 
-    void ApplyFilter(FilterButton filter)
+    void ApplyInventoryFilter(FilterButton filter)
     {
         activeFilter = filter;
         UpdatePartDisplays();
@@ -112,6 +125,6 @@ public class BlueprintControl : MonoBehaviour
 
     public static Vector3 GetCameraForward()
     {
-        return Instance.craftCam.transform.forward;
+        return instance.craftCam.transform.forward;
     }
 }

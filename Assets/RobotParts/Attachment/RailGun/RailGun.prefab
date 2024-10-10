@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 5438866113568273553}
   - component: {fileID: 8933096971172365963}
   - component: {fileID: 5261799674692488272}
+  - component: {fileID: 889706637259405176}
   m_Layer: 0
   m_Name: Railgun Shot
   m_TagString: Untagged
@@ -179,7 +180,8 @@ MonoBehaviour:
   useAirCursor: 1
   emissionPoint: {fileID: 1266673474873603974}
   trackingToggle: {fileID: 0}
-  preAnimations: []
+  preAnimations:
+  - {fileID: 889706637259405176}
   postAnimations: []
   endAnimations: []
   projectile: {fileID: 5629778864400073585, guid: 29f587667119b7440b657ac1aab27250,
@@ -214,6 +216,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ikTarget: {fileID: 7287735422693021653}
   slowness: 40
+--- !u!114 &889706637259405176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3068045254070644241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d351610167a50409da2b9d8e02f3a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  impulseLength: 0.3
+  duration: 0.05
+  returnDuration: 0.2
 --- !u!1 &6575153940852210530
 GameObject:
   m_ObjectHideFlags: 0

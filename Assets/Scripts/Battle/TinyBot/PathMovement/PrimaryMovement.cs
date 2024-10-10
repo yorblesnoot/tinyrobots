@@ -99,9 +99,8 @@ public abstract class PrimaryMovement : MonoBehaviour
         AnimateToOrientation(true);
     }
 
-    public IEnumerator ApplyImpulseToBody(Vector3 source, float distance, float snapTime, float returnTime)
+    public IEnumerator ApplyImpulseToBody(Vector3 direction, float distance, float snapTime, float returnTime)
     {
-        Vector3 direction = Owner.transform.position - source;
         direction.Normalize();
         
         Vector3 neutralPosition = Owner.transform.position;

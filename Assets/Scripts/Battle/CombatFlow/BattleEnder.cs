@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BattleEnder : MonoBehaviour
 {
-    [SerializeField] SceneLoader sceneLoader;
     [SerializeField] SceneRelay relay;
     [SerializeField] PlayerData playerData;
     [SerializeField] DropsUI dropsUI;
@@ -36,7 +35,7 @@ public class BattleEnder : MonoBehaviour
         if(ended) return;
         if (instance.playerData == null) Debug.LogWarning("No active Navigation Map found.");
         instance.relay.BattleComplete = true;
-        instance.dropsUI.ShowDrops(() => instance.sceneLoader.Load(SceneType.NAVIGATION));
+        instance.dropsUI.ShowDrops(() => SceneLoader.Load(SceneType.NAVIGATION));
 
         foreach(TinyBot bot in TurnManager.TurnTakers)
         {
@@ -49,6 +48,6 @@ public class BattleEnder : MonoBehaviour
     {
         if (ended) return;
         instance.relay.GenerateNavMap = true;
-        instance.sceneLoader.Load(SceneType.MAINMENU);
+        SceneLoader.Load(SceneType.MAINMENU);
     }
 }

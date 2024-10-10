@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: 8131201512834104215}
   - component: {fileID: 883725196565549860}
   - component: {fileID: 2698530588561022094}
+  - component: {fileID: 8584432006077641284}
   m_Layer: 0
   m_Name: Launch Grenade
   m_TagString: Untagged
@@ -151,7 +152,8 @@ MonoBehaviour:
   useAirCursor: 1
   emissionPoint: {fileID: 1542380683432714660}
   trackingToggle: {fileID: 0}
-  preAnimations: []
+  preAnimations:
+  - {fileID: 8584432006077641284}
   postAnimations: []
   endAnimations: []
   projectile: {fileID: 892347618474717919, guid: 6b7e9add1c83a534ca9bb5df8c0e48f0,
@@ -221,6 +223,21 @@ MonoBehaviour:
   TargetRadius: 0
   maxTargets: 100
   spatialDegree: 45
+--- !u!114 &8584432006077641284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4429930661517243148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d351610167a50409da2b9d8e02f3a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  impulseLength: 0.3
+  duration: 0.05
+  returnDuration: 0.2
 --- !u!1 &7199797187575493042
 GameObject:
   m_ObjectHideFlags: 0

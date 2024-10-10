@@ -1,17 +1,20 @@
+using System;
+using System.Linq;
 using TMPro;
 using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class PartSlot : MonoBehaviour
 {
     [SerializeField] Animator slotAnimator;
     [SerializeField] GameObject activeIndicator;
-    //[SerializeField] TMP_Text activePartName;
+    [SerializeField] GameObject incompatibleIndicator;
     [SerializeField] CraftablePart empty;
     [SerializeField] float cameraApproachDistance = 3f;
 
-    [HideInInspector] public AttachmentPoint attachmentPoint;
+    [HideInInspector] public AttachmentPoint AttachmentPoint;
     GameObject mockup;
 
     ModdedPart partIdentity;
@@ -38,19 +41,23 @@ public class PartSlot : MonoBehaviour
         if (partIdentity != null)
         {
             ClearPartIdentity(false, true);
+            BlueprintControl.FilterAvailableSlots();
             return;
         }
         
-
-        SlotType slotType = attachmentPoint == null ? SlotType.CHASSIS : attachmentPoint.SlotType;
         if(BlueprintControl.ActivePart == null) return;
-        //Debug.Log(BlueprintControl.ActivePart.BasePart.Type + " into " + slotType);
-        SlotType partType = BlueprintControl.ActivePart.BasePart.Type;
-        if (partType == slotType) SlotPart();
+        if(IsCompatibleWithType(BlueprintControl.ActivePart.BasePart.Type)) SlotPart();
+    }
+
+    public bool IsCompatibleWithType(SlotType partType)
+    {
+        SlotType slotType = AttachmentPoint == null ? SlotType.CHASSIS : AttachmentPoint.SlotType;
+        if (partType == slotType) return true;  
         else if (partType == SlotType.LATERAL)
         {
-            if (slotType == SlotType.UPPER || slotType == SlotType.LOWER) SlotPart();
+            if (slotType == SlotType.UPPER || slotType == SlotType.LOWER) return true;
         }
+        return false;
     }
 
     void SlotPart()
@@ -71,8 +78,6 @@ public class PartSlot : MonoBehaviour
             if(mockup != null) mockup.SetActive(false);
             if (partIdentity.BasePart.PrimaryLocomotion) primaryLocomotionSlotted = false;
             partIdentity = null;
-            //activeIndicator.SetActive(false);
-            //activePartName.text = "";
 
             if (childSlots != null)
             {
@@ -110,12 +115,10 @@ public class PartSlot : MonoBehaviour
             }
         }
 
-        mockup.transform.SetParent(attachmentPoint == null ? transform : attachmentPoint.transform, false);
+        mockup.transform.SetParent(AttachmentPoint == null ? transform : AttachmentPoint.transform, false);
         mockup.transform.localRotation = Quaternion.identity;
         AttachmentPoint[] attachmentPoints = mockup.GetComponentsInChildren<AttachmentPoint>();
         partIdentity = part;
-        //activeIndicator.SetActive(true);
-        //activePartName.text = part.name;
 
         childSlots = new PartSlot[attachmentPoints.Length];
         for (int i = 0; i < attachmentPoints.Length; i++)
@@ -123,7 +126,7 @@ public class PartSlot : MonoBehaviour
             GameObject slot = Instantiate(BlueprintControl.NewSlot);
             slot.transform.position = attachmentPoints[i].transform.position;
             childSlots[i] = slot.GetComponent<PartSlot>();
-            childSlots[i].attachmentPoint = attachmentPoints[i];
+            childSlots[i].AttachmentPoint = attachmentPoints[i];
         }
 
         return childSlots;
@@ -143,5 +146,20 @@ public class PartSlot : MonoBehaviour
         {
             slot.BuildTree(incomingNode);
         }
+    }
+
+    public void Traverse(Action<PartSlot> action)
+    {
+        action(this);
+        if (childSlots == null) return;
+        foreach (var slot in childSlots)
+        {
+            slot.Traverse(action);
+        }
+    }
+
+    public void Hide(bool hidden = true)
+    {
+        incompatibleIndicator.SetActive(hidden && partIdentity == null);
     }
 }

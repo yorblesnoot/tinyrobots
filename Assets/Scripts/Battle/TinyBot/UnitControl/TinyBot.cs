@@ -129,7 +129,7 @@ public class TinyBot : Targetable
 
         
         feedback.QueuePopup(damage, backstabbed);
-        StartCoroutine(PrimaryMovement.ApplyImpulseToBody(source, recoilDistancePerDamage * damage, hitRecoilTime, hitReturnTime));
+        StartCoroutine(PrimaryMovement.ApplyImpulseToBody(-hitDirection, recoilDistancePerDamage * damage, hitRecoilTime, hitReturnTime));
         GameObject spark = Instantiate(hitSpark, hitPoint, Quaternion.identity);
         spark.transform.LookAt(source);
         Destroy(spark, 1f);

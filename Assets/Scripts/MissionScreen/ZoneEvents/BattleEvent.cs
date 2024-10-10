@@ -5,7 +5,6 @@ using UnityEngine.Events;
 
 public class BattleEvent : ZoneEvent
 {
-    [SerializeField] SceneLoader loader;
     [SerializeField] protected SceneRelay relay;
     [SerializeField] protected List<EncounterGenerator> possibleSpawns;
     
@@ -15,7 +14,7 @@ public class BattleEvent : ZoneEvent
         {
             PreBattle(zone);
             relay.PrepareBattle(zone.battleMap);
-            loader.Load(SceneType.BATTLE);
+            SceneLoader.Load(SceneType.BATTLE);
         }
         else
         {

@@ -177,129 +177,119 @@ MonoBehaviour:
       TierWeight: 0
   CoreInventory:
   - {fileID: 11400000, guid: 860feb0d5dc177a488b6a2eb42305b4a, type: 2}
+  - {fileID: 11400000, guid: a7692aba40afcd24ea4f5f7bcfa5e710, type: 2}
+  - {fileID: 11400000, guid: f86c8696ca2c68f4b9ec558f25fc51ba, type: 2}
   MapData:
-    ZoneLocation: 7
+    ZoneLocation: 8
     Zones:
     - pieceIndex: 13
       position: {x: 8, y: 0, z: 20}
       rotation: {x: -0, y: -1, z: -0, w: -0.00000004371139}
-      neighborIndices: 03000000
-      revealed: 1
-      eventType: 0
-    - pieceIndex: 11
-      position: {x: 8, y: 0, z: 8}
-      rotation: {x: -0, y: -0.7071068, z: -0, w: -0.7071068}
-      neighborIndices: 02000000
+      neighborIndices: 0a000000
       revealed: 0
       eventType: 3
+    - pieceIndex: 13
+      position: {x: 20, y: 0, z: 20}
+      rotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+      neighborIndices: 08000000
+      revealed: 1
+      eventType: 0
+    - pieceIndex: 12
+      position: {x: 8, y: 0, z: 8}
+      rotation: {x: -0, y: -0.7071068, z: -0, w: -0.7071068}
+      neighborIndices: 0900000006000000
+      revealed: 0
+      eventType: 1
+    - pieceIndex: 12
+      position: {x: 20, y: 0, z: 8}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      neighborIndices: 0c00000007000000
+      revealed: 0
+      eventType: 1
+    - pieceIndex: 7
+      position: {x: 12, y: 0, z: 4}
+      rotation: {x: -0, y: -0.7071068, z: -0, w: -0.7071068}
+      neighborIndices: 0600000007000000
+      revealed: 0
+      eventType: 2
+    - pieceIndex: 7
+      position: {x: 24, y: 0, z: 12}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      neighborIndices: 0c0000000b000000
+      revealed: 0
+      eventType: 1
+    - pieceIndex: 2
+      position: {x: 12, y: 0, z: 8}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      neighborIndices: 0400000002000000
+      revealed: 0
+      eventType: 1
+    - pieceIndex: 2
+      position: {x: 16, y: 0, z: 8}
+      rotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+      neighborIndices: 0300000004000000
+      revealed: 0
+      eventType: 2
+    - pieceIndex: 5
+      position: {x: 16, y: 0, z: 16}
+      rotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
+      neighborIndices: 0b0000000f0000000d00000001000000
+      revealed: 1
+      eventType: 1
     - pieceIndex: 3
       position: {x: 8, y: 0, z: 12}
       rotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-      neighborIndices: 030000000800000001000000
+      neighborIndices: 0a0000000d00000002000000
       revealed: 0
-      eventType: 2
-    - pieceIndex: 6
+      eventType: 1
+    - pieceIndex: 1
       position: {x: 8, y: 0, z: 16}
-      rotation: {x: -0, y: -0, z: -0, w: 1}
-      neighborIndices: 00000000070000000200000011000000
-      revealed: 1
-      eventType: 0
-    - pieceIndex: 11
-      position: {x: 20, y: 0, z: 8}
-      rotation: {x: -0, y: -0, z: -0, w: 1}
-      neighborIndices: 09000000
-      revealed: 0
-      eventType: 2
-    - pieceIndex: 11
-      position: {x: 20, y: 0, z: 20}
       rotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-      neighborIndices: 0f000000
-      revealed: 0
-      eventType: 1
-    - pieceIndex: 3
-      position: {x: 12, y: 0, z: 8}
-      rotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-      neighborIndices: 080000000900000012000000
-      revealed: 0
-      eventType: 1
-    - pieceIndex: 1
-      position: {x: 12, y: 0, z: 16}
-      rotation: {x: -0, y: -0, z: -0, w: 1}
-      neighborIndices: 0c00000003000000
-      revealed: 1
-      eventType: 1
-    - pieceIndex: 3
-      position: {x: 12, y: 0, z: 12}
-      rotation: {x: -0, y: -0, z: -0, w: 1}
-      neighborIndices: 0b0000000600000002000000
-      revealed: 0
-      eventType: 1
-    - pieceIndex: 1
-      position: {x: 16, y: 0, z: 8}
-      rotation: {x: -0, y: -0, z: -0, w: 1}
-      neighborIndices: 0400000006000000
-      revealed: 0
-      eventType: 2
-    - pieceIndex: 2
-      position: {x: 12, y: 0, z: 20}
-      rotation: {x: -0, y: -1, z: -0, w: -0.00000004371139}
-      neighborIndices: 100000000d000000
-      revealed: 0
-      eventType: 2
-    - pieceIndex: 4
-      position: {x: 16, y: 0, z: 12}
-      rotation: {x: -0, y: -0, z: -0, w: 1}
-      neighborIndices: 08000000
-      revealed: 0
-      eventType: 2
-    - pieceIndex: 4
-      position: {x: 16, y: 0, z: 16}
-      rotation: {x: -0, y: -0, z: -0, w: 1}
-      neighborIndices: 07000000
-      revealed: 0
-      eventType: 1
-    - pieceIndex: 4
-      position: {x: 16, y: 0, z: 20}
-      rotation: {x: -0, y: -0, z: -0, w: 1}
-      neighborIndices: 0a000000
-      revealed: 0
-      eventType: 2
-    - pieceIndex: 2
-      position: {x: 20, y: 0, z: 12}
-      rotation: {x: -0, y: -1, z: -0, w: -0.00000004371139}
-      neighborIndices: 0f00000013000000
+      neighborIndices: 0000000009000000
       revealed: 0
       eventType: 1
     - pieceIndex: 1
       position: {x: 20, y: 0, z: 16}
-      rotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-      neighborIndices: 050000000e000000
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      neighborIndices: 0500000008000000
+      revealed: 0
+      eventType: 1
+    - pieceIndex: 3
+      position: {x: 20, y: 0, z: 12}
+      rotation: {x: -0, y: -0, z: -0, w: 1}
+      neighborIndices: 05000000030000000f000000
+      revealed: 0
+      eventType: 1
+    - pieceIndex: 3
+      position: {x: 12, y: 0, z: 12}
+      rotation: {x: -0, y: -1, z: -0, w: -0.00000004371139}
+      neighborIndices: 080000000f00000009000000
+      revealed: 0
+      eventType: 1
+    - pieceIndex: 4
+      position: {x: 12, y: 0, z: 20}
+      rotation: {x: -0, y: -0.7071068, z: -0, w: -0.7071068}
+      neighborIndices: 10000000
+      revealed: 0
+      eventType: 2
+    - pieceIndex: 3
+      position: {x: 16, y: 0, z: 12}
+      rotation: {x: -0, y: -1, z: -0, w: -0.00000004371139}
+      neighborIndices: 080000000c0000000d000000
       revealed: 0
       eventType: 1
     - pieceIndex: 10
       position: {x: 16, y: 0, z: 24}
       rotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-      neighborIndices: 0a000000
-      revealed: 0
-      eventType: 1
-    - pieceIndex: 8
-      position: {x: 4, y: 0, z: 16}
-      rotation: {x: -0, y: -1, z: -0, w: -0.00000004371139}
-      neighborIndices: 03000000
-      revealed: 0
-      eventType: 1
-    - pieceIndex: 8
-      position: {x: 12, y: 0, z: 4}
-      rotation: {x: -0, y: -0.7071068, z: -0, w: -0.7071068}
-      neighborIndices: 06000000
-      revealed: 0
-      eventType: 1
-    - pieceIndex: 8
-      position: {x: 24, y: 0, z: 12}
-      rotation: {x: -0, y: -0, z: -0, w: 1}
       neighborIndices: 0e000000
       revealed: 0
       eventType: 1
+    - pieceIndex: 9
+      position: {x: 4, y: 0, z: 16}
+      rotation: {x: -0, y: -1, z: -0, w: -0.00000004371139}
+      neighborIndices: 
+      revealed: 0
+      eventType: 1
   Difficulty: 1
-  DevMode: 0
+  DevMode: 1
   BotConverter: {fileID: 11400000, guid: efd80f4536a76904d8f8a1a5b13e844c, type: 2}

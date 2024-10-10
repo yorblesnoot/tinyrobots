@@ -30,8 +30,8 @@ public class EventProvider : MonoBehaviour
 
     public void PlaceBossEvent(TowerNavZone zone)
     {
-        zone.zoneEventType = zoneEvents.IndexOf(bossEvent);
-        zone.zoneEvent = bossEvent;
+        zone.ZoneEventType = zoneEvents.IndexOf(bossEvent);
+        zone.ZoneEvent = bossEvent;
     }
 }
 

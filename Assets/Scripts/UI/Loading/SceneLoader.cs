@@ -17,16 +17,21 @@ public class SceneLoader : MonoBehaviour
     [SerializeField] Image loadingScreen;
     [SerializeField] Slider loadingBar;
 
-    
-    public void Load(SceneType sceneType)
+    static SceneLoader instance;
+    private void Awake()
     {
-        loadingScreen.gameObject.SetActive(true);
-        loadingBar.value = 0;
-        StartCoroutine(LoadScene(sceneType));
+        instance = this;
+    }
+
+    public static void Load(SceneType sceneType)
+    {
+        instance.StartCoroutine(instance.LoadScene(sceneType));
     }
 
     private IEnumerator LoadScene(SceneType sceneType)
     {
+        loadingScreen.gameObject.SetActive(true);
+        loadingBar.value = 0;
         int sceneIndex = (int)sceneType;
         AsyncOperation loading = SceneManager.LoadSceneAsync(sceneIndex);
         while (!loading.isDone)

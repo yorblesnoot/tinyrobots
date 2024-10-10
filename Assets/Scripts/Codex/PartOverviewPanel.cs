@@ -14,18 +14,17 @@ public class PartOverviewPanel : MonoBehaviour
     [SerializeField] PartStatIcon[] statDisplays;
     public void Become(ModdedPart part)
     {
+        if(part == null)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
         moveStyleDisplay.Become(part);
         gameObject.SetActive(true);
         nameDisplay.text = part.BasePart.name;
         SetAbilities(part);
         SetBaseStats(part);
         SetMods(part);
-        part.Mutators.DebugContents();
-    }
-
-    public void Hide()
-    {
-        gameObject.SetActive(false);
     }
 
     void SetMods(ModdedPart part)

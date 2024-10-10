@@ -73,14 +73,14 @@ public class TowerBuilder : MonoBehaviour
             SavedNavZone saved = data.Zones[i];
             TowerPiece piece = allPieces[saved.pieceIndex];
             TowerNavZone zone = InstantiatePiece(piece, saved.position, saved.rotation);
-            zone.zoneIndex = i;
+            zone.ZoneIndex = i;
             PrimeZone(zone, saved.eventType);
             zones.Add(zone);
         }
         for (int i = 0; i < data.Zones.Count; i++)
         {
             SavedNavZone node = data.Zones[i];
-            zones[i].neighbors = node.neighborIndices.Select(x => zones[x]).ToHashSet();
+            zones[i].Neighbors = node.neighborIndices.Select(x => zones[x]).ToHashSet();
             if (data.Zones[i].revealed) zones[i].RevealNeighbors(true);
         }
         return zones[data.ZoneLocation];
@@ -88,8 +88,8 @@ public class TowerBuilder : MonoBehaviour
 
     private void SetFixedEvents(List<MapNode> path)
     {
-        zoneRooms[path[0].room].zoneEvent = null;
-        zoneRooms[path[0].room].zoneEventType = 0;
+        zoneRooms[path[0].room].ZoneEvent = null;
+        zoneRooms[path[0].room].ZoneEventType = 0;
         eventProvider.PlaceBossEvent(zoneRooms[path[^1].room]);
     }
 
@@ -124,15 +124,15 @@ public class TowerBuilder : MonoBehaviour
 
         for(int i = 0; i < zones.Count; i++)
         {
-            zones[i].zoneIndex = i;
+            zones[i].ZoneIndex = i;
             SavedNavZone node = new()
             {
-                pieceIndex = zones[i].towerPiece.pieceIndex,
+                pieceIndex = zones[i].TowerPiece.pieceIndex,
                 position = zones[i].transform.position,
                 rotation = zones[i].transform.rotation,
-                neighborIndices = zones[i].neighbors.Select(neighbor => zones.IndexOf(neighbor)).ToArray(),
+                neighborIndices = zones[i].Neighbors.Select(neighbor => zones.IndexOf(neighbor)).ToArray(),
                 revealed = false,
-                eventType = zones[i].zoneEventType,
+                eventType = zones[i].ZoneEventType,
         };
             map.Add(node);
         }
@@ -158,7 +158,7 @@ public class TowerBuilder : MonoBehaviour
             {
                 TowerNavZone connectedZone = zoneRooms[connected.room];
                 
-                zoneRooms[room].neighbors.Add(connectedZone);
+                zoneRooms[room].Neighbors.Add(connectedZone);
             }
         }
     }
@@ -227,8 +227,8 @@ public class TowerBuilder : MonoBehaviour
 
     private void PrimeZone(TowerNavZone zone, int eventIndex = -1)
     {
-        zone.zoneEventType = eventIndex < 0 ? eventProvider.GetRandomWeightedEvent() : eventIndex;
-        zone.zoneEvent = eventProvider[zone.zoneEventType];
+        zone.ZoneEventType = eventIndex < 0 ? eventProvider.GetRandomWeightedEvent() : eventIndex;
+        zone.ZoneEvent = eventProvider[zone.ZoneEventType];
         zone.Initialize();
     }
 

@@ -228,6 +228,7 @@ GameObject:
   - component: {fileID: 9029231829327162900}
   - component: {fileID: 6215523326780402956}
   - component: {fileID: 5978695959865485863}
+  - component: {fileID: 5609523218986396854}
   m_Layer: 0
   m_Name: Laser Shot
   m_TagString: Untagged
@@ -276,7 +277,8 @@ MonoBehaviour:
   useAirCursor: 1
   emissionPoint: {fileID: 646414412058972572}
   trackingToggle: {fileID: 0}
-  preAnimations: []
+  preAnimations:
+  - {fileID: 5609523218986396854}
   postAnimations: []
   endAnimations: []
   projectile: {fileID: 4700887371249141454, guid: 96e320672d3da51439a874f0e20d154a,
@@ -312,6 +314,21 @@ MonoBehaviour:
   - Default
   - Terrain
   - Shield
+--- !u!114 &5609523218986396854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6331935042606441181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d351610167a50409da2b9d8e02f3a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  impulseLength: 0.2
+  duration: 0.05
+  returnDuration: 0.2
 --- !u!1001 &4461339206532929495
 PrefabInstance:
   m_ObjectHideFlags: 0
