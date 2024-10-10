@@ -40,4 +40,14 @@ public class TowerRoom : MonoBehaviour
         if (EventSystem.current.IsPointerOverGameObject()) return;
         associatedZone.ZoneClicked();
     }
+
+    private void OnMouseEnter()
+    {
+        associatedZone.MouseHighlight();
+    }
+
+    private void OnMouseExit()
+    {
+        associatedZone.MouseHighlight(false);
+    }
 }

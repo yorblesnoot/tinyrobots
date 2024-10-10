@@ -6,6 +6,7 @@ using UnityEngine.Events;
 
 public class PlayerNavigator : MonoBehaviour
 {
+    [SerializeField] bool noEvents = true;
     [SerializeField] float moveTime = 1f;
     [SerializeField] EventProvider eventProvider;
     public static PlayerNavigator Instance { get; private set; }
@@ -30,8 +31,6 @@ public class PlayerNavigator : MonoBehaviour
     public void TryMoveToZone(TowerNavZone zone)
     {
         if (!moveAvailable) return;
-        if (OccupiedZone != null && !OccupiedZone.Neighbors.Contains(zone)) return;
-
         moveAvailable = false;
         Tween.Position(transform, endValue: zone.UnitPosition, duration: moveTime).OnComplete(() => FinishMove(zone));
     }
@@ -44,7 +43,7 @@ public class PlayerNavigator : MonoBehaviour
         mapData.Zones[zone.ZoneIndex].revealed = true;
         mapData.ZoneLocation = zone.ZoneIndex;
 
-        if(zone.ZoneEvent != null) zone.ZoneEvent.Activate(zone, CompleteEvent);
+        if(zone.ZoneEvent != null && !noEvents) zone.ZoneEvent.Activate(zone, CompleteEvent);
         else moveAvailable = true;
     }
 

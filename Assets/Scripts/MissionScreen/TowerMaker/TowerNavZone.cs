@@ -1,3 +1,4 @@
+using log4net.Core;
 using PrimeTween;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,8 +11,12 @@ public class TowerNavZone : MonoBehaviour
     [SerializeField] float unitHeight = 1;
     [SerializeField] float revealDuration = 1;
     [SerializeField] Transform unitPoint;
-    [SerializeField] float pulseFrequency = 1;
 
+    [SerializeField] float pulseFrequency = 1;
+    [SerializeField][Range(0, 1)] float maxGlow = .8f;
+    [SerializeField] float highlightDuration = .3f;
+
+    public bool AvailableMove { get; private set; }
     [HideInInspector] public HashSet<TowerNavZone> Neighbors;
     [HideInInspector] public Vector3 UnitPosition { get { return (unitPoint != null ? unitPoint : transform).position + Vector3.up * unitHeight; } }
     [HideInInspector] public TowerPiece TowerPiece;
@@ -24,6 +29,8 @@ public class TowerNavZone : MonoBehaviour
     int evaporationSource;
     int glowThreshold;
 
+    bool glowPaused = false;
+    
     
     public void Initialize()
     {
@@ -34,28 +41,44 @@ public class TowerNavZone : MonoBehaviour
             room.associatedZone = this;
         }
         PrepBlackout();
-        PlayerNavigator.EnteredZone.AddListener(ToggleHighlight);
+        PlayerNavigator.EnteredZone.AddListener(ToggleAvailability);
     }
 
-    void ToggleHighlight(TowerNavZone zone)
+    void ToggleAvailability(TowerNavZone zone)
     {
-        if (Neighbors.Contains(zone)) StartCoroutine(GlowPulse());
-        else StopCoroutine(GlowPulse());
+        if(Neighbors.Contains(zone))
+        {
+            if (!AvailableMove)
+            {
+                AvailableMove = true;
+                StartCoroutine(GlowPulse());
+            }
+        }
+        else AvailableMove = false;
     }
 
     IEnumerator GlowPulse()
     {
-        while (true)
+        while (AvailableMove)
         {
+            if(glowPaused) yield return RampHighlight();
             float level = Mathf.Sin(Time.time * pulseFrequency);
-            level = Mathf.Clamp(level - 1, -1, 0);
-            foreach (var renderer in renderers)
-            {
-                renderer.material.SetFloat(glowThreshold, level);
-            }
+            level = level.Remap(-1, 1, -maxGlow, -1);
+            foreach (var renderer in renderers) renderer.material.SetFloat(glowThreshold, level);
             yield return null;
         }
-        
+        foreach (var renderer in renderers) renderer.material.SetFloat(glowThreshold, -1);
+    }
+
+    IEnumerator RampHighlight()
+    {
+        Sequence sequence = Sequence.Create();
+        foreach (var renderer in renderers)
+        {
+            sequence.Group(Tween.MaterialProperty(renderer.material, glowThreshold, -maxGlow/2, highlightDuration));
+        }
+        yield return sequence.ToYieldInstruction();
+        yield return new WaitUntil(() => glowPaused == false);
     }
 
     void PrepBlackout()
@@ -70,7 +93,13 @@ public class TowerNavZone : MonoBehaviour
 
     public void ZoneClicked()
     {
+        if (!AvailableMove) return;
         PlayerNavigator.Instance.TryMoveToZone(this);
+    }
+
+    public void MouseHighlight(bool on = true)
+    {
+        glowPaused = on;
     }
 
     public void RevealNeighbors(bool instant = false)

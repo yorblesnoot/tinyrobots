@@ -46,10 +46,6 @@ namespace MeetAndTalk.Editor
                 window.minSize = new Vector2(500, 250);
                 window.Load();
             }
-            else if (Application.isPlaying)
-            {
-                EditorUtility.DisplayDialog("Can't Open a Dialogue", "Dialogue Editor can only be opened when the project is not on!\nTurn off Play Mode to open the Editor", "I understand");
-            }
 
             return false;
         }

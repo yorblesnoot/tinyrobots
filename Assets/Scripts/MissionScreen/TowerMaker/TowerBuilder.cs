@@ -68,9 +68,12 @@ public class TowerBuilder : MonoBehaviour
     {
         mapData = data;
         List<TowerNavZone> zones = new();
+        Debug.Log(allPieces.Count());
         for (int i = 0; i < data.Zones.Count; i++)
         {
             SavedNavZone saved = data.Zones[i];
+            
+            Debug.Log(saved.pieceIndex);
             TowerPiece piece = allPieces[saved.pieceIndex];
             TowerNavZone zone = InstantiatePiece(piece, saved.position, saved.rotation);
             zone.ZoneIndex = i;
@@ -108,7 +111,6 @@ public class TowerBuilder : MonoBehaviour
 
     void AssignPieceIndices()
     {
-        if (allPieces != null) return;
         allPieces = new();
         allPieces.AddRange(bodyPieces);
         allPieces.AddRange(sidePieces);
