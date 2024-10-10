@@ -73,7 +73,6 @@ public class TowerBuilder : MonoBehaviour
         {
             SavedNavZone saved = data.Zones[i];
             
-            Debug.Log(saved.pieceIndex);
             TowerPiece piece = allPieces[saved.pieceIndex];
             TowerNavZone zone = InstantiatePiece(piece, saved.position, saved.rotation);
             zone.ZoneIndex = i;

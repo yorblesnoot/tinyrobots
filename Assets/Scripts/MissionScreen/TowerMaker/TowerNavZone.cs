@@ -67,15 +67,15 @@ public class TowerNavZone : MonoBehaviour
             foreach (var renderer in renderers) renderer.material.SetFloat(glowThreshold, level);
             yield return null;
         }
-        foreach (var renderer in renderers) renderer.material.SetFloat(glowThreshold, -1);
+        StartCoroutine(RampHighlight(false));
     }
 
-    IEnumerator RampHighlight()
+    IEnumerator RampHighlight(bool up = true)
     {
         Sequence sequence = Sequence.Create();
         foreach (var renderer in renderers)
         {
-            sequence.Group(Tween.MaterialProperty(renderer.material, glowThreshold, -maxGlow/2, highlightDuration));
+            sequence.Group(Tween.MaterialProperty(renderer.material, glowThreshold, up ? -maxGlow/2 : -1, highlightDuration));
         }
         yield return sequence.ToYieldInstruction();
         yield return new WaitUntil(() => glowPaused == false);

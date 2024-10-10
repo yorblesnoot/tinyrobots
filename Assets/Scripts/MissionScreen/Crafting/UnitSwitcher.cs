@@ -50,11 +50,20 @@ public class UnitSwitcher : MonoBehaviour
         SaveActiveBotToCore();
         ActiveCore = newCore;
         blueprintControl.originPart = newCore.ModdedCore;
-
         nameDisplay.text = UnitTab.GetCoreName(newCore);
         if (newCore.Bot != null) PlacePartsInSlots(newCore.Bot.Children[0], blueprintControl.OriginSlot);
         unitStatsDisplay.RefreshDisplays();
         BlueprintControl.FilterAvailableSlots();
+        HighlightTabs();
+    }
+
+    void HighlightTabs()
+    {
+        int activeIndex = SceneGlobals.PlayerData.CoreInventory.IndexOf(ActiveCore);
+        for(int i = 0; i < tabs.Length; i++)
+        {
+            tabs[i].Highlight(i == activeIndex);
+        }
     }
 
     private void SaveActiveBotToCore()

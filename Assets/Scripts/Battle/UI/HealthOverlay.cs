@@ -1,3 +1,4 @@
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,7 @@ public class HealthOverlay : MonoBehaviour
 {
     [SerializeField] Slider healthOverlay;
     [SerializeField] TMP_Text healthCount;
+    [SerializeField] float changeDuration = .5f;
     public void UpdateHealth(TinyBot bot)
     {
         UpdateHealth(bot.Stats.Current[StatType.HEALTH], bot.Stats.Max[StatType.HEALTH]);
@@ -14,7 +16,7 @@ public class HealthOverlay : MonoBehaviour
     {
         healthOverlay.maxValue = max;
         int missingHealth = max - current;
-        healthOverlay.value = missingHealth;
+        Tween.UISliderValue(healthOverlay, missingHealth, changeDuration);
         if (healthCount == null) return;
         healthCount.text = $"{current}/{max}";
     }

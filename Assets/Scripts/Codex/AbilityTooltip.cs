@@ -7,7 +7,10 @@ using UnityEngine.UI;
 public class AbilityTooltip : MonoBehaviour
 {
     static AbilityTooltip instance;
+    [SerializeField] float heightModifier = 50;
+    [SerializeField] bool usePosition;
 
+    [Header("Components")]
     [SerializeField] TMP_Text abilityName;
     [SerializeField] TMP_Text abilityType;
     [SerializeField] TMP_Text damage;
@@ -17,7 +20,7 @@ public class AbilityTooltip : MonoBehaviour
     [SerializeField] TMP_Text cost;
     [SerializeField] TMP_Text description;
 
-    [SerializeField] float heightModifier = 50;
+    
 
     Image image;
     static float showHeight;
@@ -27,6 +30,7 @@ public class AbilityTooltip : MonoBehaviour
         gameObject.SetActive(false);
         image = GetComponent<Image>();
         showHeight = image.rectTransform.rect.height/2 + heightModifier;
+        Debug.Log(showHeight);
     }
 
     public static void Show(Ability ability, Vector3 position)
@@ -40,8 +44,10 @@ public class AbilityTooltip : MonoBehaviour
         instance.cost.text = ability.cost + " AP";
         instance.description.text = ability.Description;
 
-        position.y += position.y > Screen.height/2 ? -showHeight : showHeight;
-        instance.transform.position = position;
+        if (instance.usePosition) return;
+        position = instance.transform.parent.InverseTransformPoint(position);
+        position.y += position.y > 0 ? -showHeight : showHeight;
+        instance.transform.localPosition = position;
     }
 
     public static void Hide()

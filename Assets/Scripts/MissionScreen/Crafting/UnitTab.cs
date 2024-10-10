@@ -7,6 +7,7 @@ public class UnitTab : MonoBehaviour
 {
     [SerializeField] Button button;
     [SerializeField] TMP_Text coreName;
+    [SerializeField] Color highlightColor;
 
     public void AssignTab(UnityAction clickEffect, BotCore core)
     {
@@ -18,5 +19,10 @@ public class UnitTab : MonoBehaviour
     public static string GetCoreName(BotCore core)
     {
          return core.displayName == "" ? core.name.Replace("Core", "") : core.displayName;
+    }
+
+    public void Highlight(bool on = true)
+    {
+        button.image.color = on ? highlightColor : Color.white;
     }
 }
