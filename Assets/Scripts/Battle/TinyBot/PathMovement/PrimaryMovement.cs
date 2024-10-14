@@ -81,16 +81,14 @@ public abstract class PrimaryMovement : MonoBehaviour
     }
     protected Vector3 GetCenterColumn()
     {
-        return new(Pathfinder3D.XSize / 2, transform.position.y, Pathfinder3D.ZSize / 2);
+        return new(Pathfinder3D.XSize / 2, Owner.transform.position.y, Pathfinder3D.ZSize / 2);
     }
     public abstract IEnumerator NeutralStance();
 
     public virtual void RotateToTrackEntity(GameObject trackingTarget)
     {
         Vector3 worldTarget = trackingTarget.transform.position;
-        Vector3 localTarget = Owner.transform.InverseTransformPoint(worldTarget);
-        localTarget.y = 0;
-        worldTarget = Owner.transform.TransformPoint(localTarget);
+        worldTarget.y = Owner.transform.position.y;
 
         Vector3 direction = worldTarget - Owner.transform.position;
 

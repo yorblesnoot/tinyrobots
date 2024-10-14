@@ -67,11 +67,11 @@ public class PrimaryCursor : MonoBehaviour
         else if (Input.GetMouseButtonDown(1)) ClickableAbility.CancelAbility();
 
 
-        if (PlayerControlledBot != null)
+        if (PlayerControlledBot != null && !abilityActive && PlayerControlledBot.Stats.Max[StatType.MOVEMENT] > 0)
         {
             GenerateMovePreview();
         }
-        if (PlayerControlledBot == null || abilityActive)
+        else
         {
             HideMovePreview();
         }
