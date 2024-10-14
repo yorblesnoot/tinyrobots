@@ -9,11 +9,12 @@ public class BossEvent : BattleEvent
     protected override void PreBattle(TowerNavZone zone)
     {
         relay.ActiveSpawnTable = possibleSpawns[0];
+        SceneGlobals.PlayerData.Difficulty += 2;
     }
 
     protected override IEnumerator PostBattle(UnityAction eventComplete)
     {
-        SceneGlobals.PlayerData.Difficulty++;
+        SceneGlobals.PlayerData.Difficulty--;
         SceneGlobals.PlayerData.MapData = towerBuilder.BuildTowerFloor(null);
         eventComplete();
         yield break;

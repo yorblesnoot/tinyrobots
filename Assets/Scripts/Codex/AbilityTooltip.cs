@@ -30,7 +30,6 @@ public class AbilityTooltip : MonoBehaviour
         gameObject.SetActive(false);
         image = GetComponent<Image>();
         showHeight = image.rectTransform.rect.height/2 + heightModifier;
-        Debug.Log(showHeight);
     }
 
     public static void Show(Ability ability, Vector3 position)

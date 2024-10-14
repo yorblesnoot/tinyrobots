@@ -1,4 +1,5 @@
 using PrimeTween;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class BotAssembler : MonoBehaviour
     [SerializeField] float botColliderOffset = 1;
     [SerializeField] PortraitGenerator portraitGenerator;
     [SerializeField] BotPalette palette;
+    [SerializeField] GameObject suspensionStand;
 
     static BotAssembler instance;
     private void Awake()
@@ -27,6 +29,7 @@ public class BotAssembler : MonoBehaviour
         botStats.MaxAll();
         botUnit.Stats = botStats;
         botUnit.Allegiance = allegiance;
+        if (locomotion == null) locomotion = AddImmobileLocomotion(botUnit);
         SetBotTallness(locomotion, initialAttachmentPoint, botUnit);
         RestructureHierarchy(locomotion, initialAttachmentPoint, bot);
         
@@ -64,7 +67,6 @@ public class BotAssembler : MonoBehaviour
 
         static void RestructureHierarchy(PrimaryMovement locomotion, AttachmentPoint initialAttachmentPoint, GameObject bot)
         {
-            if (locomotion == null) Debug.LogError("Failed to find primary locomotion.");
             locomotion.transform.SetParent(bot.transform, true);
             initialAttachmentPoint.transform.SetParent(locomotion.sourceBone, true);
         }
@@ -76,6 +78,15 @@ public class BotAssembler : MonoBehaviour
                 botStats.Max[stat.Key] += stat.Value;
             }
         }
+    }
+
+    private static PrimaryMovement AddImmobileLocomotion(TinyBot bot)
+    {
+        bot.Stats.Max[StatType.MOVEMENT] = 0;
+        bot.Stats.Current[StatType.MOVEMENT] = 0;
+        ImmobileMovement movement = Instantiate(instance.suspensionStand).GetComponent<ImmobileMovement>();
+        movement.AttachToChassis(bot);
+        return movement;
     }
 
     static void SetBotTallness(PrimaryMovement locomotion, AttachmentPoint initialAttachmentPoint, TinyBot bot)

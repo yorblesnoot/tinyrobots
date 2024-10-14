@@ -102,14 +102,15 @@ public abstract class PrimaryMovement : MonoBehaviour
     public IEnumerator ApplyImpulseToBody(Vector3 direction, float distance, float snapTime, float returnTime)
     {
         direction.Normalize();
-        
-        Vector3 neutralPosition = Owner.transform.position;
+
+        Transform target = Owner.transform;
+        Vector3 neutralPosition = target.position;
         Vector3 snapPosition = neutralPosition + direction * distance;
 
         float timeElapsed = 0;
         while (timeElapsed < snapTime)
         {
-            Owner.transform.position = Vector3.Lerp(neutralPosition, snapPosition, timeElapsed / snapTime);
+            target.position = Vector3.Lerp(neutralPosition, snapPosition, timeElapsed / snapTime);
             timeElapsed += Time.deltaTime;
             HandleImpulse();
             yield return null;
@@ -117,7 +118,7 @@ public abstract class PrimaryMovement : MonoBehaviour
         timeElapsed = 0;
         while (timeElapsed < returnTime)
         {
-            Owner.transform.position = Vector3.Lerp(snapPosition, neutralPosition, timeElapsed / returnTime);
+            target.position = Vector3.Lerp(snapPosition, neutralPosition, timeElapsed / returnTime);
             timeElapsed += Time.deltaTime;
             HandleImpulse();
             yield return null;

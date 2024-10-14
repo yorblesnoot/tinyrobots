@@ -60,10 +60,10 @@ public class MapScanner
             List<DirectedHit> directedHits = GetHitProfile(a, b, castDimension);
 
             directedHits = directedHits.OrderBy(hit => hit.position[castDimension]).ToList();
-            foreach (DirectedHit hit in directedHits)
+            /*foreach (DirectedHit hit in directedHits)
             {
                 Debug.DrawLine(hit.position, hit.position + rayDirection / 5, hit.front ? Color.green : Color.red, 20f);
-            }
+            }*/
 
             int hitcount = 0;
             for (int c = 0; c < cSize; c++)
@@ -88,7 +88,7 @@ public class MapScanner
                 coord[targetDimensions[1]] = b;
                 coord[castDimension] = c;
                 outputGrid[coord.x, coord.y, coord.z] = 1;
-                Debug.DrawLine(coord, coord + rayDirection / 5, Color.blue, 20f);
+                //Debug.DrawLine(coord, coord + rayDirection / 5, Color.blue, 20f);
             }
         }
 
