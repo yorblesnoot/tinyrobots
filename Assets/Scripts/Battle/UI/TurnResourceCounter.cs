@@ -1,3 +1,4 @@
+using PrimeTween;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,6 +8,10 @@ using UnityEngine.UI;
 
 public class TurnResourceCounter : MonoBehaviour
 {
+    [SerializeField] float durationPerMove = .3f;
+
+
+    [Header("Components")]
     [SerializeField] List<Image> abilityPoints;
     [SerializeField] TMP_Text abilityCount;
 
@@ -53,16 +58,13 @@ public class TurnResourceCounter : MonoBehaviour
     public void UpdateResourceDisplays()
     {
         UpdateAbilityPoints();
-        StartCoroutine(AnimateMoveBar());
+        AnimateMoveBar();
     }
 
-    IEnumerator AnimateMoveBar()
+    void AnimateMoveBar()
     {
-        while(moveSlider.value != currentBot.Stats.Current[StatType.MOVEMENT])
-        {
-            float newValue = Mathf.Lerp(moveSlider.value, currentBot.Stats.Current[StatType.MOVEMENT], Time.deltaTime);
-            SetSliderAndNumber(newValue);
-            yield return null;
-        }
+        float difference = currentBot.Stats.Current[StatType.MOVEMENT] - moveSlider.value;
+        float duration = Mathf.Abs(difference / currentBot.PrimaryMovement.FinalSpeed);
+        Tween.Custom(moveSlider.value, currentBot.Stats.Current[StatType.MOVEMENT], duration, SetSliderAndNumber);
     }
 }

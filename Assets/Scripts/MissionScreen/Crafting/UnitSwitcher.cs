@@ -49,11 +49,12 @@ public class UnitSwitcher : MonoBehaviour
         if (newCore == ActiveCore) return;
         SaveActiveBotToCore();
         ActiveCore = newCore;
-        blueprintControl.originPart = newCore.ModdedCore;
+        blueprintControl.OriginPart = newCore.ModdedCore;
         nameDisplay.text = UnitTab.GetCoreName(newCore);
         if (newCore.Bot != null) PlacePartsInSlots(newCore.Bot.Children[0], blueprintControl.OriginSlot);
         unitStatsDisplay.RefreshDisplays();
         BlueprintControl.FilterAvailableSlots();
+        blueprintControl.UpdatePartDisplays();
         HighlightTabs();
     }
 

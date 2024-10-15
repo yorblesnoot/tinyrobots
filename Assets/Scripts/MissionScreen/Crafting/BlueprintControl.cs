@@ -1,16 +1,13 @@
 using Cinemachine;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
 
 
 public class BlueprintControl : MonoBehaviour
 {
     public static ModdedPart ActivePart;
     public static GameObject NewSlot;
-    [HideInInspector] public ModdedPart originPart;
+    [HideInInspector] public ModdedPart OriginPart;
 
     [SerializeField] GameObject newSlot;
     [SerializeField] CinemachineVirtualCamera craftCam;
@@ -21,22 +18,21 @@ public class BlueprintControl : MonoBehaviour
 
     static BlueprintControl instance;
     static bool devMode;
-    [Serializable]
-    class FilterButton
-    {
-        public Button Button;
-        public SlotType Type;
-    }
+    
 
     [SerializeField] List<FilterButton> filters;
+    [SerializeField] SmartFilter smartFilter;
     FilterButton activeFilter;
 
     public void Initialize()
     {
         instance = this;
-        foreach (var filter in filters) filter.Button.onClick.AddListener(() => ApplyInventoryFilter(filter));
+        List<FilterButton> allFilters = new(filters)
+        {
+            smartFilter
+        };
+        foreach (var filter in allFilters) filter.Button.onClick.AddListener(() => ApplyInventoryFilter(filter));
         NewSlot = newSlot;
-        UpdatePartDisplays();
         foreach (var core in SceneGlobals.PlayerData.CoreInventory) core.Initialize();
     }
 
@@ -65,14 +61,15 @@ public class BlueprintControl : MonoBehaviour
         void HideIfIncompatible(PartSlot slot)
         {
             if(ActivePart == null) slot.Hide(false);
+            else if(ActivePart.BasePart.PrimaryLocomotion && PartSlot.PrimaryLocomotionSlotted) slot.Hide(true);
             else slot.Hide(!slot.IsCompatibleWithType(ActivePart.BasePart.Type));
         }
     }
 
     public static void SlotActivePart()
     {
-        if (devMode) return;
-        SceneGlobals.PlayerData.PartInventory.Remove(ActivePart);
+
+        if (!devMode) SceneGlobals.PlayerData.PartInventory.Remove(ActivePart);
         SetActivePart(null);
 
         ActivatablePart.resetActivation.Invoke();
@@ -81,8 +78,7 @@ public class BlueprintControl : MonoBehaviour
 
     public static void ReturnPart(ModdedPart part)
     {
-        if (devMode) return;
-        SceneGlobals.PlayerData.PartInventory.Add(part);
+        if (!devMode) SceneGlobals.PlayerData.PartInventory.Add(part);
         instance.UpdatePartDisplays();
         
     }
@@ -93,10 +89,10 @@ public class BlueprintControl : MonoBehaviour
         UpdatePartDisplays();
     }
 
-    void UpdatePartDisplays()
+    public void UpdatePartDisplays()
     {
         List<ModdedPart> filteredParts = activeFilter != null 
-            ? SceneGlobals.PlayerData.PartInventory.Where(part => part.BasePart.Type == activeFilter.Type).ToList() 
+            ? activeFilter.FilterParts(SceneGlobals.PlayerData.PartInventory)
             : SceneGlobals.PlayerData.PartInventory;
         for (int i = 0; i < filteredParts.Count; i++)
         {
@@ -116,7 +112,7 @@ public class BlueprintControl : MonoBehaviour
 
     public TreeNode<ModdedPart> BuildBot()
     {
-        TreeNode<ModdedPart> partTree = new(originPart);
+        TreeNode<ModdedPart> partTree = new(OriginPart);
         OriginSlot.BuildTree(partTree);
         
         GUIUtility.systemCopyBuffer = BotConverter.BotToString(partTree);

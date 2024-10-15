@@ -14,8 +14,10 @@ public abstract class PrimaryMovement : MonoBehaviour
     [SerializeField] float lookSpeed = 1f;
     [SerializeField] protected float MoveSpeed = 3;
     [SerializeField] protected float PivotSpeed = 180f;
-
     [HideInInspector] public float SpeedMultiplier = 1;
+    public float FinalSpeed { get { return MoveSpeed * SpeedMultiplier; } }
+
+    
 
     public IEnumerator TraversePath(List<Vector3> path)
     {
@@ -56,7 +58,7 @@ public abstract class PrimaryMovement : MonoBehaviour
         unit.rotation = targetRotation;
 
         timeElapsed = 0;
-        float pathStepDuration = Vector3.Distance(unit.transform.position, target) / (MoveSpeed * SpeedMultiplier);
+        float pathStepDuration = Vector3.Distance(unit.transform.position, target) / FinalSpeed;
         while (timeElapsed < pathStepDuration)
         {
             unit.position = Vector3.Lerp(startPosition, target, timeElapsed / pathStepDuration);

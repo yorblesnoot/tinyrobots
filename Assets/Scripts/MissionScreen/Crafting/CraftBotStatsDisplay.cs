@@ -45,7 +45,7 @@ public class CraftBotStatsDisplay : MonoBehaviour
 
         List<ModdedPart> activePartsPlusOrigin = new(activeParts)
         {
-            blueprintControl.originPart
+            blueprintControl.OriginPart
         };
         foreach(var part in activePartsPlusOrigin)
         {

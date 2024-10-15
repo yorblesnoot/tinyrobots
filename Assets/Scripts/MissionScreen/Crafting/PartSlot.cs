@@ -1,10 +1,6 @@
 using System;
-using System.Linq;
-using TMPro;
-using UnityEditor.PackageManager.UI;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
 
 public class PartSlot : MonoBehaviour
 {
@@ -17,15 +13,16 @@ public class PartSlot : MonoBehaviour
     [HideInInspector] public AttachmentPoint AttachmentPoint;
     GameObject mockup;
 
-    ModdedPart partIdentity;
+    public ModdedPart PartIdentity { get; private set; }
+    public SlotType SlotType { get { return AttachmentPoint == null ? SlotType.CHASSIS : AttachmentPoint.SlotType; } }
     PartSlot[] childSlots;
     readonly string contractionAnimation = "contract";
 
     public static UnityEvent<ModdedPart, bool> SlottedPart = new();
-    static bool primaryLocomotionSlotted;
+    public static bool PrimaryLocomotionSlotted {get; private set;}
     private void OnEnable()
     {
-        partIdentity = null;
+        PartIdentity = null;
         activeIndicator.transform.localPosition = Vector3.zero;
         Vector3 towardsCamera = -BlueprintControl.GetCameraForward();
         activeIndicator.transform.SetPositionAndRotation(transform.position + towardsCamera * cameraApproachDistance, 
@@ -38,7 +35,7 @@ public class PartSlot : MonoBehaviour
     }
     void CheckToActivate()
     {
-        if (partIdentity != null)
+        if (PartIdentity != null)
         {
             ClearPartIdentity(false, true);
             BlueprintControl.FilterAvailableSlots();
@@ -51,7 +48,7 @@ public class PartSlot : MonoBehaviour
 
     public bool IsCompatibleWithType(SlotType partType)
     {
-        SlotType slotType = AttachmentPoint == null ? SlotType.CHASSIS : AttachmentPoint.SlotType;
+        SlotType slotType = SlotType;
         if (partType == slotType) return true;  
         else if (partType == SlotType.LATERAL)
         {
@@ -63,21 +60,21 @@ public class PartSlot : MonoBehaviour
     void SlotPart()
     {
         ModdedPart activePart = BlueprintControl.ActivePart;
-        if (activePart.BasePart.PrimaryLocomotion && primaryLocomotionSlotted) return;
+        if (activePart.BasePart.PrimaryLocomotion && PrimaryLocomotionSlotted) return;
         SetPartIdentity(activePart);
         BlueprintControl.SlotActivePart();
     }
 
     public void ClearPartIdentity(bool destroy, bool toInventory)
     {
-        SlottedPart.Invoke(partIdentity, false);
+        SlottedPart.Invoke(PartIdentity, false);
         if(slotAnimator != null) slotAnimator.SetBool(contractionAnimation, false);
-        if (partIdentity != null)
+        if (PartIdentity != null)
         {
-            if(toInventory) BlueprintControl.ReturnPart(partIdentity);
+            if(toInventory) BlueprintControl.ReturnPart(PartIdentity);
             if(mockup != null) mockup.SetActive(false);
-            if (partIdentity.BasePart.PrimaryLocomotion) primaryLocomotionSlotted = false;
-            partIdentity = null;
+            if (PartIdentity.BasePart.PrimaryLocomotion) PrimaryLocomotionSlotted = false;
+            PartIdentity = null;
 
             if (childSlots != null)
             {
@@ -97,7 +94,7 @@ public class PartSlot : MonoBehaviour
 
     public PartSlot[] SetPartIdentity(ModdedPart part)
     {
-        primaryLocomotionSlotted |= part.BasePart.PrimaryLocomotion;
+        PrimaryLocomotionSlotted |= part.BasePart.PrimaryLocomotion;
         SlottedPart.Invoke(part, true);
         slotAnimator.SetBool(contractionAnimation, true);
         part.InstantiateSample();
@@ -118,7 +115,7 @@ public class PartSlot : MonoBehaviour
         mockup.transform.SetParent(AttachmentPoint == null ? transform : AttachmentPoint.transform, false);
         mockup.transform.localRotation = Quaternion.identity;
         AttachmentPoint[] attachmentPoints = mockup.GetComponentsInChildren<AttachmentPoint>();
-        partIdentity = part;
+        PartIdentity = part;
 
         childSlots = new PartSlot[attachmentPoints.Length];
         for (int i = 0; i < attachmentPoints.Length; i++)
@@ -134,13 +131,13 @@ public class PartSlot : MonoBehaviour
 
     public void BuildTree(TreeNode<ModdedPart> parent)
     {
-        if (partIdentity == null)
+        if (PartIdentity == null)
         {
-            partIdentity = new();
-            partIdentity.BasePart = empty;
+            PartIdentity = new();
+            PartIdentity.BasePart = empty;
         }
         
-        TreeNode<ModdedPart> incomingNode = parent.AddChild(partIdentity);
+        TreeNode<ModdedPart> incomingNode = parent.AddChild(PartIdentity);
         if (childSlots == null) return;
         foreach(var slot in childSlots)
         {
@@ -160,6 +157,6 @@ public class PartSlot : MonoBehaviour
 
     public void Hide(bool hidden = true)
     {
-        incompatibleIndicator.SetActive(hidden && partIdentity == null);
+        incompatibleIndicator.SetActive(hidden && PartIdentity == null);
     }
 }
