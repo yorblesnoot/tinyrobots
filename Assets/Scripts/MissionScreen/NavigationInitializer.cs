@@ -11,9 +11,10 @@ public class NavigationInitializer : MonoBehaviour
     void Start()
     {
         PlayerNavigator.MoveComplete.AddListener(SaveGame);
+        unitSwitcher.Initialize();
         SceneGlobals.PlayerData.MapData = towerBuilder.BuildTowerFloor(SceneGlobals.SceneRelay.GenerateNavMap ? null : SceneGlobals.PlayerData.MapData);
         SceneGlobals.SceneRelay.GenerateNavMap = false;
-        unitSwitcher.Initialize();
+        
         originSlot.gameObject.SetActive(true);
         mainUI.SetActive(true);
     }

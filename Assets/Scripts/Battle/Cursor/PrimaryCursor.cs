@@ -125,6 +125,7 @@ public class PrimaryCursor : MonoBehaviour
 
     IEnumerator UseSkill(ActiveAbility ability)
     {
+        currentPath = null;
         yield return StartCoroutine(ability.Execute());
         ClickableAbility.PlayerUsedAbility?.Invoke();
     }
@@ -161,11 +162,11 @@ public class PrimaryCursor : MonoBehaviour
             pathIndex++;
         }
         
-
-        pathingLine.positionCount = currentPath.Count;
+        int validCount = currentPath.Count;
+        pathingLine.positionCount = validCount;
         pathingLine.SetPositions(currentPath.ToArray());
         
-        currentPathCost = currentPath.Count > 0 ? distances[^1] : 0;
+        currentPathCost = validCount > 0 ? distances[validCount-1] : 0;
         redLine.positionCount = redPath.Count;
         redLine.SetPositions(redPath.ToArray());
         moveCostPreview.color = redPath.Count > 0 ? Color.red : Color.white;
@@ -182,6 +183,7 @@ public class PrimaryCursor : MonoBehaviour
     {
         actionInProgress = true;
         yield return StartCoroutine(PlayerControlledBot.PrimaryMovement.TraversePath(currentPath));
+        currentPath = null;
         Pathfinder3D.GeneratePathingTree(PlayerControlledBot.PrimaryMovement.Style, PlayerControlledBot.transform.position);
         actionInProgress = false;
     }

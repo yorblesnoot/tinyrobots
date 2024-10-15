@@ -71,6 +71,7 @@ public class TinyBot : Targetable
     public void SpendResource(int resource, StatType statType)
     {
         Stats.Current[statType] -= resource;
+        if (Stats.Current[statType] < 0) Stats.Current[statType] = 0;
     }
 
     public void BeginTurn()

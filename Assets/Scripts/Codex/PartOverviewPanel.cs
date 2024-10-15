@@ -12,6 +12,10 @@ public class PartOverviewPanel : MonoBehaviour
     [SerializeField] AbilityDisplay[] abilityDisplays;
     [SerializeField] TMP_Text[] modLines;
     [SerializeField] PartStatIcon[] statDisplays;
+    private void Awake()
+    {
+        gameObject.SetActive(false);
+    }
     public void Become(ModdedPart part)
     {
         if(part == null)

@@ -30,7 +30,7 @@ public class TurnResourceCounter : MonoBehaviour
 
     public void SyncStatDisplay(TinyBot bot)
     {
-        StopAllCoroutines();
+        Tween.StopAll(moveSlider.value);
         currentBot = bot;
         UpdateAbilityPoints();
 

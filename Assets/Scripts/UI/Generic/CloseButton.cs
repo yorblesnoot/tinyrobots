@@ -6,6 +6,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class CloseButton : MonoBehaviour
 {
+    [SerializeField] GameObject closeTarget;
     Button button;
     private void Awake()
     {
@@ -16,7 +17,8 @@ public class CloseButton : MonoBehaviour
     void Close()
     {
         MasterUI.ClosedWindow.Invoke();
-        gameObject.transform.parent.gameObject.SetActive(false);
+        GameObject target = closeTarget == null ? gameObject.transform.parent.gameObject : closeTarget;
+        target.SetActive(false);
     }
 
 }

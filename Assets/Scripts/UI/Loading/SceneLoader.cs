@@ -25,12 +25,12 @@ public class SceneLoader : MonoBehaviour
 
     public static void Load(SceneType sceneType)
     {
+        instance.loadingScreen.gameObject.SetActive(true);
         instance.StartCoroutine(instance.LoadScene(sceneType));
     }
 
     private IEnumerator LoadScene(SceneType sceneType)
     {
-        loadingScreen.gameObject.SetActive(true);
         loadingBar.value = 0;
         int sceneIndex = (int)sceneType;
         AsyncOperation loading = SceneManager.LoadSceneAsync(sceneIndex);
