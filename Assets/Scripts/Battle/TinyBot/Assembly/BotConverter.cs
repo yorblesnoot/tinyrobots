@@ -123,7 +123,6 @@ public class ConverterEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-
         BotConverter botConverter = (BotConverter)target;
         if (GUILayout.Button("Populate Libraries"))
         {
