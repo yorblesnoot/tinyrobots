@@ -11,6 +11,15 @@ public class PartRarityDefinitions : ScriptableObject
         RarityDefinition.ActiveTier = tier;
         return RandomPlus.RandomByWeight(rarityDefinitions);
     }
+
+    public RarityDefinition GetDefinition(int modCount)
+    {
+        foreach (var rarityDefinition in rarityDefinitions)
+        {
+            if(rarityDefinition.ModCounts.Contains(modCount)) return rarityDefinition;
+        }
+        return null;
+    }
 }
 
 [System.Serializable]

@@ -1,12 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameStarter : MonoBehaviour
 {
+    [SerializeField] Button loadButton;
     [SerializeField] BotConverter botConverter;
     [SerializeField] List<BotCore> starterCores;
     [SerializeField] int startDifficulty = 6;
+
+    SaveContainer container;
+    private void Start()
+    {
+        container = new(SceneGlobals.PlayerData);
+        loadButton.onClick.AddListener(LoadGame);
+        loadButton.gameObject.SetActive(container.SaveExists());
+    }
 
     public void NewGame()
     {
@@ -21,7 +31,6 @@ public class GameStarter : MonoBehaviour
 
     public void LoadGame()
     {
-        SaveContainer container = new(SceneGlobals.PlayerData);
         container.LoadPlayerData();
         SceneGlobals.SceneRelay.GenerateNavMap = false;
         SceneLoader.Load(SceneType.NAVIGATION);

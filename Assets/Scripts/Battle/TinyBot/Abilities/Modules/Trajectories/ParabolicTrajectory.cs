@@ -4,7 +4,7 @@ using UnityEngine;
 public class ParabolicTrajectory : Trajectory
 {
     [SerializeField] protected int parabolaPoints = 10;
-    [SerializeField] float gravityAccel = -.98f;
+    [SerializeField] float gravityAccel = -.3f;
 
     protected override Vector3[] CalculateTrajectory(Vector3 source, Vector3 target)
     {

@@ -14,7 +14,7 @@ public class ModdedPart
     public int EnergyCost { get; private set; }
     [HideInInspector] public GameObject Sample;
     [HideInInspector] public Ability[] Abilities;
-    [HideInInspector] public RarityDefinition Rarity;
+    public RarityDefinition Rarity;
 
     public static readonly HashSet<StatType> PercentStats = new() { StatType.ENERGY };
     public ModdedPart() { }
@@ -42,13 +42,10 @@ public class ModdedPart
         if (FinalStats != null) return;
         List<StatValue> statValues = new();
         List<ModValue> modValues = new();
-        if (Mutators != null)
+        foreach (PartMutator mutator in Mutators)
         {
-            foreach (PartMutator mutator in Mutators)
-            {
-                statValues.AddRange(mutator.Stats);
-                modValues.AddRange(mutator.Mods);
-            }
+            statValues.AddRange(mutator.Stats);
+            modValues.AddRange(mutator.Mods);
         }
 
         ApplyStats(statValues);

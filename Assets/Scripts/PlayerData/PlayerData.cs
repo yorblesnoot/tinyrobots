@@ -8,7 +8,7 @@ public class PlayerData : ScriptableObject
     public void LoadRecords()
     {
         if(DevMode) PartInventory = BotConverter.PartLibrary.Where(part => part.Type != SlotType.CORE)
-                .Select(part => new ModdedPart(part)).ToList();
+                .Select(part => BotConverter.GetDefaultPart(part)).ToList();
         foreach(BotCore core in CoreInventory)
         {
             if (core.Bot != null || core.StarterRecord == null) continue;

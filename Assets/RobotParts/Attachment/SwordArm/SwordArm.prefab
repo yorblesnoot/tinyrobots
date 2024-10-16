@@ -200,7 +200,6 @@ GameObject:
   - component: {fileID: 449424067534177295}
   - component: {fileID: 1678144688368226067}
   - component: {fileID: 8481281637002415656}
-  - component: {fileID: 188292235470090148}
   - component: {fileID: 6697166036674859764}
   m_Layer: 0
   m_Name: Sword Strike
@@ -317,25 +316,6 @@ MonoBehaviour:
   thrustDuration: 0.1
   thrustLinger: 0.1
   returnDuration: 0.5
---- !u!114 &188292235470090148
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8098520941806732672}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ce60f75570eda74a9df2f6317325b4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ikTarget: {fileID: 8265051676045458903}
-  slashPosition: {fileID: 762499412463330799}
-  slashHeight: 1
-  slashWidth: 1
-  slashLength: 3
-  slashTime: 0.07
-  returnTime: 0.4
 --- !u!114 &6697166036674859764
 MonoBehaviour:
   m_ObjectHideFlags: 0

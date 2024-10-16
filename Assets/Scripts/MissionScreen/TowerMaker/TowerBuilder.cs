@@ -68,7 +68,6 @@ public class TowerBuilder : MonoBehaviour
     {
         mapData = data;
         List<TowerNavZone> zones = new();
-        Debug.Log(allPieces.Count());
         for (int i = 0; i < data.Zones.Count; i++)
         {
             SavedNavZone saved = data.Zones[i];

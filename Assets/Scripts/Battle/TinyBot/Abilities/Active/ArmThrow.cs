@@ -11,26 +11,15 @@ public class ArmThrow : ActiveAbility
         locked = true;
     }
 
-    public void PrepareToThrow()
-    {
-        Owner.Stats.Current[StatType.MOVEMENT] /= 2;
-        Owner.EndedTurn.AddListener(EndAbility);
-        if (Owner.Allegiance == Allegiance.PLAYER) TurnResourceCounter.Update?.Invoke();
-        foreach (ActiveAbility ability in Owner.ActiveAbilities)
-        {
-            ability.locked = true;
-        }
-        locked = false;
-    }
-
     protected override IEnumerator PerformEffects()
     {
+        Targetable thrown = armGrab.Grabbed;
         armGrab.EndGrab();
-        yield return StartCoroutine(ProjectileMovement.LaunchAlongLine(armGrab.grabbed.gameObject, thrownAirTime, currentTrajectory));
-        EndAbility();
+        yield return StartCoroutine(ProjectileMovement.LaunchAlongLine(thrown.gameObject, thrownAirTime, currentTrajectory));
         float intervalTime = thrownAirTime / currentTrajectory.Count;
         Vector3 displacement = currentTrajectory[^1] - currentTrajectory[^2];
-        yield return StartCoroutine(armGrab.grabbed.Fall(displacement / intervalTime));
+        armGrab.EndAbility();
+        yield return StartCoroutine(thrown.Fall(displacement / intervalTime));
         Pathfinder3D.EvaluateNodeOccupancy(Owner.transform.position);
     }
 }

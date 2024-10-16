@@ -11,15 +11,12 @@ public class DropsUI : MonoBehaviour
     [SerializeField] PartOverviewPanel partPreview;
     [SerializeField] PlayerData playerData;
     [SerializeField] PartGenerator partGenerator;
-    
     [SerializeField] Button continueButton;
-    [SerializeField] List<GameObject> otherUI;
 
-    public void ShowDrops(UnityAction doneCallback)
+    public void ShowDrops()
     {
-        continueButton.onClick.AddListener(doneCallback);
         gameObject.SetActive(true);
-        foreach(var obj in otherUI) obj.gameObject.SetActive(false);
+        
         List<ModdedPart> parts = partGenerator.GenerateDropList();
 
         for (int i = 0; i < dropDisplays.Length; i++)

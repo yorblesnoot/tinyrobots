@@ -2281,6 +2281,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e49fa23d663d7d45be4da107697046a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  loadButton: {fileID: 1710104439}
   botConverter: {fileID: 11400000, guid: efd80f4536a76904d8f8a1a5b13e844c, type: 2}
   starterCores:
   - {fileID: 11400000, guid: 860feb0d5dc177a488b6a2eb42305b4a, type: 2}
@@ -2772,19 +2773,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1710104440}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1356290341}
-        m_TargetAssemblyTypeName: GameStarter, Assembly-CSharp
-        m_MethodName: LoadGame
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1710104440
 MonoBehaviour:
   m_ObjectHideFlags: 0

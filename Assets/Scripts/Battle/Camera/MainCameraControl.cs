@@ -150,8 +150,8 @@ public class MainCameraControl : MonoBehaviour
     private void SlideCamera(Vector3 moveOffset)
     {
         if(!freeCameraAvailable) return;
+        ToggleAutoCam(false);
         Quaternion yRotation = Camera.main.transform.rotation;
-
         moveOffset *= scrollSpeed;
         Vector3 slidPosition = transform.position + yRotation * moveOffset;
         transform.position = slidPosition;

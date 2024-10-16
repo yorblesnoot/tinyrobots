@@ -13,6 +13,8 @@ public class BotConverter : ScriptableObject
     Dictionary<string, PartMutator> mutatorMap;
     Dictionary<string, BotCore> coreMap;
 
+    [SerializeField] PartRarityDefinitions rarityDefinitions;
+
     public void Initialize()
     {
         partMap = PartLibrary.ToDictionary(p => p.Id, p => p);
@@ -89,8 +91,7 @@ public class BotConverter : ScriptableObject
         string sub = input.Substring(textCursor, guidSkip);
         modPart = new(partMap[sub]);
         textCursor += guidSkip;
-        if (textCursor >= input.Length) return textCursor;
-        while(input[textCursor] == '!')
+        while (textCursor < input.Length && input[textCursor] == '!')
         {
             textCursor++;
             string modSub = input.Substring(textCursor, guidSkip);
@@ -98,6 +99,7 @@ public class BotConverter : ScriptableObject
             modPart.Mutators.Add(mutator);
             textCursor += guidSkip;
         }
+        modPart.Rarity = rarityDefinitions.GetDefinition(modPart.Mutators.Count);
         modPart.InitializePart();
         return textCursor;
     }
@@ -105,5 +107,12 @@ public class BotConverter : ScriptableObject
     public BotCore GetCore(string guid)
     {
         return coreMap[guid];
+    }
+
+    public ModdedPart GetDefaultPart(CraftablePart part)
+    {
+        ModdedPart modPart = new(part);
+        modPart.Rarity = rarityDefinitions.GetDefinition(0);
+        return modPart;
     }
 }

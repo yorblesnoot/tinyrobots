@@ -44,7 +44,7 @@ public class PlayerNavigator : MonoBehaviour
         mapData.ZoneLocation = zone.ZoneIndex;
 
         if(zone.ZoneEvent != null && !noEvents) zone.ZoneEvent.Activate(zone, CompleteEvent);
-        else moveAvailable = true;
+        else CompleteEvent();
     }
 
     void CompleteEvent()

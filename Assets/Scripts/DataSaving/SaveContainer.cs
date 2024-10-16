@@ -51,7 +51,6 @@ public class SaveContainer
         converter.Initialize();
 
         string saveJSON = File.ReadAllText(savePath);
-        Debug.Log(saveJSON);
         Save save = JsonUtility.FromJson<Save>(saveJSON);
         
         playerData.MapData = save.map;
@@ -71,6 +70,16 @@ public class SaveContainer
             finalCores.Add(loadedCore);
         }
         return finalCores;
+    }
+
+    public void ClearPlayerData()
+    {
+        File.Delete(savePath);
+    }
+
+    public bool SaveExists()
+    {
+        return File.Exists(savePath);
     }
 
     class Save

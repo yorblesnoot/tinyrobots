@@ -105,6 +105,7 @@ public class BlueprintControl : MonoBehaviour
             ModdedPart part = filteredParts[i];
             part.InitializePart();
             partDisplays[i].DisplayPart(part, SetActivePart);
+            partDisplays[i].SetTextColor(part.Rarity.TextColor);
         }
 
         for(int i = filteredParts.Count; i < partDisplays.Count; i++) partDisplays[i].gameObject.SetActive(false);

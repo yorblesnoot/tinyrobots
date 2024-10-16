@@ -46,6 +46,7 @@ public abstract class Targetable : MonoBehaviour
     public virtual void Die(Vector3 hitSource = default)
     {
         StopAllCoroutines();
+        Pathfinder3D.GetOccupancy.RemoveListener(DeclareOccupancy);
         GetComponent<Collider>().isTrigger = false;
         IsDead = true;
     }

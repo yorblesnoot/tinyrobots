@@ -80,7 +80,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ikTarget: {fileID: 2419956447974706190}
-  windupTime: 1
+  windupTime: 0.7
   windDistance: 1
 --- !u!114 &3862903475833651967
 MonoBehaviour:
@@ -98,7 +98,7 @@ MonoBehaviour:
   - Default
   - Terrain
   parabolaPoints: 10
-  gravityAccel: -0.98
+  gravityAccel: -0.35
 --- !u!1 &2994116557199998672
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,7 +345,7 @@ MonoBehaviour:
   Description: Grabs and carries the target. While carrying, the user can't use active
     abilities and has halved Move Speed. The user will drop a carried target at the
     end of the turn.
-  range: 1.5
+  range: 1
   ModifiableRange: 0
   cooldown: 1
   damage: 0
@@ -365,7 +365,7 @@ MonoBehaviour:
   - {fileID: 6476705628180564292}
   endAnimations: []
   armThrow: {fileID: 3328195909937798841}
-  grabbed: {fileID: 0}
+  Grabbed: {fileID: 0}
 --- !u!114 &4046753275453398220
 MonoBehaviour:
   m_ObjectHideFlags: 0
