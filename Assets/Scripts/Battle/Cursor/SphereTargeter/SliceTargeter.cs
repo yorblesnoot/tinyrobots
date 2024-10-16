@@ -1,5 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class SliceTargeter : MonoBehaviour
@@ -46,3 +46,28 @@ public class SliceTargeter : MonoBehaviour
         instance.Slices[active].enabled = setting;
     }
 }
+
+#if UNITY_EDITOR
+[CustomEditor(typeof(SliceTargeter))]
+public class SliceEditor : Editor
+{
+    public override void OnInspectorGUI()
+    {
+        SliceTargeter slicer = (SliceTargeter)target;
+        if (GUILayout.Button("Configure Slices"))
+        {
+            slicer.Slices = new();
+            foreach (Transform slice in slicer.transform)
+            {
+                MeshCollider collider = slice.AddComponentIfNeeded<MeshCollider>();
+                collider.convex = true;
+                collider.isTrigger = true;
+                slice.gameObject.layer = slicer.SensorLayer;
+                slicer.Slices.Add(slice.GetComponent<MeshRenderer>());
+                EditorUtility.SetDirty(slice.gameObject);
+            }
+        }
+        DrawDefaultInspector();
+    }
+}
+#endif

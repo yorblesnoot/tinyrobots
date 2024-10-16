@@ -191,7 +191,7 @@ public class ModuleDefiner : MonoBehaviour
                     Vector3 center = new(x, y, z);
                     center += transform.position;
                     Gizmos.DrawWireCube(center, Vector3.one);
-                    Handles.Label(center, $"{x}, {y}, {z}");
+                    //Handles.Label(center, $"{x}, {y}, {z}");
                 }
             }
         }

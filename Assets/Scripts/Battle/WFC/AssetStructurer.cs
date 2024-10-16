@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+#if UNITY_EDITOR
 using System.IO;
 using System.Linq;
 using UnityEditor;
@@ -32,3 +31,4 @@ public class AssetStructurer : MonoBehaviour
         }
     }
 }
+#endif

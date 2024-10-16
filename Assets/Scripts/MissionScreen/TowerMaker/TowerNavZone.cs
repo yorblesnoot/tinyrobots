@@ -1,4 +1,3 @@
-using log4net.Core;
 using PrimeTween;
 using System.Collections;
 using System.Collections.Generic;

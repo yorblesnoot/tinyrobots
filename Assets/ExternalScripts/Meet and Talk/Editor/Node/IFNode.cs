@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
-using UnityEditor.UIElements;
+
 using MeetAndTalk.Editor;
 using MeetAndTalk.Localization;
 using MeetAndTalk.Event;
@@ -58,11 +58,11 @@ namespace MeetAndTalk.Nodes
             {
                 ValueName = value.newValue;   
                 
-                // SprawdŸ, czy ValueName znajduje siê w manager.IntValues lub manager.FloatValues
+                // Sprawdï¿½, czy ValueName znajduje siï¿½ w manager.IntValues lub manager.FloatValues
                 bool isValueNameInIntValues = manager.IntValues.Any(intValue => intValue.ValueName == ValueName);
                 bool isValueNameInFloatValues = manager.FloatValues.Any(floatValue => floatValue.ValueName == ValueName);
 
-                // Ustaw widocznoœæ AvatarPositionField w zale¿noœci od warunków
+                // Ustaw widocznoï¿½ï¿½ AvatarPositionField w zaleï¿½noï¿½ci od warunkï¿½w
                 AvatarPositionField.style.display = isValueNameInIntValues || isValueNameInFloatValues ? DisplayStyle.Flex : DisplayStyle.None;
                 Value_Field.style.display = isValueNameInIntValues || isValueNameInFloatValues ? DisplayStyle.Flex : DisplayStyle.None;
             });
@@ -97,7 +97,7 @@ namespace MeetAndTalk.Nodes
             bool isValueNameInIntValues = manager.IntValues.Any(intValue => intValue.ValueName == ValueName);
             bool isValueNameInFloatValues = manager.FloatValues.Any(floatValue => floatValue.ValueName == ValueName);
 
-            // Ustaw widocznoœæ AvatarPositionField w zale¿noœci od warunków
+            // Ustaw widocznoï¿½ï¿½ AvatarPositionField w zaleï¿½noï¿½ci od warunkï¿½w
             AvatarPositionField.style.display = isValueNameInIntValues || isValueNameInFloatValues ? DisplayStyle.Flex : DisplayStyle.None;
             Value_Field.style.display = isValueNameInIntValues || isValueNameInFloatValues ? DisplayStyle.Flex : DisplayStyle.None;
 
