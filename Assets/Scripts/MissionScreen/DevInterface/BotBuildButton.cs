@@ -1,7 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+#if UNITY_EDITOR
+
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,3 +27,4 @@ public class BotBuildButton : MonoBehaviour
         AssetDatabase.CreateAsset(record, finalPath);
     }
 }
+#endif
