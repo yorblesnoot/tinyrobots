@@ -95,21 +95,22 @@ public class BotAI
             foreach (var ability in dashes)
             {
                 if (AbilityIsUnavailable(ability)) continue;
-                List<Vector3Int> dashLocations = Pathfinder3D.GetCompatibleLocations(thisBot.transform.position, 
-                ability.range, thisBot.PrimaryMovement.Style).Where(x =>
+
+                List<Vector3Int> dashLocations = Pathfinder3D.GetDashTargets(thisBot.transform.position, 
+                ability.range, thisBot.PrimaryMovement.Style).OrderBy(DistanceFromOptimalRange(closestEnemyPosition)).ToList();
+                if(thisBot.PrimaryMovement.Style == MoveStyle.WALK)
                 {
-                    float distance = Vector3.Distance(thisBot.transform.position, x);
-                    return distance > ability.range / 2 && distance < ability.range;
-                }).OrderBy(DistanceFromOptimalRange(closestEnemyPosition)).ToList();
+                    dashLocations = Pathfinder3D.FilterByFloodCompatible(Vector3Int.RoundToInt(closestEnemyPosition), optimalDistance, dashLocations)
+                        .OrderByDescending(p => Vector3.Distance(thisBot.transform.position, p)).ToList();
+                }
 
                 foreach (Vector3Int location in dashLocations)
                 {
-                    if (DashCanReach(ability, location))
-                    {
-                        yield return UseAbility(ability, pointer);
-                        yield return AttackPhase();
-                        yield break;
-                    }
+                    if (!DashCanReach(ability, location)) continue;
+
+                    yield return UseAbility(ability, pointer);
+                    yield return AttackPhase();
+                    yield break;
                 }
             }
             yield return MovePhase();

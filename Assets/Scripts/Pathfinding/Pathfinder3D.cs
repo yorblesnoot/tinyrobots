@@ -1,3 +1,4 @@
+using log4net.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,7 @@ public static class Pathfinder3D
         }
         directionMagnitudes = Directions.Select(d => d.magnitude).ToArray();
         foreach (Node node in nodeMap.Values) SetNeighbors(node);
+        FloodWalkable();
         MapInitialized.Invoke();
     }
     static void SetNeighbors(Node current)
@@ -110,7 +112,6 @@ public static class Pathfinder3D
     };
     static float[] directionMagnitudes;
     #endregion
-    
 
     #region Path Services
     public static void GeneratePathingTree(MoveStyle style, Vector3 position)
@@ -176,11 +177,46 @@ public static class Pathfinder3D
     {
         return nodeMap.Values.Where(node => node.G < float.PositiveInfinity).Select(node => node.Location).ToList();
     }
-    public static List<Vector3Int> GetCompatibleLocations(Vector3 position, float range, MoveStyle style)
+
+    public static List<Vector3Int> GetDashTargets(Vector3 position, float range, MoveStyle style, bool approach = true)
     {
-        return nodeMap.Values.Where(x => x.StyleAccess[(int)style] 
-        && Vector3.Distance(position, x.Location) < range).Select(n => n.Location).ToList();
-    } 
+        List<Node> compatible = SearchSphere(Vector3Int.RoundToInt(position), Mathf.FloorToInt(range)).Where(x => x.StyleAccess[(int)style]).ToList();
+        return compatible.Select(n => n.Location).ToList();
+    }
+
+    public static List<Vector3Int> FilterByFloodCompatible(Vector3Int nearestTarget, float abilityRange, List<Vector3Int> nearPositions)
+    {
+        //find nodes within ability range of nearest enemy
+        List<Node> enemyRange = SearchSphere(nearestTarget, Mathf.FloorToInt(abilityRange));
+
+        //get flood zones of those nodes
+        HashSet<int> targetZones = enemyRange.Select(n => n.FloodZone).ToHashSet();
+
+        //filter nearby nodes by the found flood zones
+        nearPositions = nearPositions.Where(p => targetZones.Contains(nodeMap[p].FloodZone)).ToList();
+
+        //order those nodes by distance from the user
+        return nearPositions;
+    }
+
+    static List<Node> SearchSphere(Vector3Int source, int radius)
+    {
+        List<Node> output = new();
+        for (int x = source.x - radius; x <= source.x + radius; x++)
+        {
+            for (int y = source.y - radius; y <= source.y + radius; y++)
+            {
+                for (int z = source.z - radius; z <= source.z + radius; z++)
+                {
+                    Vector3Int checkedPosition = new(x, y, z);
+                    if (Vector3.Distance(checkedPosition, source) > radius) continue;
+                    if (nodeMap.TryGetValue(checkedPosition, out Node node)) output.Add(node);
+                }
+            }
+        }
+        return output;
+    }
+
     #endregion
 
     #region Map Services
@@ -277,6 +313,41 @@ public static class Pathfinder3D
         finishedList.Reverse();
         return finishedList;
     }
+
+    static void FloodWalkable()
+    {
+        int activeZone = 0;
+
+        foreach (Node node in nodeMap.Values)
+        {
+            StartFlood(node);
+        }
+
+        void StartFlood(Node node)
+        {
+            if (!NodeIsFloodable(node)) return;
+            activeZone++;
+            Flood(node);
+        }
+
+        void Flood(Node node)
+        {
+            if (!NodeIsFloodable(node)) return;
+            node.Visited = true;
+            node.FloodZone = activeZone;
+
+            foreach (var edge in node.Edges)
+            {
+                Flood(edge.Neighbor);
+            }
+        }
+
+        bool NodeIsFloodable(Node node)
+        {
+            return !node.Visited && node.StyleAccess[(int)MoveStyle.WALK];
+        }
+    }
+
     class Node
     {
         public float G = float.PositiveInfinity;
@@ -289,6 +360,7 @@ public static class Pathfinder3D
         public bool[] StyleAccess;
 
         public Node Parent;
+        public int FloodZone;
 
         public class Edge
         {
