@@ -10,15 +10,15 @@ public class ShootProjectile : ActiveAbility
     protected override IEnumerator PerformEffects()
     {
         GameObject spawned = Instantiate(projectile);
-        yield return StartCoroutine(ProjectileMovement.LaunchAlongLine(spawned, travelTime, currentTrajectory, CompleteTrajectory));
+        yield return StartCoroutine(ProjectileMovement.LaunchAlongLine(spawned, travelTime, CurrentTrajectory, CompleteTrajectory));
     }
 
     protected virtual void CompleteTrajectory(Vector3 position, GameObject launched)
     {
         Destroy(launched);
-        foreach (var targetable in currentTargets)
+        foreach (var targetable in CurrentTargets)
         {
-            targetable.ReceiveHit(damage, Owner.transform.position, currentTrajectory[^1]);
+            targetable.ReceiveHit(damage, Owner.transform.position, CurrentTrajectory[^1]);
         }
     }
 }

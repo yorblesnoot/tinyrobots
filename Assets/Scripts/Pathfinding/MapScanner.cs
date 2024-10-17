@@ -88,7 +88,7 @@ public class MapScanner
                 coord[targetDimensions[1]] = b;
                 coord[castDimension] = c;
                 outputGrid[coord.x, coord.y, coord.z] = 1;
-                //Debug.DrawLine(coord, coord + rayDirection / 5, Color.blue, 20f);
+                Debug.DrawLine(coord, coord + rayDirection / 5, Color.blue, 20f);
             }
         }
 

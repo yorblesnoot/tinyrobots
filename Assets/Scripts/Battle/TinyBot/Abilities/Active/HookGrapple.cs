@@ -12,24 +12,17 @@ public class HookGrapple : HookAbility
         line.positionCount = 2;
         projectile.transform.SetParent(null, true);
         
-        float intervalTime = travelTime / currentTrajectory.Count;
-        yield return StartCoroutine(LaunchWithLine(projectile, currentTrajectory, intervalTime));
-        bool hitSomething = Vector3.Distance(currentTrajectory[0], currentTrajectory[^1]) < range;
-        if (hitSomething)
-        {
-            if (currentTargets.Count > 0) currentTargets[0].ReceiveHit(damage, Owner.transform.position, currentTrajectory[^1]);
-            Vector3 backDirection = currentTrajectory[1] - currentTrajectory[0];
-            backDirection.Normalize();
-            backDirection *= backDistance;
-            Vector3 secondTarget = currentTrajectory[1] - backDirection;
-            List<Vector3> secondaryTrajectory = new() { currentTrajectory[0], secondTarget };
-            yield return StartCoroutine(LaunchWithLine(Owner.gameObject, secondaryTrajectory, intervalTime));
-        }
-        else
-        {
-            List<Vector3> reverseTrajectory = new() { projectile.transform.position, BaseParent.TransformPoint(BaseHookPosition) };
-            yield return StartCoroutine(LaunchWithLine(projectile, reverseTrajectory, intervalTime, false));
-        }
+        float intervalTime = travelTime / CurrentTrajectory.Count;
+        yield return StartCoroutine(LaunchWithLine(projectile, CurrentTrajectory, intervalTime));
+        bool hitSomething = Vector3.Distance(CurrentTrajectory[0], CurrentTrajectory[^1]) < range;
+
+        if (CurrentTargets.Count > 0) CurrentTargets[0].ReceiveHit(damage, Owner.transform.position, CurrentTrajectory[^1]);
+        Vector3 backDirection = CurrentTrajectory[1] - CurrentTrajectory[0];
+        backDirection.Normalize();
+        backDirection *= backDistance;
+        Vector3 secondTarget = CurrentTrajectory[1] - backDirection;
+        List<Vector3> secondaryTrajectory = new() { CurrentTrajectory[0], secondTarget };
+        yield return StartCoroutine(LaunchWithLine(Owner.gameObject, secondaryTrajectory, intervalTime));
         
         EndAbility();
         if (hitSomething)
@@ -39,5 +32,9 @@ public class HookGrapple : HookAbility
         }
     }
 
-    
+    public override bool IsUsable(Vector3 targetPosition)
+    {
+        return TrajectoryCollided;
+    }
+
 }

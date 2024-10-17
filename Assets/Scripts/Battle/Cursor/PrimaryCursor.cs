@@ -23,12 +23,18 @@ public class PrimaryCursor : MonoBehaviour
     public static CursorState State;
     public static TinyBot TargetedBot;
 
+    [SerializeField] Material validMaterial;
+    [SerializeField] Material invalidMaterial;
+
+    [Header("Components")]
     [SerializeField] CursorBehaviour cursorBehaviour;
     [SerializeField] TurnResourceCounter statDisplay;
     [SerializeField] LineRenderer pathingLine;
     [SerializeField] LineRenderer redLine;
     [SerializeField] GameObject numRotator;
     [SerializeField] TMP_Text moveCostPreview;
+    [SerializeField] Renderer selectBubble;
+
 
     static TurnResourceCounter StatDisplay;
 
@@ -54,6 +60,7 @@ public class PrimaryCursor : MonoBehaviour
 
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
         if (State == CursorState.FREE) activeBehaviour.ControlCursor();
+        ToggleInvalidIndicator();
         if (actionInProgress) 
         {
             HideMovePreview();
@@ -76,6 +83,18 @@ public class PrimaryCursor : MonoBehaviour
             HideMovePreview();
         }
 
+    }
+
+    void ToggleInvalidIndicator()
+    {
+        if(ClickableAbility.Activated == null || ClickableAbility.Activated.Ability.IsUsable(transform.position))
+        {
+            selectBubble.material = validMaterial;
+        }
+        else
+        {
+            selectBubble.material = invalidMaterial;
+        }
     }
 
     private void GenerateMovePreview()

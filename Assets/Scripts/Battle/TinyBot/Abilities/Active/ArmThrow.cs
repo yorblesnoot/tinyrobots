@@ -15,9 +15,9 @@ public class ArmThrow : ActiveAbility
     {
         Targetable thrown = armGrab.Grabbed;
         armGrab.EndGrab();
-        yield return StartCoroutine(ProjectileMovement.LaunchAlongLine(thrown.gameObject, thrownAirTime, currentTrajectory));
-        float intervalTime = thrownAirTime / currentTrajectory.Count;
-        Vector3 displacement = currentTrajectory[^1] - currentTrajectory[^2];
+        yield return StartCoroutine(ProjectileMovement.LaunchAlongLine(thrown.gameObject, thrownAirTime, CurrentTrajectory));
+        float intervalTime = thrownAirTime / CurrentTrajectory.Count;
+        Vector3 displacement = CurrentTrajectory[^1] - CurrentTrajectory[^2];
         armGrab.EndAbility();
         yield return StartCoroutine(thrown.Fall(displacement / intervalTime));
         Pathfinder3D.EvaluateNodeOccupancy(Owner.transform.position);

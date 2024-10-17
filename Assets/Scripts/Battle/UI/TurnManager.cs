@@ -9,7 +9,6 @@ public class TurnManager : MonoBehaviour
     public static TurnManager Singleton;
 
     [SerializeField] List<TurnPortrait> turnPortraitList;
-    [SerializeField] Camera headshotCam;
     [SerializeField] float activeUnitScaleFactor = 1.5f;
     [SerializeField] BattleEnder battleEnder;
     
@@ -67,11 +66,6 @@ public class TurnManager : MonoBehaviour
     {
         TurnTakers.OrderByDescending(bot => bot.Stats.Max[StatType.INITIATIVE]);
         QueueNextTurnTaker(select);
-    }
-
-    public static void UpdateHealth(TinyBot bot)
-    {
-        if(activePortraits.TryGetValue(bot, out var portrait)) portrait.UpdateHealth();
     }
 
     static void GetActiveBots()

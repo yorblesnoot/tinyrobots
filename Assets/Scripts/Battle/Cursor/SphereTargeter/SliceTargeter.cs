@@ -25,7 +25,6 @@ public class SliceTargeter : MonoBehaviour
         float mod = 1 - (float)degree / 360;
         mod *= count;
         int finalIndex = Mathf.FloorToInt(mod);
-        if(finalIndex == active) return;
         active = finalIndex;
         Transform.localScale = new Vector3(radius, radius, radius);
         for (int i = 0; i < count; i++)

@@ -111,8 +111,10 @@ public class BotConverter : ScriptableObject
 
     public ModdedPart GetDefaultPart(CraftablePart part)
     {
-        ModdedPart modPart = new(part);
-        modPart.Rarity = rarityDefinitions.GetDefinition(0);
+        ModdedPart modPart = new(part)
+        {
+            Rarity = rarityDefinitions.GetDefinition(0)
+        };
         return modPart;
     }
 }
@@ -129,6 +131,8 @@ public class ConverterEditor : Editor
             botConverter.CoreLibrary = SerializeAssetsOfType<BotCore>("BotCore");
             botConverter.MutatorLibrary = SerializeAssetsOfType<PartMutator>("PartMutator");
             botConverter.PartLibrary = SerializeAssetsOfType<CraftablePart>("CraftablePart");
+            EditorUtility.SetDirty(botConverter);
+            AssetDatabase.SaveAssets();
         }
         DrawDefaultInspector();
     }

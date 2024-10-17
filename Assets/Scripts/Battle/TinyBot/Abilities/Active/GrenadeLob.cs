@@ -7,12 +7,12 @@ public class GrenadeLob : ShootProjectile
     protected override IEnumerator PerformEffects()
     {
         GameObject spawned = Instantiate(projectile);
-        yield return StartCoroutine(ProjectileMovement.LaunchAlongLine(spawned, travelTime, currentTrajectory, CompleteTrajectory));
+        yield return StartCoroutine(ProjectileMovement.LaunchAlongLine(spawned, travelTime, CurrentTrajectory, CompleteTrajectory));
     }
 
     protected override void CompleteTrajectory(Vector3 position, GameObject launched)
     {
-        StartCoroutine(explosiveModule.Detonate(currentTargets, currentTrajectory[^1], damage));
+        StartCoroutine(explosiveModule.Detonate(CurrentTargets, CurrentTrajectory[^1], damage));
         Destroy(launched);
     }
 }

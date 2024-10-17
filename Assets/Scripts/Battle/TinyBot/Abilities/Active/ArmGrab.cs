@@ -10,7 +10,7 @@ public class ArmGrab : ActiveAbility
     [HideInInspector] public Targetable Grabbed;
     protected override IEnumerator PerformEffects()
     {
-        Grabbed = currentTargets[0];
+        Grabbed = CurrentTargets[0];
         Grabbed.ToggleActiveLayer(true);
         Pathfinder3D.EvaluateNodeOccupancy(Owner.transform.position);
         Grabbed.transform.SetParent(emissionPoint.transform, true);
@@ -30,7 +30,7 @@ public class ArmGrab : ActiveAbility
 
     public override bool IsUsable(Vector3 targetPosition)
     {
-        if(currentTargets.Count == 0) return false;
+        if(CurrentTargets.Count == 0) return false;
         return true;
     }
 

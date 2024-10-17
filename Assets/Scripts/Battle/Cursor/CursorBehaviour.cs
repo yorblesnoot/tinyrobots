@@ -47,7 +47,7 @@ public class CursorBehaviour : MonoBehaviour
             SnapToTerrain(combinedHit.point);
             
         }
-        else if(Vector3.Distance(lastTerrainPosition, terrainHit.point) < terrainStickiness)
+        else if(terrainHit.collider != null && Vector3.Distance(lastTerrainPosition, terrainHit.point) < terrainStickiness)
         {
             //if terrain is deeper than plane and distance from last terrain hit is within a margin, snap to terrain
             SnapToTerrain(terrainHit.point);

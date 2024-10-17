@@ -11,30 +11,30 @@ public class HookPull : HookAbility
         line.positionCount = 2;
         projectile.transform.SetParent(null, true);
 
-        float intervalTime = travelTime / currentTrajectory.Count;
+        float intervalTime = travelTime / CurrentTrajectory.Count;
         Targetable target = null;
-        if (currentTargets != null && currentTargets.Count > 0)
+        if (CurrentTargets != null && CurrentTargets.Count > 0)
         {
-            target = currentTargets[0];
-            currentTrajectory[^1] = currentTargets[0].TargetPoint.position;
+            target = CurrentTargets[0];
+            CurrentTrajectory[^1] = CurrentTargets[0].TargetPoint.position;
         }
         
-        yield return StartCoroutine(LaunchWithLine(projectile, currentTrajectory, intervalTime));
-        currentTrajectory.Reverse();
-        Vector3 direction = (currentTrajectory[0] - currentTrajectory[^1]).normalized;
-        currentTrajectory[^1] = emissionPoint.transform.position + direction * dropDistance;
+        yield return StartCoroutine(LaunchWithLine(projectile, CurrentTrajectory, intervalTime));
+        CurrentTrajectory.Reverse();
+        Vector3 direction = (CurrentTrajectory[0] - CurrentTrajectory[^1]).normalized;
+        CurrentTrajectory[^1] = emissionPoint.transform.position + direction * dropDistance;
 
         if (target != null)
         {
-            target.ReceiveHit(damage, Owner.transform.position, currentTrajectory[^1]);
+            target.ReceiveHit(damage, Owner.transform.position, CurrentTrajectory[^1]);
             if (target.IsDead) target = null;
             else
             {
                 yield return new WaitForSeconds(pullDelay);
-                StartCoroutine(ProjectileMovement.LaunchAlongLine(target.gameObject, travelTime, currentTrajectory));
+                StartCoroutine(ProjectileMovement.LaunchAlongLine(target.gameObject, travelTime, CurrentTrajectory));
             }
         }
-        yield return StartCoroutine(LaunchWithLine(projectile, currentTrajectory, intervalTime, false));
+        yield return StartCoroutine(LaunchWithLine(projectile, CurrentTrajectory, intervalTime, false));
         EndAbility();
         if (target != null) yield return StartCoroutine(target.Fall());
     }

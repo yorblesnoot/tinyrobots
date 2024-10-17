@@ -5,18 +5,19 @@ using UnityEngine;
 public abstract class Trajectory : MonoBehaviour
 {
     public string[] blockingLayers = { "Default", "Terrain", "Shield" };
-    protected int blockingLayerMask;
+    protected int BlockingLayerMask;
 
     readonly float overlapLength = .1f;
 
     private void Awake()
     {
-        blockingLayerMask = LayerMask.GetMask(blockingLayers);
+        BlockingLayerMask = LayerMask.GetMask(blockingLayers);
     }
-    public virtual List<Vector3> GetTrajectory(Vector3 target, Vector3 sourcePosition, float range, bool aiMode = false)
+    public virtual List<Vector3> GetTrajectory(Vector3 sourcePosition, Vector3 target, out RaycastHit hit, bool aiMode = false)
     {
         Vector3[] targets = CalculateTrajectory(sourcePosition, target);
-        return CastAlongPoints(targets, blockingLayerMask, out RaycastHit hit, aiMode ? BotAI.terrainCheckSize : 0);
+        List < Vector3 > trajectory = CastAlongPoints(targets, BlockingLayerMask, out hit, aiMode ? BotAI.terrainCheckSize : 0);
+        return trajectory;
     }
 
     protected abstract Vector3[] CalculateTrajectory(Vector3 source, Vector3 target);
@@ -36,6 +37,7 @@ public abstract class Trajectory : MonoBehaviour
             if (castHit && radius > 0) castHit = Physics.SphereCast(castTargets[i], radius, direction, out hitInfo, direction.magnitude + overlapLength, mask);
             if (castHit)
             {
+                //add penetration here
                 modifiedTargets.Add(hitInfo.point);
                 hit = hitInfo;
                 break;

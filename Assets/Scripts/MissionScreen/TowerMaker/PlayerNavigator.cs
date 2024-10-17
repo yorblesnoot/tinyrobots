@@ -49,13 +49,14 @@ public class PlayerNavigator : MonoBehaviour
 
     void CompleteEvent()
     {
+        if (OccupiedZone.ZoneEvent != null)
+        {
+            OccupiedZone.ZoneEvent.Clear(OccupiedZone);
+            OccupiedZone.ZoneEvent = null;
+            OccupiedZone.ZoneEventType = 0;
+            mapData.Zones[mapData.ZoneLocation].eventType = 0;
+        }
         moveAvailable = true;
         MoveComplete?.Invoke();
-
-        if (OccupiedZone.ZoneEvent == null) return;
-        OccupiedZone.ZoneEvent.Clear(OccupiedZone);
-        OccupiedZone.ZoneEvent = null;
-        OccupiedZone.ZoneEventType = 0;
-        mapData.Zones[mapData.ZoneLocation].eventType = 0;
     }
 }

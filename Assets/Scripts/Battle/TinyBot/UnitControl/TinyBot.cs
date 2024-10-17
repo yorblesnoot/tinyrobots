@@ -29,6 +29,7 @@ public class TinyBot : Targetable
     [HideInInspector] public UnityEvent BeganTurn = new();
     [HideInInspector] public UnityEvent EndedTurn = new();
     [HideInInspector] public UnityEvent ReceivedHit = new();
+    [HideInInspector] public UnityEvent ChangedHealth = new();
 
     public static UnityEvent ClearActiveBot = new();
     BotAI botAI;
@@ -141,7 +142,7 @@ public class TinyBot : Targetable
     protected override void ReduceHealth(int damage)
     {
         base.ReduceHealth(damage);
-        TurnManager.UpdateHealth(this);
+        ChangedHealth.Invoke();
         BattleEnder.IsMissionOver();
     }
 

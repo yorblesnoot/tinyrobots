@@ -22,6 +22,7 @@ public class TurnPortrait : MonoBehaviour
         thisBot = bot;
         gameObject.SetActive(true);
         selectButton.onClick.AddListener(SelectThroughPortrait);
+        bot.ChangedHealth.AddListener(UpdateHealth);
         if (bot.Allegiance == Allegiance.PLAYER)
         {
             frame.color = allyColor;

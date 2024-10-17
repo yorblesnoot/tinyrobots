@@ -7,32 +7,31 @@ public abstract class ActiveAbility : Ability
 {
     public AbilityType Type;
     
-    public bool useAirCursor = true;
-    
     public GameObject emissionPoint;
     
     GameObject trackedTarget;
-    protected bool playerTargeting;
-    protected List<Vector3> currentTrajectory;
-    protected List<Targetable> currentTargets = new();    
+    protected bool PlayerTargeting;
+    protected List<Vector3> CurrentTrajectory;
+    protected List<Targetable> CurrentTargets = new();    
     
     [SerializeField] ToggleAnimation trackingToggle;
     [SerializeField] AnimationController[] preAnimations;
     [SerializeField] AnimationController[] postAnimations;
     [SerializeField] AnimationController[] endAnimations;
-    protected TargetPoint targetType;
-    
-    Trajectory trajectoryDefinition;
+    protected TargetPoint TargetType;
+    protected Trajectory TrajectoryDefinition;
+
+    protected bool TrajectoryCollided;
     TrackingAnimation trackingAnimation;
 
     readonly float skillDelay = .5f;
 
-    public float TotalRange { get { return range + targetType.TargetRadius; } }
+    public float TotalRange { get { return range + TargetType.TargetRadius; } }
     private void Awake()
     {
         durationModule = GetComponent<DurationModule>();
-        trajectoryDefinition = GetComponent<Trajectory>();
-        targetType = TryGetComponent(out TargetPoint point) ? point : gameObject.AddComponent<ImpactTarget>();
+        TrajectoryDefinition = TryGetComponent(out Trajectory trajectory) ? trajectory : gameObject.AddComponent<NoTrajectory>();
+        TargetType = TryGetComponent(out TargetPoint point) ? point : gameObject.AddComponent<ImpactTarget>();
         trackingAnimation = GetComponent<TrackingAnimation>();
         if (emissionPoint == null) emissionPoint = transform.gameObject;
     }
@@ -49,7 +48,7 @@ public abstract class ActiveAbility : Ability
         yield return ToggleAnimations(preAnimations);
         yield return StartCoroutine(PerformEffects());
         yield return ToggleAnimations(postAnimations);
-        currentTargets = new();
+        CurrentTargets = new();
         ScheduleAbilityEnd();
         PrimaryCursor.actionInProgress = false;
         if (Vector3Int.RoundToInt(Owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(Owner.MoveStyle, Owner.transform.position);
@@ -58,7 +57,7 @@ public abstract class ActiveAbility : Ability
     public virtual void EndAbility()
     {
         LineMaker.HideLine();
-        targetType.EndTargeting();
+        TargetType.EndTargeting();
         if(durationModule != null) durationModule.ClearCallback();
         if(trackingAnimation != null) trackingAnimation.ResetTracking();
         StartCoroutine(ToggleAnimations(endAnimations));
@@ -79,24 +78,24 @@ public abstract class ActiveAbility : Ability
     public List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
     {
         Vector3 rangeTarget = GetRangeLimitedTarget(sourcePosition, target);
-        currentTrajectory = trajectoryDefinition == null ? new() { sourcePosition, rangeTarget }
-            : trajectoryDefinition.GetTrajectory(rangeTarget, sourcePosition, range);
+        CurrentTrajectory = TrajectoryDefinition.GetTrajectory(sourcePosition, rangeTarget, out RaycastHit hit, aiMode);
+        TrajectoryCollided = hit.collider != null;
         List<Targetable> newTargets = range == 0 ? new() { Owner } 
-        : aiMode ? targetType.FindTargetsAI(currentTrajectory) : targetType.FindTargets(currentTrajectory);
+        : aiMode ? TargetType.FindTargetsAI(CurrentTrajectory) : TargetType.FindTargets(CurrentTrajectory);
 
         if (!aiMode)
         {
-            if(trackingAnimation != null) trackingAnimation.Aim(currentTrajectory);
+            if(trackingAnimation != null) trackingAnimation.Aim(CurrentTrajectory);
             Owner.PrimaryMovement.RotateToTrackEntity(trackedTarget);
         }
         
-        if (playerTargeting)
+        if (PlayerTargeting)
         {
-            if(trajectoryDefinition != null) LineMaker.DrawLine(currentTrajectory.ToArray());
-            targetType.Draw(currentTrajectory);
+            if(TrajectoryDefinition != null) LineMaker.DrawLine(CurrentTrajectory.ToArray());
+            TargetType.Draw(CurrentTrajectory);
             SetHighlightedTargets(newTargets);
         }
-        currentTargets = new(newTargets);
+        CurrentTargets = new(newTargets);
         return newTargets;
     }
 
@@ -117,7 +116,7 @@ public abstract class ActiveAbility : Ability
         if (animations == null || animations.Length == 0) yield break;
         foreach (var ani in animations)
         {
-            yield return StartCoroutine(ani.Play(Owner, currentTrajectory, currentTargets));
+            yield return StartCoroutine(ani.Play(Owner, CurrentTrajectory, CurrentTargets));
         }
             
     }
@@ -135,9 +134,9 @@ public abstract class ActiveAbility : Ability
 
     public virtual void LockOnTo(GameObject target, bool draw)
     {
-        if(trackingToggle != null) StartCoroutine(trackingToggle.Play(Owner, currentTrajectory, currentTargets));
+        if(trackingToggle != null) StartCoroutine(trackingToggle.Play(Owner, CurrentTrajectory, CurrentTargets));
         trackedTarget = target;
-        playerTargeting = draw;
+        PlayerTargeting = draw;
         StartCoroutine(TrackTarget());
     }
     public virtual void ReleaseLockOn()
@@ -155,23 +154,23 @@ public abstract class ActiveAbility : Ability
         {
             Targetable bot = newTargets[i];
             if (bot == null) newTargets.Remove(bot);
-            else if (!currentTargets.Contains(bot)) bot.SetOutlineColor(Color.red);
+            else if (!CurrentTargets.Contains(bot)) bot.SetOutlineColor(Color.red);
         }
-        foreach(Targetable target in currentTargets)
+        foreach(Targetable target in CurrentTargets)
         {
             if(!newTargets.Contains(target)) target.SetOutlineColor(Color.white);
         }
     }
     Vector3 GetCameraAimPoint()
     {
-        if (currentTargets != null && currentTargets.Count > 0)
+        if (CurrentTargets != null && CurrentTargets.Count > 0)
         {
             Vector3 average = Vector3.zero;
-            foreach (var target in currentTargets)
+            foreach (var target in CurrentTargets)
             {
                 average += target.transform.position;
             }
-            average /= currentTargets.Count;
+            average /= CurrentTargets.Count;
             return average;
         }
         else
