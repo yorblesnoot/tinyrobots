@@ -534,19 +534,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 714a1afd7354c1e4b833e3c0844d8bce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: Launches a hook at the target location. If the hook hits a movable
-    target, pulls the target to the user's position.
+  Description: Launches a hook at the target location, dealing damage. If the hook
+    hits a movable target, pulls the target to the user's position.
   range: 15
   ModifiableRange: 1
   cooldown: 2
-  damage: 10
+  EffectMagnitude: 10
   cost: 1
   icon: {fileID: 21300000, guid: 5e256e48be18d4d2ebc4bc0c1995af39, type: 3}
+  EffectDescription: ' Damage'
   currentCooldown: 0
   Owner: {fileID: 0}
   locked: 0
   Type: 0
-  useAirCursor: 1
   emissionPoint: {fileID: 3957079144629141797}
   trackingToggle: {fileID: 0}
   preAnimations: []

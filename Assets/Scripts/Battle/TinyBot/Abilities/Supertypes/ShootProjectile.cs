@@ -18,7 +18,7 @@ public class ShootProjectile : ActiveAbility
         Destroy(launched);
         foreach (var targetable in CurrentTargets)
         {
-            targetable.ReceiveHit(damage, Owner.transform.position, CurrentTrajectory[^1]);
+            targetable.ReceiveHit(EffectMagnitude, Owner.transform.position, CurrentTrajectory[^1]);
         }
     }
 }

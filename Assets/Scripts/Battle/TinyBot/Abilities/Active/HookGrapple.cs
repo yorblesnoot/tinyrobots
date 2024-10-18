@@ -16,7 +16,7 @@ public class HookGrapple : HookAbility
         yield return StartCoroutine(LaunchWithLine(projectile, CurrentTrajectory, intervalTime));
         bool hitSomething = Vector3.Distance(CurrentTrajectory[0], CurrentTrajectory[^1]) < range;
 
-        if (CurrentTargets.Count > 0) CurrentTargets[0].ReceiveHit(damage, Owner.transform.position, CurrentTrajectory[^1]);
+        if (CurrentTargets.Count > 0) CurrentTargets[0].ReceiveHit(EffectMagnitude, Owner.transform.position, CurrentTrajectory[^1]);
         Vector3 backDirection = CurrentTrajectory[1] - CurrentTrajectory[0];
         backDirection.Normalize();
         backDirection *= backDistance;

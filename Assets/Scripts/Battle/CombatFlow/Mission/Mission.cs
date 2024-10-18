@@ -30,6 +30,9 @@ public abstract class Mission : MonoBehaviour
         return bot;
     }
 
+    //spawn enemy bots and add to drops ~~~
+
+
     protected List<TinyBot> SpawnPlayerBots()
     {
         List<TinyBot> bots = new();
@@ -59,13 +62,19 @@ public abstract class Mission : MonoBehaviour
     private void PlaceBotsInSpawnZones()
     {
         List<TinyBot> bots = SpawnPlayerBots();
+        AddEnemyBotsToSpawns(bots);
+
+        foreach (TinyBot bot in bots) SpawnZone.PlaceBot(bot);
+    }
+
+    private void AddEnemyBotsToSpawns(List<TinyBot> bots)
+    {
         EncounterGenerator table = SceneGlobals.SceneRelay.ActiveSpawnTable;
         if (table != null)
         {
             List<BotRecord> enemyRecords = table.GetSpawnList(SceneGlobals.PlayerData.Difficulty);
             bots.AddRange(enemyRecords.Select(record => SpawnBot(Allegiance.ENEMY, record)));
+            
         }
-
-        foreach (TinyBot bot in bots) SpawnZone.PlaceBot(bot);
     }
 }

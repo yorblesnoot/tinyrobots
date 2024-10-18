@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public abstract class Ability : MonoBehaviour
 {
@@ -6,9 +7,10 @@ public abstract class Ability : MonoBehaviour
     public float range;
     public bool ModifiableRange = false;
     public int cooldown = 1;
-    public int damage;
+    [FormerlySerializedAs("damage")] public int EffectMagnitude;
     public int cost;
     public Sprite icon;
+    public string EffectDescription = " Damage";
     protected DurationModule durationModule;
 
     [HideInInspector] public int currentCooldown;

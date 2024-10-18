@@ -6,7 +6,7 @@ public class MeleeHit : ActiveAbility
     {
         foreach (Targetable target in CurrentTargets)
         {
-            target.ReceiveHit(damage, Owner.transform.position, target.TargetPoint.position);
+            target.ReceiveHit(EffectMagnitude, Owner.transform.position, target.TargetPoint.position);
         }
         yield break;
     }

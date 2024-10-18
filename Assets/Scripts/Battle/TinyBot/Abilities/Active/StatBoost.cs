@@ -11,10 +11,9 @@ public class StatBoost : ActiveAbility
     }
     [SerializeField] StatType statType;
     [SerializeField] BonusMode mode;
-    [SerializeField] int bonus;
     protected override IEnumerator PerformEffects()
     {
-        Owner.Stats.Current[statType] += GetFinalBonus(bonus, mode);
+        Owner.Stats.Current[statType] += GetFinalBonus(EffectMagnitude, mode);
         if (Owner.Allegiance == Allegiance.PLAYER) TurnResourceCounter.Update.Invoke();
         yield break;
     }

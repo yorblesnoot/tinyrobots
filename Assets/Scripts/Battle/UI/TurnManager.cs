@@ -136,7 +136,7 @@ public class TurnManager : MonoBehaviour
             float currentY = -height / 2;
             portraitRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
             portraitRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
-            Vector3 newPosition = new(currentX - -width / 2, currentY, 0);
+            Vector3 newPosition = new(currentX + width / 2, currentY, 0);
             portraitRect.transform.localPosition = newPosition;
             currentX += width;
         }

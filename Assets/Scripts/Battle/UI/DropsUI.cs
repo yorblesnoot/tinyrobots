@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class DropsUI : MonoBehaviour
@@ -37,6 +35,6 @@ public class DropsUI : MonoBehaviour
 
     private void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.D)) ShowDrops(null);
+        if (Input.GetKeyDown(KeyCode.D)) ShowDrops();
     }
 }

@@ -12,7 +12,7 @@ public class GrenadeLob : ShootProjectile
 
     protected override void CompleteTrajectory(Vector3 position, GameObject launched)
     {
-        StartCoroutine(explosiveModule.Detonate(CurrentTargets, CurrentTrajectory[^1], damage));
+        StartCoroutine(explosiveModule.Detonate(CurrentTargets, CurrentTrajectory[^1], EffectMagnitude));
         Destroy(launched);
     }
 }

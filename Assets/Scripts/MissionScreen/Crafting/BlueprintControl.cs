@@ -1,5 +1,6 @@
 using Cinemachine;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -94,7 +95,7 @@ public class BlueprintControl : MonoBehaviour
 
     public void UpdatePartDisplays()
     {
-        List<ModdedPart> filteredParts = activeFilter.FilterParts(SceneGlobals.PlayerData.PartInventory);
+        List<ModdedPart> filteredParts = activeFilter.FilterParts(SceneGlobals.PlayerData.PartInventory).OrderBy(part=> part.BasePart.name).ToList();
         foreach(var filter in allFilters) filter.Button.image.color = filter == activeFilter ? selectedFilterColor : unselectedFilterColor;
         for (int i = 0; i < filteredParts.Count; i++)
         {

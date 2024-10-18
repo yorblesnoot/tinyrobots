@@ -21,7 +21,7 @@ public class ThornsAura : PassiveAbility
     void DealSpikeDamage(Targetable targetable)
     {
         if (targetable.Allegiance == Owner.Allegiance || affectedUnits.Contains(targetable)) return;
-        targetable.ReceiveHit(damage, Owner.TargetPoint.position, targetable.TargetPoint.position, false);
+        targetable.ReceiveHit(EffectMagnitude, Owner.TargetPoint.position, targetable.TargetPoint.position, false);
         affectedUnits.Add(targetable);
     }
 

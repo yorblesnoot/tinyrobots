@@ -26,7 +26,7 @@ public class HookPull : HookAbility
 
         if (target != null)
         {
-            target.ReceiveHit(damage, Owner.transform.position, CurrentTrajectory[^1]);
+            target.ReceiveHit(EffectMagnitude, Owner.transform.position, CurrentTrajectory[^1]);
             if (target.IsDead) target = null;
             else
             {

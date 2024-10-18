@@ -20,8 +20,6 @@ public class AbilityTooltip : MonoBehaviour
     [SerializeField] TMP_Text cost;
     [SerializeField] TMP_Text description;
 
-    
-
     Image image;
     static float showHeight;
     private void Awake()
@@ -37,7 +35,7 @@ public class AbilityTooltip : MonoBehaviour
         instance.gameObject.SetActive(true);
         instance.abilityName.text = ability.gameObject.name;
         instance.abilityType.text = ability.IsActive() ? "Active Ability" : "Passive Ability";
-        instance.damage.text = ability.damage + " Damage";
+        instance.damage.text = ability.EffectMagnitude + ability.EffectDescription;
         instance.range.text = ability.range + " Ft";
         instance.cooldown.text = ability.cooldown + " Turns";
         instance.cost.text = ability.cost + " AP";

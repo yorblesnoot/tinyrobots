@@ -7,13 +7,18 @@ public class PartGenerator : MonoBehaviour
     [SerializeField] List<PartMutator> mutators;
     [SerializeField] BotConverter botConverter;
     [SerializeField] PartRarityDefinitions rarityPalette;
-    List<CraftablePart> generableBases;
+    static List<CraftablePart> partDropPool;
 
     [SerializeField] int minDrops = 2;
     [SerializeField] int maxDrops = 4;
     private void Awake()
     {
-        generableBases = botConverter.PartLibrary.Where(part => part.Type != SlotType.CORE && part.Collectible).ToList();
+        partDropPool = botConverter.PartLibrary.Where(part => part.Type != SlotType.CORE && part.Collectible).ToList();
+    }
+
+    public static void SubmitBotParts(TreeNode<ModdedPart> partTree)
+    {
+        partTree.Traverse(part => partDropPool.Add(part.BasePart));
     }
 
     public List<ModdedPart> GenerateDropList()
@@ -25,13 +30,15 @@ public class PartGenerator : MonoBehaviour
         droppedRarities = droppedRarities.OrderByDescending(x => x.ModCounts[0]).ToList();
 
         List<ModdedPart> output = droppedRarities.Select(r => Generate(r)).ToList();
+
+
         SceneGlobals.PlayerData.PartInventory.AddRange(output);
         return output;
     }
     public ModdedPart Generate(RarityDefinition rarity, CraftablePart partBase = null)
     {
         int modNumber = rarity.ModCounts.GrabRandomly(false);
-        partBase = partBase != null ? partBase : generableBases.GrabRandomly(false);
+        partBase = partBase != null ? partBase : partDropPool.GrabRandomly(false);
         ModdedPart modPart = new(partBase)
         {
             Rarity = rarity
@@ -87,7 +94,7 @@ public class PartGenerator : MonoBehaviour
     {
         if (mod.Type == ModType.RANGE && ability.ModifiableRange) return true;
         else if (mod.Type == ModType.COOLDOWN && ability.cooldown + mod.Value > 0) return true;
-        else if (mod.Type == ModType.POTENCY && ability.damage > 0) return true;
+        else if (mod.Type == ModType.POTENCY && ability.EffectMagnitude > 0) return true;
         else if (mod.Type == ModType.COST && ability.cost + mod.Value >= 0) return true;
         return false;
     }

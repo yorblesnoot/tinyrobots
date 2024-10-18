@@ -20,6 +20,6 @@ public class ArmorPlates : PassiveAbility
         if(armor == armored) return;
         armorAura.SetActive(armor);
         armored = armor;
-        Owner.Stats.Current[StatType.ARMOR] += armor ? damage : -damage;
+        Owner.Stats.Current[StatType.ARMOR] += armor ? EffectMagnitude : -EffectMagnitude;
     }
 }
