@@ -1,9 +1,7 @@
 using Cinemachine;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class MainCameraControl : MonoBehaviour
 {
@@ -89,11 +87,13 @@ public class MainCameraControl : MonoBehaviour
 
         Cams.Free.m_XAxis.m_InputAxisName = xInput;
         Cams.Free.m_YAxis.m_InputAxisName = yInput;
+        PrimaryCursor.RestrictCursor(true);
     }
 
     void EndFocusRotation(InputAction.CallbackContext context)
     {
         LockCameraPivot();
+        PrimaryCursor.RestrictCursor(false);
     }
 
     static bool freeCameraAvailable = true;

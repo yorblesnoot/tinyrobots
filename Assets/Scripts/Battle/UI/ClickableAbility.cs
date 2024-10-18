@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -18,7 +19,7 @@ public class ClickableAbility : AbilityDisplay
     public static ClickableAbility Activated;
     private void OnEnable()
     {
-        PlayerUsedAbility.AddListener(OvercostOverlay);
+        PlayerUsedAbility.AddListener(UpdateUsability);
         TinyBot.ClearActiveBot.AddListener(CancelAbility);
     }
 
@@ -29,27 +30,30 @@ public class ClickableAbility : AbilityDisplay
         base.Become(ability);
         Ability = ability as ActiveAbility;
         button.interactable = true;
-        ability.Owner.BeganTurn.AddListener(UpdateCooldowns);
+        ability.Owner.BeganTurn.AddListener(UpdateUsability);
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(Activate);
         SetPips(ability.cost);
-        UpdateCooldowns();
+        UpdateUsability();
     }
 
-    void OvercostOverlay()
+    void UpdateUsability()
     {
         if (Ability == null) return;
-        bool unusuable = Ability.cost > UnitControl.PlayerControlledBot.Stats.Current[StatType.ACTION]
-            || !Ability.IsAvailable();
-        cooldownPanel.gameObject.SetActive(unusuable);
-        cooldown.text = "";
+        bool usable = true;
+        bool offCooldown = Ability.currentCooldown == 0;
+        usable &= Ability.cost <= UnitControl.PlayerControlledBot.Stats.Current[StatType.ACTION];
+        usable &= Ability.IsAvailable();
+        usable &= offCooldown;
+        cooldownPanel.gameObject.SetActive(!usable);
+        cooldown.text = offCooldown ? "" : Ability.currentCooldown.ToString();
     }
 
     void OnDisable()
     {
         image.color = Color.white;
         SetPips(0);
-        PlayerUsedAbility.RemoveListener(OvercostOverlay);
+        PlayerUsedAbility.RemoveListener(UpdateUsability);
         TinyBot.ClearActiveBot.RemoveListener(CancelAbility);
         button.onClick.RemoveAllListeners();
     }
@@ -67,15 +71,6 @@ public class ClickableAbility : AbilityDisplay
         if(Activated == null) return;
         Activated.Ability.EndAbility();
         EndUsableAbilityState();
-    }
-
-    
-
-    public void UpdateCooldowns()
-    {
-        if (Ability == null) return;
-        cooldownPanel.gameObject.SetActive(Ability.currentCooldown > 0);
-        cooldown.text = Ability.currentCooldown.ToString();
     }
 
     void SetPips(int pips)

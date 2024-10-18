@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UIElements;
 
 public class CursorBehaviour : MonoBehaviour
 {
@@ -60,6 +58,8 @@ public class CursorBehaviour : MonoBehaviour
             transform.position = combinedHit.point;
         }
     }
+
+
 
     void SnapToTerrain(Vector3 position)
     {

@@ -74,6 +74,7 @@ public class UnitSwitcher : MonoBehaviour
         ActiveCore.Energized = unitStatsDisplay.IsDeployable();
         ActiveCore.Bot = blueprintControl.BuildBot();
         blueprintControl.OriginSlot.ClearPartIdentity(false, false);
+        SaveContainer.SaveGame(SceneGlobals.PlayerData);
     }
 
     void PlacePartsInSlots(TreeNode<ModdedPart> node, PartSlot slot)

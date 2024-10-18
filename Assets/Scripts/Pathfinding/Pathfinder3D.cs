@@ -232,6 +232,15 @@ public static class Pathfinder3D
         }
         return styles;
     }
+
+    public static bool GetBestApproachPath(Vector3Int target, int radius, MoveStyle style, out Vector3Int point)
+    {
+        List<Node> zone = SearchSphere(target, radius);
+        var positions = zone.Where(n => n.StyleAccess[(int)style]).OrderBy(n => n.G/2 + Vector3.Distance(target, n.Location)).Select(n => n.Location);
+        point = positions.FirstOrDefault();
+        if(positions.Count() == 0) return false;
+        return true;
+    }
     
     public static bool GetLandingPointBy(Vector3 target, MoveStyle style, out Vector3Int coords)
     {

@@ -23,6 +23,7 @@ public class PrimaryCursor : MonoBehaviour
     public static CursorState State;
     public static TinyBot TargetedBot;
 
+    [SerializeField] int pathSearchRadius = 10;
     [SerializeField] Material validMaterial;
     [SerializeField] Material invalidMaterial;
 
@@ -99,12 +100,14 @@ public class PrimaryCursor : MonoBehaviour
 
     private void GenerateMovePreview()
     {
-        bool foundValidSpot = Pathfinder3D.GetLandingPointBy(transform.position, PlayerControlledBot.PrimaryMovement.Style, out Vector3Int currentPosition);
-        //Vector3Int currentPosition = Vector3Int.RoundToInt(transform.position);
-        if (!foundValidSpot || currentPosition == lastPosition) return;
+        Vector3Int cursorPosition = Vector3Int.RoundToInt(transform.position);
+        if (cursorPosition == lastPosition) return;
 
-        lastPosition = currentPosition;
-        List<Vector3> possiblePath = Pathfinder3D.FindVectorPath(currentPosition, out List<float> distances);
+        bool foundValidSpot = Pathfinder3D.GetBestApproachPath(cursorPosition, pathSearchRadius, PlayerControlledBot.MoveStyle, out Vector3Int targetPosition);
+        if (!foundValidSpot) return;
+
+        lastPosition = cursorPosition;
+        List<Vector3> possiblePath = Pathfinder3D.FindVectorPath(targetPosition, out List<float> distances);
         if (possiblePath == null || possiblePath.Count == 0) return;
         ProcessAndPreviewPath(possiblePath, distances);
     }
@@ -122,11 +125,10 @@ public class PrimaryCursor : MonoBehaviour
                 StatDisplay.SyncStatDisplay(PlayerControlledBot);
 
                 StartCoroutine(UseSkill(skill));
-                ClickableAbility.Activated.UpdateCooldowns();
                 ClickableAbility.EndUsableAbilityState();
             }
         }
-        else if (TargetedBot != null)
+        else if (TargetedBot != null && TargetedBot.Allegiance == Allegiance.PLAYER)
         {
             SelectBot(TargetedBot);
             HideMovePreview();
@@ -211,9 +213,9 @@ public class PrimaryCursor : MonoBehaviour
     {
         if (!bot.AvailableForTurn) return;
         TinyBot.ClearActiveBot.Invoke();
-        PlayerSelectedBot.Invoke(bot);
-
         bot.BecomeActiveUnit();
+        PlayerSelectedBot.Invoke(bot);
+        
         MoveStyle botStyle = bot.PrimaryMovement.Style;
         Pathfinder3D.GeneratePathingTree(botStyle, bot.transform.position);
     }
@@ -231,5 +233,11 @@ public class PrimaryCursor : MonoBehaviour
         if (State != CursorState.UNITSNAPPED) return;
         TargetedBot = null;
         State = CursorState.FREE;
+    }
+
+    public static void RestrictCursor(bool on = true)
+    {
+        Unsnap();
+        State = on ? CursorState.SPACELOCKED : CursorState.FREE;
     }
 }

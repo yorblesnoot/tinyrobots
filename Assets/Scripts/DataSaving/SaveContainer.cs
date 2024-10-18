@@ -15,6 +15,12 @@ public class SaveContainer
         savePath = Application.persistentDataPath + Path.DirectorySeparatorChar + "runData.json";
     }
 
+    public static void SaveGame(PlayerData data)
+    {
+        SaveContainer container = new(data);
+        container.SavePlayerData();
+    }
+
     public void SavePlayerData()
     {
         Save save = new()
