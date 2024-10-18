@@ -34,6 +34,7 @@ public static class Pathfinder3D
                 }
             }
         }
+        lastOccupied = new();
         directionMagnitudes = Directions.Select(d => d.magnitude).ToArray();
         foreach (Node node in nodeMap.Values) SetNeighbors(node);
         FloodWalkable();

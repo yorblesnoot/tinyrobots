@@ -61,28 +61,31 @@ public abstract class Targetable : MonoBehaviour
         if (Stats.Current[StatType.HEALTH] == 0) Die();
     }
 
+    readonly int maxFallDuration = 5;
     public IEnumerator Fall(Vector3 velocity = default)
     {
         float startHeight = transform.position.z;
         PhysicsBody.isKinematic = false;
         PhysicsBody.velocity = velocity;
-        while (true)
+        float elapsedTime = 0;
+        while (elapsedTime < maxFallDuration)
         {
             Vector3Int cleanPosition = Vector3Int.RoundToInt(transform.position);
             if (Pathfinder3D.PointIsOffMap(cleanPosition.x, cleanPosition.y, cleanPosition.z))
             {
                 Die(transform.position);
-                break;
+                yield break;
             }
             if (Pathfinder3D.GetLandingPointBy(transform.position, MoveStyle, out Vector3Int coords))
             {
 
                 Land(coords, startHeight);
-                break;
+                yield break;
             }
-
+            elapsedTime += Time.deltaTime;
             yield return null;
         }
+        Die(transform.position);
     }
 
     public void ToggleActiveLayer(bool active)

@@ -31,6 +31,7 @@ public class CursorBehaviour : MonoBehaviour
         //if the wheel is being scrolled back, snap to plane
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         bool scrollBack = scroll < 0;
+        if(scroll != 0) PrimaryCursor.Unsnap();
         if (scrollBack) ScrollDepthPlane(scroll);
 
         Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var combinedHit, maximumCameraDistance, combinedMask);

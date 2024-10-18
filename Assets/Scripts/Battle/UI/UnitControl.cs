@@ -39,6 +39,7 @@ public class UnitControl : MonoBehaviour
         gameObject.SetActive(false);
         TurnManager.EndTurn(PlayerControlledBot);
         ClickableAbility.EndUsableAbilityState();
+        
     }
 
     void VisualizeAbilityList(TinyBot bot)

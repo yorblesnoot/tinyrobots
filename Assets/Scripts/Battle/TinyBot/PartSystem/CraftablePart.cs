@@ -9,6 +9,7 @@ public enum SlotType
     UPPER,
     LOWER,
     REAR,
+    ALL
 }
 
 [CreateAssetMenu(fileName = "CraftPart", menuName = "ScriptableObjects/CraftPart")]

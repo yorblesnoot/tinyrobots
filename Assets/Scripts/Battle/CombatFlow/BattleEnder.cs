@@ -59,6 +59,7 @@ public class BattleEnder : MonoBehaviour
 
     void ClearUI()
     {
-        foreach (var obj in clearedUI) obj.gameObject.SetActive(false);
+        MainCameraControl.RestrictCamera();
+        foreach (var obj in clearedUI) obj.SetActive(false);
     }
 }

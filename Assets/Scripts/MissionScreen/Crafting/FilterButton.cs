@@ -10,6 +10,6 @@ class FilterButton
     public SlotType Type;
     public virtual List<ModdedPart> FilterParts(List<ModdedPart> parts)
     {
-        return parts.Where(part => part.BasePart.Type == Type).ToList();
+        return parts.Where(part => PartSlot.PartCanSlot(part.BasePart.Type, Type)).ToList();
     }
 }

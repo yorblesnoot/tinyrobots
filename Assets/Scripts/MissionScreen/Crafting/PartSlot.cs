@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Rendering;
 
 public class PartSlot : MonoBehaviour
 {
@@ -38,21 +39,19 @@ public class PartSlot : MonoBehaviour
         if (PartIdentity != null)
         {
             ClearPartIdentity(false, true);
-            BlueprintControl.FilterAvailableSlots();
-            return;
+            BlueprintControl.HideUnusableSlots();
         }
-        
-        if(BlueprintControl.ActivePart == null) return;
-        if(IsCompatibleWithType(BlueprintControl.ActivePart.BasePart.Type)) SlotPart();
+        else if(BlueprintControl.ActivePart == null) return;
+        else if(PartCanSlot(BlueprintControl.ActivePart.BasePart.Type, SlotType)) SlotPart();
     }
 
-    public bool IsCompatibleWithType(SlotType partType)
+    public static bool PartCanSlot(SlotType part, SlotType slot)
     {
-        SlotType slotType = SlotType;
-        if (partType == slotType) return true;  
-        else if (partType == SlotType.LATERAL)
+        if(slot == SlotType.ALL || part == SlotType.ALL) return true;
+        if (part == slot) return true;
+        else if (part == SlotType.LATERAL)
         {
-            if (slotType == SlotType.UPPER || slotType == SlotType.LOWER) return true;
+            if (slot == SlotType.UPPER || slot == SlotType.LOWER) return true;
         }
         return false;
     }
@@ -71,10 +70,8 @@ public class PartSlot : MonoBehaviour
         if(slotAnimator != null) slotAnimator.SetBool(contractionAnimation, false);
         if (PartIdentity != null)
         {
-            if(toInventory) BlueprintControl.ReturnPart(PartIdentity);
             if(mockup != null) mockup.SetActive(false);
             if (PartIdentity.BasePart.PrimaryLocomotion) PrimaryLocomotionSlotted = false;
-            PartIdentity = null;
 
             if (childSlots != null)
             {
@@ -84,6 +81,10 @@ public class PartSlot : MonoBehaviour
                 }
                 childSlots = null;
             }
+            //this ordering is to avoid disrupting the smart filter, which checks part identity when the list is updated
+            ModdedPart returnPart = PartIdentity;
+            PartIdentity = null;
+            if (toInventory) BlueprintControl.ReturnPart(returnPart);
         }
 
         if (destroy)

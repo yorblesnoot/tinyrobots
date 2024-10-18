@@ -16,11 +16,13 @@ public class ClickableAbility : AbilityDisplay
 
     [HideInInspector] public ActiveAbility Ability;
     public static ClickableAbility Activated;
-    private void Awake()
+    private void OnEnable()
     {
         PlayerUsedAbility.AddListener(OvercostOverlay);
         TinyBot.ClearActiveBot.AddListener(CancelAbility);
     }
+
+    
 
     public override void Become(Ability ability)
     {
@@ -47,7 +49,8 @@ public class ClickableAbility : AbilityDisplay
     {
         image.color = Color.white;
         SetPips(0);
-        Ability = null;
+        PlayerUsedAbility.RemoveListener(OvercostOverlay);
+        TinyBot.ClearActiveBot.RemoveListener(CancelAbility);
         button.onClick.RemoveAllListeners();
     }
 

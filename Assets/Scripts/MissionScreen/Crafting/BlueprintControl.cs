@@ -9,25 +9,29 @@ public class BlueprintControl : MonoBehaviour
     public static GameObject NewSlot;
     [HideInInspector] public ModdedPart OriginPart;
 
+    [SerializeField] Color selectedFilterColor = Color.blue;
+    Color unselectedFilterColor;
+
+    [Header("Components")]
     [SerializeField] GameObject newSlot;
     [SerializeField] CinemachineVirtualCamera craftCam;
     [SerializeField] List<ActivatablePart> partDisplays;
     [SerializeField] PartOverviewPanel partOverviewPanel;
-    public PartSlot OriginSlot;
-
-
-    static BlueprintControl instance;
-    static bool devMode;
-    
-
     [SerializeField] List<FilterButton> filters;
     [SerializeField] SmartFilter smartFilter;
+    public PartSlot OriginSlot;
+
+    static BlueprintControl instance;
+    
+    List<FilterButton> allFilters;
     FilterButton activeFilter;
 
     public void Initialize()
     {
+        activeFilter = filters[0];
+        unselectedFilterColor = smartFilter.Button.image.color;
         instance = this;
-        List<FilterButton> allFilters = new(filters)
+        allFilters = new(filters)
         {
             smartFilter
         };
@@ -39,7 +43,6 @@ public class BlueprintControl : MonoBehaviour
     private void OnEnable()
     {
         craftCam.Priority = 100;
-        devMode = SceneGlobals.PlayerData.DevMode;
     }
 
     private void OnDisable()
@@ -51,10 +54,10 @@ public class BlueprintControl : MonoBehaviour
     {
         ActivePart = part;
         instance.partOverviewPanel.Become(part);
-        FilterAvailableSlots();
+        HideUnusableSlots();
     }
 
-    public static void FilterAvailableSlots()
+    public static void HideUnusableSlots()
     {
         instance.OriginSlot.Traverse(HideIfIncompatible);
 
@@ -62,14 +65,14 @@ public class BlueprintControl : MonoBehaviour
         {
             if(ActivePart == null) slot.Hide(false);
             else if(ActivePart.BasePart.PrimaryLocomotion && PartSlot.PrimaryLocomotionSlotted) slot.Hide(true);
-            else slot.Hide(!slot.IsCompatibleWithType(ActivePart.BasePart.Type));
+            else slot.Hide(PartSlot.PartCanSlot(ActivePart.BasePart.Type, slot.SlotType));
         }
     }
 
     public static void SlotActivePart()
     {
 
-        if (!devMode) SceneGlobals.PlayerData.PartInventory.Remove(ActivePart);
+        if (!SceneGlobals.PlayerData.DevMode) SceneGlobals.PlayerData.PartInventory.Remove(ActivePart);
         SetActivePart(null);
 
         ActivatablePart.resetActivation.Invoke();
@@ -78,7 +81,7 @@ public class BlueprintControl : MonoBehaviour
 
     public static void ReturnPart(ModdedPart part)
     {
-        if (!devMode) SceneGlobals.PlayerData.PartInventory.Add(part);
+        if (!SceneGlobals.PlayerData.DevMode) SceneGlobals.PlayerData.PartInventory.Add(part);
         instance.UpdatePartDisplays();
         
     }
@@ -91,9 +94,8 @@ public class BlueprintControl : MonoBehaviour
 
     public void UpdatePartDisplays()
     {
-        List<ModdedPart> filteredParts = activeFilter != null 
-            ? activeFilter.FilterParts(SceneGlobals.PlayerData.PartInventory)
-            : SceneGlobals.PlayerData.PartInventory;
+        List<ModdedPart> filteredParts = activeFilter.FilterParts(SceneGlobals.PlayerData.PartInventory);
+        foreach(var filter in allFilters) filter.Button.image.color = filter == activeFilter ? selectedFilterColor : unselectedFilterColor;
         for (int i = 0; i < filteredParts.Count; i++)
         {
             if(i == partDisplays.Count - 1)

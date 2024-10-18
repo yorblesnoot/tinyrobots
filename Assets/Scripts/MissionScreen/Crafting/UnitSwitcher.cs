@@ -53,7 +53,7 @@ public class UnitSwitcher : MonoBehaviour
         nameDisplay.text = UnitTab.GetCoreName(newCore);
         if (newCore.Bot != null) PlacePartsInSlots(newCore.Bot.Children[0], blueprintControl.OriginSlot);
         unitStatsDisplay.RefreshDisplays();
-        BlueprintControl.FilterAvailableSlots();
+        BlueprintControl.HideUnusableSlots();
         blueprintControl.UpdatePartDisplays();
         HighlightTabs();
     }
