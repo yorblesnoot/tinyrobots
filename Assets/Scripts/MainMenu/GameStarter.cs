@@ -26,6 +26,7 @@ public class GameStarter : MonoBehaviour
         SceneGlobals.SceneRelay.GenerateNavMap = true;
         SceneGlobals.PlayerData.PartInventory = new();
         SceneGlobals.PlayerData.Difficulty = startDifficulty;
+        SceneGlobals.PlayerData.MapData = new();
         SceneLoader.Load(SceneType.NAVIGATION);
     }
 

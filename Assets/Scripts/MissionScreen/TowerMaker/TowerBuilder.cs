@@ -35,17 +35,16 @@ public class TowerBuilder : MonoBehaviour
     }
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F)) BuildTowerFloor(mapData);
+        if (Input.GetKeyDown(KeyCode.F)) DeployTowerFloor(mapData, true);
     }
-    public MapData BuildTowerFloor(MapData data)
+    public void DeployTowerFloor(MapData data, bool generate)
     {
-        TowerNavZone spawnPosition = data == null ? GenerateTowerFloor() : LoadTowerFloor(data);
+        TowerNavZone spawnPosition = generate ? GenerateNewFloor(data) : ReconstructFloor(data);
         Tween.PositionY(transform, transform.position.y - floorRiseLength, floorRiseTime);
         PlacePlayer(spawnPosition);
-        return mapData;
     }
 
-    TowerNavZone GenerateTowerFloor()
+    TowerNavZone GenerateNewFloor(MapData data)
     {
         if (mapGrid == null) GenerateGrid();
         else ClearGrid();
@@ -55,7 +54,7 @@ public class TowerBuilder : MonoBehaviour
         PlaceMapPieces(path);
         SetFixedEvents(path);
         PopulateNavigableZone();
-        SaveMapData();
+        SaveToMapData(data);
         return zoneRooms[path[0].room];
     }
 
@@ -64,7 +63,7 @@ public class TowerBuilder : MonoBehaviour
         foreach(MapNode node in mapGrid.Values) node.room = null;
     }
 
-    TowerNavZone LoadTowerFloor(MapData data)
+    TowerNavZone ReconstructFloor(MapData data)
     {
         mapData = data;
         List<TowerNavZone> zones = new();
@@ -116,9 +115,9 @@ public class TowerBuilder : MonoBehaviour
         for(int i = 0; i < allPieces.Count; i++) allPieces[i].pieceIndex = i;
     }
 
-    private void SaveMapData()
+    private void SaveToMapData(MapData data)
     {
-        mapData = new();
+        mapData = data;
         List<TowerNavZone> zones = zoneRooms.Values.ToHashSet().ToList();
         List<SavedNavZone> map = new();
 
@@ -137,7 +136,7 @@ public class TowerBuilder : MonoBehaviour
             map.Add(node);
         }
 
-        mapData.Zones = map;
+        data.Zones = map;
     }
 
     void PlacePlayer(TowerNavZone zone)

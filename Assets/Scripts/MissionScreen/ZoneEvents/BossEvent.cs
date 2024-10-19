@@ -15,7 +15,7 @@ public class BossEvent : BattleEvent
     protected override IEnumerator PostBattle(UnityAction eventComplete)
     {
         SceneGlobals.PlayerData.Difficulty--;
-        SceneGlobals.PlayerData.MapData = towerBuilder.BuildTowerFloor(null);
+        towerBuilder.DeployTowerFloor(SceneGlobals.PlayerData.MapData, true);
         eventComplete();
         yield break;
     }

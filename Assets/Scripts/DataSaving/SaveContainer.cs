@@ -23,6 +23,7 @@ public class SaveContainer
 
     public void SavePlayerData()
     {
+        Debug.Log("game saved");
         Save save = new()
         {
             partInventory = playerData.PartInventory.Select(part => BotConverter.PartToString(part)).ToList(),
