@@ -100,7 +100,7 @@ public class BotAI
                 ability.range, thisBot.PrimaryMovement.Style).OrderBy(DistanceFromOptimalRange(closestEnemyPosition)).ToList();
                 if(thisBot.PrimaryMovement.Style == MoveStyle.WALK)
                 {
-                    dashLocations = Pathfinder3D.FilterByFloodCompatible(Vector3Int.RoundToInt(closestEnemyPosition), optimalDistance, dashLocations)
+                    dashLocations = Pathfinder3D.FilterByWalkAccessible(Vector3Int.RoundToInt(closestEnemyPosition), optimalDistance, dashLocations)
                         .OrderByDescending(p => Vector3.Distance(thisBot.transform.position, p)).ToList();
                 }
 

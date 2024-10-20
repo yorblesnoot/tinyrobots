@@ -7,7 +7,6 @@ public class BotCore : SOWithGUID
     public void Initialize()
     {
         ModdedCore = new(corePart);
-        ModdedCore.InitializePart();
     }
 
     public TreeNode<ModdedPart> Bot;

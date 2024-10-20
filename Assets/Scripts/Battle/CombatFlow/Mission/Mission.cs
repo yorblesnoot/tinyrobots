@@ -55,7 +55,7 @@ public abstract class Mission : MonoBehaviour
     protected virtual void InitializeMission()
     {
         SceneGlobals.PlayerData.BotConverter.Initialize();
-        SceneGlobals.PlayerData.LoadRecords();
+        SceneGlobals.PlayerData.LoadDefaultInventory();
         PlaceBotsInSpawnZones();
     }
 

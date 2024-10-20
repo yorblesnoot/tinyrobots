@@ -103,8 +103,9 @@ public class PrimaryCursor : MonoBehaviour
         Vector3Int cursorPosition = Vector3Int.RoundToInt(transform.position);
         if (cursorPosition == lastPosition) return;
 
-        bool foundValidSpot = Pathfinder3D.GetBestApproachPath(cursorPosition, pathSearchRadius, PlayerControlledBot.MoveStyle, out Vector3Int targetPosition);
-        if (!foundValidSpot) return;
+        if (!Pathfinder3D.GetLandingPointBy(cursorPosition, PlayerControlledBot.MoveStyle, out Vector3Int targetPosition)
+            && !Pathfinder3D.GetBestApproachPath(cursorPosition, pathSearchRadius, PlayerControlledBot.MoveStyle, out targetPosition)) 
+            return;
 
         lastPosition = cursorPosition;
         List<Vector3> possiblePath = Pathfinder3D.FindVectorPath(targetPosition, out List<float> distances);

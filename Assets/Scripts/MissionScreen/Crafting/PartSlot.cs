@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Rendering;
 
 public class PartSlot : MonoBehaviour
 {
@@ -70,7 +69,11 @@ public class PartSlot : MonoBehaviour
         if(slotAnimator != null) slotAnimator.SetBool(contractionAnimation, false);
         if (PartIdentity != null)
         {
-            if(mockup != null) mockup.SetActive(false);
+            if (mockup != null)
+            {
+                mockup.SetActive(false);
+                mockup.transform.SetParent(null);
+            }
             if (PartIdentity.BasePart.PrimaryLocomotion) PrimaryLocomotionSlotted = false;
 
             if (childSlots != null)
@@ -98,8 +101,9 @@ public class PartSlot : MonoBehaviour
         PrimaryLocomotionSlotted |= part.BasePart.PrimaryLocomotion;
         SlottedPart.Invoke(part, true);
         slotAnimator.SetBool(contractionAnimation, true);
-        part.InstantiateSample();
         mockup = part.Sample;
+        Debug.Log(part.BasePart.name);
+        Debug.Log(mockup);
         if (mockup.TryGetComponent(out Collider collider)) collider.enabled = false;
         mockup.SetActive(true);
         Animator partAnimator = mockup.GetComponentInChildren<Animator>();

@@ -26,6 +26,7 @@ public class SpatialTarget : TargetPoint
 
     public override List<Targetable> FindTargetsAI(List<Vector3> trajectory)
     {
+        SliceTargeter.ToggleVisual(false);
         Vector3 point = trajectory[^1];
         Collider[] hits = Physics.OverlapSphere(point, TargetRadius);
         List<Targetable> targets = new();

@@ -184,7 +184,7 @@ public static class Pathfinder3D
         return compatible.Select(n => n.Location).ToList();
     }
 
-    public static List<Vector3Int> FilterByFloodCompatible(Vector3Int nearestTarget, float abilityRange, List<Vector3Int> nearPositions)
+    public static List<Vector3Int> FilterByWalkAccessible(Vector3Int nearestTarget, float abilityRange, List<Vector3Int> nearPositions)
     {
         //find nodes within ability range of nearest enemy
         List<Node> enemyRange = SearchSphere(nearestTarget, Mathf.FloorToInt(abilityRange));
@@ -246,12 +246,12 @@ public static class Pathfinder3D
     {
         coords = Vector3Int.RoundToInt(target);
         if (!nodeMap.ContainsKey(coords)) return false;
-        if (nodeMap[coords].StyleAccess[(int)style]) return true;
+        if (nodeMap[coords].IsAccessible(style)) return true;
         else
         {
             foreach (var edge in nodeMap[coords].Edges)
             {
-                if (!nodeMap[edge.Neighbor.Location].StyleAccess[(int)style]) continue;
+                if (!nodeMap[edge.Neighbor.Location].IsAccessible(style)) continue;
                 coords = edge.Neighbor.Location;
                 return true;
             }
@@ -370,6 +370,11 @@ public static class Pathfinder3D
 
         public Node Parent;
         public int FloodZone;
+
+        public bool IsAccessible(MoveStyle style)
+        {
+            return StyleAccess[(int)style] && !Occupied;
+        }
 
         public class Edge
         {

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -56,6 +55,7 @@ public class ClickableAbility : AbilityDisplay
         PlayerUsedAbility.RemoveListener(UpdateUsability);
         TinyBot.ClearActiveBot.RemoveListener(CancelAbility);
         button.onClick.RemoveAllListeners();
+        Ability = null;
     }
 
     public static void EndUsableAbilityState()

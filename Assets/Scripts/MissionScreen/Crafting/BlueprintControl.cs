@@ -36,9 +36,9 @@ public class BlueprintControl : MonoBehaviour
         {
             smartFilter
         };
-        foreach (var filter in allFilters) filter.Button.onClick.AddListener(() => ApplyInventoryFilter(filter));
+        
         NewSlot = newSlot;
-        foreach (var core in SceneGlobals.PlayerData.CoreInventory) core.Initialize();
+        foreach (var filter in allFilters) filter.Button.onClick.AddListener(() => ApplyInventoryFilter(filter));
     }
 
     private void OnEnable()
@@ -66,7 +66,7 @@ public class BlueprintControl : MonoBehaviour
         {
             if(ActivePart == null) slot.Hide(false);
             else if(ActivePart.BasePart.PrimaryLocomotion && PartSlot.PrimaryLocomotionSlotted) slot.Hide(true);
-            else slot.Hide(PartSlot.PartCanSlot(ActivePart.BasePart.Type, slot.SlotType));
+            else slot.Hide(!PartSlot.PartCanSlot(ActivePart.BasePart.Type, slot.SlotType));
         }
     }
 
@@ -106,7 +106,6 @@ public class BlueprintControl : MonoBehaviour
             }
             partDisplays[i].gameObject.SetActive(true);
             ModdedPart part = filteredParts[i];
-            part.InitializePart();
             partDisplays[i].DisplayPart(part, SetActivePart);
             partDisplays[i].SetTextColor(part.Rarity.TextColor);
         }

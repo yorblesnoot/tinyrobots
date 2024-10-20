@@ -145,6 +145,7 @@ public abstract class ActiveAbility : Ability
         trackedTarget = null;
         LineMaker.HideLine();
         SetHighlightedTargets(null);
+        TargetType.EndTargeting();
     }
 
     private void SetHighlightedTargets(List<Targetable> newTargets)

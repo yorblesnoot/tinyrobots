@@ -5,7 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "PlayerData", menuName = "ScriptableObjects/Singletons/PlayerData")]
 public class PlayerData : ScriptableObject
 {
-    public void LoadRecords()
+    public void LoadDefaultInventory()
     {
         if(DevMode) PartInventory = BotConverter.PartLibrary.Where(part => part.Type != SlotType.CORE)
                 .Select(part => BotConverter.GetDefaultPart(part)).ToList();

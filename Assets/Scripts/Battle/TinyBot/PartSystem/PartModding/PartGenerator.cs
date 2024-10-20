@@ -44,9 +44,7 @@ public class PartGenerator : MonoBehaviour
             Rarity = rarity
         };
         List<PartMutator> availableMutators = new();
-
         HashSet<StatType> partStats = partBase.PartStats.Select(ps => ps.Type).ToHashSet();
-        modPart.InstantiateSample();
         Ability[] abilities = modPart.Abilities;
         foreach (var mutator in mutators)
         {

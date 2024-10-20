@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class MainCameraControl : MonoBehaviour
 {
 
-    [SerializeField] CameraSet cams;
+    [SerializeField] float wasdCameraMultiplier = 1f;
     [SerializeField] float scrollSpeed = 1f;
     [SerializeField] float scrollZoneX;
     [SerializeField] float scrollZoneY;
@@ -14,6 +14,7 @@ public class MainCameraControl : MonoBehaviour
     [SerializeField] float actionCutDuration = 2f;
     [SerializeField] float actionCutMaxZoom = 5f;
     [SerializeField] int focalPointDeadzone = 5;
+    [SerializeField] CameraSet cams;
     [SerializeField] CinemachineConfiner[] confiners;
 
     Vector3Int mapCorner;
@@ -124,11 +125,11 @@ public class MainCameraControl : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.A))
         {
-            SlideCamera(new Vector3(-scrollZoneX / 2, 0f, 0f));
+            SlideCamera(new Vector3(-scrollZoneX * wasdCameraMultiplier, 0f, 0f));
         }
         if (Input.GetKey(KeyCode.D))
         {
-            SlideCamera(new Vector3(scrollZoneX / 2, 0f, 0f));
+            SlideCamera(new Vector3(scrollZoneX * wasdCameraMultiplier, 0f, 0f));
         }
         else if(!rotateHold.inProgress)
         {

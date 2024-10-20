@@ -41,7 +41,6 @@ public class BotAssembler : MonoBehaviour
 
         GameObject RecursiveConstruction(TreeNode<ModdedPart> currentNode, AttachmentPoint attachmentPoint = null)
         {
-            currentNode.Value.InitializePart();
             GameObject spawned = currentNode.Value.Sample;
             PartModifier modifier = spawned.GetComponent<PartModifier>();
             AddPartStats(currentNode.Value);

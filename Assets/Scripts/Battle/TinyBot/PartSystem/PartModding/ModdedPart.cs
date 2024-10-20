@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class ModdedPart
@@ -21,25 +22,26 @@ public class ModdedPart
     public ModdedPart(CraftablePart part)
     {
         BasePart = part;
+        InitializePart();
+        SceneManager.sceneLoaded += (_, __) => InitializePart();
     }
 
     public void InitializePart()
     {
-        InstantiateSample();
+        Sample = InstantiateSample(out Abilities);
         EnergyCost = BasePart.EnergyCost;
         MutatePart();
     }
 
-    public void InstantiateSample()
+    public GameObject InstantiateSample(out Ability[] abilities)
     {
-        if (Sample != null) return;
-        Sample = GameObject.Instantiate(BasePart.AttachableObject);
-        Abilities = Sample.GetComponent<PartModifier>().Abilities;
+        GameObject output = GameObject.Instantiate(BasePart.AttachableObject);
+        abilities = output.GetComponent<PartModifier>().Abilities;
+        return output;
     }
 
     void MutatePart()
     {
-        if (FinalStats != null) return;
         List<StatValue> statValues = new();
         List<ModValue> modValues = new();
         foreach (PartMutator mutator in Mutators)
