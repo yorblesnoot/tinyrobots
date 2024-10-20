@@ -54,7 +54,6 @@ public class BattleEnder : MonoBehaviour
         SaveContainer save = new(SceneGlobals.PlayerData);
         save.ClearPlayerData();
         instance.gameOverScreen.SetActive(true);
-        SceneLoader.Load(SceneType.MAINMENU);
     }
 
     void ClearUI()

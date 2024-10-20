@@ -34,7 +34,7 @@ public class AbilityTooltip : MonoBehaviour
     {
         instance.gameObject.SetActive(true);
         instance.abilityName.text = ability.gameObject.name;
-        instance.abilityType.text = ability.IsActive() ? "Active Ability" : "Passive Ability";
+        instance.abilityType.text = ability.IsActive ? "Active Ability" : "Passive Ability";
         instance.damage.text = ability.EffectMagnitude + ability.EffectDescription;
         instance.range.text = ability.range + " Ft";
         instance.cooldown.text = ability.cooldown + " Turns";

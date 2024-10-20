@@ -45,6 +45,7 @@ public class PartGenerator : MonoBehaviour
         };
         List<PartMutator> availableMutators = new();
         HashSet<StatType> partStats = partBase.PartStats.Select(ps => ps.Type).ToHashSet();
+        partStats.Add(StatType.ENERGY);
         Ability[] abilities = modPart.Abilities;
         foreach (var mutator in mutators)
         {
@@ -91,9 +92,9 @@ public class PartGenerator : MonoBehaviour
     bool ModCanApply(Ability ability, ModValue mod)
     {
         if (mod.Type == ModType.RANGE && ability.ModifiableRange) return true;
-        else if (mod.Type == ModType.COOLDOWN && ability.cooldown + mod.Value > 0) return true;
         else if (mod.Type == ModType.POTENCY && ability.EffectMagnitude > 0) return true;
-        else if (mod.Type == ModType.COST && ability.cost + mod.Value >= 0) return true;
+        else if (ability.IsActive && mod.Type == ModType.COOLDOWN && ability.cooldown + mod.Value > 0) return true;
+        else if (ability.IsActive && mod.Type == ModType.COST && ability.cost + mod.Value >= 0) return true;
         return false;
     }
 }

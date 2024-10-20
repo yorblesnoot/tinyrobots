@@ -54,10 +54,9 @@ public class CraftBotStatsDisplay : MonoBehaviour
             {
                 int increment = part.FinalStats[stat];
                 if (stat == StatType.HEALTH) totalHealth += increment;
+                else if(stat == StatType.ENERGY) totalWeight += increment;
                 else entries[stat].Value += increment;
             }
-            
-            totalWeight += part.EnergyCost;
         }
 
         foreach(var entry in entries.Values) entry.Display.text = entry.Value.ToString();

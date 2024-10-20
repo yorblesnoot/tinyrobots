@@ -33,8 +33,10 @@ public class DropsUI : MonoBehaviour
         partPreview.gameObject.SetActive(true);
     }
 
+#if UNITY_EDITOR
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.D)) ShowDrops();
     }
+#endif
 }

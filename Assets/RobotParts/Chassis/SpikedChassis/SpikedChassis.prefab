@@ -4876,12 +4876,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Description: Deal damage to any enemy that enters the effect's range. Each enemy
     can be damaged once per round by this effect.
-  range: 1.5
+  range: 2
   ModifiableRange: 1
-  cooldown: 1
-  damage: 5
+  cooldown: 0
+  EffectMagnitude: 5
   cost: 0
   icon: {fileID: 21300000, guid: ebff662845e054b529080169db2a2f72, type: 3}
+  EffectDescription: ' Damage'
   currentCooldown: 0
   Owner: {fileID: 0}
   locked: 0
@@ -5616,11 +5617,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8134652024258315121, guid: 29c67b6ceb68f7f4ea90dc92e430204a,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8945867629322780574, guid: 29c67b6ceb68f7f4ea90dc92e430204a,
         type: 3}
       propertyPath: m_Name
@@ -5631,7 +5627,8 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 8134652024258315121, guid: 29c67b6ceb68f7f4ea90dc92e430204a, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -29,7 +29,10 @@ public class ActivatablePart : PartButton
         resetActivation.AddListener(BecomeInactive);
 
         List<StatType> statTypes = part.FinalStats.Keys.ToList();
-        for(int i = 0; i < statDisplays.Count(); i++)
+        statTypes.Remove(StatType.ENERGY);
+        weightDisplay.text = part.FinalStats[StatType.ENERGY].ToString();
+        
+        for (int i = 0; i < statDisplays.Count(); i++)
         {
             if(i < statTypes.Count)
             {
@@ -37,7 +40,6 @@ public class ActivatablePart : PartButton
             }
             else statDisplays[i].Hide();
         }
-        weightDisplay.text = part.EnergyCost.ToString();
     }
 
     public void SetTextColor(Color color)

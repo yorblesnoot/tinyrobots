@@ -27,6 +27,7 @@ public abstract class ActiveAbility : Ability
     readonly float skillDelay = .5f;
 
     public float TotalRange { get { return range + TargetType.TargetRadius; } }
+    public override bool IsActive => true;
     private void Awake()
     {
         durationModule = GetComponent<DurationModule>();
@@ -181,11 +182,6 @@ public abstract class ActiveAbility : Ability
             offset *= Mathf.Min(range, offset.magnitude);
             return offset + Owner.transform.position;
         }
-    }
-
-    public override bool IsActive()
-    {
-        return true;
     }
 }
 

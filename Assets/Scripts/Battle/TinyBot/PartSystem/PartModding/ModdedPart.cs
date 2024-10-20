@@ -31,7 +31,6 @@ public class ModdedPart
     public void InitializePart()
     {
         sample = InstantiateSample(out abilities);
-        EnergyCost = BasePart.EnergyCost;
         MutatePart();
     }
 
@@ -54,10 +53,6 @@ public class ModdedPart
 
         ApplyStats(statValues);
         ApplyMods(modValues);
-
-        if (!FinalStats.TryGetValue(StatType.ENERGY, out int extraEnergy)) return;
-        FinalStats.Remove(StatType.ENERGY);
-        EnergyCost += extraEnergy;
     }
 
     void ApplyStats(List<StatValue> statValues)
@@ -65,6 +60,7 @@ public class ModdedPart
         FinalStats = new();
         StatChanges = new();
         Dictionary<StatType, int> baseStats = BasePart.PartStats.ToDictionary(val => val.Type, val => val.Value);
+        baseStats.Add(StatType.ENERGY, BasePart.EnergyCost);
         //consolidate similar stats
         foreach (var statSet in statValues)
         {

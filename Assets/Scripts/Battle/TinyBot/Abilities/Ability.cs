@@ -24,7 +24,7 @@ public abstract class Ability : MonoBehaviour
         Owner.BeganTurn.AddListener(LapseCooldown);
     }
 
-    public abstract bool IsActive();
+    public abstract bool IsActive { get; }
 
     void LapseCooldown()
     {

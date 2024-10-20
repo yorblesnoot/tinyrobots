@@ -46,19 +46,11 @@ public class PartOverviewPanel : MonoBehaviour
     string GetStatPhrase(StatType type, int value)
     {
         string statName = type.ToString().ToLower().FirstToUpper();
+        if (type == StatType.ACTION || type == StatType.MOVEMENT) statName += " Points";
+        else if (type == StatType.ENERGY) statName += " Cost";
         string plus = value > 0 ? "+" : "";
-        if (ModdedPart.PercentStats.Contains(type))
-        {
-            return $"{plus}{value}% {statName}";
-        }
-        else if(type == StatType.ACTION || type == StatType.MOVEMENT)
-        {
-            return $"{plus}{value} {statName} points";
-        }
-        else
-        {
-            return $"{plus}{value} {statName}";
-        }
+
+        return $"{plus}{value}{(ModdedPart.PercentStats.Contains(type) ? "%" : "")} {statName}";
     }
 
     string GetModPhrase(ModType type, int value)
@@ -75,6 +67,8 @@ public class PartOverviewPanel : MonoBehaviour
     void SetBaseStats(ModdedPart part)
     {
         List<StatType> statTypes = part.FinalStats.Keys.ToList();
+        statTypes.Remove(StatType.ENERGY);
+        weightDisplay.text = part.FinalStats[StatType.ENERGY].ToString();
         for (int i = 0; i < statDisplays.Count(); i++)
         {
             if (i < statTypes.Count)
@@ -83,7 +77,7 @@ public class PartOverviewPanel : MonoBehaviour
             }
             else statDisplays[i].Hide();
         }
-        weightDisplay.text = part.EnergyCost.ToString();
+        
     }
 
     void SetAbilities(ModdedPart part)
