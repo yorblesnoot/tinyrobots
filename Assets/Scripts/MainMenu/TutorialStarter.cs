@@ -17,7 +17,7 @@ public class TutorialStarter : MonoBehaviour
         PlayerData playerData = SceneGlobals.PlayerData;
         botConverter.Initialize();
         tutorialCore.Initialize();
-        tutorialCore.Bot = botConverter.StringToBot(tutorialRecord.record);
+        tutorialCore.Bot = botConverter.StringToBot(tutorialRecord.Record);
         playerData.PartInventory = new();
         playerData.CoreInventory = new() { tutorialCore };
         SceneGlobals.SceneRelay.MissionType = MissionType.TUTORIAL;

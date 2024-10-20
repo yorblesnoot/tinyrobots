@@ -24,7 +24,7 @@ public abstract class Mission : MonoBehaviour
     
     public TinyBot SpawnBot(Allegiance allegiance, BotRecord botRecord)
     {
-        var tree = SceneGlobals.PlayerData.BotConverter.StringToBot(botRecord.record);
+        var tree = SceneGlobals.PlayerData.BotConverter.StringToBot(botRecord.Record);
         TinyBot bot = BotAssembler.BuildBot(tree, allegiance);
         TurnManager.AddTurnTaker(bot);
         return bot;

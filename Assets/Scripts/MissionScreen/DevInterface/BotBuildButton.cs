@@ -21,7 +21,7 @@ public class BotBuildButton : MonoBehaviour
         if(!blueprintControl.gameObject.activeInHierarchy) return;
         blueprintControl.BuildBot();
         BotRecord record = ScriptableObject.CreateInstance<BotRecord>();
-        record.record = GUIUtility.systemCopyBuffer;
+        record.Record = GUIUtility.systemCopyBuffer;
         string finalPath = filePath + fileName + extension;
         finalPath = AssetDatabase.GenerateUniqueAssetPath(finalPath);
         AssetDatabase.CreateAsset(record, finalPath);

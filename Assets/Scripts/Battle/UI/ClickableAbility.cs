@@ -55,7 +55,7 @@ public class ClickableAbility : AbilityDisplay
         PlayerUsedAbility.RemoveListener(UpdateUsability);
         TinyBot.ClearActiveBot.RemoveListener(CancelAbility);
         button.onClick.RemoveAllListeners();
-        Ability = null;
+        if(Ability != null) Ability.Owner.BeganTurn.RemoveListener(UpdateUsability);
     }
 
     public static void EndUsableAbilityState()

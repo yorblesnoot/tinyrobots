@@ -42,7 +42,7 @@ public class TinyBot : Targetable
     
     public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement)
     {
-        partRenderers = GetComponentsInChildren<Renderer>();
+        PartRenderers = GetComponentsInChildren<Renderer>();
         PhysicsBody = GetComponent<Rigidbody>();
         this.partModifiers = parts;
         SetAbilities(abilities);
@@ -61,6 +61,20 @@ public class TinyBot : Targetable
             ActiveAbility active = ability as ActiveAbility;
             if (active != null) ActiveAbilities.Add(active);
             else PassiveAbilities.Add(ability as PassiveAbility);
+        }
+    }
+
+    public override void SetOutlineColor(Color color)
+    {
+        foreach (PartModifier mod in partModifiers)
+        {
+            foreach(Renderer ren in mod.mainRenderers)
+            {
+                foreach (var m in ren.materials)
+                {
+                    m.SetColor("_OutlineColor", color);
+                }
+            }
         }
     }
 

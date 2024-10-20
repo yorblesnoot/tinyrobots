@@ -19,7 +19,7 @@ public abstract class Targetable : MonoBehaviour
     
     public bool IsDead { get; protected set; } = false;
 
-    protected Renderer[] partRenderers;
+    protected Renderer[] PartRenderers;
 
     private void Awake()
     {
@@ -32,15 +32,9 @@ public abstract class Targetable : MonoBehaviour
         Pathfinder3D.SetNodeOccupancy(Vector3Int.RoundToInt(transform.position), true);
     }
 
-    public void SetOutlineColor(Color color)
+    public virtual void SetOutlineColor(Color color)
     {
-        foreach (Renderer r in partRenderers)
-        {
-            foreach (var m in r.materials)
-            {
-                m.SetColor("_OutlineColor", color);
-            }
-        }
+        
     }
 
     public virtual void Die(Vector3 hitSource = default)

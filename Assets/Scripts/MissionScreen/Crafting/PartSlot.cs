@@ -72,7 +72,7 @@ public class PartSlot : MonoBehaviour
             if (mockup != null)
             {
                 mockup.SetActive(false);
-                mockup.transform.SetParent(null);
+                mockup.transform.SetParent(null, true);
             }
             if (PartIdentity.BasePart.PrimaryLocomotion) PrimaryLocomotionSlotted = false;
 
@@ -102,8 +102,6 @@ public class PartSlot : MonoBehaviour
         SlottedPart.Invoke(part, true);
         slotAnimator.SetBool(contractionAnimation, true);
         mockup = part.Sample;
-        Debug.Log(part.BasePart.name);
-        Debug.Log(mockup);
         if (mockup.TryGetComponent(out Collider collider)) collider.enabled = false;
         mockup.SetActive(true);
         Animator partAnimator = mockup.GetComponentInChildren<Animator>();
@@ -118,6 +116,7 @@ public class PartSlot : MonoBehaviour
         }
 
         mockup.transform.SetParent(AttachmentPoint == null ? transform : AttachmentPoint.transform, false);
+        mockup.transform.localPosition = Vector3.zero;
         mockup.transform.localRotation = Quaternion.identity;
         AttachmentPoint[] attachmentPoints = mockup.GetComponentsInChildren<AttachmentPoint>();
         PartIdentity = part;

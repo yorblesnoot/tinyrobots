@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 public class MainCameraControl : MonoBehaviour
 {
-
+    [SerializeField] float climbSpeed = 1f;
     [SerializeField] float wasdCameraMultiplier = 1f;
     [SerializeField] float scrollSpeed = 1f;
     [SerializeField] float scrollZoneX;
@@ -14,6 +14,7 @@ public class MainCameraControl : MonoBehaviour
     [SerializeField] float actionCutDuration = 2f;
     [SerializeField] float actionCutMaxZoom = 5f;
     [SerializeField] int focalPointDeadzone = 5;
+    [SerializeField] int cameraConfineMargin = 1;
     [SerializeField] CameraSet cams;
     [SerializeField] CinemachineConfiner[] confiners;
 
@@ -43,18 +44,18 @@ public class MainCameraControl : MonoBehaviour
     }
     void ConfineCameras(Vector3Int corner)
     {
-        GameObject boundingBox = new();
-        boundingBox.layer = LayerMask.NameToLayer("Ignore Raycast");
+        GameObject boundingBox = new()
+        {
+            layer = LayerMask.NameToLayer("Ignore Raycast")
+        };
         BoxCollider boundingCollider = boundingBox.AddComponent<BoxCollider>();
-        Vector3 bounds = corner;
-        bounds.x -= focalPointDeadzone;
-        bounds.y -= focalPointDeadzone;
-        bounds.z -= focalPointDeadzone;
+        boundingCollider.center = corner / 2;
+        corner.x -= cameraConfineMargin;
+        corner.y -= cameraConfineMargin;
+        corner.z -= cameraConfineMargin;
 
-        Vector3 center = corner;
-        center /= 2;
-        boundingCollider.size = bounds;
-        boundingCollider.center = center;
+        boundingCollider.size = corner;
+        
         foreach(var cam in confiners)
         {
             cam.m_BoundingVolume = boundingCollider;
@@ -105,7 +106,7 @@ public class MainCameraControl : MonoBehaviour
 
     private void LateUpdate()
     {
-        if(Input.GetKeyDown(KeyCode.LeftControl)) RestrictCamera(freeCameraAvailable);
+        if(Input.GetKeyDown(KeyCode.Backspace)) RestrictCamera(freeCameraAvailable);
         if(freeCameraAvailable) PlayerControlCamera();
         cams.Brain.ManualUpdate();
         Cams.Automatic.m_MinDuration = 50;
@@ -119,7 +120,7 @@ public class MainCameraControl : MonoBehaviour
         {
             Zoom(zoomSpeed);
         }
-        if (Input.GetKey(KeyCode.S))
+        else if (Input.GetKey(KeyCode.S))
         {
             Zoom(-zoomSpeed);
         }
@@ -127,14 +128,34 @@ public class MainCameraControl : MonoBehaviour
         {
             SlideCamera(new Vector3(-scrollZoneX * wasdCameraMultiplier, 0f, 0f));
         }
-        if (Input.GetKey(KeyCode.D))
+        else if (Input.GetKey(KeyCode.D))
         {
             SlideCamera(new Vector3(scrollZoneX * wasdCameraMultiplier, 0f, 0f));
         }
-        else if(!rotateHold.inProgress)
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            ClimbCamera(climbSpeed);
+        }
+        else if (Input.GetKey(KeyCode.LeftControl))
+        {
+            ClimbCamera(-climbSpeed);
+        }
+        
+        if(!rotateHold.inProgress)
         {
             PanCamera(mouse);
         }
+    }
+
+    void ClimbCamera(float value)
+    {
+        if (!freeCameraAvailable) return;
+        ToggleAutoCam(false);
+        Vector3 climbedPosition = transform.position;
+        climbedPosition.y += climbSpeed * value;
+
+        transform.position = climbedPosition;
+        ClampFocusInMap();
     }
 
     private void PanCamera(Vector3 mouse)
@@ -162,6 +183,7 @@ public class MainCameraControl : MonoBehaviour
     private void Zoom(float factor)
     {
         Vector3 direction = Cams.FocalPoint.position - Camera.main.transform.position;
+        direction.y = 0;
         direction.Normalize();
         direction *= factor;
         transform.position += direction;

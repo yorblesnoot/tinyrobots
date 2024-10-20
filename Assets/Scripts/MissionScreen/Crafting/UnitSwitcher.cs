@@ -17,6 +17,7 @@ public class UnitSwitcher : MonoBehaviour
     public void Initialize()
     {
         playerData = SceneGlobals.PlayerData;
+        foreach (var part in SceneGlobals.PlayerData.PartInventory) part.InitializePart();
         foreach (var core in SceneGlobals.PlayerData.CoreInventory) core.Initialize();
         playerData.LoadDefaultInventory();
         
@@ -53,9 +54,7 @@ public class UnitSwitcher : MonoBehaviour
         ActiveCore = newCore;
         blueprintControl.OriginPart = newCore.ModdedCore;
         nameDisplay.text = UnitTab.GetCoreName(newCore);
-        Debug.Log(newCore);
-        Debug.Log(newCore.Bot);
-        Debug.Log(newCore.Bot.Children[0]);
+        
         if (newCore.Bot != null) PlacePartsInSlots(newCore.Bot.Children[0], blueprintControl.OriginSlot);
         unitStatsDisplay.RefreshDisplays();
         BlueprintControl.HideUnusableSlots();

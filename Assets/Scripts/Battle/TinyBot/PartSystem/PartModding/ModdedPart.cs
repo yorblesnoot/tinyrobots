@@ -13,8 +13,11 @@ public class ModdedPart
     //public int[] ExtraAbilities;
     public List<PartMutator> Mutators = new();
     public int EnergyCost { get; private set; }
-    [HideInInspector] public GameObject Sample;
-    [HideInInspector] public Ability[] Abilities;
+    public GameObject Sample { get { if (sample == null) InitializePart(); return sample; } }
+    GameObject sample;
+
+    public Ability[] Abilities { get { if (abilities == null) InitializePart(); return abilities; } }
+    Ability[] abilities;
     public RarityDefinition Rarity;
 
     public static readonly HashSet<StatType> PercentStats = new() { StatType.ENERGY };
@@ -23,12 +26,11 @@ public class ModdedPart
     {
         BasePart = part;
         InitializePart();
-        SceneManager.sceneLoaded += (_, __) => InitializePart();
     }
 
     public void InitializePart()
     {
-        Sample = InstantiateSample(out Abilities);
+        sample = InstantiateSample(out abilities);
         EnergyCost = BasePart.EnergyCost;
         MutatePart();
     }

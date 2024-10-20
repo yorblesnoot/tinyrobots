@@ -13,7 +13,7 @@ public class PlayerData : ScriptableObject
         {
             if (core.Bot != null || core.StarterRecord == null) continue;
             
-            core.Bot = BotConverter.StringToBot(core.StarterRecord.record);
+            core.Bot = BotConverter.StringToBot(core.StarterRecord.Record);
         }
     }
     public List<ModdedPart> PartInventory;

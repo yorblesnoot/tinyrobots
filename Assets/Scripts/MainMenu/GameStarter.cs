@@ -22,7 +22,11 @@ public class GameStarter : MonoBehaviour
     {
         botConverter.Initialize();
         SceneGlobals.PlayerData.CoreInventory = new(starterCores);
-        foreach (var core in SceneGlobals.PlayerData.CoreInventory) core.HealthRatio = 1;
+        foreach (var core in SceneGlobals.PlayerData.CoreInventory)
+        {
+            core.HealthRatio = 1;
+            core.Bot = SceneGlobals.PlayerData.BotConverter.StringToBot(core.StarterRecord.Record);
+        }
         SceneGlobals.SceneRelay.GenerateNavMap = true;
         SceneGlobals.PlayerData.PartInventory = new();
         SceneGlobals.PlayerData.Difficulty = startDifficulty;
