@@ -34,7 +34,12 @@ public abstract class ActiveAbility : Ability
         TrajectoryDefinition = TryGetComponent(out Trajectory trajectory) ? trajectory : gameObject.AddComponent<NoTrajectory>();
         TargetType = TryGetComponent(out TargetPoint point) ? point : gameObject.AddComponent<ImpactTarget>();
         trackingAnimation = GetComponent<TrackingAnimation>();
-        if (emissionPoint == null) emissionPoint = transform.gameObject;
+    }
+
+    public override void Initialize(TinyBot botUnit)
+    {
+        base.Initialize(botUnit);
+        if (emissionPoint == null) emissionPoint = Owner.gameObject;
     }
 
     public IEnumerator Execute()

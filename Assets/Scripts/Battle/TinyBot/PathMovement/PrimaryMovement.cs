@@ -90,7 +90,9 @@ public abstract class PrimaryMovement : MonoBehaviour
     public virtual void RotateToTrackEntity(GameObject trackingTarget)
     {
         Vector3 worldTarget = trackingTarget.transform.position;
-        worldTarget.y = Owner.transform.position.y;
+        Vector3 localTarget = Owner.transform.InverseTransformPoint(worldTarget);
+        localTarget.y = 0;
+        worldTarget = Owner.transform.TransformPoint(localTarget);
 
         Vector3 direction = worldTarget - Owner.transform.position;
 

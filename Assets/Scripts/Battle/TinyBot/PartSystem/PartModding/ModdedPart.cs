@@ -78,7 +78,7 @@ public class ModdedPart
         }
         foreach(var stat in baseStats)
         {
-            if (stat.Value == 0) continue;
+            if (stat.Value == 0 && stat.Key != StatType.ENERGY) continue;
             if (!FinalStats.ContainsKey(stat.Key)) FinalStats.Add(stat.Key, stat.Value);
         }
     }
