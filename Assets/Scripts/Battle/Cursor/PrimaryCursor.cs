@@ -44,6 +44,7 @@ public class PrimaryCursor : MonoBehaviour
     public static UnityEvent<TinyBot> PlayerSelectedBot = new();
     private void Awake()
     {
+        RestrictCursor(false);
         Instance = this;
         actionInProgress = false;
         TinyBot.ClearActiveBot.AddListener(() => pathingLine.positionCount = 0);

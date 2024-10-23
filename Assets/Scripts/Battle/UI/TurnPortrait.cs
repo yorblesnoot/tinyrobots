@@ -10,7 +10,7 @@ public class TurnPortrait : MonoBehaviour
     [SerializeField] Image frame;
     [SerializeField] Color allyColor;
     [SerializeField] Color enemyColor;
-    [SerializeField] Color neutralColor;
+    [SerializeField] Color activeColor;
 
     [SerializeField] Animator animator;
     [SerializeField] GameObject grayOut;
@@ -21,18 +21,24 @@ public class TurnPortrait : MonoBehaviour
     {
         thisBot = bot;
         gameObject.SetActive(true);
+        PrimaryCursor.PlayerSelectedBot.AddListener(HighlightWhenActive);
         selectButton.onClick.AddListener(SelectThroughPortrait);
         bot.ChangedHealth.AddListener(UpdateHealth);
-        if (bot.Allegiance == Allegiance.PLAYER)
-        {
-            frame.color = allyColor;
-        }
-        else if(bot.Allegiance == Allegiance.ENEMY)
-        {
-            frame.color = enemyColor;
-        }
+        SetColorForAllegiance(bot);
         cardPortrait.sprite = bot.Portrait;
         healthOverlay.UpdateHealth(thisBot);
+    }
+
+    private void SetColorForAllegiance(TinyBot bot)
+    {
+        if (bot.Allegiance == Allegiance.PLAYER) frame.color = allyColor;
+        else if (bot.Allegiance == Allegiance.ENEMY) frame.color = enemyColor;
+    }
+
+    void HighlightWhenActive(TinyBot bot)
+    {
+        if(bot == thisBot) frame.color = activeColor;
+        else SetColorForAllegiance(thisBot);
     }
 
     void SelectThroughPortrait()

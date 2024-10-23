@@ -65,7 +65,7 @@ public class UnitControl : MonoBehaviour
     private void Update()
     {
         if (deployedAbilities == null || !Input.anyKeyDown) return;
-        if(Input.GetKeyDown(KeyCode.Return)) EndPlayerTurn();
+        if(Input.GetKeyDown(KeyCode.Space)) EndPlayerTurn();
         for (int i = 0;i < deployedAbilities.Count; i++)
         {
             if (!Input.GetKeyDown(keyCodes[i])) continue;
