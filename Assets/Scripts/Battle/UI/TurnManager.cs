@@ -65,6 +65,10 @@ public class TurnManager : MonoBehaviour
     public static void BeginTurnSequence(bool select = true)
     {
         TurnTakers.OrderByDescending(bot => bot.Stats.Max[StatType.INITIATIVE]);
+        foreach(var bot in TurnTakers)
+        {
+            Debug.Log(bot.Stats.Max[StatType.INITIATIVE]);
+        }
         QueueNextTurnTaker(select);
     }
 
@@ -108,7 +112,7 @@ public class TurnManager : MonoBehaviour
             GetActiveBots();
         }
         TinyBot next = currentlyActive.First();
-        MainCameraControl.CutToUnit(next, select);
+        MainCameraControl.CutToEntity(next.TargetPoint, select);
         if (select) PrimaryCursor.SelectBot(next);
     }
 
@@ -122,11 +126,13 @@ public class TurnManager : MonoBehaviour
     static void ArrangePortraits(List<TinyBot> active)
     {
         float currentX = 0f;
+        foreach(var portrait in portraitStock) portrait.gameObject.SetActive(false);
         foreach (TinyBot turnTaker in TurnTakers)
         {
             float width = cardWidth;
             float height = cardHeight;
             RectTransform portraitRect = activePortraits[turnTaker].GetComponent<RectTransform>();
+            portraitRect.gameObject.SetActive(true);
             if (active.Contains(turnTaker))
             {
                 height *= Singleton.activeUnitScaleFactor;

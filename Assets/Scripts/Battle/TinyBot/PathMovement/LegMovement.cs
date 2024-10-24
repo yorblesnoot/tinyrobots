@@ -1,6 +1,7 @@
 using PrimeTween;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -19,6 +20,7 @@ public abstract class LegMovement : PrimaryMovement
     [SerializeField] protected float forwardBias = .5f;
 
     protected bool stepping;
+    Dictionary<Transform, (Vector3, Quaternion)> baseLimbPositions;
 
     private void Awake()
     {
@@ -39,10 +41,30 @@ public abstract class LegMovement : PrimaryMovement
 
     protected override void InstantNeutral()
     {
-        foreach (var anchor in anchors) anchor.ikTarget.position = GetLimbTarget(anchor, true);
+        LoadLimbPositions();
+        foreach (var anchor in anchors)
+        {
+            anchor.ikTarget.position = GetLimbTarget(anchor, true);
+            anchor.UpdateGluedPosition();
+        }
     }
 
-    protected abstract void InitializeParameters();
+    void SaveLimbPosition(Transform transform)
+    {
+        baseLimbPositions.Add(transform, (transform.localPosition, transform.localRotation));
+    }
+
+    void LoadLimbPositions()
+    {
+        foreach (var entry in baseLimbPositions) entry.Key.SetLocalPositionAndRotation(entry.Value.Item1, entry.Value.Item2);
+    }
+
+    protected virtual void InitializeParameters()
+    {
+        baseLimbPositions = new();
+        sourceBone.TraverseHierarchy(SaveLimbPosition);
+        baseLimbPositions.Remove(sourceBone);
+    }
     public override void AnimateToOrientation(bool inPlace = false)
     {
         foreach (var anchor in anchors)

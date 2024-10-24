@@ -20,7 +20,6 @@ public class TurnPortrait : MonoBehaviour
     public void Become(TinyBot bot)
     {
         thisBot = bot;
-        gameObject.SetActive(true);
         PrimaryCursor.PlayerSelectedBot.AddListener(HighlightWhenActive);
         selectButton.onClick.AddListener(SelectThroughPortrait);
         bot.ChangedHealth.AddListener(UpdateHealth);
@@ -44,7 +43,7 @@ public class TurnPortrait : MonoBehaviour
     void SelectThroughPortrait()
     {
         PrimaryCursor.SelectBot(thisBot);
-        MainCameraControl.CutToUnit(thisBot);
+        MainCameraControl.CutToEntity(thisBot.TargetPoint);
     }
 
     public void Clear()

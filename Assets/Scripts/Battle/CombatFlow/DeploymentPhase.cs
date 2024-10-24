@@ -8,6 +8,9 @@ public class DeploymentPhase : MonoBehaviour
 {
     [SerializeField] CanvasGroup deploymentBanner;
     [SerializeField] float fadeDuration = .5f;
+    [SerializeField] BotPalette palette;
+    [SerializeField] Material hologramMaterial;
+    Material[] hologramProfile;
 
     static DeploymentPhase instance;
 
@@ -15,15 +18,18 @@ public class DeploymentPhase : MonoBehaviour
     {
         instance = this;
         deploymentBanner.alpha = 0;
+        hologramProfile = new Material[] { hologramMaterial};
     }
     public static IEnumerator BeginDeployment(List<TinyBot> playerBots, Action endCallback)
     {
+        DeploymentZone.BeginDeployment();
         yield return Tween.Alpha(instance.deploymentBanner, 1f, instance.fadeDuration).ToYieldInstruction();
         foreach (TinyBot bot in playerBots)
         {
             yield return instance.DeployUnit(bot);
         }
         yield return Tween.Alpha(instance.deploymentBanner, 0f, instance.fadeDuration).ToYieldInstruction();
+        DeploymentZone.EndDeployment();
         endCallback();
     }
 
@@ -31,9 +37,11 @@ public class DeploymentPhase : MonoBehaviour
     IEnumerator DeployUnit(TinyBot bot)
     {
         bot.ToggleActiveLayer(true);
+        foreach (var part in bot.PartModifiers) palette.RecolorPart(part, hologramProfile);
         while (!Input.GetMouseButtonDown(0))
         {
-            if(Pathfinder3D.GetLandingPointBy(PrimaryCursor.Transform.position, bot.MoveStyle, out Vector3Int landingPoint))
+            Vector3 clampedPosition = DeploymentZone.ClampInZone(PrimaryCursor.Transform.position);
+            if(Pathfinder3D.GetLandingPointBy(clampedPosition, bot.MoveStyle, out Vector3Int landingPoint))
             {
                 if (landingPoint != lastPosition)
                 {
@@ -50,8 +58,8 @@ public class DeploymentPhase : MonoBehaviour
             }
             yield return null;
         }
-        
-        bot.StartCoroutine(bot.PrimaryMovement.NeutralStance());
+
+        foreach (var part in bot.PartModifiers) palette.RecolorPart(part, bot.Allegiance);
         bot.ToggleActiveLayer(false);
         yield return null;
     }

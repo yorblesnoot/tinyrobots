@@ -205,9 +205,9 @@ public class MainCameraControl : MonoBehaviour
         transform.position = transform.position.Clamp(minimum, maximum);
     }
 
-    public static void CutToUnit(TinyBot bot, bool autoCam = true)
+    public static void CutToEntity(Transform entity, bool autoCam = true)
     {
-        Cams.FocalPoint.transform.position = bot.TargetPoint.position;
+        Cams.FocalPoint.transform.position = entity.position;
         if (autoCam) ToggleAutoCam();
     }
 
@@ -246,10 +246,10 @@ public class MainCameraControl : MonoBehaviour
     public static void ActionPanTo(Vector3 target)
     {
         RestrictCamera(true);
-        Instance.StartCoroutine(ActionCut(target, Instance.actionCutDuration));
+        Instance.StartCoroutine(ActionPan(target, Instance.actionCutDuration));
     }
 
-    static IEnumerator ActionCut(Vector3 target, float duration)
+    static IEnumerator ActionPan(Vector3 target, float duration)
     {
         Vector3 startPosition = Cams.FocalPoint.position;
         float timeElapsed = 0;

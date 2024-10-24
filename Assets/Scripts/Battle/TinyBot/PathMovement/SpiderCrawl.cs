@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SpiderCrawl : LegMovement
@@ -9,7 +10,7 @@ public class SpiderCrawl : LegMovement
     [SerializeField] float secondCastLength;
     [SerializeField] float secondCastHeight = -1;
     
-    
+
     public override void SpawnOrientation()
     {
         Vector3 normal = GetMeshNormalAt(Owner.transform.position);
@@ -17,11 +18,8 @@ public class SpiderCrawl : LegMovement
         Vector3 facing = Vector3.Cross(normal, centerDirection);
         //look position and normal cant be the same?
         Owner.transform.rotation = Quaternion.LookRotation(facing, normal);
+        
         InstantNeutral();
-    }
-    protected override void InitializeParameters()
-    {
-        Style = MoveStyle.CRAWL;
     }
 
     protected override IEnumerator InterpolatePositionAndRotation(Transform unit, Vector3 target)

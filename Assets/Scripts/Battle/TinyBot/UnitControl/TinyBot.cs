@@ -25,7 +25,8 @@ public class TinyBot : Targetable
     [HideInInspector] public Sprite Portrait;
     
     [HideInInspector] public bool AvailableForTurn;
-    
+    [HideInInspector] public List<PartModifier> PartModifiers;
+
     [HideInInspector] public UnityEvent BeganTurn = new();
     [HideInInspector] public UnityEvent EndedTurn = new();
     [HideInInspector] public UnityEvent ReceivedHit = new();
@@ -38,13 +39,13 @@ public class TinyBot : Targetable
     [HideInInspector] public PrimaryMovement PrimaryMovement;
     public List<ActiveAbility> ActiveAbilities { get; private set; }
     public List<PassiveAbility> PassiveAbilities { get; private set;}
-    List<PartModifier> partModifiers;
+    
     
     public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement)
     {
         PartRenderers = GetComponentsInChildren<Renderer>();
         PhysicsBody = GetComponent<Rigidbody>();
-        this.partModifiers = parts;
+        PartModifiers = parts;
         SetAbilities(abilities);
 
         PrimaryMovement = primaryMovement;
@@ -66,7 +67,7 @@ public class TinyBot : Targetable
 
     public override void SetOutlineColor(Color color)
     {
-        foreach (PartModifier mod in partModifiers)
+        foreach (PartModifier mod in PartModifiers)
         {
             foreach(Renderer ren in mod.mainRenderers)
             {
@@ -120,7 +121,7 @@ public class TinyBot : Targetable
         base.Die(hitSource);
         if(PrimaryCursor.TargetedBot == this) PrimaryCursor.Unsnap();
         Vector3 hitPush = (transform.position - hitSource).normalized * deathPushMulti;
-        foreach(var part in partModifiers)
+        foreach(var part in PartModifiers)
         {
             if(!part.TryGetComponent(out Rigidbody rigidPart)) rigidPart = part.gameObject.AddComponent<Rigidbody>();
             Vector3 explodeForce = new(Random.Range(deathExplodeMinForce, deathExplodeMaxForce), 

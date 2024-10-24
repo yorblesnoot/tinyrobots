@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class PrimaryMovement : MonoBehaviour
 {
-    public MoveStyle Style { get; protected set; }
+    [field: SerializeField] public MoveStyle Style { get; protected set; }
     [HideInInspector] public TinyBot Owner;
 
     

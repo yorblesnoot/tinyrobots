@@ -11,8 +11,8 @@ public class BipedalWalk : LegMovement
     int terrainMask;
     protected override void InitializeParameters()
     {
+        base.InitializeParameters();
         terrainMask = LayerMask.GetMask("Terrain");
-        Style = MoveStyle.WALK;
         sanitizationPositions = new() { Vector3.zero, Vector3.left * sanOffset, Vector3.right * sanOffset, Vector3.forward * sanOffset, Vector3.back * sanOffset };
     }
 

@@ -44,9 +44,7 @@ public class BotAssembler : MonoBehaviour
             GameObject spawned = currentNode.Value.Sample;
             PartModifier modifier = spawned.GetComponent<PartModifier>();
             AddPartStats(currentNode.Value);
-            if (modifier.mainRenderers != null) 
-                foreach (Renderer renderer in modifier.mainRenderers) 
-                    instance.palette.RecolorPart(renderer, allegiance);
+            instance.palette.RecolorPart(modifier, allegiance);
             spawnedParts.Add(modifier);
             if(attachmentPoint != null) spawned.transform.SetParent(attachmentPoint.transform, false);
             spawned.transform.localRotation = Quaternion.identity;
