@@ -50,7 +50,7 @@ public class ImmobileMovement : PrimaryMovement
         ikTarget.position = gluedPosition;
     }
 
-    protected override void AnimateToOrientation(bool inPlace = false)
+    public override void AnimateToOrientation(bool inPlace = false)
     {
         HandleImpulse();
         rotatorBase.rotation = gluedRotation;

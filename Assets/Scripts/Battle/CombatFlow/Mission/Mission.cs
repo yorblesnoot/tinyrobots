@@ -13,13 +13,17 @@ public abstract class Mission : MonoBehaviour
 {
     [SerializeField] List<BotRecord> playerBotOverride;
     [SerializeField] bool selectFirstBot = true;
+    [SerializeField] bool useDeployment = true;
     public static Mission Active;
     public void BeginMission()
     {
         Active = this;
+        TurnManager.RoundEnded.AddListener(RoundEnd);
         InitializeMission();
-        TurnManager.BeginTurnSequence(selectFirstBot);
+        if(!useDeployment) TurnManager.BeginTurnSequence(selectFirstBot);
     }
+
+
 
     
     public TinyBot SpawnBot(Allegiance allegiance, BotRecord botRecord)
@@ -32,6 +36,26 @@ public abstract class Mission : MonoBehaviour
 
     //spawn enemy bots and add to drops ~~~
 
+    
+    public virtual void RoundEnd() { }
+    public abstract bool MetVictoryCondition();
+    protected virtual void InitializeMission()
+    {
+        SceneGlobals.PlayerData.BotConverter.Initialize();
+        SceneGlobals.PlayerData.LoadDefaultInventory();
+        SpawnBots();
+    }
+
+    private void SpawnBots()
+    {
+        List<TinyBot> enemyBots = SpawnEnemyBots();
+        List<TinyBot> playerBots = SpawnPlayerBots();
+        if (useDeployment) StartCoroutine(DeploymentPhase.BeginDeployment(playerBots, () => TurnManager.BeginTurnSequence(selectFirstBot)));
+        else enemyBots.AddRange(playerBots);
+        
+
+        foreach (TinyBot bot in enemyBots) SpawnZone.PlaceBot(bot);
+    }
 
     protected List<TinyBot> SpawnPlayerBots()
     {
@@ -49,26 +73,9 @@ public abstract class Mission : MonoBehaviour
         return bots;
     }
 
-    
-    public virtual void RoundEnd() { }
-    public abstract bool MetVictoryCondition();
-    protected virtual void InitializeMission()
+    private List<TinyBot> SpawnEnemyBots()
     {
-        SceneGlobals.PlayerData.BotConverter.Initialize();
-        SceneGlobals.PlayerData.LoadDefaultInventory();
-        PlaceBotsInSpawnZones();
-    }
-
-    private void PlaceBotsInSpawnZones()
-    {
-        List<TinyBot> bots = SpawnPlayerBots();
-        AddEnemyBotsToSpawns(bots);
-
-        foreach (TinyBot bot in bots) SpawnZone.PlaceBot(bot);
-    }
-
-    private void AddEnemyBotsToSpawns(List<TinyBot> bots)
-    {
+        List<TinyBot> bots = new();
         EncounterGenerator table = SceneGlobals.SceneRelay.ActiveSpawnTable;
         if (table != null)
         {
@@ -76,5 +83,6 @@ public abstract class Mission : MonoBehaviour
             bots.AddRange(enemyRecords.Select(record => SpawnBot(Allegiance.ENEMY, record)));
             
         }
+        return bots;
     }
 }

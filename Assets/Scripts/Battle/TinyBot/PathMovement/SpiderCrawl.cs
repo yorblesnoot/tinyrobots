@@ -17,7 +17,7 @@ public class SpiderCrawl : LegMovement
         Vector3 facing = Vector3.Cross(normal, centerDirection);
         //look position and normal cant be the same?
         Owner.transform.rotation = Quaternion.LookRotation(facing, normal);
-        StartCoroutine(NeutralStance());
+        InstantNeutral();
     }
     protected override void InitializeParameters()
     {
@@ -42,11 +42,8 @@ public class SpiderCrawl : LegMovement
             yield return null;
         }
     }
-    protected override Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral, Vector3 localStartPosition)
+    protected override Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral)
     {
-        Vector3 targetDirection = anchor.localBasePosition - localStartPosition;
-        targetDirection.Normalize();
-
         Vector3 worldForward = goToNeutral ? Vector3.zero : transform.forward * forwardBias;
         Vector3 localForward = anchor.ikTarget.InverseTransformDirection(worldForward);
         Vector3 firstRaySource = anchor.localBasePosition + localForward;

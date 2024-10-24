@@ -2,11 +2,16 @@ using UnityEngine;
 
 public class CursorBehaviour : MonoBehaviour
 {
+    [Header("Settings")]
     [SerializeField] float terrainStickiness = 1;
     [SerializeField] float scrollRate = 20;
     [SerializeField] float minimumCameraDistance = 5;
     [SerializeField] float maximumCameraDistance = 100;
-    [SerializeField] protected Transform depthPlane;
+
+    [Header("Components")]
+    [SerializeField] Transform depthPlane;
+    [SerializeField] GameObject airCursor;
+    [SerializeField] GameObject groundCursor;
     int combinedMask;
     int terrainMask;
     int terrainLayer;
@@ -35,6 +40,7 @@ public class CursorBehaviour : MonoBehaviour
         Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var combinedHit, maximumCameraDistance, combinedMask);
         if (scrollBack)
         {
+            AirMode();
             lastTerrainPosition = Vector3.zero;
             transform.position = combinedHit.point;
             return;
@@ -43,26 +49,35 @@ public class CursorBehaviour : MonoBehaviour
         //if plane is deeper than terrain, snap to terrain
         if(combinedHit.collider != null && combinedHit.collider.gameObject.layer == terrainLayer)
         {
-            SnapToTerrain(combinedHit.point);
+            SnapToTerrain(combinedHit);
             
         }
         else if(terrainHit.collider != null && Vector3.Distance(lastTerrainPosition, terrainHit.point) < terrainStickiness)
         {
             //if terrain is deeper than plane and distance from last terrain hit is within a margin, snap to terrain
-            SnapToTerrain(terrainHit.point);
+            SnapToTerrain(terrainHit);
         }
         else
         {
             //otherwise, snap to plane
+            AirMode();
             ScrollDepthPlane(scroll);
             transform.position = combinedHit.point;
         }
     }
 
-
-
-    void SnapToTerrain(Vector3 position)
+    void AirMode()
     {
+        groundCursor.SetActive(false);
+        airCursor.SetActive(true);
+    }
+
+    void SnapToTerrain(RaycastHit hit)
+    {
+        groundCursor.SetActive(true);
+        airCursor.SetActive(false);
+        groundCursor.transform.rotation = Quaternion.LookRotation(hit.normal);
+        Vector3 position = hit.point;
         transform.position = position;
         depthPlane.position = position;
         lastTerrainPosition = position;
@@ -76,13 +91,9 @@ public class CursorBehaviour : MonoBehaviour
         depthPlane.localPosition = newPosition;
     }
 
-    public void ToggleGroundFocus(bool focus = true)
-    {
-
-    }
-
     public void SnapToPosition(Vector3 position)
     {
         depthPlane.position = position;
+        AirMode();
     }
 }

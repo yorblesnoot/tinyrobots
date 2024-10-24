@@ -35,7 +35,7 @@ public class BipedalWalk : LegMovement
         return newPath;
     }
 
-    protected override Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral, Vector3 localStartPosition)
+    protected override Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral)
     {
         Vector3 initialPosition = anchor.localBasePosition + (goToNeutral ? Vector3.zero : (anchorZoneRadius + forwardBias) * Vector3.forward);
         Vector3 rayPosition = legModel.transform.TransformPoint(initialPosition);

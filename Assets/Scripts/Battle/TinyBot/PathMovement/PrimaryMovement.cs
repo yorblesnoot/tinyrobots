@@ -69,7 +69,7 @@ public abstract class PrimaryMovement : MonoBehaviour
         }
         BattleEnder.IsMissionOver();
     }
-    protected virtual void AnimateToOrientation(bool inPlace = false) { }
+    public virtual void AnimateToOrientation(bool inPlace = false) { }
     public virtual Quaternion GetRotationAtPosition(Vector3 moveTarget)
     {
         moveTarget.y = transform.position.y;
@@ -79,7 +79,12 @@ public abstract class PrimaryMovement : MonoBehaviour
     public virtual void SpawnOrientation()
     {
         Owner.transform.LookAt(GetCenterColumn());
-        StartCoroutine(NeutralStance());
+        InstantNeutral();
+    }
+
+    protected virtual void InstantNeutral()
+    {
+
     }
     protected Vector3 GetCenterColumn()
     {

@@ -37,8 +37,13 @@ public abstract class LegMovement : PrimaryMovement
         }
     }
 
+    protected override void InstantNeutral()
+    {
+        foreach (var anchor in anchors) anchor.ikTarget.position = GetLimbTarget(anchor, true);
+    }
+
     protected abstract void InitializeParameters();
-    protected override void AnimateToOrientation(bool inPlace = false)
+    public override void AnimateToOrientation(bool inPlace = false)
     {
         foreach (var anchor in anchors)
         {
@@ -76,7 +81,7 @@ public abstract class LegMovement : PrimaryMovement
     protected void TryStepToBase(Anchor anchor, bool goToNeutral = false)
     {
         Vector3 localStartPosition = anchor.ikTarget.localPosition;
-        Vector3 finalPosition = GetLimbTarget(anchor, goToNeutral, localStartPosition);
+        Vector3 finalPosition = GetLimbTarget(anchor, goToNeutral);
         if (finalPosition == default) return;
         stepping = true;
         anchor.stepping = true;
@@ -90,7 +95,7 @@ public abstract class LegMovement : PrimaryMovement
         anchor.stepping = false;
     }
 
-    protected abstract Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral, Vector3 localStartPosition);
+    protected abstract Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral);
 
     public override IEnumerator NeutralStance()
     {
