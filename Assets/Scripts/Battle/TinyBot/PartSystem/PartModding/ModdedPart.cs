@@ -37,7 +37,9 @@ public class ModdedPart
     public GameObject InstantiateSample(out Ability[] abilities)
     {
         GameObject output = GameObject.Instantiate(BasePart.AttachableObject);
-        abilities = output.GetComponent<PartModifier>().Abilities;
+        PartModifier partMod = output.GetComponent<PartModifier>();
+        partMod.SourcePart = this;
+        abilities = partMod.Abilities;
         return output;
     }
 

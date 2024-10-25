@@ -215,7 +215,6 @@ public class PrimaryCursor : MonoBehaviour
     {
         if (!bot.AvailableForTurn) return;
         TinyBot.ClearActiveBot.Invoke();
-        bot.BecomeActiveUnit();
         PlayerSelectedBot.Invoke(bot);
         
         MoveStyle botStyle = bot.PrimaryMovement.Style;

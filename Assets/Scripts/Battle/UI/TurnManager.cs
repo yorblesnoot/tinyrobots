@@ -67,6 +67,7 @@ public class TurnManager : MonoBehaviour
         TurnTakers.OrderByDescending(bot => bot.Stats.Max[StatType.INITIATIVE]);
         foreach(var bot in TurnTakers)
         {
+            Debug.Log(bot.Allegiance);
             Debug.Log(bot.Stats.Max[StatType.INITIATIVE]);
         }
         QueueNextTurnTaker(select);

@@ -8,6 +8,7 @@ public class PartModifier : MonoBehaviour
     public List<TreeNode<ModdedPart>> SubTrees;
     public List<Renderer> mainRenderers;
     [HideInInspector] public Ability[] Abilities;
+    [HideInInspector] public ModdedPart SourcePart;
 
     private void Awake()
     {

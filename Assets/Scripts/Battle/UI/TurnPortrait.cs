@@ -49,6 +49,7 @@ public class TurnPortrait : MonoBehaviour
     public void Clear()
     {
         thisBot = null;
+        PrimaryCursor.PlayerSelectedBot.RemoveListener(HighlightWhenActive);
         selectButton.onClick.RemoveAllListeners();
         gameObject.SetActive(false);
     }

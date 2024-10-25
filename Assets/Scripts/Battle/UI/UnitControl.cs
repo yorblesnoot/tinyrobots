@@ -19,18 +19,27 @@ public class UnitControl : MonoBehaviour
     {
         ClickableAbility.Activated = null;
         turnEnd.onClick.AddListener(EndPlayerTurn);
-        PrimaryCursor.PlayerSelectedBot.AddListener(ShowControlForUnit);
+        PrimaryCursor.PlayerSelectedBot.AddListener(PlayerControlBot);
         gameObject.SetActive(false);
     }
 
     readonly static KeyCode[] keyCodes = {KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9 };
 
-    public void ShowControlForUnit(TinyBot bot)
+    public void PlayerControlBot(TinyBot bot)
     {
+        ReleaseBot();
+        PlayerControlledBot = bot;
         gameObject.SetActive(true);
-        VisualizeAbilityList(bot);
+        VisualizeAbilityList();
         unitPortrait.sprite = bot.Portrait;
         healthOverlay.UpdateHealth(bot);
+        bot.AbilitiesChanged.AddListener(VisualizeAbilityList);
+    }
+
+    void ReleaseBot()
+    {
+        if (PlayerControlledBot == null) return;
+        PlayerControlledBot.AbilitiesChanged.RemoveListener(VisualizeAbilityList);
     }
 
     void EndPlayerTurn()
@@ -42,13 +51,13 @@ public class UnitControl : MonoBehaviour
         
     }
 
-    void VisualizeAbilityList(TinyBot bot)
+    void VisualizeAbilityList()
     {
         
         ClickableAbility.EndUsableAbilityState();
         deployedAbilities = new();
-        bot.ActiveAbilities.PassDataToUI(clickableAbilities, AddActive);
-        bot.PassiveAbilities.PassDataToUI(unclickableAbilities, AddPassive);
+        PlayerControlledBot.ActiveAbilities.PassDataToUI(clickableAbilities, AddActive);
+        PlayerControlledBot.PassiveAbilities.PassDataToUI(unclickableAbilities, AddPassive);
 
         void AddActive(ActiveAbility ability, ClickableAbility clickable)
         {

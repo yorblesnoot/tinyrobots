@@ -31,6 +31,8 @@ public class TinyBot : Targetable
     [HideInInspector] public UnityEvent EndedTurn = new();
     [HideInInspector] public UnityEvent ReceivedHit = new();
     [HideInInspector] public UnityEvent ChangedHealth = new();
+    [HideInInspector] public UnityEvent AbilitiesChanged = new();
+    public static UnityEvent<TinyBot> BotDied = new();
 
     public static UnityEvent ClearActiveBot = new();
     BotAI botAI;
@@ -50,6 +52,7 @@ public class TinyBot : Targetable
 
         PrimaryMovement = primaryMovement;
         PrimaryMovement.Owner = this;
+        PrimaryCursor.PlayerSelectedBot.AddListener(TryToBecomeActive);
         ClearActiveBot.AddListener(ClearActiveUnit);
     }
 
@@ -59,10 +62,16 @@ public class TinyBot : Targetable
         PassiveAbilities = new();
         foreach (var ability in abilities)
         {
-            ActiveAbility active = ability as ActiveAbility;
-            if (active != null) ActiveAbilities.Add(active);
-            else PassiveAbilities.Add(ability as PassiveAbility);
+            AddAbility(ability);
         }
+    }
+
+    public void AddAbility(Ability ability)
+    {
+        ActiveAbility active = ability as ActiveAbility;
+        if (active != null) ActiveAbilities.Add(active);
+        else PassiveAbilities.Add(ability as PassiveAbility);
+        AbilitiesChanged.Invoke();
     }
 
     public override void SetOutlineColor(Color color)
@@ -104,10 +113,9 @@ public class TinyBot : Targetable
         }
     }
 
-    public void BecomeActiveUnit()
+    void TryToBecomeActive(TinyBot target)
     {
-        UnitControl.PlayerControlledBot = this;
-        ToggleActiveLayer(true);
+        if(target == this) ToggleActiveLayer(true);
     }
 
     public void ClearActiveUnit()
@@ -119,6 +127,7 @@ public class TinyBot : Targetable
     public override void Die(Vector3 hitSource = default)
     {
         base.Die(hitSource);
+        
         if(PrimaryCursor.TargetedBot == this) PrimaryCursor.Unsnap();
         Vector3 hitPush = (transform.position - hitSource).normalized * deathPushMulti;
         foreach(var part in PartModifiers)
@@ -131,6 +140,7 @@ public class TinyBot : Targetable
         }
         TurnManager.RemoveTurnTaker(this);
         if(LinkedCore != null) LinkedCore.HealthRatio = 0;
+        BotDied.Invoke(this);
         Destroy(gameObject, 5f);
     }
 
@@ -159,6 +169,12 @@ public class TinyBot : Targetable
         base.ReduceHealth(damage);
         ChangedHealth.Invoke();
         BattleEnder.IsMissionOver();
+    }
+
+    public void Heal(int amount)
+    {
+        ReduceHealth(-amount);
+        //heal vfx
     }
 
     protected override void Land(Vector3Int coords, float startHeight)
