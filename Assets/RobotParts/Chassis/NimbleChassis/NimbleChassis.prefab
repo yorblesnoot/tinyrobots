@@ -415,6 +415,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ThrusterTrail (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8762518646154475088, guid: ea8b5c724b6acc74f8cfdaa518c56c94,
+        type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -519,6 +524,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ThrusterTrail (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8762518646154475088, guid: ea8b5c724b6acc74f8cfdaa518c56c94,
+        type: 3}
+      propertyPath: m_Layer
+      value: 14
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -858,6 +868,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ThrusterTrail
       objectReference: {fileID: 0}
+    - target: {fileID: 8762518646154475088, guid: ea8b5c724b6acc74f8cfdaa518c56c94,
+        type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -966,6 +981,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: NimbleChassisModel
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: cf40a8d6977f0e64c894b4d9db310820,
+        type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -981,7 +1001,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 3324099999610628983}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: cf40a8d6977f0e64c894b4d9db310820,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 22112335715375829}
   m_SourcePrefab: {fileID: 100100000, guid: cf40a8d6977f0e64c894b4d9db310820, type: 3}
 --- !u!23 &5114205891417443632 stripped
 MeshRenderer:
@@ -995,6 +1019,34 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5852667996245791156}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &6771640710845836517 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: cf40a8d6977f0e64c894b4d9db310820,
+    type: 3}
+  m_PrefabInstance: {fileID: 5852667996245791156}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &22112335715375829
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6771640710845836517}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4493585093827132993, guid: cf40a8d6977f0e64c894b4d9db310820, type: 3}
 --- !u!1001 &6175676558955113560
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1188,6 +1240,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ThrusterTrail (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8762518646154475088, guid: ea8b5c724b6acc74f8cfdaa518c56c94,
+        type: 3}
+      propertyPath: m_Layer
+      value: 14
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1235,7 +1292,7 @@ PrefabInstance:
     - target: {fileID: 800812987463654942, guid: cf37322916f26de45b29416e4dd76b9f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.49399996
+      value: 0.562
       objectReference: {fileID: 0}
     - target: {fileID: 800812987463654942, guid: cf37322916f26de45b29416e4dd76b9f,
         type: 3}

@@ -165,6 +165,7 @@ public abstract class ActiveAbility : Ability
         }
         foreach(Targetable target in CurrentTargets)
         {
+            if(target == null) continue;
             if(!newTargets.Contains(target)) target.SetOutlineColor(Color.white);
         }
     }

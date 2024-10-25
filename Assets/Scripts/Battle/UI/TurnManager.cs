@@ -64,12 +64,7 @@ public class TurnManager : MonoBehaviour
 
     public static void BeginTurnSequence(bool select = true)
     {
-        TurnTakers.OrderByDescending(bot => bot.Stats.Max[StatType.INITIATIVE]);
-        foreach(var bot in TurnTakers)
-        {
-            Debug.Log(bot.Allegiance);
-            Debug.Log(bot.Stats.Max[StatType.INITIATIVE]);
-        }
+        TurnTakers = TurnTakers.OrderByDescending(bot => bot.Stats.Max[StatType.INITIATIVE]).ToList();
         QueueNextTurnTaker(select);
     }
 
