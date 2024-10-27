@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using System.Linq;
 
 public enum CursorState
 {
@@ -111,7 +112,7 @@ public class PrimaryCursor : MonoBehaviour
         lastPosition = cursorPosition;
         List<Vector3> possiblePath = Pathfinder3D.FindVectorPath(targetPosition, out List<float> distances);
         if (possiblePath == null || possiblePath.Count == 0) return;
-        ProcessAndPreviewPath(possiblePath, distances);
+        ProcessAndPreviewPath(possiblePath);
     }
 
     private void ProcessClick(bool anAbilityIsActive)
@@ -153,11 +154,15 @@ public class PrimaryCursor : MonoBehaviour
         ClickableAbility.PlayerUsedAbility?.Invoke();
     }
 
-    void ProcessAndPreviewPath(List<Vector3> possiblePath, List<float> distances)
+    void ProcessAndPreviewPath(List<Vector3> possiblePath)
     {
         numRotator.SetActive(true);
         numRotator.transform.SetParent(null);
         possiblePath = PlayerControlledBot.PrimaryMovement.SanitizePath(possiblePath);
+        //get the indices in the raw path of the new path points
+        //then replace the old distance list with 
+        List<float> distances = GetPathDistances(possiblePath);
+        
         numRotator.transform.position = possiblePath[^1];
         moveCostPreview.text = Mathf.CeilToInt(distances[^1]).ToString() + " ft";
         currentPath = new();
@@ -193,6 +198,16 @@ public class PrimaryCursor : MonoBehaviour
         redLine.positionCount = redPath.Count;
         redLine.SetPositions(redPath.ToArray());
         moveCostPreview.color = redPath.Count > 0 ? Color.red : Color.white;
+    }
+
+    List<float> GetPathDistances(List<Vector3> points)
+    {
+        List<float> output = new() { 0 };
+        for(int i = 1; i < points.Count; i++)
+        {
+            output.Add(Vector3.Distance(points[i-1], points[i]));
+        }
+        return output;
     }
 
     void HideMovePreview()

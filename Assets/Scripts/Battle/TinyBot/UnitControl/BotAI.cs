@@ -118,6 +118,7 @@ public class BotAI
 
         IEnumerator MovePhase()
         {
+            //this is a problem
             float remainingMove = thisBot.Stats.Current[StatType.MOVEMENT];
             List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations();
             List<Vector3Int> goodLocations = pathableLocations.Where(IsWithinOptimalRange(closestEnemyPosition)).ToList();
@@ -132,8 +133,9 @@ public class BotAI
             path = path.Take(endIndex).ToList();
             if (path.Count == 0) yield break;
 
-            thisBot.SpendResource(Mathf.RoundToInt(moveCosts[endIndex]), StatType.MOVEMENT);
             path = thisBot.PrimaryMovement.SanitizePath(path);
+            thisBot.SpendResource(Mathf.RoundToInt(moveCosts[endIndex]), StatType.MOVEMENT);
+            
             yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.TraversePath(path));
             yield return ShieldPhase();
         }

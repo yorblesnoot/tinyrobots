@@ -50,8 +50,8 @@ public abstract class PrimaryMovement : MonoBehaviour
         float pivotDuration = Quaternion.Angle(startRotation, targetRotation) / (PivotSpeed * SpeedMultiplier);
         while (timeElapsed < pivotDuration)
         {
-            unit.rotation = Quaternion.Slerp(startRotation, targetRotation, timeElapsed / pivotDuration);
             timeElapsed += Time.deltaTime;
+            unit.rotation = Quaternion.Slerp(startRotation, targetRotation, timeElapsed / pivotDuration);
             AnimateToOrientation();
             yield return null;
         }

@@ -6,24 +6,24 @@ public class DeploymentZone : MonoBehaviour
 {
     [SerializeField] GameObject zoneMarker;
     [SerializeField] Transform corner;
-    static DeploymentZone Active;
+    static DeploymentZone active;
     private void Awake()
     {
-        Active = this;
+        active = this;
         corner.gameObject.SetActive(false);
         zoneMarker.SetActive(false);
     }
 
     public static void BeginDeployment()
     {
-        Active.zoneMarker.SetActive(true);
-        Active.PositionAreaMarker();
-        MainCameraControl.CutToEntity(Active.zoneMarker.transform);
+        active.zoneMarker.SetActive(true);
+        active.PositionAreaMarker();
+        MainCameraControl.CutToEntity(active.zoneMarker.transform);
     }
 
     public static void EndDeployment()
     {
-        Active.zoneMarker.SetActive(false);
+        active.zoneMarker.SetActive(false);
     }
 
     void PositionAreaMarker()
@@ -39,7 +39,7 @@ public class DeploymentZone : MonoBehaviour
 
     public static Vector3 ClampInZone(Vector3 position)
     {
-        return position.Clamp(Active.transform.position, Active.corner.position);
+        return position.Clamp(active.transform.position, active.corner.position);
     }
 
     private void OnDrawGizmos()
