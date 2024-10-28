@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "BotCore", menuName = "ScriptableObjects/BotCore")]
-public class BotCore : SOWithGUID
+public class BotCharacter : SOWithGUID
 {
     public void Initialize()
     {

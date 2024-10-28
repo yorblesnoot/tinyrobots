@@ -9,7 +9,7 @@ public class PlayerData : ScriptableObject
     {
         if(DevMode) PartInventory = BotConverter.PartLibrary.Where(part => part.Type != SlotType.CORE)
                 .Select(part => BotConverter.GetDefaultPart(part)).ToList();
-        foreach(BotCore core in CoreInventory)
+        foreach(BotCharacter core in CoreInventory)
         {
             if (core.Bot != null || core.StarterRecord == null) continue;
             
@@ -17,7 +17,7 @@ public class PlayerData : ScriptableObject
         }
     }
     public List<ModdedPart> PartInventory;
-    public List<BotCore> CoreInventory;
+    public List<BotCharacter> CoreInventory;
     public MapData MapData;
     
     public int Difficulty = 3;

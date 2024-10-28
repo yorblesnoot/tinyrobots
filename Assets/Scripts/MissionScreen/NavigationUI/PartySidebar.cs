@@ -8,11 +8,11 @@ public class PartySidebar : MonoBehaviour
     [SerializeField] UnitSwitcher unitSwitcher;
     private void OnEnable()
     {
-        List<BotCore> cores = SceneGlobals.PlayerData.CoreInventory;
+        List<BotCharacter> cores = SceneGlobals.PlayerData.CoreInventory;
         cores.PassDataToUI(portraits, EnablePortrait);
     }
 
-    void EnablePortrait(BotCore core, PartyPortrait portrait)
+    void EnablePortrait(BotCharacter core, PartyPortrait portrait)
     {
         portrait.Become(core, unitSwitcher.Enable);
     }

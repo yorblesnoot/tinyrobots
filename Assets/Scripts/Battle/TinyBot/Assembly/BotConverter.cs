@@ -6,12 +6,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BotConverter", menuName = "ScriptableObjects/Singletons/BotConverter")]
 public class BotConverter : ScriptableObject
 {
-    public List<BotCore> CoreLibrary;
+    public List<BotCharacter> CoreLibrary;
     public List<CraftablePart> PartLibrary;
     public List<PartMutator> MutatorLibrary;
     Dictionary<string, CraftablePart> partMap;
     Dictionary<string, PartMutator> mutatorMap;
-    Dictionary<string, BotCore> coreMap;
+    Dictionary<string, BotCharacter> coreMap;
 
     [SerializeField] PartRarityDefinitions rarityDefinitions;
 
@@ -104,7 +104,7 @@ public class BotConverter : ScriptableObject
         return textCursor;
     }
 
-    public BotCore GetCore(string guid)
+    public BotCharacter GetCore(string guid)
     {
         return coreMap[guid];
     }
@@ -128,7 +128,7 @@ public class ConverterEditor : Editor
         BotConverter botConverter = (BotConverter)target;
         if (GUILayout.Button("Populate Libraries"))
         {
-            botConverter.CoreLibrary = SerializeAssetsOfType<BotCore>("BotCore");
+            botConverter.CoreLibrary = SerializeAssetsOfType<BotCharacter>("BotCore");
             botConverter.MutatorLibrary = SerializeAssetsOfType<PartMutator>("PartMutator");
             botConverter.PartLibrary = SerializeAssetsOfType<CraftablePart>("CraftablePart");
             EditorUtility.SetDirty(botConverter);

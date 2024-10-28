@@ -65,12 +65,12 @@ public class SaveContainer
         playerData.CoreInventory = LoadCores(save, converter);
     }
 
-    List<BotCore> LoadCores(Save save, BotConverter converter)
+    List<BotCharacter> LoadCores(Save save, BotConverter converter)
     {
-        List<BotCore> finalCores = new();
+        List<BotCharacter> finalCores = new();
         foreach(var core in save.coreInventory)
         {
-            BotCore loadedCore = converter.GetCore(core.guid);
+            BotCharacter loadedCore = converter.GetCore(core.guid);
             loadedCore.Bot = converter.StringToBot(core.bot);
             loadedCore.HealthRatio = core.healthRatio;
             finalCores.Add(loadedCore);

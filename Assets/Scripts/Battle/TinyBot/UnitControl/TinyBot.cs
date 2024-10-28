@@ -37,7 +37,7 @@ public class TinyBot : Targetable
     public static UnityEvent ClearActiveBot = new();
     BotAI botAI;
 
-    [HideInInspector] public BotCore LinkedCore;
+    [HideInInspector] public BotCharacter LinkedCore;
     [HideInInspector] public PrimaryMovement PrimaryMovement;
     public List<ActiveAbility> ActiveAbilities { get; private set; }
     public List<PassiveAbility> PassiveAbilities { get; private set;}

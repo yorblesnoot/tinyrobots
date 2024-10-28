@@ -13,7 +13,7 @@ public class UnitSwitcher : MonoBehaviour
 
     PlayerData playerData;
 
-    [HideInInspector] public static BotCore ActiveCore { get; private set; }
+    [HideInInspector] public static BotCharacter ActiveCore { get; private set; }
     public void Initialize()
     {
         playerData = SceneGlobals.PlayerData;
@@ -27,7 +27,7 @@ public class UnitSwitcher : MonoBehaviour
             bool validTab = i < coreCount;
             tabs[i].gameObject.SetActive(validTab);
             if (!validTab) continue;
-            BotCore core = playerData.CoreInventory[i];
+            BotCharacter core = playerData.CoreInventory[i];
             tabs[i].AssignTab(() => SwitchCharacter(core), core);
         }
         blueprintControl.Initialize(); 
@@ -39,7 +39,7 @@ public class UnitSwitcher : MonoBehaviour
         ActiveCore = null;
     }
 
-    public void Enable(BotCore core)
+    public void Enable(BotCharacter core)
     {
         navUI.SetActive(false);
         unitStatsDisplay.Initialize();
@@ -47,7 +47,7 @@ public class UnitSwitcher : MonoBehaviour
         SwitchCharacter(core);
     }
 
-    void SwitchCharacter(BotCore newCore)
+    void SwitchCharacter(BotCharacter newCore)
     {
         if (newCore == ActiveCore) return;
         SaveActiveBotToCore();

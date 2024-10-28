@@ -7,7 +7,7 @@ public class GameStarter : MonoBehaviour
 {
     [SerializeField] Button loadButton;
     [SerializeField] BotConverter botConverter;
-    [SerializeField] List<BotCore> starterCores;
+    [SerializeField] List<BotCharacter> starterCores;
     [SerializeField] int startDifficulty = 6;
 
     SaveContainer container;

@@ -5,7 +5,7 @@ public class TutorialStarter : MonoBehaviour
     
     [SerializeField] int startDifficulty = 6;
 
-    [SerializeField] BotCore tutorialCore;
+    [SerializeField] BotCharacter tutorialCore;
     [SerializeField] BotRecord tutorialRecord;
     [SerializeField] GameObject tutorialMap;
 

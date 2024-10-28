@@ -9,14 +9,14 @@ public class UnitTab : MonoBehaviour
     [SerializeField] TMP_Text coreName;
     [SerializeField] Color highlightColor;
 
-    public void AssignTab(UnityAction clickEffect, BotCore core)
+    public void AssignTab(UnityAction clickEffect, BotCharacter core)
     {
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(clickEffect);
         coreName.text = GetCoreName(core);
     }
 
-    public static string GetCoreName(BotCore core)
+    public static string GetCoreName(BotCharacter core)
     {
          return core.displayName == "" ? core.name.Replace("Core", "") : core.displayName;
     }

@@ -9,6 +9,7 @@ public class BotAssembler : MonoBehaviour
     [SerializeField] PortraitGenerator portraitGenerator;
     [SerializeField] BotPalette palette;
     [SerializeField] GameObject suspensionStand;
+    [SerializeField] GameObject botBase;
 
     static BotAssembler instance;
     private void Awake()
@@ -18,20 +19,21 @@ public class BotAssembler : MonoBehaviour
 
     public static TinyBot BuildBot(TreeNode<ModdedPart> treeRoot, Allegiance allegiance)
     {
+        GameObject spawnedBase = Instantiate(instance.botBase);
+        TinyBot botUnit = spawnedBase.GetComponent<TinyBot>();
         PrimaryMovement locomotion = null;
-        AttachmentPoint initialAttachmentPoint;
         List<PartModifier> spawnedParts = new();
         UnitStats botStats = new();
-        GameObject bot = RecursiveConstruction(treeRoot);
-        initialAttachmentPoint = bot.GetComponentInChildren<AttachmentPoint>();
-        TinyBot botUnit = bot.GetComponent<TinyBot>();
+        GameObject core = RecursiveConstruction(treeRoot);
+        core.transform.SetParent(botUnit.TargetPoint, false);
+        
         if (SceneGlobals.PlayerData.DevMode && allegiance == Allegiance.PLAYER) botStats.TestMode();
         botStats.MaxAll();
         botUnit.Stats = botStats;
         botUnit.Allegiance = allegiance;
         if (locomotion == null) locomotion = AddImmobileLocomotion(botUnit);
-        SetBotTallness(locomotion, initialAttachmentPoint, botUnit);
-        RestructureHierarchy(locomotion, initialAttachmentPoint, bot);
+        SetBotTallness(locomotion, botUnit.TargetPoint, botUnit);
+        RestructureHierarchy(locomotion, botUnit.TargetPoint, core);
         
         List<Ability> abilities = GetAbilityList(spawnedParts, botUnit);
         botUnit.Initialize(abilities, spawnedParts, locomotion);
@@ -42,6 +44,7 @@ public class BotAssembler : MonoBehaviour
         GameObject RecursiveConstruction(TreeNode<ModdedPart> currentNode, AttachmentPoint attachmentPoint = null)
         {
             GameObject spawned = currentNode.Value.Sample;
+            Debug.Log(spawned.name);
             PartModifier modifier = spawned.GetComponent<PartModifier>();
             AddPartStats(currentNode.Value);
             instance.palette.RecolorPart(modifier, allegiance);
@@ -62,10 +65,10 @@ public class BotAssembler : MonoBehaviour
             return spawned;
         }
 
-        static void RestructureHierarchy(PrimaryMovement locomotion, AttachmentPoint initialAttachmentPoint, GameObject bot)
+        static void RestructureHierarchy(PrimaryMovement locomotion, Transform initialAttachmentPoint, GameObject bot)
         {
             locomotion.transform.SetParent(bot.transform, true);
-            initialAttachmentPoint.transform.SetParent(locomotion.sourceBone, true);
+            initialAttachmentPoint.SetParent(locomotion.sourceBone, true);
         }
 
         void AddPartStats(ModdedPart part)
@@ -86,15 +89,15 @@ public class BotAssembler : MonoBehaviour
         return movement;
     }
 
-    static void SetBotTallness(PrimaryMovement locomotion, AttachmentPoint initialAttachmentPoint, TinyBot bot)
+    static void SetBotTallness(PrimaryMovement locomotion, Transform initialAttachmentPoint, TinyBot bot)
     {
         Vector3 locomotionTarget = bot.transform.position;
         locomotionTarget.y += locomotion.locomotionHeight;
-        Vector3 locomotionOffset = locomotion.transform.position - initialAttachmentPoint.transform.position;
+        Vector3 locomotionOffset = locomotion.transform.position - initialAttachmentPoint.position;
         Vector3 chassisPosition = locomotionTarget - locomotionOffset;
         chassisPosition = bot.transform.InverseTransformPoint(chassisPosition);
 
-        initialAttachmentPoint.transform.localPosition = chassisPosition;
+        initialAttachmentPoint.localPosition = chassisPosition;
         Vector3 colliderCenter = chassisPosition;
         colliderCenter.y -= instance.botColliderOffset;
         bot.GetComponent<CapsuleCollider>().center = colliderCenter;

@@ -8,8 +8,8 @@ public class PartyPortrait : MonoBehaviour
     [SerializeField] Button button;
     [SerializeField] HealthOverlay healthOverlay;
     [SerializeField] GameObject weightOverlay;
-    BotCore activeCore;
-    public void Become(BotCore core, Action<BotCore> coreCallback)
+    BotCharacter activeCore;
+    public void Become(BotCharacter core, Action<BotCharacter> coreCallback)
     {
         activeCore = core;
         portrait.sprite = core.CharacterPortrait;
