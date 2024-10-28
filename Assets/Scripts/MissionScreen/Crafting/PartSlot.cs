@@ -31,17 +31,13 @@ public class PartSlot : MonoBehaviour
 
     private void OnMouseDown()
     {
-        CheckToActivate();
-    }
-    void CheckToActivate()
-    {
-        if (PartIdentity != null)
+        if (PartIdentity != null && PartIdentity.BasePart.Type != SlotType.CORE)
         {
             ClearPartIdentity(false, true);
             BlueprintControl.HideUnusableSlots();
         }
-        else if(BlueprintControl.ActivePart == null) return;
-        else if(PartCanSlot(BlueprintControl.ActivePart.BasePart.Type, SlotType)) SlotPart();
+        else if (BlueprintControl.ActivePart == null) return;
+        else if (PartCanSlot(BlueprintControl.ActivePart.BasePart.Type, SlotType)) SlotPart();
     }
 
     public static bool PartCanSlot(SlotType part, SlotType slot)
@@ -133,20 +129,13 @@ public class PartSlot : MonoBehaviour
         return childSlots;
     }
 
-    public void BuildTree(TreeNode<ModdedPart> parent)
+    public TreeNode<ModdedPart> BuildTree()
     {
-        if (PartIdentity == null)
-        {
-            PartIdentity = new();
-            PartIdentity.BasePart = empty;
-        }
-        
-        TreeNode<ModdedPart> incomingNode = parent.AddChild(PartIdentity);
-        if (childSlots == null) return;
-        foreach(var slot in childSlots)
-        {
-            slot.BuildTree(incomingNode);
-        }
+        PartIdentity ??= new(empty);
+        TreeNode<ModdedPart> node = new(PartIdentity);
+        if (childSlots != null)
+            foreach (var slot in childSlots) node.AddChild(slot.BuildTree());
+        return node;
     }
 
     public void Traverse(Action<PartSlot> action)

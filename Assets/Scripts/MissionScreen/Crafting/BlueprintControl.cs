@@ -115,9 +115,7 @@ public class BlueprintControl : MonoBehaviour
 
     public TreeNode<ModdedPart> BuildBot()
     {
-        TreeNode<ModdedPart> partTree = new(OriginPart);
-        OriginSlot.BuildTree(partTree);
-        
+        var partTree = OriginSlot.BuildTree();
         GUIUtility.systemCopyBuffer = BotConverter.BotToString(partTree);
         return partTree;
     }

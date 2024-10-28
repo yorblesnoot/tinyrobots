@@ -30,7 +30,6 @@ public class ActivatablePart : PartButton
 
         List<StatType> statTypes = part.FinalStats.Keys.ToList();
         statTypes.Remove(StatType.ENERGY);
-        Debug.Log(part.BasePart.name);
         weightDisplay.text = part.FinalStats[StatType.ENERGY].ToString();
         
         for (int i = 0; i < statDisplays.Count(); i++)

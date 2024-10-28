@@ -16,9 +16,9 @@ public class UnitTab : MonoBehaviour
         coreName.text = GetCoreName(core);
     }
 
-    public static string GetCoreName(BotCharacter core)
+    public static string GetCoreName(BotCharacter character)
     {
-         return core.displayName == "" ? core.name.Replace("Core", "") : core.displayName;
+         return character.displayName == "" ? character.name.Replace("Character", "") : character.displayName;
     }
 
     public void Highlight(bool on = true)

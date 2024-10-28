@@ -43,11 +43,7 @@ public class CraftBotStatsDisplay : MonoBehaviour
         totalHealth = totalWeight = 0;
         List <Ability> activeAbilities = new();
 
-        List<ModdedPart> activePartsPlusOrigin = new(activeParts)
-        {
-            blueprintControl.OriginPart
-        };
-        foreach(var part in activePartsPlusOrigin)
+        foreach(var part in activeParts)
         {
             activeAbilities.AddRange(part.Abilities);
             foreach (StatType stat in part.FinalStats.Keys)

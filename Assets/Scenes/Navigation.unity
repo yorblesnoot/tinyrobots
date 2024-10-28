@@ -17563,8 +17563,6 @@ MonoBehaviour:
   OriginPart:
     BasePart: {fileID: 0}
     Mutators: []
-    Sample: {fileID: 0}
-    Abilities: []
     Rarity:
       TextColor: {r: 0, g: 0, b: 0, a: 0}
       ModCounts: 
@@ -20109,6 +20107,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1439835739}
     m_Modifications:
+    - target: {fileID: 3191819364442582833, guid: d9c38f15f59535e48b0f60a7fab45b74,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4929582602251879122, guid: d9c38f15f59535e48b0f60a7fab45b74,
         type: 3}
       propertyPath: m_Name
@@ -20248,6 +20251,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7792407359148506998, guid: d9c38f15f59535e48b0f60a7fab45b74,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
