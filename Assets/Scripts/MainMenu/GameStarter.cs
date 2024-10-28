@@ -8,8 +8,7 @@ public class GameStarter : MonoBehaviour
     [SerializeField] Button loadButton;
     [SerializeField] BotConverter botConverter;
     [SerializeField] List<BotCharacter> starterCores;
-    [SerializeField] int startDifficulty = 6;
-
+    [SerializeField] GameObject characterSelect;
     SaveContainer container;
     private void Start()
     {
@@ -20,18 +19,7 @@ public class GameStarter : MonoBehaviour
 
     public void NewGame()
     {
-        botConverter.Initialize();
-        SceneGlobals.PlayerData.CoreInventory = new(starterCores);
-        foreach (var core in SceneGlobals.PlayerData.CoreInventory)
-        {
-            core.HealthRatio = 1;
-            core.Bot = SceneGlobals.PlayerData.BotConverter.StringToBot(core.StarterRecord.Record);
-        }
-        SceneGlobals.SceneRelay.GenerateNavMap = true;
-        SceneGlobals.PlayerData.PartInventory = new();
-        SceneGlobals.PlayerData.Difficulty = startDifficulty;
-        SceneGlobals.PlayerData.MapData = new();
-        SceneLoader.Load(SceneType.NAVIGATION);
+        characterSelect.SetActive(true);
     }
 
     public void LoadGame()

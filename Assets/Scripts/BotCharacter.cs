@@ -23,7 +23,9 @@ public class BotCharacter : SOWithGUID
     [HideInInspector] public ModdedPart ModdedCore;
 
     [Header("Characteristics")]
-    public string displayName;
+    public string DisplayName;
+    public bool Playable = true;
+    [TextArea(3, 10)] public string Description;
 
     [field: SerializeField] public BotRecord StarterRecord {  get; private set; }
     [SerializeField] CraftablePart corePart;
