@@ -40,12 +40,12 @@ public class ClickableAbility : AbilityDisplay
     {
         if (Ability == null) return;
         bool usable = true;
-        bool offCooldown = Ability.currentCooldown == 0;
+        bool offCooldown = Ability.CurrentCooldown == 0;
         usable &= Ability.cost <= UnitControl.PlayerControlledBot.Stats.Current[StatType.ACTION];
         usable &= Ability.IsAvailable();
         usable &= offCooldown;
         cooldownPanel.gameObject.SetActive(!usable);
-        cooldown.text = offCooldown ? "" : Ability.currentCooldown.ToString();
+        cooldown.text = offCooldown ? "" : Ability.CurrentCooldown.ToString();
     }
 
     void OnDisable()

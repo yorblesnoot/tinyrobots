@@ -23,9 +23,9 @@ public class ArmGrab : ActiveAbility
     {
         foreach (ActiveAbility ability in Owner.ActiveAbilities)
         {
-            ability.locked = on;
+            ability.ProhibitAbility(this, on);
         }
-        armThrow.locked = !on;
+        armThrow.ProhibitAbility(this, !on);
     }
 
     public override bool IsUsable(Vector3 targetPosition)

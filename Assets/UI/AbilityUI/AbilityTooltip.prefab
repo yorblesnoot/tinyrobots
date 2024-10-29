@@ -96,6 +96,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ccda0efec40cc84986c8f43ee22ce56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  heightModifier: 20
+  usePosition: 0
   abilityName: {fileID: 4167994764672629976}
   abilityType: {fileID: 4941061183168211467}
   damage: {fileID: 8028933219713953969}
@@ -104,7 +106,6 @@ MonoBehaviour:
   cooldown: {fileID: 6571132894828916432}
   cost: {fileID: 7687812459116803246}
   description: {fileID: 3967033617901231123}
-  heightModifier: 20
 --- !u!1 &9124188699648998541
 GameObject:
   m_ObjectHideFlags: 0
@@ -1180,8 +1181,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8524632234935377762, guid: 22dca5f3edff36f4dbd1f785bb462ba2,
         type: 3}
+      propertyPath: m_fontSizeMax
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8524632234935377762, guid: 22dca5f3edff36f4dbd1f785bb462ba2,
+        type: 3}
+      propertyPath: m_fontSizeMin
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8524632234935377762, guid: 22dca5f3edff36f4dbd1f785bb462ba2,
+        type: 3}
       propertyPath: m_fontSizeBase
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 8524632234935377762, guid: 22dca5f3edff36f4dbd1f785bb462ba2,
+        type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8524632234935377762, guid: 22dca5f3edff36f4dbd1f785bb462ba2,
         type: 3}

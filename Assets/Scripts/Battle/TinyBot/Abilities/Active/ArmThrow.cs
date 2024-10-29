@@ -8,7 +8,7 @@ public class ArmThrow : ActiveAbility
 
     private void Start()
     {
-        locked = true;
+        ProhibitAbility(armGrab);
     }
 
     protected override IEnumerator PerformEffects()

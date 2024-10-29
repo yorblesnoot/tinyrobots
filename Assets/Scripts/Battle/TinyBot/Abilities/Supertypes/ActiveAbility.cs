@@ -20,11 +20,13 @@ public abstract class ActiveAbility : Ability
     [SerializeField] AnimationController[] endAnimations;
     protected TargetPoint TargetType;
     protected Trajectory TrajectoryDefinition;
-
     protected bool TrajectoryCollided;
     TrackingAnimation trackingAnimation;
 
     readonly float skillDelay = .5f;
+    HashSet<System.Object> prohibitionSources = new();
+
+    [HideInInspector] public bool Locked { get { return prohibitionSources.Count > 0; } }
 
     public float TotalRange { get { return range + TargetType.TargetRadius; } }
     public override bool IsActive => true;
@@ -47,7 +49,7 @@ public abstract class ActiveAbility : Ability
         Vector3 rawPosition = Owner.transform.position;
         Vector3Int startPosition = Vector3Int.RoundToInt(rawPosition);
         MainCameraControl.ActionPanTo(GetCameraAimPoint());
-        currentCooldown = SceneGlobals.PlayerData.DevMode ? 0 : cooldown;
+        CurrentCooldown = SceneGlobals.PlayerData.DevMode ? 0 : cooldown;
         PrimaryCursor.actionInProgress = true;
         yield return new WaitForSeconds(skillDelay);
         ReleaseLockOn();
@@ -134,7 +136,7 @@ public abstract class ActiveAbility : Ability
 
     public virtual bool IsAvailable()
     {
-        if (currentCooldown > 0 || locked) return false;
+        if (CurrentCooldown > 0 || Locked) return false;
         return true;
     }
 
@@ -188,6 +190,12 @@ public abstract class ActiveAbility : Ability
             offset *= Mathf.Min(range, offset.magnitude);
             return offset + Owner.transform.position;
         }
+    }
+
+    public void ProhibitAbility(System.Object source, bool prohibit = true)
+    {
+        if(prohibit) prohibitionSources.Add(source);
+        else prohibitionSources.Remove(source);
     }
 }
 

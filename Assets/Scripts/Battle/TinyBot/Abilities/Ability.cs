@@ -13,9 +13,9 @@ public abstract class Ability : MonoBehaviour
     public string EffectDescription = " Damage";
     protected DurationModule durationModule;
 
-    [HideInInspector] public int currentCooldown;
+    [HideInInspector] public int CurrentCooldown;
     [HideInInspector] public TinyBot Owner;
-    [HideInInspector] public bool locked;
+    
     
 
     public virtual void Initialize(TinyBot botUnit)
@@ -28,6 +28,6 @@ public abstract class Ability : MonoBehaviour
 
     void LapseCooldown()
     {
-        currentCooldown = Mathf.Clamp(currentCooldown - 1, 0, currentCooldown);
+        CurrentCooldown = Mathf.Clamp(CurrentCooldown - 1, 0, CurrentCooldown);
     }
 }
