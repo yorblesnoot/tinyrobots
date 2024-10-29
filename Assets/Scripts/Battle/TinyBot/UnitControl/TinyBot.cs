@@ -41,7 +41,8 @@ public class TinyBot : Targetable
     [HideInInspector] public PrimaryMovement PrimaryMovement;
     public List<ActiveAbility> ActiveAbilities { get; private set; }
     public List<PassiveAbility> PassiveAbilities { get; private set;}
-    
+
+    public DamageCalculator DamageCalculator = new();
     
     public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement)
     {
@@ -144,23 +145,17 @@ public class TinyBot : Targetable
         Destroy(gameObject, 5f);
     }
 
-    public override void ReceiveHit(int damage, Vector3 source, Vector3 hitPoint, bool canBackstab = true)
+    public override void ReceiveHit(int baseDamage, TinyBot source, Vector3 hitPoint, bool canBackstab = true)
     {
-        //account for armor
-        float armorMultiplier = 1 - (float)Stats.Current[StatType.ARMOR] / 100;
-        damage = Mathf.RoundToInt(armorMultiplier * damage);
-        //check for a backstab
-        Vector3 hitDirection = (source - transform.position).normalized;
-        float dot = Vector3.Dot(hitDirection, transform.forward);
-        bool backstabbed = canBackstab && dot < 0;
+        int finalDamage = DamageCalculator.GetDamage(baseDamage, source, this, true);
+        Vector3 hitDirection = (source.TargetPoint.position - transform.position).normalized;
 
-        
-        feedback.QueuePopup(damage, backstabbed);
-        StartCoroutine(PrimaryMovement.ApplyImpulseToBody(-hitDirection, recoilDistancePerDamage * damage, hitRecoilTime, hitReturnTime));
+        feedback.QueuePopup(finalDamage, finalDamage > 1.5f * baseDamage);
+        StartCoroutine(PrimaryMovement.ApplyImpulseToBody(-hitDirection, recoilDistancePerDamage * finalDamage, hitRecoilTime, hitReturnTime));
         GameObject spark = Instantiate(hitSpark, hitPoint, Quaternion.identity);
-        spark.transform.LookAt(source);
+        spark.transform.LookAt(source.TargetPoint.position);
         Destroy(spark, 1f);
-        ReduceHealth(backstabbed ? Mathf.RoundToInt(backstabMultiplier * damage) : damage);
+        ReduceHealth(finalDamage);
         ReceivedHit.Invoke();
     }
 

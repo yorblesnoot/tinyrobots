@@ -128,7 +128,7 @@ public class ConverterEditor : Editor
         BotConverter botConverter = (BotConverter)target;
         if (GUILayout.Button("Populate Libraries"))
         {
-            botConverter.CoreLibrary = SerializeAssetsOfType<BotCharacter>("BotCore");
+            botConverter.CoreLibrary = SerializeAssetsOfType<BotCharacter>("BotCharacter");
             botConverter.MutatorLibrary = SerializeAssetsOfType<PartMutator>("PartMutator");
             botConverter.PartLibrary = SerializeAssetsOfType<CraftablePart>("CraftablePart");
             EditorUtility.SetDirty(botConverter);

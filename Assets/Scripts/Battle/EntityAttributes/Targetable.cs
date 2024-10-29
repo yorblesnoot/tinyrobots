@@ -45,7 +45,7 @@ public abstract class Targetable : MonoBehaviour
         IsDead = true;
     }
 
-    public abstract void ReceiveHit(int damage, Vector3 source, Vector3 hitPoint, bool canBackstab = true);
+    public abstract void ReceiveHit(int damage, TinyBot source, Vector3 hitPoint, bool canBackstab = true);
     public abstract MoveStyle GetMoveStyle();
 
     protected virtual void ReduceHealth(int damage)

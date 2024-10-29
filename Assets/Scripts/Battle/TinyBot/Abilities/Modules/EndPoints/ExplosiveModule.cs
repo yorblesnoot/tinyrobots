@@ -13,7 +13,7 @@ public class ExplosiveModule : MonoBehaviour
         terrainMask = LayerMask.GetMask("Terrain", "Shield");
     }
     
-    public IEnumerator Detonate(List<Targetable> targets, Vector3 explosionPosition, int damage)
+    public IEnumerator Detonate(TinyBot source, List<Targetable> targets, Vector3 explosionPosition, int damage)
     {
         GameObject effect = Instantiate(explodeVfx, explosionPosition, Quaternion.identity);
         Destroy(effect, 2f);
@@ -23,7 +23,7 @@ public class ExplosiveModule : MonoBehaviour
             Vector3 direction = target.TargetPoint.position - explosionPosition;
             float distance = direction.magnitude;
             if (Physics.Raycast(explosionPosition, direction, distance, terrainMask)) continue;
-            target.ReceiveHit(damage, explosionPosition, target.TargetPoint.position);
+            target.ReceiveHit(damage, source, target.TargetPoint.position);
         }
     }
 }
