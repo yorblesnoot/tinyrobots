@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3703276254365187947}
+  - component: {fileID: 2914890764279478768}
   - component: {fileID: 5049859194918168238}
   - component: {fileID: 717656918056969135}
   - component: {fileID: 4914929855446104983}
@@ -36,6 +37,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4768644344964732484}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2914890764279478768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5823662053731491588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 987a16f33931ce74282945de6b45b49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: Increases the user's current movement points by a percent of their
+    max movement points.
+  range: 0
+  ModifiableRange: 0
+  cooldown: 1
+  EffectMagnitude: 100
+  cost: 1
+  icon: {fileID: 21300000, guid: 9048f1bbff3cf47ce8b0467ca61e0f4f, type: 3}
+  EffectDescription: '% of Max Movement'
+  CurrentCooldown: 0
+  Owner: {fileID: 0}
+  emissionPoint: {fileID: 0}
+  Type: 1
+  trackingToggle: {fileID: 0}
+  abilityEffects:
+  - {fileID: 717656918056969135}
+  - {fileID: 5049859194918168238}
+  endEffects:
+  - {fileID: 4914929855446104983}
 --- !u!114 &5049859194918168238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -48,26 +80,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e579321ee83338a4baf731b5f7d195e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: The user gains Movement Points equal to a percent of their maximum
-    Movement Points.
-  range: 0
-  ModifiableRange: 0
-  cooldown: 1
-  EffectMagnitude: 100
-  cost: 1
-  icon: {fileID: 21300000, guid: 9048f1bbff3cf47ce8b0467ca61e0f4f, type: 3}
-  EffectDescription: '% of Max Movement'
-  currentCooldown: 0
-  Owner: {fileID: 0}
-  locked: 0
-  Type: 1
-  emissionPoint: {fileID: 5432190980053784425}
-  trackingToggle: {fileID: 0}
-  preAnimations:
-  - {fileID: 717656918056969135}
-  postAnimations: []
-  endAnimations:
-  - {fileID: 4914929855446104983}
+  Ability: {fileID: 0}
   statType: 2
   mode: 1
 --- !u!114 &717656918056969135
@@ -82,6 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a769bc2de0dd054fbafef4a7fb38d82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
   animatorStateName: thrusterOn
   animator: {fileID: 2473556710997146749}
   playValue: 1
@@ -97,6 +111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a769bc2de0dd054fbafef4a7fb38d82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
   animatorStateName: thrusterOn
   animator: {fileID: 2473556710997146749}
   playValue: 0
@@ -149,7 +164,7 @@ PrefabInstance:
         type: 3}
       propertyPath: Abilities.Array.data[0]
       value: 
-      objectReference: {fileID: 5049859194918168238}
+      objectReference: {fileID: 0}
     - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: mainRenderers.Array.size

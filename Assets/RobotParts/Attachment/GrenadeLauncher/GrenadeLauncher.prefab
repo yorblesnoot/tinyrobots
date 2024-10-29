@@ -98,12 +98,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6831720523657745251}
-  - component: {fileID: 3912106138831175643}
+  - component: {fileID: 3639939546054309542}
   - component: {fileID: 8648479197037184448}
   - component: {fileID: 8131201512834104215}
   - component: {fileID: 883725196565549860}
   - component: {fileID: 2698530588561022094}
   - component: {fileID: 8584432006077641284}
+  - component: {fileID: 8364142452336399486}
   m_Layer: 0
   m_Name: Launch Grenade
   m_TagString: Untagged
@@ -126,7 +127,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1640944372738328647}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3912106138831175643
+--- !u!114 &3639939546054309542
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -135,31 +136,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 4429930661517243148}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5804629f9d3cee429e512789e5387aa, type: 3}
+  m_Script: {fileID: 11500000, guid: 987a16f33931ce74282945de6b45b49f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: Launch a grenade that explodes on impact, damaging multiple targets.
-  range: 10
-  ModifiableRange: 1
+  Description: Launches a grenade at the target, dealing area damage on impact.
+  range: 15
+  ModifiableRange: 0
   cooldown: 1
   EffectMagnitude: 20
   cost: 2
   icon: {fileID: 21300000, guid: 04781ddf1640d48e4b784ad7268ba9ad, type: 3}
   EffectDescription: ' Damage'
-  currentCooldown: 0
+  CurrentCooldown: 0
   Owner: {fileID: 0}
-  locked: 0
-  Type: 0
   emissionPoint: {fileID: 1542380683432714660}
+  Type: 0
   trackingToggle: {fileID: 0}
-  preAnimations:
+  abilityEffects:
   - {fileID: 8584432006077641284}
-  postAnimations: []
-  endAnimations: []
-  projectile: {fileID: 892347618474717919, guid: 6b7e9add1c83a534ca9bb5df8c0e48f0,
-    type: 3}
-  travelTime: 0.5
-  explosiveModule: {fileID: 8131201512834104215}
+  - {fileID: 8364142452336399486}
+  - {fileID: 8131201512834104215}
+  endEffects: []
 --- !u!114 &8648479197037184448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -187,6 +184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfd674d38e9688f4bae731bebb2c55d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
   explodeVfx: {fileID: 4153987745759348907, guid: 3376c9ee103331b47ab2c7927d7818f5,
     type: 3}
   damageDelay: 0.1
@@ -235,9 +233,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2d351610167a50409da2b9d8e02f3a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
   impulseLength: 0.3
   duration: 0.05
   returnDuration: 0.2
+--- !u!114 &8364142452336399486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4429930661517243148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85c12129b0a81664a9b683fa6f45e7bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
+  projectile: {fileID: 892347618474717919, guid: 6b7e9add1c83a534ca9bb5df8c0e48f0,
+    type: 3}
+  travelTime: 1
 --- !u!1 &7199797187575493042
 GameObject:
   m_ObjectHideFlags: 0
@@ -377,11 +392,6 @@ PrefabInstance:
       propertyPath: Abilities.Array.size
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
-        type: 3}
-      propertyPath: Abilities.Array.data[0]
-      value: 
-      objectReference: {fileID: 3912106138831175643}
     - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: mainRenderers.Array.size

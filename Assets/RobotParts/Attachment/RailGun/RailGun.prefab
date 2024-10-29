@@ -127,10 +127,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2382435795797869435}
+  - component: {fileID: 4448071686322630491}
   - component: {fileID: 5438866113568273553}
   - component: {fileID: 8933096971172365963}
   - component: {fileID: 5261799674692488272}
   - component: {fileID: 889706637259405176}
+  - component: {fileID: 2091254307546430664}
   m_Layer: 0
   m_Name: Railgun Shot
   m_TagString: Untagged
@@ -153,6 +155,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6252531337253117509}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4448071686322630491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3068045254070644241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 987a16f33931ce74282945de6b45b49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: Shoot a charged bolt at long range, dealing high damage to the first
+    unit hit.
+  range: 40
+  ModifiableRange: 0
+  cooldown: 3
+  EffectMagnitude: 30
+  cost: 2
+  icon: {fileID: 21300000, guid: 482884d1759cf4bdbad2fa53c99aee5c, type: 3}
+  EffectDescription: ' Damage'
+  CurrentCooldown: 0
+  Owner: {fileID: 0}
+  emissionPoint: {fileID: 1266673474873603974}
+  Type: 0
+  trackingToggle: {fileID: 0}
+  abilityEffects:
+  - {fileID: 889706637259405176}
+  - {fileID: 5438866113568273553}
+  - {fileID: 2091254307546430664}
+  endEffects: []
 --- !u!114 &5438866113568273553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,25 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c12129b0a81664a9b683fa6f45e7bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: 'Launches an energized bolt at long range, dealing high damage to
-    the first target hit. '
-  range: 40
-  ModifiableRange: 1
-  cooldown: 3
-  EffectMagnitude: 25
-  cost: 2
-  icon: {fileID: 21300000, guid: 482884d1759cf4bdbad2fa53c99aee5c, type: 3}
-  EffectDescription: ' Damage'
-  currentCooldown: 0
-  Owner: {fileID: 0}
-  locked: 0
-  Type: 0
-  emissionPoint: {fileID: 1266673474873603974}
-  trackingToggle: {fileID: 0}
-  preAnimations:
-  - {fileID: 889706637259405176}
-  postAnimations: []
-  endAnimations: []
+  Ability: {fileID: 0}
   projectile: {fileID: 5629778864400073585, guid: 29f587667119b7440b657ac1aab27250,
     type: 3}
   travelTime: 0.2
@@ -228,9 +243,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2d351610167a50409da2b9d8e02f3a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
   impulseLength: 0.3
   duration: 0.05
   returnDuration: 0.2
+  waitForEnd: 0
+--- !u!114 &2091254307546430664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3068045254070644241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c40a361018ba3347859f207203e7cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
 --- !u!1 &6575153940852210530
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4810942245680575558}
-  - component: {fileID: 4227336768844592630}
+  - component: {fileID: 7884835459616799269}
   - component: {fileID: 2106831098450369181}
   - component: {fileID: 5169802445763735221}
   - component: {fileID: 7375164309739221164}
@@ -37,7 +37,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1109644160072459602}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4227336768844592630
+--- !u!114 &7884835459616799269
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -46,27 +46,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 1081520666649474286}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8c2c9ed12c9f5947af826aefb145eec, type: 3}
+  m_Script: {fileID: 11500000, guid: 987a16f33931ce74282945de6b45b49f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: Deploys a shield that blocks incoming projectiles. The shield will
-    remain deployed until the beginning of the user's next turn.
+  Description: Project a shield in the target direction, which will block projectiles
+    until the end of the turn.
   range: 3
   ModifiableRange: 0
   cooldown: 1
-  damage: 0
+  EffectMagnitude: 0
   cost: 1
   icon: {fileID: 21300000, guid: 577de0353c3f34e91b4bdeb038bcb2e9, type: 3}
-  currentCooldown: 0
+  EffectDescription: ' Damage'
+  CurrentCooldown: 0
   Owner: {fileID: 0}
-  locked: 0
-  Type: 2
   emissionPoint: {fileID: 8745797279635306441}
+  Type: 2
   trackingToggle: {fileID: 0}
-  preAnimations: []
-  postAnimations:
+  abilityEffects:
   - {fileID: 2106831098450369181}
-  endAnimations:
+  endEffects:
   - {fileID: 5169802445763735221}
 --- !u!114 &2106831098450369181
 MonoBehaviour:
@@ -80,6 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a769bc2de0dd054fbafef4a7fb38d82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
   animatorStateName: barrierUp
   animator: {fileID: 3839906931210058057}
   playValue: 1
@@ -95,6 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a769bc2de0dd054fbafef4a7fb38d82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
   animatorStateName: barrierUp
   animator: {fileID: 3839906931210058057}
   playValue: 0
@@ -260,11 +261,6 @@ PrefabInstance:
       propertyPath: Abilities.Array.size
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
-        type: 3}
-      propertyPath: Abilities.Array.data[0]
-      value: 
-      objectReference: {fileID: 4227336768844592630}
     - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: mainRenderers.Array.size

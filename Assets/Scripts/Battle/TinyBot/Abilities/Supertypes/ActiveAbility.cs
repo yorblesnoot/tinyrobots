@@ -3,11 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ActiveAbility : Ability
+public class ActiveAbility : Ability
 {
     public AbilityType Type;
-    
-    public GameObject emissionPoint;
     
     GameObject trackedTarget;
     protected bool PlayerTargeting;
@@ -15,9 +13,10 @@ public abstract class ActiveAbility : Ability
     protected List<Targetable> CurrentTargets = new();    
     
     [SerializeField] ToggleAnimation trackingToggle;
-    [SerializeField] AnimationController[] preAnimations;
-    [SerializeField] AnimationController[] postAnimations;
-    [SerializeField] AnimationController[] endAnimations;
+
+    [SerializeField] AbilityEffect[] abilityEffects;
+    [SerializeField] AbilityEffect[] endEffects;
+
     protected TargetPoint TargetType;
     protected Trajectory TrajectoryDefinition;
     protected bool TrajectoryCollided;
@@ -32,6 +31,8 @@ public abstract class ActiveAbility : Ability
     public override bool IsActive => true;
     private void Awake()
     {
+        foreach(var effect in abilityEffects) effect.Ability = this;
+
         durationModule = GetComponent<DurationModule>();
         TrajectoryDefinition = TryGetComponent(out Trajectory trajectory) ? trajectory : gameObject.AddComponent<NoTrajectory>();
         TargetType = TryGetComponent(out TargetPoint point) ? point : gameObject.AddComponent<ImpactTarget>();
@@ -53,9 +54,12 @@ public abstract class ActiveAbility : Ability
         PrimaryCursor.actionInProgress = true;
         yield return new WaitForSeconds(skillDelay);
         ReleaseLockOn();
-        yield return ToggleAnimations(preAnimations);
-        yield return StartCoroutine(PerformEffects());
-        yield return ToggleAnimations(postAnimations);
+        
+        //yield return ToggleAnimations(preAnimations);
+        foreach (var effect in abilityEffects) yield return effect.PerformEffect(Owner, CurrentTrajectory, CurrentTargets);
+        //yield return ToggleAnimations(postAnimations);
+
+
         CurrentTargets = new();
         ScheduleAbilityEnd();
         PrimaryCursor.actionInProgress = false;
@@ -68,11 +72,11 @@ public abstract class ActiveAbility : Ability
         TargetType.EndTargeting();
         if(durationModule != null) durationModule.ClearCallback();
         if(trackingAnimation != null) trackingAnimation.ResetTracking();
-        StartCoroutine(ToggleAnimations(endAnimations));
+        //StartCoroutine(ToggleAnimations(endAnimations));
     }
 
-    
-    protected abstract IEnumerator PerformEffects();
+
+    protected virtual IEnumerator PerformEffects() { yield break; }
 
     IEnumerator TrackTarget()
     {
@@ -119,15 +123,6 @@ public abstract class ActiveAbility : Ability
         if (durationModule == null) EndAbility();
         else durationModule.SetDuration(Owner, EndAbility);
     }
-    IEnumerator ToggleAnimations(AnimationController[] animations)
-    {
-        if (animations == null || animations.Length == 0) yield break;
-        foreach (var ani in animations)
-        {
-            yield return StartCoroutine(ani.Play(Owner, CurrentTrajectory, CurrentTargets));
-        }
-            
-    }
 
     public virtual bool IsUsable(Vector3 targetPosition)
     {
@@ -142,7 +137,7 @@ public abstract class ActiveAbility : Ability
 
     public virtual void LockOnTo(GameObject target, bool draw)
     {
-        if(trackingToggle != null) StartCoroutine(trackingToggle.Play(Owner, CurrentTrajectory, CurrentTargets));
+        if(trackingToggle != null) StartCoroutine(trackingToggle.PerformEffect(Owner, CurrentTrajectory, CurrentTargets));
         trackedTarget = target;
         PlayerTargeting = draw;
         StartCoroutine(TrackTarget());

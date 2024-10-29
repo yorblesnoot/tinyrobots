@@ -225,10 +225,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3777093702978273970}
+  - component: {fileID: 2365829980575128815}
   - component: {fileID: 9029231829327162900}
   - component: {fileID: 6215523326780402956}
   - component: {fileID: 5978695959865485863}
   - component: {fileID: 5609523218986396854}
+  - component: {fileID: 6733489304003567363}
   m_Layer: 0
   m_Name: Laser Shot
   m_TagString: Untagged
@@ -251,6 +253,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5497382933998797151}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2365829980575128815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6331935042606441181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 987a16f33931ce74282945de6b45b49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: Shoot a laser at the target, dealing damage to the first unit hit.
+  range: 20
+  ModifiableRange: 0
+  cooldown: 1
+  EffectMagnitude: 10
+  cost: 1
+  icon: {fileID: 21300000, guid: ef488320a1037477b9937ad14125f21b, type: 3}
+  EffectDescription: ' Damage'
+  CurrentCooldown: 0
+  Owner: {fileID: 0}
+  emissionPoint: {fileID: 5367564025516129834}
+  Type: 0
+  trackingToggle: {fileID: 0}
+  abilityEffects:
+  - {fileID: 5609523218986396854}
+  - {fileID: 9029231829327162900}
+  - {fileID: 6733489304003567363}
+  endEffects: []
 --- !u!114 &9029231829327162900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,24 +295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c12129b0a81664a9b683fa6f45e7bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: Launch a laser blast that deals damage to the first target hit.
-  range: 20
-  ModifiableRange: 1
-  cooldown: 1
-  damage: 10
-  cost: 1
-  icon: {fileID: 21300000, guid: d0abed84aa6f5489fb1695cbcafffef0, type: 3}
-  currentCooldown: 0
-  Owner: {fileID: 0}
-  locked: 0
-  Type: 0
-  useAirCursor: 1
-  emissionPoint: {fileID: 646414412058972572}
-  trackingToggle: {fileID: 0}
-  preAnimations:
-  - {fileID: 5609523218986396854}
-  postAnimations: []
-  endAnimations: []
+  Ability: {fileID: 0}
   projectile: {fileID: 4700887371249141454, guid: 96e320672d3da51439a874f0e20d154a,
     type: 3}
   travelTime: 0.3
@@ -326,9 +341,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2d351610167a50409da2b9d8e02f3a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
   impulseLength: 0.2
   duration: 0.05
   returnDuration: 0.2
+  waitForEnd: 0
+--- !u!114 &6733489304003567363
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6331935042606441181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c40a361018ba3347859f207203e7cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
 --- !u!1001 &4461339206532929495
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -422,12 +452,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7720e2096f975f944b47c6983c6d88da, type: 3}
---- !u!1 &646414412058972572 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3823936672024544843, guid: 7720e2096f975f944b47c6983c6d88da,
-    type: 3}
-  m_PrefabInstance: {fileID: 4461339206532929495}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2268767466953380951 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2492069091629794176, guid: 7720e2096f975f944b47c6983c6d88da,
@@ -639,6 +663,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5160258190624734017}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5367564025516129834 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1000221815533028715, guid: c2625f0d9f8225f42bc27754fa7e7d1f,
+    type: 3}
+  m_PrefabInstance: {fileID: 5160258190624734017}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5430640392694498832 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: c2625f0d9f8225f42bc27754fa7e7d1f,
@@ -756,7 +786,7 @@ PrefabInstance:
         type: 3}
       propertyPath: Abilities.Array.data[0]
       value: 
-      objectReference: {fileID: 9029231829327162900}
+      objectReference: {fileID: 0}
     - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: mainRenderers.Array.size

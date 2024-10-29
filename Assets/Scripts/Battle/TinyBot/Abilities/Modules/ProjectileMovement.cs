@@ -5,7 +5,7 @@ using UnityEngine;
 
 public static class ProjectileMovement 
 {
-    public static IEnumerator LaunchAlongLine(GameObject launched, float travelTime, List<Vector3> currentTrajectory, Action<Vector3, GameObject> CompleteTrajectory = null)
+    public static IEnumerator LaunchAlongLine(GameObject launched, float travelTime, List<Vector3> currentTrajectory)
     {
         float intervalTime = travelTime / currentTrajectory.Count;
         float timeElapsed;
@@ -25,6 +25,5 @@ public static class ProjectileMovement
                 yield return null;
             }
         }
-        CompleteTrajectory?.Invoke(currentTrajectory[^1], launched);
     }
 }

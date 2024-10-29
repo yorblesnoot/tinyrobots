@@ -77,6 +77,17 @@ public class BotAssembler : MonoBehaviour
         }
     }
 
+    public static void SummonBot(TreeNode<ModdedPart> tree, TinyBot owner, Vector3 position, Action<TinyBot> botConditioning = null)
+    {
+        tree.Traverse((part) => part.InitializePart());
+        TinyBot summon = BuildBot(tree, owner.Allegiance);
+        Pathfinder3D.GetLandingPointBy(position, summon.MoveStyle, out Vector3Int cleanPosition);
+        summon.transform.position = summon.PrimaryMovement.SanitizePoint(cleanPosition);
+        summon.PrimaryMovement.SpawnOrientation();
+        botConditioning?.Invoke(summon);
+        TurnManager.RegisterSummon(summon);
+    }
+
     private static PrimaryMovement AddImmobileLocomotion(TinyBot bot)
     {
         bot.Stats.Max[StatType.MOVEMENT] = 0;

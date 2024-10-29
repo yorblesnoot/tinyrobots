@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2248060084806012289}
+  - component: {fileID: 4698286060093503972}
   - component: {fileID: 8417426881783264267}
   - component: {fileID: 1323384398262838132}
   m_Layer: 0
@@ -33,6 +34,34 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2010277669220077577}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4698286060093503972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4842553658956407495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 987a16f33931ce74282945de6b45b49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: Dash to the target location.
+  range: 5
+  ModifiableRange: 1
+  cooldown: 1
+  EffectMagnitude: 0
+  cost: 0
+  icon: {fileID: 21300000, guid: fd27e3f6b435d4425a4e5034f96cdef3, type: 3}
+  EffectDescription: ' Damage'
+  CurrentCooldown: 0
+  Owner: {fileID: 0}
+  emissionPoint: {fileID: 0}
+  Type: 3
+  trackingToggle: {fileID: 0}
+  abilityEffects:
+  - {fileID: 8417426881783264267}
+  endEffects: []
 --- !u!114 &8417426881783264267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45,23 +74,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32a745efca3b1424d82c6c5c0af23320, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: Dash to the target location.
-  range: 5
-  ModifiableRange: 0
-  cooldown: 1
-  EffectMagnitude: 0
-  cost: 0
-  icon: {fileID: 21300000, guid: aded89c3cc39746f0b06cc98bf2ae990, type: 3}
-  EffectDescription: ' Damage'
-  currentCooldown: 0
-  Owner: {fileID: 0}
-  locked: 0
-  Type: 0
-  emissionPoint: {fileID: 0}
-  trackingToggle: {fileID: 0}
-  preAnimations: []
-  postAnimations: []
-  endAnimations: []
+  Ability: {fileID: 0}
   intervalTime: 0.2
 --- !u!114 &1323384398262838132
 MonoBehaviour:

@@ -15,8 +15,10 @@ public abstract class Ability : MonoBehaviour
 
     [HideInInspector] public int CurrentCooldown;
     [HideInInspector] public TinyBot Owner;
-    
-    
+
+    public GameObject emissionPoint;
+
+
 
     public virtual void Initialize(TinyBot botUnit)
     {

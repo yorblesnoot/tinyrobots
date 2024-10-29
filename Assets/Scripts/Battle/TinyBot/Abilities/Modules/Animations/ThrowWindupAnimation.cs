@@ -7,7 +7,7 @@ public class ThrowWindupAnimation : IKAnimation
 {
     [SerializeField] float windupTime = 1f;
     [SerializeField] float windDistance = 1f;
-    public override IEnumerator Play(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
+    public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
         Vector3 windDirection = trajectory[0] - trajectory[1];
         windDirection.Normalize();

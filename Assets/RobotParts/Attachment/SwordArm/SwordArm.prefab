@@ -195,9 +195,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8228527384845259923}
+  - component: {fileID: 7583693367898762510}
   - component: {fileID: 6420332332597587671}
-  - component: {fileID: 5513254970727348}
-  - component: {fileID: 449424067534177295}
   - component: {fileID: 1678144688368226067}
   - component: {fileID: 8481281637002415656}
   - component: {fileID: 6697166036674859764}
@@ -223,6 +222,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3534938756837104313}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7583693367898762510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8098520941806732672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 987a16f33931ce74282945de6b45b49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: Strike with the blade at close range, dealing moderate damage in a
+    small area.
+  range: 1
+  ModifiableRange: 0
+  cooldown: 1
+  EffectMagnitude: 20
+  cost: 1
+  icon: {fileID: 21300000, guid: c6c887cce7af543b0bf0b150917f449c, type: 3}
+  EffectDescription: ' Damage'
+  CurrentCooldown: 0
+  Owner: {fileID: 0}
+  emissionPoint: {fileID: 4121413900738104645}
+  Type: 0
+  trackingToggle: {fileID: 0}
+  abilityEffects:
+  - {fileID: 8481281637002415656}
+  - {fileID: 6420332332597587671}
+  endEffects: []
 --- !u!114 &6420332332597587671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,55 +264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c40a361018ba3347859f207203e7cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: Slash at a nearby target, dealing moderate damage in a small area.
-  range: 0.1
-  ModifiableRange: 0
-  cooldown: 1
-  damage: 20
-  cost: 1
-  icon: {fileID: 21300000, guid: 77fb1396afd204cba852e21347033826, type: 3}
-  currentCooldown: 0
-  Owner: {fileID: 0}
-  locked: 0
-  Type: 0
-  useAirCursor: 1
-  emissionPoint: {fileID: 4121413900738104645}
-  trackingToggle: {fileID: 5513254970727348}
-  preAnimations:
-  - {fileID: 8481281637002415656}
-  postAnimations: []
-  endAnimations:
-  - {fileID: 449424067534177295}
---- !u!114 &5513254970727348
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8098520941806732672}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a769bc2de0dd054fbafef4a7fb38d82, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animatorStateName: bladeOut
-  animator: {fileID: 3797603778250042775}
-  playValue: 1
---- !u!114 &449424067534177295
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8098520941806732672}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a769bc2de0dd054fbafef4a7fb38d82, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animatorStateName: bladeOut
-  animator: {fileID: 3797603778250042775}
-  playValue: 0
+  Ability: {fileID: 0}
 --- !u!114 &1678144688368226067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -311,6 +292,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d6f7aeac8060ab45bf36642d8d75847, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
   ikTarget: {fileID: 8265051676045458903}
   thrustLength: 3
   thrustDuration: 0.1
@@ -886,7 +868,7 @@ PrefabInstance:
         type: 3}
       propertyPath: Abilities.Array.data[0]
       value: 
-      objectReference: {fileID: 6420332332597587671}
+      objectReference: {fileID: 0}
     - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: mainRenderers.Array.size

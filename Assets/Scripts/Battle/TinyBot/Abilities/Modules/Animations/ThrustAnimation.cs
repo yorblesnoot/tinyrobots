@@ -9,7 +9,7 @@ public class ThrustAnimation : IKAnimation
     [SerializeField] float thrustDuration = .3f;
     [SerializeField] float thrustLinger = .2f;
     [SerializeField] float returnDuration = .5f;
-    public override IEnumerator Play(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
+    public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
         Vector3 point = trajectory[^1];
         Vector3 direction = point - trajectory[0];
