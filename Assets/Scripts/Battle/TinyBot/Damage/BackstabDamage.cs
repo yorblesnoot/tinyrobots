@@ -10,6 +10,7 @@ public class BackstabDamage : DamageFactor
 
     public override float UseFactor(float incoming, TinyBot source, TinyBot target)
     {
+        if (source == null) return incoming;
         Vector3 hitDirection = (source.TargetPoint.position - target.TargetPoint.position).normalized;
         float dot = Vector3.Dot(hitDirection, target.transform.forward);
         bool backstabbed = dot < 0;

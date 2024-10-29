@@ -9,7 +9,9 @@ public class TurnManager : MonoBehaviour
     public static TurnManager Singleton;
 
     [SerializeField] List<TurnPortrait> turnPortraitList;
+    [SerializeField] PortraitGenerator portraitGenerator;
     [SerializeField] float activeUnitScaleFactor = 1.5f;
+    [SerializeField] float summonScaleFactor = .7f;
     [SerializeField] BattleEnder battleEnder;
     
     static List<TurnPortrait> portraitStock;
@@ -21,10 +23,12 @@ public class TurnManager : MonoBehaviour
     public static Mission Mission;
     static Dictionary<TinyBot, TurnPortrait> activePortraits;
     static List<TinyBot> currentlyActive;
+    static HashSet<TinyBot> summoned;
 
     public static UnityEvent RoundEnded = new();
     private void Awake()
     {
+        summoned = new();
         TurnTakers = new();
         activeIndex = 0;
         TurnTakers = new(); activePortraits = new(); currentlyActive = new();
@@ -34,17 +38,32 @@ public class TurnManager : MonoBehaviour
         cardWidth = rectTransform.rect.width;
         cardHeight = rectTransform.rect.height;
     }
-    public static void AddTurnTaker(TinyBot bot)
+    public static void AddTurnTaker(TinyBot bot, int index = 0)
     {
+        Singleton.portraitGenerator.AttachPortrait(bot);
         portraitStock[0].Become(bot);
         activePortraits.Add(bot, portraitStock[0]);
-        portraitStock.RemoveAt(0);       
-        TurnTakers.Add(bot);
+        portraitStock.RemoveAt(0);
+        if(index > 0) TurnTakers.Insert(index, bot);
+        else TurnTakers.Add(bot);
+    }
+
+    public static void RegisterSummon(TinyBot bot)
+    {
+        AddTurnTaker(bot, activeIndex);
+        summoned.Add(bot);
+        if (bot.Allegiance == Allegiance.PLAYER)
+        {
+            currentlyActive.Add(bot);
+            bot.BeginTurn();
+        }
+        ArrangePortraits(currentlyActive);
     }
 
     public static void RemoveTurnTaker(TinyBot bot)
     {
         currentlyActive.Remove(bot);
+        summoned.Remove(bot);
         if (TurnTakers.IndexOf(bot) < activeIndex) activeIndex--;
         TurnTakers.Remove(bot);
         TurnPortrait removed = activePortraits[bot];
@@ -64,8 +83,18 @@ public class TurnManager : MonoBehaviour
 
     public static void BeginTurnSequence(bool select = true)
     {
-        TurnTakers = TurnTakers.OrderByDescending(bot => bot.Stats.Max[StatType.INITIATIVE]).ToList();
+        TurnTakers = TurnTakers.OrderByDescending<TinyBot, int>(SceneGlobals.PlayerData.DevMode ? PlayerFirstOrder : BotInitOrder).ToList();
         QueueNextTurnTaker(select);
+    }
+
+    static int BotInitOrder(TinyBot bot)
+    {
+        return bot.Stats.Max[StatType.INITIATIVE];
+    }
+
+    static int PlayerFirstOrder(TinyBot bot)
+    {
+        return bot.Allegiance == Allegiance.PLAYER ? 10 : 0;
     }
 
     static void GetActiveBots()
@@ -134,6 +163,12 @@ public class TurnManager : MonoBehaviour
                 height *= Singleton.activeUnitScaleFactor;
                 width *= Singleton.activeUnitScaleFactor;
             }
+            if(summoned.Contains(turnTaker))
+            {
+                height *= Singleton.summonScaleFactor;
+                width *= Singleton.summonScaleFactor;
+            }
+            
             float currentY = -height / 2;
             portraitRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
             portraitRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
@@ -142,4 +177,6 @@ public class TurnManager : MonoBehaviour
             currentX += width;
         }
     }
+
+    
 }

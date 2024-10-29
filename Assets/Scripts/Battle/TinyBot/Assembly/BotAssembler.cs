@@ -6,7 +6,6 @@ using UnityEngine;
 public class BotAssembler : MonoBehaviour
 {
     [SerializeField] float botColliderOffset = 1;
-    [SerializeField] PortraitGenerator portraitGenerator;
     [SerializeField] BotPalette palette;
     [SerializeField] GameObject suspensionStand;
     [SerializeField] GameObject botBase;
@@ -33,18 +32,16 @@ public class BotAssembler : MonoBehaviour
         botUnit.Allegiance = allegiance;
         if (locomotion == null) locomotion = AddImmobileLocomotion(botUnit);
         SetBotTallness(locomotion, botUnit.TargetPoint, botUnit);
-        RestructureHierarchy(locomotion, botUnit.TargetPoint, core);
+        RestructureHierarchy(locomotion, botUnit.TargetPoint, botUnit.transform);
         
         List<Ability> abilities = GetAbilityList(spawnedParts, botUnit);
         botUnit.Initialize(abilities, spawnedParts, locomotion);
-        instance.portraitGenerator.AttachPortrait(botUnit);
 
         return botUnit;
 
         GameObject RecursiveConstruction(TreeNode<ModdedPart> currentNode, AttachmentPoint attachmentPoint = null)
         {
             GameObject spawned = currentNode.Value.Sample;
-            Debug.Log(spawned.name);
             PartModifier modifier = spawned.GetComponent<PartModifier>();
             AddPartStats(currentNode.Value);
             instance.palette.RecolorPart(modifier, allegiance);
@@ -65,9 +62,9 @@ public class BotAssembler : MonoBehaviour
             return spawned;
         }
 
-        static void RestructureHierarchy(PrimaryMovement locomotion, Transform initialAttachmentPoint, GameObject bot)
+        static void RestructureHierarchy(PrimaryMovement locomotion, Transform initialAttachmentPoint, Transform bot)
         {
-            locomotion.transform.SetParent(bot.transform, true);
+            locomotion.transform.SetParent(bot, true);
             initialAttachmentPoint.SetParent(locomotion.sourceBone, true);
         }
 
