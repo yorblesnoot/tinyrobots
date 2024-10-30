@@ -9798,6 +9798,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4779364911431351598}
+  - component: {fileID: 2590721168193574490}
   - component: {fileID: 3036506339782271919}
   - component: {fileID: 6036351917969036493}
   - component: {fileID: 7326935782977378231}
@@ -9823,6 +9824,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5980253648058666097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2590721168193574490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2216951377409610882}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 987a16f33931ce74282945de6b45b49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: Summon an illusion of the user at the target location. The illusion
+    has access to the user's other abilities, deals half damage, and dies upon taking
+    damage.
+  range: 5
+  ModifiableRange: 0
+  cooldown: 3
+  EffectMagnitude: 50
+  cost: 1
+  icon: {fileID: 21300000, guid: 973b80daceb574e4a899fdde92cc3e42, type: 3}
+  EffectDescription: '% of User''s Damage'
+  CurrentCooldown: 0
+  Owner: {fileID: 0}
+  emissionPoint: {fileID: 0}
+  Type: 4
+  trackingToggle: {fileID: 0}
+  abilityEffects:
+  - {fileID: 7326935782977378231}
+  - {fileID: 3036506339782271919}
+  endEffects: []
 --- !u!114 &3036506339782271919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9835,24 +9867,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d2fb1850706311419bfe0a62f11fd71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: Create an illusion of the user. The illusion has access to all the
-    user's other abilities, deals half damage, and dies after taking damage.
-  range: 5
-  ModifiableRange: 0
-  cooldown: 3
-  EffectMagnitude: 50
-  cost: 1
-  icon: {fileID: 21300000, guid: f3147281d18564c83aaab4ebae0b229e, type: 3}
-  EffectDescription: ' % of User Damage'
-  CurrentCooldown: 0
-  Owner: {fileID: 0}
-  Type: 4
-  emissionPoint: {fileID: 0}
-  trackingToggle: {fileID: 0}
-  preAnimations:
-  - {fileID: 7326935782977378231}
-  postAnimations: []
-  endAnimations: []
+  Ability: {fileID: 0}
   illusionMaterial: {fileID: 2100000, guid: 8a2a8c4f2ff3bb649a75613ca8a99a12, type: 2}
   palette: {fileID: 11400000, guid: 55d5961420d9960419564510536d2377, type: 2}
 --- !u!114 &6036351917969036493
@@ -9883,6 +9898,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c916965041f0d94f9351d7ebad2163c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
+  location: 0
   particles:
   - {fileID: 3890377388307409057}
 --- !u!1 &2500374801713600168

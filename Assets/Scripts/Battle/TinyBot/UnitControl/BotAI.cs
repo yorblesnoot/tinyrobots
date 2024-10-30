@@ -218,7 +218,7 @@ public class BotAI
         Debug.DrawRay(position, Vector3.up, Color.yellow, 10f);
         pointer.transform.position = position;
         ability.AimAt(pointer, thisBot.transform.position, true);
-        if (ability.IsUsable(pointer.transform.position)) return true;
+        if (ability.IsUsable()) return true;
         return false;
     }
     private bool AbilityIsUnavailable(ActiveAbility ability)

@@ -497,6 +497,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2883295750466617304}
+  - component: {fileID: 8185570065185268937}
   - component: {fileID: 8901974070791791103}
   - component: {fileID: 3015369353320182564}
   - component: {fileID: 3118477132565521092}
@@ -522,6 +523,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5037231164788261907}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8185570065185268937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8007790664541966650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 987a16f33931ce74282945de6b45b49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: Launch a hook at the target, dealing damage. The target is then pulled
+    to the user.
+  range: 15
+  ModifiableRange: 0
+  cooldown: 3
+  EffectMagnitude: 10
+  cost: 1
+  icon: {fileID: 21300000, guid: 5e256e48be18d4d2ebc4bc0c1995af39, type: 3}
+  EffectDescription: ' Damage'
+  CurrentCooldown: 0
+  Owner: {fileID: 0}
+  emissionPoint: {fileID: 3957079144629141797}
+  Type: 0
+  targetRequirement: 2
+  trackingToggle: {fileID: 0}
+  abilityEffects:
+  - {fileID: 8901974070791791103}
+  endEffects: []
 --- !u!114 &8901974070791791103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -534,24 +565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 714a1afd7354c1e4b833e3c0844d8bce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: Launches a hook at the target location, dealing damage. If the hook
-    hits a movable target, pulls the target to the user's position.
-  range: 15
-  ModifiableRange: 1
-  cooldown: 2
-  EffectMagnitude: 10
-  cost: 1
-  icon: {fileID: 21300000, guid: 5e256e48be18d4d2ebc4bc0c1995af39, type: 3}
-  EffectDescription: ' Damage'
-  currentCooldown: 0
-  Owner: {fileID: 0}
-  locked: 0
-  Type: 0
-  emissionPoint: {fileID: 3957079144629141797}
-  trackingToggle: {fileID: 0}
-  preAnimations: []
-  postAnimations: []
-  endAnimations: []
+  Ability: {fileID: 0}
   line: {fileID: 7463231680969825189}
   projectile: {fileID: 4549332990311462824}
   travelTime: 1
@@ -890,13 +904,18 @@ PrefabInstance:
     - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: mainRenderers.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: mainRenderers.Array.data[0]
       value: 
       objectReference: {fileID: 7012054690685711274}
+    - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
+        type: 3}
+      propertyPath: mainRenderers.Array.data[1]
+      value: 
+      objectReference: {fileID: 4301919223002986137}
     - target: {fileID: 3145039084063412271, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: m_Name

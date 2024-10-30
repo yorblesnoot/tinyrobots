@@ -90,7 +90,7 @@ public class PrimaryCursor : MonoBehaviour
 
     void ToggleInvalidIndicator()
     {
-        if(ClickableAbility.Activated == null || ClickableAbility.Activated.Ability.IsUsable(transform.position))
+        if(ClickableAbility.Activated == null || ClickableAbility.Activated.Ability.IsUsable())
         {
             selectBubble.material = validMaterial;
         }
@@ -121,7 +121,7 @@ public class PrimaryCursor : MonoBehaviour
         if (anAbilityIsActive)
         {
             ActiveAbility skill = ClickableAbility.Activated.Ability;
-            if (skill.IsUsable(transform.position)
+            if (skill.IsUsable()
             && skill.cost <= PlayerControlledBot.Stats.Current[StatType.ACTION])
             {
                 PlayerControlledBot.SpendResource(skill.cost, StatType.ACTION);

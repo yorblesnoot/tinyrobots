@@ -11,7 +11,7 @@ public class IllusionSummon : AbilityEffect
 
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
-        BotAssembler.SummonBot(owner.LinkedCore.Bot, owner, trajectory[^1], ConditionBot);
+        BotAssembler.SummonBot(owner.LinkedCore.Bot.Children[0], owner, trajectory[^1], ConditionBot);
         yield break;
     }
 
@@ -20,7 +20,6 @@ public class IllusionSummon : AbilityEffect
         summon.Stats.Max[StatType.HEALTH] = 1;
         summon.Stats.Current[StatType.HEALTH] = 1;
         summon.DamageCalculator.AddFactor(new MultiplierDamage() { Multiplier = Ability.EffectMagnitude / 100f, Outgoing = true });
-        summon.ActiveAbilities.Where(a => a.GetType() == typeof(IllusionSummon)).FirstOrDefault().ProhibitAbility(this);
         foreach (var part in summon.PartModifiers) palette.RecolorPart(part, new Material[] { illusionMaterial });
     }
 

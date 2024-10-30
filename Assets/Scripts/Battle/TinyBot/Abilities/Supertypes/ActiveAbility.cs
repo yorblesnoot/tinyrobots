@@ -5,9 +5,17 @@ using UnityEngine;
 
 public class ActiveAbility : Ability
 {
-    public AbilityType Type;
+    enum TargetRequirement
+    {
+        NONE,
+        OPEN,
+        UNIT,
+        TERRAIN
+    }
+
     
-    GameObject trackedTarget;
+    public AbilityType Type;
+    [SerializeField] TargetRequirement targetRequirement;
     protected bool PlayerTargeting;
     protected List<Vector3> CurrentTrajectory;
     protected List<Targetable> CurrentTargets = new();    
@@ -21,6 +29,7 @@ public class ActiveAbility : Ability
     protected Trajectory TrajectoryDefinition;
     protected bool TrajectoryCollided;
     TrackingAnimation trackingAnimation;
+    GameObject trackedTarget;
 
     readonly float skillDelay = .5f;
     HashSet<System.Object> prohibitionSources = new();
@@ -55,10 +64,7 @@ public class ActiveAbility : Ability
         yield return new WaitForSeconds(skillDelay);
         ReleaseLockOn();
         
-        //yield return ToggleAnimations(preAnimations);
         foreach (var effect in abilityEffects) yield return effect.PerformEffect(Owner, CurrentTrajectory, CurrentTargets);
-        //yield return ToggleAnimations(postAnimations);
-
 
         CurrentTargets = new();
         ScheduleAbilityEnd();
@@ -72,7 +78,8 @@ public class ActiveAbility : Ability
         TargetType.EndTargeting();
         if(durationModule != null) durationModule.ClearCallback();
         if(trackingAnimation != null) trackingAnimation.ResetTracking();
-        //StartCoroutine(ToggleAnimations(endAnimations));
+        foreach(var effect in endEffects)
+            StartCoroutine(effect.PerformEffect(Owner, null, null));
     }
 
 
@@ -124,9 +131,14 @@ public class ActiveAbility : Ability
         else durationModule.SetDuration(Owner, EndAbility);
     }
 
-    public virtual bool IsUsable(Vector3 targetPosition)
+    public virtual bool IsUsable()
     {
-        return true;
+        if (targetRequirement == TargetRequirement.NONE) return true;
+        else if(targetRequirement == TargetRequirement.OPEN && CurrentTrajectory != null 
+            && Pathfinder3D.GetLandingPointBy(CurrentTrajectory[^1], Owner.MoveStyle, out _)) return true;
+        else if (targetRequirement == TargetRequirement.UNIT && CurrentTargets.Count > 0) return true;
+        else if (targetRequirement == TargetRequirement.TERRAIN && TrajectoryCollided) return true;
+        return false;
     }
 
     public virtual bool IsAvailable()

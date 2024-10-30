@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class HookAbility : ActiveAbility
+public abstract class HookAbility : AbilityEffect
 {
     [SerializeField] protected LineRenderer line;
     [SerializeField] protected GameObject projectile;
@@ -31,18 +31,17 @@ public abstract class HookAbility : ActiveAbility
                 timeElapsed += Time.deltaTime;
                 float interpolator = timeElapsed / intervalTime;
                 launched.transform.position = Vector3.Lerp(trajectory[i], trajectory[i + 1], interpolator);
-                Vector3[] linePoints = new Vector3[2] { emissionPoint.transform.position, projectile.transform.position };
+                Vector3[] linePoints = new Vector3[2] { Ability.emissionPoint.transform.position, projectile.transform.position };
                 line.SetPositions(linePoints);
                 yield return null;
             }
         }
     }
 
-    public override void EndAbility()
+    public void ResetHook()
     {
         line.positionCount = 0;
         projectile.transform.SetParent(BaseParent);
         projectile.transform.SetLocalPositionAndRotation(BaseHookPosition, BaseHookRotation);
-        base.EndAbility();
     }
 }

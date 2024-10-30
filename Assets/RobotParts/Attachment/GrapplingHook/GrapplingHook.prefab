@@ -170,6 +170,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5993407847931728567}
+  - component: {fileID: 8865402858073634099}
   - component: {fileID: 3453704067874665369}
   - component: {fileID: 645100875821679151}
   - component: {fileID: 3808269160417413498}
@@ -195,6 +196,36 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8145177837345594570}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8865402858073634099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3502040498531955416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 987a16f33931ce74282945de6b45b49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: Launch a grappling hook at the target, dealing minor damage if the
+    target is a unit. The user is then pulled to the target.
+  range: 15
+  ModifiableRange: 1
+  cooldown: 2
+  EffectMagnitude: 5
+  cost: 1
+  icon: {fileID: 21300000, guid: bcc4e92fe2b1d4c87a04d811eec79e7e, type: 3}
+  EffectDescription: ' Damage'
+  CurrentCooldown: 0
+  Owner: {fileID: 0}
+  emissionPoint: {fileID: 1716039679318861372}
+  Type: 3
+  targetRequirement: 3
+  trackingToggle: {fileID: 0}
+  abilityEffects:
+  - {fileID: 3453704067874665369}
+  endEffects: []
 --- !u!114 &3453704067874665369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,24 +238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 989c6e8297770704db614d0cda15e35c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: Launch a grappling hook to the target location, dealing low damage.
-    If the hook hits any target, the user pulls themself to the target.
-  range: 15
-  ModifiableRange: 0
-  cooldown: 2
-  EffectMagnitude: 5
-  cost: 1
-  icon: {fileID: 21300000, guid: d5fc92820481b43a2986103f885cef46, type: 3}
-  EffectDescription: ' Damage'
-  currentCooldown: 0
-  Owner: {fileID: 0}
-  locked: 0
-  Type: 3
-  emissionPoint: {fileID: 1716039679318861372}
-  trackingToggle: {fileID: 0}
-  preAnimations: []
-  postAnimations: []
-  endAnimations: []
+  Ability: {fileID: 0}
   line: {fileID: 8709156930818878667}
   projectile: {fileID: 8858788719128827533}
   travelTime: 1
@@ -816,7 +830,7 @@ PrefabInstance:
         type: 3}
       propertyPath: Abilities.Array.data[0]
       value: 
-      objectReference: {fileID: 3453704067874665369}
+      objectReference: {fileID: 0}
     - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: mainRenderers.Array.size
