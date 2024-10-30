@@ -18,38 +18,13 @@ public class ArmGrab : AbilityEffect
         ToggleAbilityLock(owner);
         yield return null;
     }
-    void ToggleAbilityLock(TinyBot owner, bool on = true)
+    public void ToggleAbilityLock(TinyBot targetUnit, bool on = true)
     {
-        foreach (ActiveAbility ability in owner.ActiveAbilities)
+        foreach (ActiveAbility ability in targetUnit.ActiveAbilities)
         {
             ability.ProhibitAbility(this, on);
         }
-        //armThrow.Ability.ProhibitAbility(this, !on);
+        ActiveAbility active = armThrow.Ability as ActiveAbility;
+        active.ProhibitAbility(this, !on);
     }
-
-    /*
-    public override bool IsUsable(Vector3 targetPosition)
-    {
-        if(CurrentTargets.Count == 0) return false;
-        return true;
-    }
-    */
-
-    public void EndAbility()
-    {
-        if (Grabbed == null) return;
-        StartCoroutine(Grabbed.Fall());
-        EndGrab();
-    }
-    
-
-    public void EndGrab()
-    {
-        Grabbed.ToggleActiveLayer(false);
-        Grabbed.transform.SetParent(null, true);
-        Grabbed = null;
-        //ToggleAbilityLock(false);
-    }
-
-    
 }

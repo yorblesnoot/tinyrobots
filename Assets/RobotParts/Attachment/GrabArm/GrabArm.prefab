@@ -9,11 +9,15 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8381779492330375688}
+  - component: {fileID: 8901199847198928190}
   - component: {fileID: 3328195909937798841}
   - component: {fileID: 8185807176413275310}
   - component: {fileID: 3862903475833651967}
+  - component: {fileID: 7324627882742047491}
+  - component: {fileID: 3941757722735645014}
+  - component: {fileID: 4002925182691852382}
   m_Layer: 0
-  m_Name: Arm Throw
+  m_Name: Throw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -34,6 +38,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1248657615597311848}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8901199847198928190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215392366238916757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 987a16f33931ce74282945de6b45b49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: Throws a grabbed target, dealing damage to anything it hits.
+  range: 10
+  ModifiableRange: 1
+  cooldown: 3
+  EffectMagnitude: 5
+  cost: 1
+  icon: {fileID: 21300000, guid: e86c94d6498544255ba708eb4b975121, type: 3}
+  EffectDescription: ' Damage'
+  CurrentCooldown: 0
+  Owner: {fileID: 0}
+  emissionPoint: {fileID: 0}
+  Type: 0
+  targetRequirement: 0
+  trackingToggle: {fileID: 0}
+  abilityEffects:
+  - {fileID: 8185807176413275310}
+  - {fileID: 3328195909937798841}
+  - {fileID: 7324627882742047491}
+  endEffects: []
 --- !u!114 &3328195909937798841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -46,26 +81,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c64ab2b94e883149887ddaea40501e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: Throws a carried object to the target location. Can only be used after
-    carrying a target with [Arm Grab].
-  range: 10
-  ModifiableRange: 0
-  cooldown: 1
-  EffectMagnitude: 0
-  cost: 1
-  icon: {fileID: 21300000, guid: 64910aa9bb3a74497a5a5dbbe2f5a468, type: 3}
-  EffectDescription: ' Damage'
-  currentCooldown: 0
-  Owner: {fileID: 0}
-  locked: 0
-  Type: 3
-  emissionPoint: {fileID: 7519672149628714507}
-  trackingToggle: {fileID: 0}
-  preAnimations:
-  - {fileID: 8185807176413275310}
-  postAnimations: []
-  endAnimations: []
+  Ability: {fileID: 0}
   armGrab: {fileID: 6213933421517428230}
+  armDrop: {fileID: 639554009074477753}
   thrownAirTime: 0.5
 --- !u!114 &8185807176413275310
 MonoBehaviour:
@@ -79,6 +97,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b42a793c3c349fc4a990478fd124f6c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
   ikTarget: {fileID: 2419956447974706190}
   windupTime: 0.7
   windDistance: 1
@@ -99,6 +118,47 @@ MonoBehaviour:
   - Terrain
   parabolaPoints: 10
   gravityAccel: -0.35
+--- !u!114 &7324627882742047491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215392366238916757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c40a361018ba3347859f207203e7cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
+--- !u!114 &3941757722735645014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215392366238916757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 230ce290bec7b4746888e91dd6a7cf23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TargetRadius: 1
+  maxTargets: 100
+  spatialDegree: 360
+--- !u!114 &4002925182691852382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1215392366238916757}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30e47114830f3994c8ead034e18c6183, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ikTarget: {fileID: 2419956447974706190}
 --- !u!1 &2994116557199998672
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,6 +360,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1444900794158513028}
+  - component: {fileID: 959633138925749401}
   - component: {fileID: 6213933421517428230}
   - component: {fileID: 4046753275453398220}
   - component: {fileID: 2931565364048482511}
@@ -308,8 +369,9 @@ GameObject:
   - component: {fileID: 3016547542891081560}
   - component: {fileID: 2976051054577289365}
   - component: {fileID: 6476705628180564292}
+  - component: {fileID: 639554009074477753}
   m_Layer: 0
-  m_Name: Arm Grab
+  m_Name: Grab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -330,6 +392,41 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1248657615597311848}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &959633138925749401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8626700561661189099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 987a16f33931ce74282945de6b45b49f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Description: Grab the target and lift them. A grabbed target can be thrown, or
+    will be dropped at the end of the user's turn.
+  range: 1
+  ModifiableRange: 0
+  cooldown: 3
+  EffectMagnitude: 0
+  cost: 1
+  icon: {fileID: 21300000, guid: 8ba259bb0a28241f686bb8959ab8d3bf, type: 3}
+  EffectDescription: ' Damage'
+  CurrentCooldown: 0
+  Owner: {fileID: 0}
+  emissionPoint: {fileID: 7519672149628714507}
+  Type: 0
+  targetRequirement: 2
+  trackingToggle: {fileID: 0}
+  abilityEffects:
+  - {fileID: 1853841052843632077}
+  - {fileID: 2976051054577289365}
+  - {fileID: 6213933421517428230}
+  - {fileID: 6476705628180564292}
+  endEffects:
+  - {fileID: 3016547542891081560}
+  - {fileID: 639554009074477753}
 --- !u!114 &6213933421517428230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -342,28 +439,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b844cae21ae58440a09432794831c30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: Grabs and carries the target. While carrying, the user can't use active
-    abilities and has halved Move Speed. The user will drop a carried target at the
-    end of the turn.
-  range: 1
-  ModifiableRange: 0
-  cooldown: 1
-  EffectMagnitude: 0
-  cost: 1
-  icon: {fileID: 21300000, guid: 0e77e93919f1e455dbefa760bc0660de, type: 3}
-  EffectDescription: ' Damage'
-  currentCooldown: 0
-  Owner: {fileID: 0}
-  locked: 0
-  Type: 0
-  emissionPoint: {fileID: 7519672149628714507}
-  trackingToggle: {fileID: 3016547542891081560}
-  preAnimations:
-  - {fileID: 2976051054577289365}
-  - {fileID: 1853841052843632077}
-  postAnimations:
-  - {fileID: 6476705628180564292}
-  endAnimations: []
+  Ability: {fileID: 0}
   armThrow: {fileID: 3328195909937798841}
   Grabbed: {fileID: 0}
 --- !u!114 &4046753275453398220
@@ -378,9 +454,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 230ce290bec7b4746888e91dd6a7cf23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TargetRadius: 0
+  TargetRadius: 0.5
   maxTargets: 1
-  spatialDegree: 45
+  spatialDegree: 360
 --- !u!114 &2931565364048482511
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -420,6 +496,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a0a6fb102f8af6478427b83e62368e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
   ikTarget: {fileID: 2419956447974706190}
   armMoveDuration: 0.5
 --- !u!114 &3016547542891081560
@@ -434,6 +511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a769bc2de0dd054fbafef4a7fb38d82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
   animatorStateName: open
   animator: {fileID: 8908244470698263005}
   playValue: 1
@@ -449,6 +527,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a769bc2de0dd054fbafef4a7fb38d82, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
   animatorStateName: open
   animator: {fileID: 8908244470698263005}
   playValue: 0
@@ -464,9 +543,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5dbf655d47fb42d469f41eb0d700230e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
   ikTarget: {fileID: 2419956447974706190}
   raiseHeight: 1
   armMoveDuration: 0.5
+--- !u!114 &639554009074477753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8626700561661189099}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8ec848b02960e74bbc18a3849ef2598, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
+  armGrab: {fileID: 6213933421517428230}
 --- !u!1001 &448946663622926409
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -794,12 +888,12 @@ PrefabInstance:
         type: 3}
       propertyPath: Abilities.Array.data[0]
       value: 
-      objectReference: {fileID: 6213933421517428230}
+      objectReference: {fileID: 0}
     - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: Abilities.Array.data[1]
       value: 
-      objectReference: {fileID: 3328195909937798841}
+      objectReference: {fileID: 0}
     - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: mainRenderers.Array.size

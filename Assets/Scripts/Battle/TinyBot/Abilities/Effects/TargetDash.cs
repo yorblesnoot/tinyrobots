@@ -30,7 +30,11 @@ public class TargetDash : AbilityEffect
             Vector3 point = trajectory[i];
             yield return StartCoroutine(owner.gameObject.LerpTo(point, intervalTime));
         }
-        if (!landingPoint) yield return StartCoroutine(owner.Fall());
+        if (!landingPoint)
+        {
+            Vector3 velocity = (trajectory[^1] - trajectory[^2]) / intervalTime;
+            yield return StartCoroutine(owner.Fall(velocity));
+        }
         else StartCoroutine(owner.PrimaryMovement.NeutralStance());
         Pathfinder3D.GeneratePathingTree(owner.MoveStyle, owner.transform.position);
     }

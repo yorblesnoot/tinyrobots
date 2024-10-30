@@ -40,7 +40,8 @@ public class ActiveAbility : Ability
     public override bool IsActive => true;
     private void Awake()
     {
-        foreach(var effect in abilityEffects) effect.Ability = this;
+        foreach (var effect in abilityEffects) effect.Initialize(this);
+        foreach (var effect in endEffects) effect.Initialize(this);
 
         durationModule = GetComponent<DurationModule>();
         TrajectoryDefinition = TryGetComponent(out Trajectory trajectory) ? trajectory : gameObject.AddComponent<NoTrajectory>();
@@ -110,7 +111,7 @@ public class ActiveAbility : Ability
         
         if (PlayerTargeting)
         {
-            if(TrajectoryDefinition != null) LineMaker.DrawLine(CurrentTrajectory.ToArray());
+            TrajectoryDefinition.Draw(CurrentTrajectory);
             TargetType.Draw(CurrentTrajectory);
             SetHighlightedTargets(newTargets);
         }
@@ -158,7 +159,7 @@ public class ActiveAbility : Ability
     {
         if (trackingToggle != null) trackingToggle.Stop();
         trackedTarget = null;
-        LineMaker.HideLine();
+        TrajectoryDefinition.Hide();
         SetHighlightedTargets(null);
         TargetType.EndTargeting();
     }
