@@ -140,7 +140,8 @@ public class ActiveAbility : Ability
             && Pathfinder3D.GetLandingPointBy(CurrentTrajectory[^1], Owner.MoveStyle, out _)) return true;
         else if (targetRequirement == TargetRequirement.UNIT && CurrentTargets.Count > 0) return true;
         else if (targetRequirement == TargetRequirement.TERRAIN && TrajectoryCollided) return true;
-        else if (targetRequirement == TargetRequirement.ALLY && CurrentTargets[0].Allegiance == Owner.Allegiance) return true; 
+        else if (targetRequirement == TargetRequirement.ALLY && CurrentTargets.Count > 0 
+            && CurrentTargets[0].Allegiance == Owner.Allegiance) return true; 
         return false;
     }
 

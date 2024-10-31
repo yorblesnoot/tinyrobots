@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ImpactTarget : TargetPoint
 {
-    readonly float overlap = .1f;
+    readonly float checkRadius = 1;
     int layerMask;
     private void Awake()
     {
@@ -22,12 +23,15 @@ public class ImpactTarget : TargetPoint
 
     public override List<Targetable> FindTargets(List<Vector3> trajectory)
     {
-        bool singlePoint = trajectory.Count == 1;
-        Vector3 origin = singlePoint ? trajectory[0] + Vector3.up : trajectory[^2];
-        Vector3 direction = singlePoint ? Vector3.down : trajectory[^1] - origin;
-        Physics.Raycast(origin, direction, out var hitInfo, direction.magnitude + overlap, layerMask);
-        if (hitInfo.collider != null && hitInfo.collider.TryGetComponent(out Targetable target)) return new() { target };
-        return new();
+        List<Targetable> targets = new();
+        Vector3 castPoint = trajectory[^1];
+        Collider[] possibleTargets = Physics.OverlapSphere(castPoint, checkRadius, layerMask);
+        if(possibleTargets.Length > 0)
+        {
+            possibleTargets = possibleTargets.OrderBy(x => Vector3.Distance(castPoint, x.transform.position)).ToArray();
+            targets.Add(possibleTargets[0].GetComponent<Targetable>());
+        } 
+        return targets;
     }
 
     public override List<Targetable> FindTargetsAI(List<Vector3> trajectory)

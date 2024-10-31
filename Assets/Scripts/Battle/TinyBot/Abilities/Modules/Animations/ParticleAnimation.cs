@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ParticleAnimation : AbilityEffect
@@ -10,17 +11,44 @@ public class ParticleAnimation : AbilityEffect
         DESTINATION,
         TERRAINPOINT
     }
+    [SerializeField] bool unparentOnPlay = false;
     [SerializeField] ParticleLocation location;
     [SerializeField] ParticleSystem[] particles;
+    ParticlePosition[] particlePositions;
+    struct ParticlePosition
+    {
+        public ParticleSystem System;
+        public Vector3 BasePosition;
+        public Quaternion BaseRotation;
+    }
+
+
+    
+    public override void Initialize(Ability ability)
+    {
+        base.Initialize(ability);
+        particlePositions = particles.Select(p => 
+        new ParticlePosition() { System = p, BasePosition = p.transform.localPosition, BaseRotation = p.transform.localRotation }).ToArray();
+    }
 
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
         
-        foreach (var particle in particles)
+        foreach (var particle in particlePositions)
         {
-            if (location != ParticleLocation.BASE) particle.gameObject.transform.position = trajectory[^1];
-            particle.gameObject.transform.rotation = location == ParticleLocation.TERRAINPOINT ? GetTerrainParticleFacing(owner, trajectory) : Quaternion.identity ;
-            particle.Play();
+            if (location == ParticleLocation.BASE)
+            {
+                particle.System.transform.SetParent(owner.transform, false);
+                particle.System.transform.SetLocalPositionAndRotation(particle.BasePosition, particle.BaseRotation);
+            }
+            else
+            {
+                particle.System.gameObject.transform.position = trajectory[^1];
+                particle.System.transform.rotation = location == ParticleLocation.TERRAINPOINT ? GetTerrainParticleFacing(owner, trajectory) : Quaternion.identity;
+            }
+            if (unparentOnPlay) particle.System.transform.SetParent(null, true);
+            particle.System.Play();
+            
         }
         yield break;
     }

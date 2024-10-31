@@ -9904,6 +9904,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
+  unparentOnPlay: 0
   location: 0
   particles:
   - {fileID: 3890377388307409057}
@@ -9920,6 +9921,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
+  unparentOnPlay: 0
   location: 2
   particles:
   - {fileID: 1306982077450729295}
@@ -24627,21 +24629,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 987a16f33931ce74282945de6b45b49f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: 
-  range: 0
-  ModifiableRange: 0
-  cooldown: 1
+  Description: Swap places with the targeted ally.
+  range: 10
+  ModifiableRange: 1
+  cooldown: 3
   EffectMagnitude: 0
-  cost: 0
-  icon: {fileID: 0}
+  cost: 1
+  icon: {fileID: 21300000, guid: 2728f77a1347547bca66ec2ed7475fd0, type: 3}
   EffectDescription: ' Damage'
   CurrentCooldown: 0
   Owner: {fileID: 0}
   emissionPoint: {fileID: 0}
-  Type: 0
-  targetRequirement: 0
+  Type: 1
+  targetRequirement: 4
   trackingToggle: {fileID: 0}
-  abilityEffects: []
+  abilityEffects:
+  - {fileID: 724053550831225948}
+  - {fileID: 948033725631327387}
+  - {fileID: 4124181895961499932}
   endEffects: []
 --- !u!114 &4124181895961499932
 MonoBehaviour:
@@ -24669,6 +24674,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
+  unparentOnPlay: 1
   location: 0
   particles:
   - {fileID: 4758807591859834471}
@@ -24685,6 +24691,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
+  unparentOnPlay: 1
   location: 2
   particles:
   - {fileID: 1306982077450729295}
@@ -34471,7 +34478,7 @@ Transform:
   m_GameObject: {fileID: 8994726706906998739}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.0007324219, y: -0.046, z: -1.895}
+  m_LocalPosition: {x: 0, y: -1.23, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
