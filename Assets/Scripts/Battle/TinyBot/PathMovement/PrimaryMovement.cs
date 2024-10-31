@@ -17,8 +17,6 @@ public abstract class PrimaryMovement : MonoBehaviour
     [HideInInspector] public float SpeedMultiplier = 1;
     public float FinalSpeed { get { return MoveSpeed * SpeedMultiplier; } }
 
-    
-
     public IEnumerator TraversePath(List<Vector3> path)
     {
         MainCameraControl.TrackTarget(Owner.transform);
