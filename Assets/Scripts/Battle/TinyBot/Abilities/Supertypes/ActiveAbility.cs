@@ -10,7 +10,8 @@ public class ActiveAbility : Ability
         NONE,
         OPEN,
         UNIT,
-        TERRAIN
+        TERRAIN,
+        ALLY
     }
 
     
@@ -135,10 +136,11 @@ public class ActiveAbility : Ability
     public virtual bool IsUsable()
     {
         if (targetRequirement == TargetRequirement.NONE) return true;
-        else if(targetRequirement == TargetRequirement.OPEN && CurrentTrajectory != null 
+        else if (targetRequirement == TargetRequirement.OPEN && CurrentTrajectory != null
             && Pathfinder3D.GetLandingPointBy(CurrentTrajectory[^1], Owner.MoveStyle, out _)) return true;
         else if (targetRequirement == TargetRequirement.UNIT && CurrentTargets.Count > 0) return true;
         else if (targetRequirement == TargetRequirement.TERRAIN && TrajectoryCollided) return true;
+        else if (targetRequirement == TargetRequirement.ALLY && CurrentTargets[0].Allegiance == Owner.Allegiance) return true; 
         return false;
     }
 

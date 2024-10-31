@@ -1,6 +1,7 @@
 using PrimeTween;
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 public enum Allegiance
 {
@@ -26,9 +27,9 @@ public abstract class Targetable : MonoBehaviour
         Pathfinder3D.GetOccupancy.AddListener(DeclareOccupancy);
     }
 
-    void DeclareOccupancy(Vector3 position)
+    void DeclareOccupancy(Vector3[] positions)
     {
-        if (transform.position == position) return;
+        if (positions.Contains(transform.position)) return;
         Pathfinder3D.SetNodeOccupancy(Vector3Int.RoundToInt(transform.position), true);
     }
 

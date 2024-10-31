@@ -282,8 +282,8 @@ public static class Pathfinder3D
 
     #region Occupancy
     static List<Vector3Int> lastOccupied = new();
-    public static UnityEvent<Vector3> GetOccupancy = new();
-    public static void EvaluateNodeOccupancy(Vector3 position)
+    public static UnityEvent<Vector3[]> GetOccupancy = new();
+    public static void EvaluateNodeOccupancy(params Vector3[] position)
     {
         ClearOccupancy();
         GetOccupancy.Invoke(position);

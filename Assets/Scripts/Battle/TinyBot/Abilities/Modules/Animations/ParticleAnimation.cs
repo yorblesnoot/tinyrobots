@@ -18,8 +18,8 @@ public class ParticleAnimation : AbilityEffect
         
         foreach (var particle in particles)
         {
-            if (location == ParticleLocation.DESTINATION || location == ParticleLocation.TERRAINPOINT) particle.gameObject.transform.position = trajectory[^1];
-            if (location == ParticleLocation.TERRAINPOINT) particle.gameObject.transform.rotation = GetTerrainParticleFacing(owner, trajectory);
+            if (location != ParticleLocation.BASE) particle.gameObject.transform.position = trajectory[^1];
+            particle.gameObject.transform.rotation = location == ParticleLocation.TERRAINPOINT ? GetTerrainParticleFacing(owner, trajectory) : Quaternion.identity ;
             particle.Play();
         }
         yield break;

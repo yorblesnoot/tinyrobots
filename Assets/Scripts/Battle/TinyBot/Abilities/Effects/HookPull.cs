@@ -38,5 +38,6 @@ public class HookPull : HookAbility
         yield return StartCoroutine(LaunchWithLine(projectile, trajectory, intervalTime, false));
         ResetHook();
         if (target != null) yield return StartCoroutine(target.Fall());
+        Pathfinder3D.EvaluateNodeOccupancy(owner.transform.position);
     }
 }
