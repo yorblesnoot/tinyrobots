@@ -14,7 +14,7 @@ public class ThornsAura : PassiveAbility
         ParticleSystem.ShapeModule shape = thornsVisual.shape;
         shape.radius = range;
         targeter.transform.localScale = 2 * range * Vector3.one;
-        targeter.UnitTargeted.AddListener(DealSpikeDamage);
+        targeter.UnitEnteredZone.AddListener(DealSpikeDamage);
         TurnManager.RoundEnded.AddListener(ResetSpiked);
     }
 

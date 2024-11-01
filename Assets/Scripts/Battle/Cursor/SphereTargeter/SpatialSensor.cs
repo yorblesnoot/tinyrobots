@@ -7,7 +7,8 @@ using UnityEngine.Events;
 public class SpatialSensor : MonoBehaviour
 {
     List<Targetable> intersectingTargets = new();
-    [HideInInspector] public UnityEvent<Targetable> UnitTargeted = new();
+    [HideInInspector] public UnityEvent<Targetable> UnitEnteredZone = new();
+    [HideInInspector] public UnityEvent<Targetable> UnitLeftZone = new();
     MeshRenderer meshRenderer;
 
     private void Awake()
@@ -32,7 +33,7 @@ public class SpatialSensor : MonoBehaviour
     {
         if (!other.gameObject.TryGetComponent(out Targetable target)) return;
         intersectingTargets.Add(target);
-        UnitTargeted.Invoke(target);
+        UnitEnteredZone.Invoke(target);
     }
 
     private void OnTriggerExit(Collider other)
@@ -41,6 +42,6 @@ public class SpatialSensor : MonoBehaviour
         {
             intersectingTargets.Remove(target);
         }
-
+        UnitLeftZone.Invoke(target);
     }
 }

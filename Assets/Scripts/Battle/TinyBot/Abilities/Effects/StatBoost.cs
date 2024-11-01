@@ -4,33 +4,37 @@ using System.Collections.Generic;
 
 public class StatBoost : AbilityEffect
 {
-    enum BonusMode
+    public enum BonusMode
     {
         FLAT,
         PERCENTMAX,
         PERCENTCURRENT
     }
+
+
     [SerializeField] StatType statType;
     [SerializeField] BonusMode mode;
 
-    int GetFinalBonus(int bonus, BonusMode mode, TinyBot target)
+    static int GetFinalBonus(int bonus, BonusMode mode, TinyBot target, StatType stat)
     {
-        switch (mode)
+        return mode switch
         {
-            case BonusMode.FLAT:
-                return bonus;
-            case BonusMode.PERCENTMAX:
-                return Mathf.RoundToInt(target.Stats.Max[statType] * (float)bonus / 100 + 1);
-            case BonusMode.PERCENTCURRENT:
-                return Mathf.RoundToInt(target.Stats.Current[statType] * (float)bonus / 100 + 1);
-            default: return bonus;
-        }
+            BonusMode.FLAT => bonus,
+            BonusMode.PERCENTMAX => Mathf.RoundToInt(target.Stats.Max[stat] * (float)bonus / 100 + 1),
+            BonusMode.PERCENTCURRENT => Mathf.RoundToInt(target.Stats.Current[stat] * (float)bonus / 100 + 1),
+            _ => bonus,
+        };
     }
 
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
-        owner.Stats.Current[statType] += GetFinalBonus(Ability.EffectMagnitude, mode, owner);
-        if (owner.Allegiance == Allegiance.PLAYER) TurnResourceCounter.Update.Invoke();
+        ModifyStat(owner, Ability.EffectMagnitude, statType, mode);
         yield break;
+    }
+
+    public static void ModifyStat(TinyBot target, int amount, StatType stat, BonusMode mode)
+    {
+        target.Stats.Current[stat] += GetFinalBonus(amount, mode, target, stat);
+        if (target.Allegiance == Allegiance.PLAYER) TurnResourceCounter.Update.Invoke();
     }
 }
