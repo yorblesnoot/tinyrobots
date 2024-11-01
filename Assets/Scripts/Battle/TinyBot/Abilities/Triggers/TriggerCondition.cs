@@ -7,24 +7,19 @@ public abstract class TriggerCondition
 {
     protected TinyBot Target;
     public UnityEvent<TinyBot> OnTriggered = new();
-    readonly int procLimit;
-    int procCount;
-    public TriggerCondition(TinyBot target, int limit)
+    public TriggerCondition(TinyBot target)
     {
         Target = target;
-        procLimit = limit;
     }
 
-    public void ResetProcCount()
+    protected void ExecuteTrigger(TinyBot target)
     {
-        procCount = 0;
+        OnTriggered.Invoke(target);   
     }
 
-    protected void TryExecuteTrigger(TinyBot target)
+    protected void ExecuteTrigger()
     {
-        if (procLimit > 0 && procCount >= procLimit) return;
-        OnTriggered.Invoke(target);
-        procCount++;
+        ExecuteTrigger(Target);
     }
 
     public abstract void Remove();

@@ -1,6 +1,6 @@
 public class ConditionDied : TriggerCondition
 { 
-    public ConditionDied(TinyBot target, int limit) : base(target, limit)
+    public ConditionDied(TinyBot target) : base(target)
     {
         TinyBot.BotDied.AddListener(CheckForDeath);
     }
