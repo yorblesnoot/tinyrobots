@@ -84,6 +84,7 @@ public class TurnManager : MonoBehaviour
     public static void BeginTurnSequence(bool select = true)
     {
         TurnTakers = TurnTakers.OrderByDescending<TinyBot, int>(SceneGlobals.PlayerData.DevMode ? PlayerFirstOrder : BotInitOrder).ToList();
+        StartNewRound();
         QueueNextTurnTaker(select);
     }
 

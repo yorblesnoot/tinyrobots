@@ -57,6 +57,7 @@ public class TurnResourceCounter : MonoBehaviour
 
     public void UpdateResourceDisplays()
     {
+        if (UnitControl.PlayerControlledBot == null) return;
         UpdateAbilityPoints();
         AnimateMoveBar();
     }
