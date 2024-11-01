@@ -4889,13 +4889,14 @@ MonoBehaviour:
   emissionPoint: {fileID: 0}
   triggers:
   - activationCondition: 0
-    OutputEffect: {fileID: 7903811093348112724}
+    OutputEffect:
+    - {fileID: 7903811093348112724}
     alwaysTargetSelf: 0
-    applicationLimit: 1
+    activationLimit: 1
     procResetCondition: 4
   targeter: {fileID: 2086499050853252097}
   particleVisual: {fileID: 5644848923440041672}
-  validTarget: 0
+  validTarget: 2
 --- !u!114 &7903811093348112724
 MonoBehaviour:
   m_ObjectHideFlags: 0

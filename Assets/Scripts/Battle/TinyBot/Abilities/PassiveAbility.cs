@@ -5,7 +5,7 @@ using UnityEngine;
 public class PassiveAbility : Ability
 {
     public override bool IsActive => false;
-    [SerializeField] List<TriggerApplier> triggers;
+    [SerializeField] List<TriggerController> triggers;
 
     [SerializeField] SpatialSensor targeter;
     [SerializeField] ParticleSystem particleVisual;
@@ -45,7 +45,6 @@ public class PassiveAbility : Ability
         if (validTarget == ValidTarget.ENEMY && bot.Allegiance == Owner.Allegiance) return;
         foreach (var applier in triggers)
         {
-            
             if (apply) applier.ApplyTo(bot);
             else applier.RemoveFrom(bot);
         }

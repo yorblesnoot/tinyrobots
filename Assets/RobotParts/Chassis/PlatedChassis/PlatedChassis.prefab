@@ -59,7 +59,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8408041625688230748}
-  - component: {fileID: 903793742057400392}
+  - component: {fileID: 1589490889648504057}
+  - component: {fileID: 2318693742398671684}
+  - component: {fileID: 1146162043356245092}
+  - component: {fileID: 8201112813870632715}
+  - component: {fileID: 8202693648836993553}
   m_Layer: 0
   m_Name: PlatedAura
   m_TagString: Untagged
@@ -82,7 +86,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6810754838823567735}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &903793742057400392
+--- !u!114 &1589490889648504057
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -91,7 +95,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7102986453873107427}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e470d0cc4eb84648815a7b6aa04d59a, type: 3}
+  m_Script: {fileID: 11500000, guid: bd246dbbea25a9944a852e2b7c95675f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Description: Increases the user's Armor. This effect is removed until the end of
@@ -103,10 +107,87 @@ MonoBehaviour:
   cost: 0
   icon: {fileID: 21300000, guid: 766686793cc92444db6e8e6f7c37a238, type: 3}
   EffectDescription: ' Armor'
-  currentCooldown: 0
+  CurrentCooldown: 0
   Owner: {fileID: 0}
-  locked: 0
-  armorAura: {fileID: 4943244165503706272}
+  emissionPoint: {fileID: 0}
+  triggers:
+  - activationCondition: 4
+    OutputEffect:
+    - {fileID: 2318693742398671684}
+    - {fileID: 8201112813870632715}
+    alwaysTargetSelf: 0
+    applicationLimit: 0
+    procResetCondition: 0
+  - activationCondition: 3
+    OutputEffect:
+    - {fileID: 1146162043356245092}
+    - {fileID: 8202693648836993553}
+    alwaysTargetSelf: 0
+    applicationLimit: 0
+    procResetCondition: 0
+  targeter: {fileID: 0}
+  particleVisual: {fileID: 0}
+  validTarget: 0
+--- !u!114 &2318693742398671684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7102986453873107427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ead3e8e528d0164e98628bbfbb7010f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
+  target: {fileID: 4943244165503706272}
+  on: 1
+--- !u!114 &1146162043356245092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7102986453873107427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ead3e8e528d0164e98628bbfbb7010f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
+  target: {fileID: 4943244165503706272}
+  on: 0
+--- !u!114 &8201112813870632715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7102986453873107427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ab8ff15decaac4fa88d359e43ce1d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
+  apply: 1
+  buff: {fileID: 11400000, guid: dd7f11545aa3d68419dd856cb1e72faa, type: 2}
+--- !u!114 &8202693648836993553
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7102986453873107427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ab8ff15decaac4fa88d359e43ce1d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
+  apply: 0
+  buff: {fileID: 11400000, guid: dd7f11545aa3d68419dd856cb1e72faa, type: 2}
 --- !u!1001 &856987056172287187
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -856,11 +937,6 @@ PrefabInstance:
       propertyPath: Abilities.Array.size
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
-        type: 3}
-      propertyPath: Abilities.Array.data[0]
-      value: 
-      objectReference: {fileID: 903793742057400392}
     - target: {fileID: 1429002257363468550, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: mainRenderers.Array.size

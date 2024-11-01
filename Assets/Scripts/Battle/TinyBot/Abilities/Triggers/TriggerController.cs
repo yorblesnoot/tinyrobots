@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [System.Serializable]
-public class TriggerApplier
+public class TriggerController
 {
     enum Condition
     {
@@ -15,9 +15,9 @@ public class TriggerApplier
         TURNSTART
     }
     [SerializeField] Condition activationCondition;
-    [SerializeField] protected AbilityEffect OutputEffect;
+    [SerializeField] protected List<AbilityEffect> OutputEffect;
     [SerializeField] bool alwaysTargetSelf;
-    [SerializeField] int applicationLimit = 0;
+    [SerializeField] int activationLimit = 0;
     [SerializeField] Condition procResetCondition;
     protected TinyBot Owner;
 
@@ -28,7 +28,7 @@ public class TriggerApplier
     {
         Owner = owner;
         activeTriggers = new();
-        OutputEffect.Initialize(ability);
+        foreach(var effect in OutputEffect) effect.Initialize(ability);
     }
 
     
@@ -41,7 +41,7 @@ public class TriggerApplier
 
     private TriggerCondition GetTrigger(TinyBot target, Condition condition, UnityAction<TinyBot> call)
     {
-        TriggerCondition trigger = SetCondition(condition, target);
+        TriggerCondition trigger = GetCondition(condition, target);
         trigger.OnTriggered.AddListener(call);
         return trigger;
     }
@@ -49,15 +49,14 @@ public class TriggerApplier
     void ResetLinked(TinyBot target)
     {
         activationCounts[target] = 0;
-        Debug.Log("reset linked");
     }
 
-    TriggerCondition SetCondition(Condition condition, TinyBot target)
+    TriggerCondition GetCondition(Condition condition, TinyBot target)
     {
         return condition switch
         {
             Condition.DIED => new ConditionDied(target),
-            Condition.HIT => throw new System.NotImplementedException(),
+            Condition.HIT => new ConditionHit(target),
             Condition.ROUNDEND => new ConditionRoundStart(target),
             Condition.TURNSTART => throw new System.NotImplementedException(),
             _ => null
@@ -69,11 +68,12 @@ public class TriggerApplier
         if (!activationCounts.ContainsKey(target))
         {
             activationCounts.Add(target, 0);
-            GetTrigger(target, procResetCondition, ResetLinked);
+            if (activationLimit > 0) GetTrigger(target, procResetCondition, ResetLinked);
         }
-        if (applicationLimit > 0 && activationCounts[target] > applicationLimit) return;
+        if (activationLimit > 0 && activationCounts[target] > activationLimit) return;
         activationCounts[target]++;
-        Owner.StartCoroutine(OutputEffect.PerformEffect(Owner, null, new() { alwaysTargetSelf ? Owner : target }));
+        foreach (var effect in OutputEffect) 
+            Owner.StartCoroutine(effect.PerformEffect(Owner, null, new() { alwaysTargetSelf ? Owner : target }));
     }
 
     public virtual void RemoveFrom(TinyBot target)

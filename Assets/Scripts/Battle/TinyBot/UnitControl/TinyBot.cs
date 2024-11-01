@@ -37,6 +37,7 @@ public class TinyBot : Targetable
     public static UnityEvent ClearActiveBot = new();
     BotAI botAI;
 
+    [HideInInspector] public BuffController Buffs;
     [HideInInspector] public BotCharacter LinkedCore;
     [HideInInspector] public PrimaryMovement PrimaryMovement;
     public List<ActiveAbility> ActiveAbilities { get; private set; }
@@ -51,6 +52,7 @@ public class TinyBot : Targetable
         PartModifiers = parts;
         SetAbilities(abilities);
 
+        Buffs = GetComponent<BuffController>();
         PrimaryMovement = primaryMovement;
         PrimaryMovement.Owner = this;
         PrimaryCursor.PlayerSelectedBot.AddListener(TryToBecomeActive);

@@ -2,17 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ApplyBuff : MonoBehaviour
+public class ApplyBuff : AbilityEffect
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] bool apply;
+    [SerializeField] BotBuff buff;
+    public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        foreach (var target in targets)
+        {
+            TinyBot bot = target as TinyBot;
+            if (bot == null) continue;
+            if(apply) bot.Buffs.AddBuff(buff, Ability.EffectMagnitude);
+            else bot.Buffs.RemoveBuff(buff, Ability.EffectMagnitude);
+        }
+        yield break;
     }
 }
