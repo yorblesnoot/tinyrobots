@@ -20,23 +20,23 @@ public class TurnResourceCounter : MonoBehaviour
 
     TinyBot currentBot;
 
-    public static UnityEvent Update = new();
-
     private void Awake()
     {
-        Update.AddListener(UpdateResourceDisplays);
         PrimaryCursor.PlayerSelectedBot.AddListener(SyncStatDisplay);
     }
 
-    public void SyncStatDisplay(TinyBot bot)
+    public void SyncStatDisplay(TinyBot targetBot)
     {
+        if(currentBot != null) currentBot.Stats.StatModified.RemoveListener(UpdateResourceDisplays);
+        targetBot.Stats.StatModified.AddListener(UpdateResourceDisplays);
+        currentBot = targetBot;
         Tween.StopAll(moveSlider.value);
-        currentBot = bot;
+        
         UpdateAbilityPoints();
 
         moveSlider.gameObject.SetActive(true);
-        moveSlider.maxValue = bot.Stats.Max[StatType.MOVEMENT] * 2;
-        SetSliderAndNumber(bot.Stats.Current[StatType.MOVEMENT]);
+        moveSlider.maxValue = targetBot.Stats.Max[StatType.MOVEMENT] * 2;
+        SetSliderAndNumber(targetBot.Stats.Current[StatType.MOVEMENT]);
 
     }
 

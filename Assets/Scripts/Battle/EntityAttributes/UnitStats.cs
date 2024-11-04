@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine.Events;
 
 public enum StatType
 {
@@ -13,13 +14,14 @@ public enum StatType
 }
 public class UnitStats
 {
-    public Dictionary<StatType, int> Max;
-    public Dictionary<StatType, int> Current;
+    public StatBlock Max;
+    public StatBlock Current;
+    public UnityEvent StatModified = new();
 
     public UnitStats()
     {
-        Max = new();
-        Current = new();
+        Max = new(StatModified);
+        Current = new(StatModified);
         foreach(StatType type in Enum.GetValues(typeof(StatType)))
         {
             Max.Add(type, 0);
@@ -44,5 +46,33 @@ public class UnitStats
     {
         Max[StatType.MOVEMENT] = 100000;
         Max[StatType.ACTION] = 1000;
+    }
+}
+
+public class StatBlock
+{
+    Dictionary<StatType, int> map = new();
+    readonly UnityEvent modified;
+    public StatBlock(UnityEvent modified)
+    {
+        this.modified = modified;
+    }
+
+    public int this[StatType stat]
+    {
+        get
+        {
+            return map[stat];
+        }
+        set
+        {
+            map[stat] = value;
+            modified.Invoke();
+        }
+    }
+
+    public void Add(StatType stat, int value)
+    {
+        map.Add(stat, value);
     }
 }

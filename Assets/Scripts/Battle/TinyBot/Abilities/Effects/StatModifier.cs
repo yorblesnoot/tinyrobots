@@ -2,13 +2,14 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class StatBoost : AbilityEffect
+public class StatModifier : AbilityEffect
 {
     public enum BonusMode
     {
         FLAT,
         PERCENTMAX,
-        PERCENTCURRENT
+        PERCENTCURRENT,
+        PERCENTMISSING
     }
 
 
@@ -17,13 +18,15 @@ public class StatBoost : AbilityEffect
 
     static int GetFinalBonus(int bonus, BonusMode mode, TinyBot target, StatType stat)
     {
-        return mode switch
+        float percent = (float)bonus / 100;
+        float output = mode switch
         {
-            BonusMode.FLAT => bonus,
-            BonusMode.PERCENTMAX => Mathf.RoundToInt(target.Stats.Max[stat] * (float)bonus / 100 + 1),
-            BonusMode.PERCENTCURRENT => Mathf.RoundToInt(target.Stats.Current[stat] * (float)bonus / 100 + 1),
+            BonusMode.PERCENTMAX => target.Stats.Max[stat] * percent,
+            BonusMode.PERCENTCURRENT => target.Stats.Current[stat] * percent,
+            BonusMode.PERCENTMISSING => (target.Stats.Max[stat] - target.Stats.Current[stat]) * percent, 
             _ => bonus,
         };
+        return Mathf.RoundToInt(output);
     }
 
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
@@ -35,6 +38,5 @@ public class StatBoost : AbilityEffect
     public static void ModifyStat(TinyBot target, int amount, StatType stat, BonusMode mode)
     {
         target.Stats.Current[stat] += GetFinalBonus(amount, mode, target, stat);
-        if (target.Allegiance == Allegiance.PLAYER) TurnResourceCounter.Update.Invoke();
     }
 }

@@ -14,7 +14,6 @@ public class ArmGrab : AbilityEffect
         Pathfinder3D.EvaluateNodeOccupancy(owner.transform.position, Grabbed.transform.position);
         Grabbed.transform.SetParent(Ability.emissionPoint.transform, true);
         owner.Stats.Current[StatType.MOVEMENT] /= 2;
-        if (owner.Allegiance == Allegiance.PLAYER) TurnResourceCounter.Update?.Invoke();
         ToggleAbilityLock(owner);
         yield return null;
     }

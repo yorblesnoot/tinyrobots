@@ -1,5 +1,5 @@
 using UnityEngine;
-using static StatBoost;
+using static StatModifier;
 
 [CreateAssetMenu(fileName = "StatBuff", menuName = "ScriptableObjects/Buffs/Stat")]
 public class StatBuff : BotBuff

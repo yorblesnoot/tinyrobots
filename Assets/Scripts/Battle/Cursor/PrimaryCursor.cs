@@ -142,7 +142,6 @@ public class PrimaryCursor : MonoBehaviour
         {
             if (currentPath.Count == 0) return;
             PlayerControlledBot.SpendResource(Mathf.CeilToInt(currentPathCost), StatType.MOVEMENT);
-            TurnResourceCounter.Update.Invoke();
             StartCoroutine(TraversePath());
         }
     }

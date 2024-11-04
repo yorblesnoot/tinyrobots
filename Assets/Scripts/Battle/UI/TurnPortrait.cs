@@ -22,7 +22,7 @@ public class TurnPortrait : MonoBehaviour
         thisBot = bot;
         PrimaryCursor.PlayerSelectedBot.AddListener(HighlightWhenActive);
         selectButton.onClick.AddListener(SelectThroughPortrait);
-        bot.ChangedHealth.AddListener(UpdateHealth);
+        bot.Stats.StatModified.AddListener(UpdateHealth);
         SetColorForAllegiance(bot);
         cardPortrait.sprite = bot.Portrait;
         healthOverlay.UpdateHealth(thisBot);
@@ -48,18 +48,17 @@ public class TurnPortrait : MonoBehaviour
 
     public void Clear()
     {
-        thisBot = null;
+        thisBot.Stats.StatModified.RemoveListener(UpdateHealth);
         PrimaryCursor.PlayerSelectedBot.RemoveListener(HighlightWhenActive);
         selectButton.onClick.RemoveAllListeners();
         gameObject.SetActive(false);
+        thisBot = null;
     }
 
     public void ToggleGrayOut(bool on)
     {
         grayOut.SetActive(on);
     }
-
-    
 
     public void Die()
     {
