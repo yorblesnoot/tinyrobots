@@ -27,9 +27,12 @@ public class PassiveAbility : Ability
             ApplyTriggeredEffect(Owner, true);
             return;
         }
-        particleVisual.Play();
-        ParticleSystem.ShapeModule shape = particleVisual.shape;
-        shape.radius = range;
+        if(particleVisual != null)
+        {
+            particleVisual.Play();
+            ParticleSystem.ShapeModule shape = particleVisual.shape;
+            shape.radius = range;
+        }
         targeter.transform.localScale = 2 * range * Vector3.one;
 
 

@@ -20,6 +20,7 @@ public class ParticleAnimation : AbilityEffect
         public ParticleSystem System;
         public Vector3 BasePosition;
         public Quaternion BaseRotation;
+        public Transform BaseParent;
     }
 
 
@@ -28,7 +29,7 @@ public class ParticleAnimation : AbilityEffect
     {
         base.Initialize(ability);
         particlePositions = particles.Select(p => 
-        new ParticlePosition() { System = p, BasePosition = p.transform.localPosition, BaseRotation = p.transform.localRotation }).ToArray();
+        new ParticlePosition() { System = p, BasePosition = p.transform.localPosition, BaseRotation = p.transform.localRotation, BaseParent = p.transform.parent }).ToArray();
     }
 
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
@@ -38,7 +39,7 @@ public class ParticleAnimation : AbilityEffect
         {
             if (location == ParticleLocation.BASE)
             {
-                particle.System.transform.SetParent(owner.transform, false);
+                particle.System.transform.SetParent(particle.BaseParent, false);
                 particle.System.transform.SetLocalPositionAndRotation(particle.BasePosition, particle.BaseRotation);
             }
             else

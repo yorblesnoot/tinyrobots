@@ -11,6 +11,7 @@ public class ImpulseAnimation : AbilityEffect
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
         Vector3 direction = trajectory[0] - trajectory[^1];
+        if(direction == Vector3.zero) direction = owner.transform.forward;
         if(waitForEnd) yield return StartCoroutine(owner.PrimaryMovement.ApplyImpulseToBody(direction, impulseLength, duration, returnDuration));
         else StartCoroutine(owner.PrimaryMovement.ApplyImpulseToBody(direction, impulseLength, duration, returnDuration));
     }

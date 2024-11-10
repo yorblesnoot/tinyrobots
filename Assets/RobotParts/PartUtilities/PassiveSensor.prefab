@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3699294865059984128}
   - component: {fileID: 7396058553244526298}
   m_Layer: 11
-  m_Name: SphereSensor
+  m_Name: PassiveSensor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 8945867629322780574}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.8138685, y: -7.850025, z: 15.346912}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -55,7 +55,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7abefd68e34c06f4c9b549402f976aa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UnitTargeted:
+  UnitEnteredZone:
+    m_PersistentCalls:
+      m_Calls: []
+  UnitLeftZone:
     m_PersistentCalls:
       m_Calls: []
 --- !u!54 &3699294865059984128

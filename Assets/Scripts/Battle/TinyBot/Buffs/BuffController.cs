@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BuffController : MonoBehaviour
 {
-    public List<(BotBuff, int)> ActiveBuffs;
+    public Dictionary<BuffType, AppliedBuff> ActiveBuffs;
     TinyBot owner;
     private void Awake()
     {
@@ -13,15 +13,16 @@ public class BuffController : MonoBehaviour
         owner = GetComponent<TinyBot>();
     }
 
-    public void AddBuff(BotBuff buff, int potency)
+    public void AddBuff(TinyBot source, BuffType buff, int potency)
     {
-        int buffCount = ActiveBuffs.Where(b => b.Item1 ==  buff).Count();
-        if (buffCount >= buff.MaxStacks) return;
-        buff.ApplyEffect(owner, potency);
-        ActiveBuffs.Add((buff, potency));
+        AppliedBuff targetBuff;
+        if (!ActiveBuffs.TryGetValue(buff, out targetBuff))
+        {
+            targetBuff = new(buff, potency, source, );
+        }
     }
 
-    public void RemoveBuff(BotBuff buff, int potency)
+    public void RemoveBuff(BuffType buff, int potency)
     {
         if (!ActiveBuffs.Remove((buff, potency))) return;
         buff.RemoveEffect(owner, potency);

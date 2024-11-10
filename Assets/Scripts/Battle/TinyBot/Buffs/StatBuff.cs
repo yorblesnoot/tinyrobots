@@ -2,12 +2,12 @@ using UnityEngine;
 using static StatModifier;
 
 [CreateAssetMenu(fileName = "StatBuff", menuName = "ScriptableObjects/Buffs/Stat")]
-public class StatBuff : BotBuff
+public class StatBuff : BuffType
 {
     [SerializeField] StatType statType;
     [SerializeField] BonusMode mode;
 
-    public override void ApplyEffect(TinyBot bot, int potency)
+    public override void ApplyEffect(TinyBot bot, TinyBot source, int potency)
     {
         ModifyStat(bot, potency, statType, mode);
     }
