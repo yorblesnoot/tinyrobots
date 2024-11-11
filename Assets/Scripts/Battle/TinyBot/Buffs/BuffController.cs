@@ -1,31 +1,42 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
-public class BuffController : MonoBehaviour
+public class BuffController
 {
     public Dictionary<BuffType, AppliedBuff> ActiveBuffs;
     TinyBot owner;
-    private void Awake()
+
+    public BuffController(TinyBot owner)
     {
+        this.owner = owner;
         ActiveBuffs = new();
-        owner = GetComponent<TinyBot>();
+        owner.EndedTurn.AddListener(ProgressBuffs);
     }
 
     public void AddBuff(TinyBot source, BuffType buff, int potency)
     {
-        AppliedBuff targetBuff;
-        if (!ActiveBuffs.TryGetValue(buff, out targetBuff))
+        if (!ActiveBuffs.TryGetValue(buff, out AppliedBuff applied))
         {
-            targetBuff = new(buff, potency, source, );
+            applied = new(buff, owner, source, potency);
+            ActiveBuffs.Add(buff, applied);
+        }
+        if(applied.Stacks < applied.Buff.MaxStacks)
+        {
+            applied.ApplyStack();
+        }
+
+    }
+
+    void ProgressBuffs()
+    {
+        foreach (var buff in ActiveBuffs.Keys)
+        {
+            if(ActiveBuffs[buff].Tick()) ActiveBuffs.Remove(buff);
         }
     }
 
-    public void RemoveBuff(BuffType buff, int potency)
+    public void RemoveBuff(BuffType buff)
     {
-        if (!ActiveBuffs.Remove((buff, potency))) return;
-        buff.RemoveEffect(owner, potency);
-        
+        if(!ActiveBuffs.TryGetValue(buff, out AppliedBuff applied)) return;
+        applied.Remove();
     }
 }

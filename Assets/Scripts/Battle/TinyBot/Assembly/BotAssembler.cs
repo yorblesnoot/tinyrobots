@@ -30,7 +30,11 @@ public class BotAssembler : MonoBehaviour
         botStats.MaxAll();
         botUnit.Stats = botStats;
         botUnit.Allegiance = allegiance;
-        if (locomotion == null) locomotion = AddImmobileLocomotion(botUnit);
+        if (locomotion == null)
+        {
+            locomotion = AddImmobileLocomotion(botUnit, out PartModifier stand);
+            spawnedParts.Add(stand);
+        }
         SetBotTallness(locomotion, botUnit.TargetPoint, botUnit);
         RestructureHierarchy(locomotion, botUnit.TargetPoint, botUnit.transform);
         
@@ -88,11 +92,13 @@ public class BotAssembler : MonoBehaviour
         TurnManager.RegisterSummon(summon);
     }
 
-    private static PrimaryMovement AddImmobileLocomotion(TinyBot bot)
+    private static PrimaryMovement AddImmobileLocomotion(TinyBot bot, out PartModifier mod)
     {
         bot.Stats.Max[StatType.MOVEMENT] = 0;
         bot.Stats.Current[StatType.MOVEMENT] = 0;
-        ImmobileMovement movement = Instantiate(instance.suspensionStand).GetComponent<ImmobileMovement>();
+        GameObject stand = Instantiate(instance.suspensionStand);
+        ImmobileMovement movement = stand.GetComponent<ImmobileMovement>();
+        mod = stand.GetComponent<PartModifier>();
         movement.AttachToChassis(bot);
         return movement;
     }

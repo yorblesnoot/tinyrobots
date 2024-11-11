@@ -85,7 +85,7 @@ public class UnitSwitcher : MonoBehaviour
         if(node.Value.BasePart == empty) return;
         PartSlot[] childSlots = slot.SetPartIdentity(node.Value);
         if(childSlots == null || childSlots.Length == 0) return;
-        for(int i = 0; i < childSlots.Length; i++)
+        for(int i = 0; i < childSlots.Length && i < node.Children.Count; i++)
         {
             PlacePartsInSlots(node.Children[i], childSlots[i]);
         }

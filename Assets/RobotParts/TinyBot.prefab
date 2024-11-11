@@ -159,7 +159,6 @@ GameObject:
   - component: {fileID: 2238484769947955775}
   - component: {fileID: 3745691473234048856}
   - component: {fileID: 5015652637622662206}
-  - component: {fileID: 2760829013071689032}
   - component: {fileID: 7285447138792446022}
   m_Layer: 0
   m_Name: TinyBot
@@ -266,27 +265,11 @@ MonoBehaviour:
   ReceivedHit:
     m_PersistentCalls:
       m_Calls: []
-  ChangedHealth:
-    m_PersistentCalls:
-      m_Calls: []
   AbilitiesChanged:
     m_PersistentCalls:
       m_Calls: []
-  Buffs: {fileID: 0}
   LinkedCore: {fileID: 0}
   PrimaryMovement: {fileID: 0}
---- !u!114 &2760829013071689032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9120402016229796176}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 00482a00b55847e4785ba412432ca7c9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!54 &7285447138792446022
 Rigidbody:
   m_ObjectHideFlags: 0

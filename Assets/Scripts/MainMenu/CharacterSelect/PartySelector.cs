@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CharacterSelector : MonoBehaviour
+public class PartySelector : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] int startDifficulty = 1;
@@ -71,7 +71,12 @@ public class CharacterSelector : MonoBehaviour
         foreach (var core in SceneGlobals.PlayerData.CoreInventory)
         {
             core.HealthRatio = 1;
-            core.Bot = SceneGlobals.PlayerData.BotConverter.StringToBot(core.StarterRecord.Record);
+            if(SceneGlobals.PlayerData.DevMode)
+            {
+                core.Initialize();
+                core.Bot = new(core.ModdedCore);
+            }
+            else core.Bot = SceneGlobals.PlayerData.BotConverter.StringToBot(core.StarterRecord.Record);
         }
         SceneGlobals.SceneRelay.GenerateNavMap = true;
         SceneGlobals.PlayerData.PartInventory = new();

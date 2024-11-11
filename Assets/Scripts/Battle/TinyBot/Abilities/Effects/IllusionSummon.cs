@@ -19,6 +19,7 @@ public class IllusionSummon : AbilityEffect
     {
         summon.Stats.Max[StatType.HEALTH] = 1;
         summon.Stats.Current[StatType.HEALTH] = 1;
+        summon.Stats.Max[StatType.ACTION] = Ability.Owner.Stats.Max[StatType.ACTION];
         summon.DamageCalculator.AddFactor(new MultiplierDamage() { Multiplier = Ability.EffectMagnitude / 100f, Outgoing = true });
         foreach (var part in summon.PartModifiers) palette.RecolorPart(part, new Material[] { illusionMaterial });
     }

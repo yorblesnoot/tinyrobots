@@ -51,7 +51,7 @@ public class TinyBot : Targetable
         PartModifiers = parts;
         SetAbilities(abilities);
 
-        Buffs = GetComponent<BuffController>();
+        Buffs = new BuffController(this);
         PrimaryMovement = primaryMovement;
         PrimaryMovement.Owner = this;
         PrimaryCursor.PlayerSelectedBot.AddListener(TryToBecomeActive);

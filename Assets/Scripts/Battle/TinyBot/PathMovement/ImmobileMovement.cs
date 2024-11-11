@@ -55,4 +55,9 @@ public class ImmobileMovement : PrimaryMovement
         HandleImpulse();
         rotatorBase.rotation = gluedRotation;
     }
+
+    protected override void InstantNeutral()
+    {
+        StartCoroutine(NeutralStance());
+    }
 }

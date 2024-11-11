@@ -12,8 +12,8 @@ public class ApplyBuff : AbilityEffect
         {
             TinyBot bot = target as TinyBot;
             if (bot == null) continue;
-            if(apply) bot.Buffs.AddBuff(TODO, buff, Ability.EffectMagnitude);
-            else bot.Buffs.RemoveBuff(buff, Ability.EffectMagnitude);
+            if(apply) bot.Buffs.AddBuff(owner, buff, Ability.EffectMagnitude);
+            else bot.Buffs.RemoveBuff(buff);
         }
         yield break;
     }

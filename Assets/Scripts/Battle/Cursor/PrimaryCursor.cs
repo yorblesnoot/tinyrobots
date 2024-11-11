@@ -37,21 +37,17 @@ public class PrimaryCursor : MonoBehaviour
     [SerializeField] TMP_Text moveCostPreview;
     [SerializeField] Renderer selectBubble;
 
-
-    static TurnResourceCounter StatDisplay;
-
-    public static bool actionInProgress = false;
+    public static bool ActionInProgress = false;
 
     public static UnityEvent<TinyBot> PlayerSelectedBot = new();
     private void Awake()
     {
         RestrictCursor(false);
         Instance = this;
-        actionInProgress = false;
-        TinyBot.ClearActiveBot.AddListener(() => pathingLine.positionCount = 0);
+        ActionInProgress = false;
+        TinyBot.ClearActiveBot.AddListener(InvalidatePath);
         activeBehaviour = cursorBehaviour;
         Transform = transform;
-        StatDisplay = statDisplay;
     }
 
     Vector3Int lastPosition;
@@ -64,9 +60,9 @@ public class PrimaryCursor : MonoBehaviour
         //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
         if (State == CursorState.FREE) activeBehaviour.ControlCursor();
         ToggleInvalidIndicator();
-        if (actionInProgress) 
+        if (ActionInProgress) 
         {
-            HideMovePreview();
+            InvalidatePath();
             return; 
         }
         
@@ -83,7 +79,7 @@ public class PrimaryCursor : MonoBehaviour
         }
         else
         {
-            HideMovePreview();
+            InvalidatePath();
         }
 
     }
@@ -125,7 +121,7 @@ public class PrimaryCursor : MonoBehaviour
             && skill.cost <= PlayerControlledBot.Stats.Current[StatType.ACTION])
             {
                 PlayerControlledBot.SpendResource(skill.cost, StatType.ACTION);
-                StatDisplay.SyncStatDisplay(PlayerControlledBot);
+                Instance.statDisplay.SyncStatDisplay(PlayerControlledBot);
 
                 StartCoroutine(UseSkill(skill));
                 ClickableAbility.EndUsableAbilityState();
@@ -134,7 +130,7 @@ public class PrimaryCursor : MonoBehaviour
         else if (TargetedBot != null && TargetedBot.Allegiance == Allegiance.PLAYER)
         {
             SelectBot(TargetedBot);
-            HideMovePreview();
+            InvalidatePath();
             Unsnap();
         }
         //traverse a confirmed path
@@ -148,7 +144,7 @@ public class PrimaryCursor : MonoBehaviour
 
     IEnumerator UseSkill(ActiveAbility ability)
     {
-        currentPath = null;
+        InvalidatePath();
         yield return StartCoroutine(ability.Execute());
         ClickableAbility.PlayerUsedAbility?.Invoke();
     }
@@ -209,8 +205,9 @@ public class PrimaryCursor : MonoBehaviour
         return output;
     }
 
-    void HideMovePreview()
+    void InvalidatePath()
     {
+        currentPath = null;
         numRotator.SetActive(false);
         pathingLine.positionCount = 0;
         redLine.positionCount = 0;
@@ -218,11 +215,11 @@ public class PrimaryCursor : MonoBehaviour
 
     private IEnumerator TraversePath()
     {
-        actionInProgress = true;
+        ActionInProgress = true;
         yield return StartCoroutine(PlayerControlledBot.PrimaryMovement.TraversePath(currentPath));
-        currentPath = null;
+        InvalidatePath();
         Pathfinder3D.GeneratePathingTree(PlayerControlledBot.PrimaryMovement.Style, PlayerControlledBot.transform.position);
-        actionInProgress = false;
+        ActionInProgress = false;
     }
 
     public static void SelectBot(TinyBot bot)

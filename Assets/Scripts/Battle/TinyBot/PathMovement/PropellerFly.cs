@@ -58,4 +58,6 @@ public class PropellerFly : PrimaryMovement
 
         return !Physics.Raycast(path[pathIndex], direction, distance, sanitizeMask);
     }
+
+    protected override void InstantNeutral() { }
 }

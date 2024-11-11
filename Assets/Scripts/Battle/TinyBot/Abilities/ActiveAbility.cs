@@ -62,7 +62,7 @@ public class ActiveAbility : Ability
         Vector3Int startPosition = Vector3Int.RoundToInt(rawPosition);
         MainCameraControl.ActionPanTo(GetCameraAimPoint());
         CurrentCooldown = SceneGlobals.PlayerData.DevMode ? 0 : cooldown;
-        PrimaryCursor.actionInProgress = true;
+        PrimaryCursor.ActionInProgress = true;
         yield return new WaitForSeconds(skillDelay);
         ReleaseLockOn();
         
@@ -70,7 +70,7 @@ public class ActiveAbility : Ability
 
         CurrentTargets = new();
         ScheduleAbilityEnd();
-        PrimaryCursor.actionInProgress = false;
+        PrimaryCursor.ActionInProgress = false;
         if (Vector3Int.RoundToInt(Owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(Owner.MoveStyle, Owner.transform.position);
     }
 

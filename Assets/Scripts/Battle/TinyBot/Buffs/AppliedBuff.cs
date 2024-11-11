@@ -1,39 +1,51 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class AppliedBuff 
+public class AppliedBuff
 {
     public BuffType Buff;
     public int Potency;
     public TinyBot Source;
-    int MaxDuration;
-    int ElapsedDuration = 0;
+    public TinyBot Target;
+    public int Stacks { get { return stackData.Count; } }
+    int maxDuration;
+    int elapsedDuration = 0;
+    List<object> stackData;
 
 
-    public AppliedBuff(BuffType buff, int potency, TinyBot source, int duration)
+    public AppliedBuff(BuffType buff, TinyBot target, TinyBot source, int potency)
     {
         Buff = buff;
         Potency = potency;
         Source = source;
-        MaxDuration = duration;
-    }
-    
-    public void Apply(TinyBot target)
-    {
-        Buff.ApplyEffect(target, Source, Potency);
+        //maxDuration = duration;
+        Target = target;
+        elapsedDuration = 0;
+        stackData = new();
     }
 
-    public void Remove(TinyBot target)
+    public void ApplyStack()
     {
-        Buff.RemoveEffect(target, Potency);
+        elapsedDuration = 0;
+        object stack = Buff.ApplyEffect(Target, Source, Potency);
+        stackData.Add(stack);
     }
 
-    public bool CheckBuffIsExpired()
+    public void Remove()
     {
-        if (MaxDuration == 0) return false;
-        ElapsedDuration++;
-        if(ElapsedDuration > MaxDuration) return true;
+        foreach(var stack in stackData) Buff.RemoveEffect(Target, Potency, stack);
+    }
+
+    public bool Tick()
+    {
+        if (maxDuration == 0) return false;
+        elapsedDuration++;
+        Buff.TickEffect();
+        if (elapsedDuration > maxDuration)
+        {
+            Remove();
+            return true;
+        }
         return false;
     }
 }

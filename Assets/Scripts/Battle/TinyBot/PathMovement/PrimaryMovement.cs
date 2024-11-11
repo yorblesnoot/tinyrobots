@@ -80,10 +80,7 @@ public abstract class PrimaryMovement : MonoBehaviour
         InstantNeutral();
     }
 
-    protected virtual void InstantNeutral()
-    {
-
-    }
+    protected abstract void InstantNeutral();
     protected Vector3 GetCenterColumn()
     {
         return new(Pathfinder3D.XSize / 2, Owner.transform.position.y, Pathfinder3D.ZSize / 2);
