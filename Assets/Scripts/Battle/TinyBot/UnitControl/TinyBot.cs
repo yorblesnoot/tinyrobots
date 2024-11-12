@@ -42,8 +42,12 @@ public class TinyBot : Targetable
     public List<ActiveAbility> ActiveAbilities { get; private set; }
     public List<PassiveAbility> PassiveAbilities { get; private set;}
 
-    public DamageCalculator DamageCalculator;
-    
+    [HideInInspector] public DamageCalculator DamageCalculator;
+
+    private void Awake()
+    {
+        DamageCalculator = GetComponent<DamageCalculator>();
+    }
     public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement)
     {
         PartRenderers = GetComponentsInChildren<Renderer>();

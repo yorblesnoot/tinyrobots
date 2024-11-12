@@ -77,7 +77,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
   apply: 1
-  buff: {fileID: 11400000, guid: 3ca830aa8efc0f947811e3c04bd365b7, type: 2}
+  buff: {fileID: 11400000, guid: b58df2caf8f98a04d8d1606b33a5c6b1, type: 2}
 --- !u!1 &1143306888890696283
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,17 +137,17 @@ MonoBehaviour:
   emissionPoint: {fileID: 0}
   triggers:
   - activationCondition: 0
+    alwaysTargetSelf: 0
+    activationLimit: 0
+    procResetCondition: 0
     OutputEffect:
     - {fileID: 2256102057186688393}
+  - activationCondition: 1
     alwaysTargetSelf: 0
     activationLimit: 0
     procResetCondition: 0
-  - activationCondition: 1
     OutputEffect:
     - {fileID: 8701674799261509466}
-    alwaysTargetSelf: 0
-    activationLimit: 0
-    procResetCondition: 0
   targeter: {fileID: 604787091509839435}
   particleVisual: {fileID: 0}
   validTarget: 1
