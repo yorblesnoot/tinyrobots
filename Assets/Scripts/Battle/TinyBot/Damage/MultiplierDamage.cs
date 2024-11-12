@@ -1,14 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
+[CreateAssetMenu(fileName = "MultiplierDamage", menuName = "ScriptableObjects/DamageFactors/Multiplier")]
 public class MultiplierDamage : DamageFactor
 {
-    public override int Priority => 0;
-    public float Multiplier;
 
-    public override float UseFactor(float incoming, TinyBot source, TinyBot target)
+    public override float UseFactor(float incoming, TinyBot source, TinyBot target, int potency, object data = null)
     {
-        return Multiplier * incoming;
+        return incoming * potency/100;
     }
 }

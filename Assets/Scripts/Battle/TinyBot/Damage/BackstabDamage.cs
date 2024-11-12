@@ -2,13 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "BackstabDamage", menuName = "ScriptableObjects/DamageFactors/Backstab")]
 public class BackstabDamage : DamageFactor
 {
-    readonly float backstabMultiplier = 1.5f;
+    [SerializeField] float backstabMultiplier = 1.5f;
 
-    public override int Priority => 0;
-
-    public override float UseFactor(float incoming, TinyBot source, TinyBot target)
+    public override float UseFactor(float incoming, TinyBot source, TinyBot target, int potency, object data = null)
     {
         if (source == null) return incoming;
         Vector3 hitDirection = (source.TargetPoint.position - target.TargetPoint.position).normalized;

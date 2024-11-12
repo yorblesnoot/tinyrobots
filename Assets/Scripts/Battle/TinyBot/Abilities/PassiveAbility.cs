@@ -5,7 +5,7 @@ using UnityEngine;
 public class PassiveAbility : Ability
 {
     public override bool IsActive => false;
-    [SerializeField] List<TriggerController> triggers;
+    [SerializeField] List<EffectTrigger> triggers;
 
     [SerializeField] SpatialSensor targeter;
     [SerializeField] ParticleSystem particleVisual;

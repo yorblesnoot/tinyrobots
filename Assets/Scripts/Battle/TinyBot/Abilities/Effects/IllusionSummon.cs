@@ -1,13 +1,12 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class IllusionSummon : AbilityEffect
 {
     [SerializeField] Material illusionMaterial;
     [SerializeField] BotPalette palette;
+    [SerializeField] MultiplierDamage multiplier;
 
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
@@ -20,7 +19,7 @@ public class IllusionSummon : AbilityEffect
         summon.Stats.Max[StatType.HEALTH] = 1;
         summon.Stats.Current[StatType.HEALTH] = 1;
         summon.Stats.Max[StatType.ACTION] = Ability.Owner.Stats.Max[StatType.ACTION];
-        summon.DamageCalculator.AddFactor(new MultiplierDamage() { Multiplier = Ability.EffectMagnitude / 100f, Outgoing = true });
+        summon.Buffs.AddBuff(Ability.Owner, multiplier, Ability.EffectMagnitude);
         foreach (var part in summon.PartModifiers) palette.RecolorPart(part, new Material[] { illusionMaterial });
     }
 

@@ -42,7 +42,7 @@ public class TinyBot : Targetable
     public List<ActiveAbility> ActiveAbilities { get; private set; }
     public List<PassiveAbility> PassiveAbilities { get; private set;}
 
-    public DamageCalculator DamageCalculator = new();
+    public DamageCalculator DamageCalculator;
     
     public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement)
     {

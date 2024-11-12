@@ -3,40 +3,41 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class DamageCalculator 
+public class DamageCalculator : MonoBehaviour
 {
-    List<DamageFactor> factors;
+    [SerializeField] List<DamageFactor> baseFactors;
+    Dictionary<DamageFactor, AppliedDamageFactor> appliedFactors;
 
-    public DamageCalculator()
+    private void Awake()
     {
-        factors = new() { new BackstabDamage(), new ArmorDamage() };
+        appliedFactors = baseFactors.ToDictionary(f => f, f => new AppliedDamageFactor(f, 0));
     }
-    public void AddFactor(DamageFactor factor)
+
+    public void AddFactor(AppliedDamageFactor applied)
     {
-        factors.Add(factor);
+        appliedFactors.Add(applied.Factor, applied);
     }
 
     public void RemoveFactor(DamageFactor factor)
     {
-        factors.Remove(factor);
+        appliedFactors.Remove(factor);
     }
 
-    List<DamageFactor> GetCombinedFactors(TinyBot source)
+    List<AppliedDamageFactor> GetCombinedFactors(TinyBot source)
     {
-        List<DamageFactor> finalFactors = new();
-        finalFactors.AddRange(factors.Where(f => !f.Outgoing));
-        finalFactors.AddRange(source.DamageCalculator.factors.Where(f => f.Outgoing));
-        return finalFactors.OrderBy(f => f.Priority).ToList();
+        List<AppliedDamageFactor> finalFactors = new();
+        finalFactors.AddRange(appliedFactors.Values.Where(f => !f.Factor.Outgoing));
+        finalFactors.AddRange(source.DamageCalculator.appliedFactors.Values.Where(f => f.Factor.Outgoing));
+        return finalFactors.OrderBy(f => f.Factor.Priority).ToList();
     }
 
     public int GetDamage(int baseDamage, TinyBot source, TinyBot target, bool consume = false)
     {
-        List<DamageFactor> finalFactors = GetCombinedFactors(source);
+        List<AppliedDamageFactor> finalFactors = GetCombinedFactors(source);
         float currentDamage = baseDamage;
         foreach (var fact in finalFactors)
         {
             currentDamage = fact.UseFactor(currentDamage, source, target);
-            if (consume) fact.RemainingUses--;
         }
         return Mathf.RoundToInt(currentDamage);
     }
