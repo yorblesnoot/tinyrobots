@@ -7,10 +7,12 @@ public class DamageCalculator : MonoBehaviour
 {
     [SerializeField] List<DamageFactor> baseFactors;
     Dictionary<DamageFactor, AppliedDamageFactor> appliedFactors;
+    TinyBot owner;
 
     private void Awake()
     {
         appliedFactors = baseFactors.ToDictionary(f => f, f => new AppliedDamageFactor(f, 0));
+        owner = gameObject.GetComponent<TinyBot>();
     }
 
     public void AddFactor(AppliedDamageFactor applied)
@@ -37,8 +39,25 @@ public class DamageCalculator : MonoBehaviour
         float currentDamage = baseDamage;
         foreach (var fact in finalFactors)
         {
+            if (consume) fact.Uses++;
             currentDamage = fact.UseFactor(currentDamage, source, target);
         }
+        RemoveExpiredFactors(source.DamageCalculator);
+        RemoveExpiredFactors(target.DamageCalculator);
         return Mathf.RoundToInt(currentDamage);
     }
+
+    void RemoveExpiredFactors(DamageCalculator calculator)
+    {
+        List<AppliedDamageFactor> factors = calculator.appliedFactors.Values.ToList();
+        foreach (var applied in factors)
+        {
+            DamageFactor factor = applied.Factor;
+            if(factor.UseLimit > 0 && applied.Uses > factor.UseLimit)
+            {
+                calculator.owner.Buffs.RemoveBuff(factor);
+            }
+        }
+    }
+
 }

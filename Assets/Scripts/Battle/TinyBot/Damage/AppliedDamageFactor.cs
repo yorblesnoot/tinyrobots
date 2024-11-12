@@ -6,6 +6,7 @@ public class AppliedDamageFactor
 {
     //this class wraps a damage factor SO and stores data relevant to a specific instance attached to a unit
     public DamageFactor Factor;
+    public int Uses;
     object factorData;
     int potency;
     public AppliedDamageFactor(DamageFactor factor, int potency, object data = null)
@@ -17,6 +18,8 @@ public class AppliedDamageFactor
 
     public float UseFactor(float incoming, TinyBot source, TinyBot target)
     {
-        return Factor.UseFactor(incoming, source, target, potency, factorData);
+        float output = Factor.UseFactor(incoming, source, target, potency, factorData);
+        if(output != incoming) Uses++;
+        return output;
     }
 }

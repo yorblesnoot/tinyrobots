@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class AppliedBuff
 {
@@ -10,6 +11,7 @@ public class AppliedBuff
     public int Stacks;
     int maxDuration;
     int elapsedDuration = 0;
+    GameObject spawnedFX;
 
 
     public AppliedBuff(BuffType buff, TinyBot target, TinyBot source, int potency)
@@ -27,6 +29,11 @@ public class AppliedBuff
         elapsedDuration = 0;
         Buff.ApplyEffect(Target, Source, Potency);
         if (Buff.Triggers != null) foreach (BuffTrigger trigger in Buff.Triggers) trigger.ApplyTo(Target);
+        if(Stacks == 0 && Buff.FX != null)
+        {
+            spawnedFX = GameObject.Instantiate(Buff.FX);
+            spawnedFX.transform.SetParent(Target.TargetPoint, false);
+        }
         Stacks++;
     }
 
@@ -34,6 +41,7 @@ public class AppliedBuff
     {
         for(int i = 0; i < Stacks; i++) Buff.RemoveEffect(Target, Potency);
         if(Buff.Triggers != null) foreach (BuffTrigger trigger in Buff.Triggers) trigger.RemoveFrom(Target);
+        if(spawnedFX != null) GameObject.Destroy(spawnedFX);
     }
 
     public bool Tick()
