@@ -200,7 +200,7 @@ public class PrimaryCursor : MonoBehaviour
         List<float> output = new() { 0 };
         for(int i = 1; i < points.Count; i++)
         {
-            output.Add(Vector3.Distance(points[i-1], points[i]));
+            output.Add(output[^1] + Vector3.Distance(points[i-1], points[i]));
         }
         return output;
     }

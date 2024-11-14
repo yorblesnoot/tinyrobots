@@ -90,6 +90,7 @@ public class BotAssembler : MonoBehaviour
         summon.PrimaryMovement.SpawnOrientation();
         botConditioning?.Invoke(summon);
         TurnManager.RegisterSummon(summon);
+        Pathfinder3D.EvaluateNodeOccupancy(TurnManager.GetActiveUnit().transform.position);
     }
 
     private static PrimaryMovement AddImmobileLocomotion(TinyBot bot, out PartModifier mod)

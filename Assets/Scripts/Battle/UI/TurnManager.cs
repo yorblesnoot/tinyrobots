@@ -48,12 +48,19 @@ public class TurnManager : MonoBehaviour
         else TurnTakers.Add(bot);
     }
 
+    public static TinyBot GetActiveUnit()
+    {
+        if (currentlyActive.Count == 1) return currentlyActive[0];
+        else return UnitControl.PlayerControlledBot;
+    }
+
     public static void RegisterSummon(TinyBot bot)
     {
         AddTurnTaker(bot, activeIndex);
         summoned.Add(bot);
         if (bot.Allegiance == Allegiance.PLAYER)
         {
+            activeIndex++;
             currentlyActive.Add(bot);
             bot.BeginTurn();
         }

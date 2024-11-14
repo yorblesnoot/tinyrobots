@@ -283,6 +283,10 @@ public static class Pathfinder3D
     #region Occupancy
     static List<Vector3Int> lastOccupied = new();
     public static UnityEvent<Vector3[]> GetOccupancy = new();
+    /// <summary>
+    /// Causes all active units to evaluate their current occupancy except for the unit at position, blocking pathfinding around those units.
+    /// </summary>
+    /// <param name="position"></param>
     public static void EvaluateNodeOccupancy(params Vector3[] position)
     {
         ClearOccupancy();
