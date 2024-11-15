@@ -16,16 +16,18 @@ public class ActiveAbility : Ability
 
     
     public AbilityType Type;
+    public bool EndTurn = false;
     [SerializeField] TargetRequirement targetRequirement;
-    protected bool PlayerTargeting;
-    protected List<Vector3> CurrentTrajectory;
-    protected List<Targetable> CurrentTargets = new();    
+      
     
     [SerializeField] ToggleAnimation trackingToggle;
 
     [SerializeField] AbilityEffect[] abilityEffects;
     [SerializeField] AbilityEffect[] endEffects;
 
+    protected bool PlayerTargeting;
+    protected List<Vector3> CurrentTrajectory;
+    protected List<Targetable> CurrentTargets = new();
     protected TargetPoint TargetType;
     protected Trajectory TrajectoryDefinition;
     protected bool TrajectoryCollided;
@@ -72,6 +74,7 @@ public class ActiveAbility : Ability
         ScheduleAbilityEnd();
         PrimaryCursor.ActionInProgress = false;
         if (Vector3Int.RoundToInt(Owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(Owner.MoveStyle, Owner.transform.position);
+        
     }
 
     public virtual void EndAbility()

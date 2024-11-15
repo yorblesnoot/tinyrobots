@@ -146,7 +146,9 @@ public class PrimaryCursor : MonoBehaviour
     {
         InvalidatePath();
         yield return StartCoroutine(ability.Execute());
+        if (ability.EndTurn) TurnManager.EndTurn(PlayerControlledBot);
         ClickableAbility.PlayerUsedAbility?.Invoke();
+        
     }
 
     void ProcessAndPreviewPath(List<Vector3> possiblePath)

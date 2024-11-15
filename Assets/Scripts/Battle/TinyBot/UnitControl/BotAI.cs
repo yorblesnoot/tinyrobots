@@ -191,6 +191,11 @@ public class BotAI
         thisBot.SpendResource(ability.cost, StatType.ACTION);
         yield return thisBot.StartCoroutine(ability.Execute());
         yield return new WaitForSeconds(lockTime);
+        if (ability.EndTurn)
+        {
+            TurnManager.EndTurn(thisBot);
+            thisBot.StopAllCoroutines();
+        }
     }
     #endregion
 

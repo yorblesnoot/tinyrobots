@@ -34,21 +34,26 @@ public class UnitControl : MonoBehaviour
         unitPortrait.sprite = bot.Portrait;
         healthOverlay.UpdateHealth(bot);
         bot.AbilitiesChanged.AddListener(VisualizeAbilityList);
+        bot.EndedTurn.AddListener(EndControl);
     }
 
     void ReleaseBot()
     {
         if (PlayerControlledBot == null) return;
         PlayerControlledBot.AbilitiesChanged.RemoveListener(VisualizeAbilityList);
+        PlayerControlledBot.EndedTurn.RemoveListener(EndControl);
     }
 
     void EndPlayerTurn()
     {
         if (PrimaryCursor.ActionInProgress) return;
-        gameObject.SetActive(false);
         TurnManager.EndTurn(PlayerControlledBot);
+    }
+
+    void EndControl()
+    {
+        gameObject.SetActive(false);
         ClickableAbility.EndUsableAbilityState();
-        
     }
 
     void VisualizeAbilityList()

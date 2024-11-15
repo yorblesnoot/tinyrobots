@@ -2,7 +2,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "MultiplierDamage", menuName = "ScriptableObjects/DamageFactors/Multiplier")]
 public class MultiplierDamage : DamageFactor
 {
-    bool universal = true;
+    [SerializeField] bool universal = true;
     public override AppliedDamageFactor GetCustomFactor(TinyBot target, TinyBot source, int potency)
     {
         return new(this, potency, source);

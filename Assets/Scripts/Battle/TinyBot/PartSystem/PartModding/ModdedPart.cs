@@ -107,7 +107,7 @@ public class ModdedPart
         foreach(var mod in removeMods) Mods.Remove(mod);
     }
 
-    void ApplyMod(Ability ability, KeyValuePair<ModType, int> mod)
+    public static void ApplyMod(Ability ability, KeyValuePair<ModType, int> mod)
     {
         if (mod.Key == ModType.RANGE && ability.ModifiableRange) ability.range += mod.Value;
         else if (mod.Key == ModType.COOLDOWN)

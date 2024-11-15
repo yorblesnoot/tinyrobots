@@ -12,7 +12,7 @@ public enum SlotType
     ALL
 }
 
-[CreateAssetMenu(fileName = "CraftPart", menuName = "ScriptableObjects/CraftPart")]
+[CreateAssetMenu(fileName = "CraftPart", menuName = "ScriptableObjects/CraftablePart")]
 public class CraftablePart : SOWithGUID
 {
     public StatValue[] PartStats;
