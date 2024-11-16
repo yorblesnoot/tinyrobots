@@ -34,7 +34,6 @@ public class GraftAura : PassiveAbility
         
         foreach(var ability in target.Abilities)
         {
-            ability.Initialize(Owner);
             Owner.AddAbility(ability);
         }
     }

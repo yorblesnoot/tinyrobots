@@ -44,18 +44,16 @@ public class TinyBot : Targetable
 
     [HideInInspector] public DamageCalculator DamageCalculator;
 
-    private void Awake()
-    {
-        DamageCalculator = GetComponent<DamageCalculator>();
-    }
     public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement)
     {
+        DamageCalculator = GetComponent<DamageCalculator>();
+        Buffs = new BuffController(this);
         PartRenderers = GetComponentsInChildren<Renderer>();
         PhysicsBody = GetComponent<Rigidbody>();
         PartModifiers = parts;
         SetAbilities(abilities);
 
-        Buffs = new BuffController(this);
+        
         PrimaryMovement = primaryMovement;
         PrimaryMovement.Owner = this;
         PrimaryCursor.PlayerSelectedBot.AddListener(TryToBecomeActive);
@@ -74,6 +72,7 @@ public class TinyBot : Targetable
 
     public void AddAbility(Ability ability)
     {
+        ability.Initialize(this);
         ActiveAbility active = ability as ActiveAbility;
         if (active != null) ActiveAbilities.Add(active);
         else PassiveAbilities.Add(ability as PassiveAbility);

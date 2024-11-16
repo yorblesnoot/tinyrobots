@@ -25,9 +25,10 @@ public class TurnManager : MonoBehaviour
     static List<TinyBot> currentlyActive;
     static HashSet<TinyBot> summoned;
 
-    public static UnityEvent RoundEnded = new();
+    public static UnityEvent RoundEnded;
     private void Awake()
     {
+        RoundEnded = new();
         summoned = new();
         TurnTakers = new();
         activeIndex = 0;
@@ -46,12 +47,6 @@ public class TurnManager : MonoBehaviour
         portraitStock.RemoveAt(0);
         if(index > 0) TurnTakers.Insert(index, bot);
         else TurnTakers.Add(bot);
-    }
-
-    public static TinyBot GetActiveUnit()
-    {
-        if (currentlyActive.Count == 1) return currentlyActive[0];
-        else return UnitControl.PlayerControlledBot;
     }
 
     public static void RegisterSummon(TinyBot bot)

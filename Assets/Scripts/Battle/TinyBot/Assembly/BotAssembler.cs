@@ -90,7 +90,7 @@ public class BotAssembler : MonoBehaviour
         summon.PrimaryMovement.SpawnOrientation();
         botConditioning?.Invoke(summon);
         TurnManager.RegisterSummon(summon);
-        Pathfinder3D.EvaluateNodeOccupancy(TurnManager.GetActiveUnit().transform.position);
+        Pathfinder3D.EvaluateNodeOccupancy(owner.transform.position);
     }
 
     private static PrimaryMovement AddImmobileLocomotion(TinyBot bot, out PartModifier mod)
@@ -128,7 +128,6 @@ public class BotAssembler : MonoBehaviour
             foreach (var ability in partAbilities)
             {
                 if (ability is ISubTreeConsumer consumer) consumer.SubTrees = part.SubTrees;
-                ability.Initialize(botUnit);
             }
             abilities.AddRange(partAbilities);
         }
