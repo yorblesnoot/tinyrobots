@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Unity.VisualScripting.Member;
 
 public class ExplodeDamage : AbilityEffect
 {
     [SerializeField] GameObject explodeVfx;
     [SerializeField] float damageDelay = .3f;
+    public override string Description => " Damage";
 
     int terrainMask;
     private void Awake()
@@ -25,7 +25,7 @@ public class ExplodeDamage : AbilityEffect
             Vector3 direction = target.TargetPoint.position - explosionPosition;
             float distance = direction.magnitude;
             if (Physics.Raycast(explosionPosition, direction, distance, terrainMask)) continue;
-            target.ReceiveHit(Ability.EffectMagnitude, owner, target.TargetPoint.position);
+            target.ReceiveHit(FinalEffectiveness, owner, target.TargetPoint.position);
         }
     }
 }

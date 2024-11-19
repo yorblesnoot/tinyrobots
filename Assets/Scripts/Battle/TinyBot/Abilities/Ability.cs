@@ -7,11 +7,10 @@ public abstract class Ability : MonoBehaviour
     public float range;
     public bool ModifiableRange = false;
     public int cooldown = 1;
-    [FormerlySerializedAs("damage")] public int EffectMagnitude;
+    [HideInInspector] public float EffectivenessMultiplier = 1;
     public int cost;
     public Sprite icon;
-    public string EffectDescription = " Damage";
-    protected DurationModule durationModule;
+    protected DurationModule DurationModule;
 
     [HideInInspector] public int CurrentCooldown;
     [HideInInspector] public TinyBot Owner;
@@ -25,6 +24,8 @@ public abstract class Ability : MonoBehaviour
         Owner = botUnit;
         Owner.BeganTurn.AddListener(LapseCooldown);
     }
+
+    public abstract bool IsScalable();
 
     public abstract bool IsActive { get; }
 

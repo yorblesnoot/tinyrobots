@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class DealDamage : AbilityEffect
 {
+    public override string Description => " Damage";
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
         foreach (Targetable target in targets)
         {
-            target.ReceiveHit(Ability.EffectMagnitude, owner, target.TargetPoint.position);
+            target.ReceiveHit(FinalEffectiveness, owner, target.TargetPoint.position);
         }
         yield break;
     }

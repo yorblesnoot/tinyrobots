@@ -6,7 +6,8 @@ public class HookPull : HookAbility
 {
     [SerializeField] float dropDistance = 1;
     [SerializeField] float pullDelay = .5f;
-    
+    public override string Description => " Damage";
+
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> currentTargets)
     {
         line.positionCount = 2;
@@ -27,7 +28,7 @@ public class HookPull : HookAbility
 
         if (target != null)
         {
-            target.ReceiveHit(Ability.EffectMagnitude, owner, trajectory[^1]);
+            target.ReceiveHit(FinalEffectiveness, owner, trajectory[^1]);
             if (target.IsDead) target = null;
             else
             {

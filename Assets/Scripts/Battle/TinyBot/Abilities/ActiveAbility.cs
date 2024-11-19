@@ -36,7 +36,7 @@ public class ActiveAbility : Ability
 
     readonly float skillDelay = .5f;
     HashSet<System.Object> prohibitionSources = new();
-
+    
     [HideInInspector] public bool Locked { get { return prohibitionSources.Count > 0; } }
 
     public float TotalRange { get { return range + TargetType.TargetRadius; } }
@@ -46,7 +46,7 @@ public class ActiveAbility : Ability
         foreach (var effect in abilityEffects) effect.Initialize(this);
         foreach (var effect in endEffects) effect.Initialize(this);
 
-        durationModule = GetComponent<DurationModule>();
+        DurationModule = GetComponent<DurationModule>();
         TrajectoryDefinition = TryGetComponent(out Trajectory trajectory) ? trajectory : gameObject.AddComponent<NoTrajectory>();
         TargetType = TryGetComponent(out TargetPoint point) ? point : gameObject.AddComponent<ImpactTarget>();
         trackingAnimation = GetComponent<TrackingAnimation>();
@@ -81,7 +81,7 @@ public class ActiveAbility : Ability
     {
         LineMaker.HideLine();
         TargetType.EndTargeting();
-        if(durationModule != null) durationModule.ClearCallback();
+        if(DurationModule != null) DurationModule.ClearCallback();
         if(trackingAnimation != null) trackingAnimation.ResetTracking();
         foreach(var effect in endEffects)
             StartCoroutine(effect.PerformEffect(Owner, null, null));
@@ -132,8 +132,8 @@ public class ActiveAbility : Ability
     }
     void ScheduleAbilityEnd()
     {
-        if (durationModule == null) EndAbility();
-        else durationModule.SetDuration(Owner, EndAbility);
+        if (DurationModule == null) EndAbility();
+        else DurationModule.SetDuration(Owner, EndAbility);
     }
 
     public virtual bool IsUsable()
@@ -210,6 +210,15 @@ public class ActiveAbility : Ability
     {
         if(prohibit) prohibitionSources.Add(source);
         else prohibitionSources.Remove(source);
+    }
+
+    public override bool IsScalable()
+    {
+        foreach(var effect in abilityEffects)
+        {
+            if(effect.BaseEffectMagnitude > 0) return true;
+        }
+        return false;
     }
 }
 

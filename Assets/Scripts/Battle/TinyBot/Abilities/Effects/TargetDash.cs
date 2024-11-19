@@ -7,16 +7,6 @@ public class TargetDash : AbilityEffect
 {
     [SerializeField] float intervalTime = .2f;
 
-    /*public override bool IsUsable(Vector3 targetPosition)
-    {
-        if (Pathfinder3D.GetLandingPointBy(CurrentTrajectory[^1], Owner.MoveStyle, out Vector3Int nodeTarget))
-        {
-            CurrentTrajectory[^1] = nodeTarget;
-            return true;
-        }
-        return false;
-    }*/
-
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
         bool landingPoint = Pathfinder3D.GetLandingPointBy(trajectory[^1], owner.MoveStyle, out Vector3Int target);

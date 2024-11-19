@@ -11,7 +11,7 @@ public class StatModifier : AbilityEffect
         PERCENTCURRENT,
         PERCENTMISSING
     }
-
+    public override string Description => GetLineDescription(statType, mode);
 
     [SerializeField] StatType statType;
     [SerializeField] BonusMode mode;
@@ -31,12 +31,23 @@ public class StatModifier : AbilityEffect
 
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
-        ModifyStat(owner, Ability.EffectMagnitude, statType, mode);
+        ModifyStat(owner, FinalEffectiveness, statType, mode);
         yield break;
     }
 
     public static void ModifyStat(TinyBot target, int amount, StatType stat, BonusMode mode)
     {
         target.Stats.Current[stat] += GetFinalBonus(amount, mode, target, stat);
+    }
+
+    public static string GetLineDescription(StatType stat, BonusMode mode)
+    {
+        return mode switch
+        {
+            BonusMode.PERCENTMAX => $"% of Max {stat}",
+            BonusMode.PERCENTCURRENT => $"% of Current {stat}",
+            BonusMode.PERCENTMISSING => $"% of Missing {stat}",
+            _ => $" {stat}"
+        };
     }
 }

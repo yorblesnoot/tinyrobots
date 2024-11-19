@@ -6,6 +6,7 @@ public class StatBuff : BuffType
 {
     [SerializeField] StatType statType;
     [SerializeField] BonusMode mode;
+    public override string LineDescription => GetLineDescription(statType, mode);
 
     public override void ApplyEffect(TinyBot bot, TinyBot source, int potency)
     {

@@ -8,6 +8,8 @@ public class IllusionSummon : AbilityEffect
     [SerializeField] BotPalette palette;
     [SerializeField] MultiplierDamage multiplier;
 
+    public override string Description => " % Damage Dealt";
+
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
         BotAssembler.SummonBot(owner.LinkedCore.Bot.Children[0], owner, trajectory[^1], ConditionBot);
@@ -19,7 +21,7 @@ public class IllusionSummon : AbilityEffect
         summon.Stats.Max[StatType.HEALTH] = 1;
         summon.Stats.Current[StatType.HEALTH] = 1;
         summon.Stats.Max[StatType.ACTION] = Ability.Owner.Stats.Max[StatType.ACTION];
-        summon.Buffs.AddBuff(Ability.Owner, multiplier, Ability.EffectMagnitude);
+        summon.Buffs.AddBuff(Ability.Owner, multiplier, Mathf.RoundToInt(Ability.EffectivenessMultiplier * BaseEffectMagnitude));
         foreach (var part in summon.PartModifiers) palette.RecolorPart(part, new Material[] { illusionMaterial });
     }
 

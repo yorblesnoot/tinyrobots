@@ -92,7 +92,7 @@ public class PartGenerator : MonoBehaviour
     bool ModCanApply(Ability ability, ModValue mod)
     {
         if (mod.Type == ModType.RANGE && ability.ModifiableRange) return true;
-        else if (mod.Type == ModType.POTENCY && ability.EffectMagnitude > 0) return true;
+        else if (mod.Type == ModType.POTENCY && ability.IsScalable()) return true;
         else if (ability.IsActive && mod.Type == ModType.COOLDOWN && ability.cooldown + mod.Value > 0) return true;
         else if (ability.IsActive && mod.Type == ModType.COST && ability.cost + mod.Value >= 0) return true;
         return false;

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PassiveAbility : Ability
 {
@@ -51,5 +52,14 @@ public class PassiveAbility : Ability
             if (apply) applier.ApplyTo(bot);
             else applier.RemoveFrom(bot);
         }
+    }
+
+    public override bool IsScalable()
+    {
+        foreach (var applier in triggers)
+        {
+            if(applier.IsScalable()) return true;
+        }
+        return false;
     }
 }

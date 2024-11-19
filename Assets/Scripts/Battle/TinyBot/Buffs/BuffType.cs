@@ -10,6 +10,7 @@ public abstract class BuffType : ScriptableObject
     public GameObject FX;
     public List<BuffTrigger> Triggers;
     [TextArea(3, 10)] public string Description;
+    public virtual string LineDescription => "";
     public abstract void ApplyEffect(TinyBot target, TinyBot source, int potency);
 
     public abstract void RemoveEffect(TinyBot target, int potency);

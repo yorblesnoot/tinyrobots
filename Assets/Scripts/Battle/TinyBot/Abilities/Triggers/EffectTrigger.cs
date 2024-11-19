@@ -18,4 +18,13 @@ public class EffectTrigger : TriggerController
         foreach (var effect in OutputEffect)
             Owner.StartCoroutine(effect.PerformEffect(Owner, null, new() { alwaysTargetSelf ? Owner : target }));
     }
+
+    public bool IsScalable()
+    {
+        foreach(var effect in OutputEffect)
+        {
+            if(effect.BaseEffectMagnitude > 0) return true;
+        }
+        return false;
+    }
 }

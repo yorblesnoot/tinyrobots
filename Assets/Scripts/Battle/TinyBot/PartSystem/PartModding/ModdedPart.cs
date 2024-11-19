@@ -117,9 +117,7 @@ public class ModdedPart
         }
         else if (mod.Key == ModType.POTENCY)
         {
-            float finalDamage = ability.EffectMagnitude;
-            finalDamage *= 1 + mod.Value / 100;
-            ability.EffectMagnitude = Mathf.RoundToInt(finalDamage);
+            ability.EffectivenessMultiplier += mod.Value / 100;
         }
         else if (mod.Key == ModType.COST)
         {
