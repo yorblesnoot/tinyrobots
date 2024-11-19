@@ -41,7 +41,7 @@ public static class StringHelper
         return output;
     }
 
-    public static string GenerateOxfordList(this List<string> list)
+    public static string ToOxfordList(this List<string> list)
     {
         if (list.Count == 0) return null;
         if(list.Count == 1)

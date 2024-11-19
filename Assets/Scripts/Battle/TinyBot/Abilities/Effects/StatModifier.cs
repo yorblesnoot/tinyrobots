@@ -31,7 +31,12 @@ public class StatModifier : AbilityEffect
 
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
-        ModifyStat(owner, FinalEffectiveness, statType, mode);
+        foreach(var target in targets)
+        {
+            TinyBot bot = target as TinyBot;
+            if (bot == null) continue;
+            ModifyStat(bot, FinalEffectiveness, statType, mode);
+        }
         yield break;
     }
 

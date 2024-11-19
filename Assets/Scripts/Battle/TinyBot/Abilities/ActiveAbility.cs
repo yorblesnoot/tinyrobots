@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ActiveAbility : Ability
@@ -41,6 +42,9 @@ public class ActiveAbility : Ability
 
     public float TotalRange { get { return range + TargetType.TargetRadius; } }
     public override bool IsActive => true;
+
+    protected override AbilityEffect[] Effects => abilityEffects;
+
     private void Awake()
     {
         foreach (var effect in abilityEffects) effect.Initialize(this);
@@ -210,15 +214,6 @@ public class ActiveAbility : Ability
     {
         if(prohibit) prohibitionSources.Add(source);
         else prohibitionSources.Remove(source);
-    }
-
-    public override bool IsScalable()
-    {
-        foreach(var effect in abilityEffects)
-        {
-            if(effect.BaseEffectMagnitude > 0) return true;
-        }
-        return false;
     }
 }
 

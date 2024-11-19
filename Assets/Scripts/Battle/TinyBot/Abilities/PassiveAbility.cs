@@ -6,6 +6,14 @@ using UnityEngine.UIElements;
 public class PassiveAbility : Ability
 {
     public override bool IsActive => false;
+
+    protected override AbilityEffect[] Effects { get
+        {
+            effects ??= GetFinalEffects();
+            return effects;
+        } }
+    AbilityEffect[] effects;
+
     [SerializeField] List<EffectTrigger> triggers;
 
     [SerializeField] SpatialSensor targeter;
@@ -41,6 +49,15 @@ public class PassiveAbility : Ability
         targeter.UnitLeftZone.AddListener((target) => ApplyTriggeredEffect(target, false));
     }
 
+    AbilityEffect[] GetFinalEffects()
+    {
+        List<AbilityEffect> effects = new();
+        foreach (var applier in triggers)
+        {
+            effects.AddRange(applier.OutputEffect);
+        }
+        return effects.ToArray();
+    }
     public void ApplyTriggeredEffect(Targetable targetable, bool apply)
     {
         TinyBot bot = targetable as TinyBot;
@@ -52,14 +69,5 @@ public class PassiveAbility : Ability
             if (apply) applier.ApplyTo(bot);
             else applier.RemoveFrom(bot);
         }
-    }
-
-    public override bool IsScalable()
-    {
-        foreach (var applier in triggers)
-        {
-            if(applier.IsScalable()) return true;
-        }
-        return false;
     }
 }

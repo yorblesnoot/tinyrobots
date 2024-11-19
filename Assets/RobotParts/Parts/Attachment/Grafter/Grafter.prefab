@@ -75,6 +75,8 @@ GameObject:
   - component: {fileID: 2112774795589447306}
   - component: {fileID: 2794114424561071729}
   - component: {fileID: 3567674222466099839}
+  - component: {fileID: 8439732469051544588}
+  - component: {fileID: 9152967734751911946}
   m_Layer: 0
   m_Name: GraftAura
   m_TagString: Untagged
@@ -109,15 +111,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd246dbbea25a9944a852e2b7c95675f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: 
+  Description: When a nearby unit dies, graft one of its parts onto the user and
+    heal the user. The user can use the abilities of grafted parts.
   range: 10
   ModifiableRange: 0
   cooldown: 0
-  EffectMagnitude: 0
   EffectivenessMultiplier: 1
   cost: 0
   icon: {fileID: 21300000, guid: 5e5ca445963574a5eb55eb7465de0257, type: 3}
-  EffectDescription: ' Damage'
   CurrentCooldown: 0
   Owner: {fileID: 0}
   emissionPoint: {fileID: 0}
@@ -126,17 +127,53 @@ MonoBehaviour:
     alwaysTargetSelf: 0
     activationLimit: 0
     procResetCondition: 0
-    OutputEffect: []
+    OutputEffect:
+    - {fileID: 8439732469051544588}
   - activationCondition: 2
     alwaysTargetSelf: 1
     activationLimit: 0
     procResetCondition: 0
     OutputEffect:
-    - {fileID: 3567674222466099839}
+    - {fileID: 9152967734751911946}
   targeter: {fileID: 3431278007647828337}
   particleVisual: {fileID: 0}
   validTarget: 0
 --- !u!114 &3567674222466099839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8265391253900851745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e579321ee83338a4baf731b5f7d195e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
+  BaseEffectMagnitude: 10
+  statType: 0
+  mode: 1
+--- !u!114 &8439732469051544588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8265391253900851745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19803712f268446469296d763d820b61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
+  graftAnimationDuration: 1
+  graftSlots:
+  - {fileID: 8698801983889210937}
+  - {fileID: 7128348136563048138}
+  - {fileID: 947532673188573684}
+--- !u!114 &9152967734751911946
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

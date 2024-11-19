@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -17,7 +19,7 @@ public abstract class Ability : MonoBehaviour
 
     public GameObject emissionPoint;
 
-
+    protected abstract AbilityEffect[] Effects { get; }
 
     public virtual void Initialize(TinyBot botUnit)
     {
@@ -25,12 +27,31 @@ public abstract class Ability : MonoBehaviour
         Owner.BeganTurn.AddListener(LapseCooldown);
     }
 
-    public abstract bool IsScalable();
+    public bool IsScalable()
+    {
+        foreach (var effect in Effects)
+        {
+            if (effect.BaseEffectMagnitude > 0) return true;
+        }
+        return false;
+    }
 
     public abstract bool IsActive { get; }
 
     void LapseCooldown()
     {
         CurrentCooldown = Mathf.Clamp(CurrentCooldown - 1, 0, CurrentCooldown);
+    }
+
+    public string GetEffectPhrases()
+    {
+        var phrases = new List<string>();
+        foreach(var effect in Effects)
+        {
+            if(effect.BaseEffectMagnitude == 0) continue;
+            string phrase = effect.FinalEffectiveness.ToString() + effect.Description;
+            phrases.Add(phrase);
+        }
+        return phrases.Count > 0 ? phrases.ToOxfordList() : "---";
     }
 }
