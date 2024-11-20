@@ -11,7 +11,7 @@ public class AppliedBuff
     public int Stacks;
     int maxDuration;
     int elapsedDuration = 0;
-    GameObject spawnedFX;
+    BuffEffectCarrier spawnedFX;
 
 
     public AppliedBuff(BuffType buff, TinyBot target, TinyBot source, int potency)
@@ -31,8 +31,9 @@ public class AppliedBuff
         if (Buff.Triggers != null) foreach (BuffTrigger trigger in Buff.Triggers) trigger.ApplyTo(Target);
         if(Stacks == 0 && Buff.FX != null)
         {
-            spawnedFX = GameObject.Instantiate(Buff.FX);
+            spawnedFX = GameObject.Instantiate(Buff.FX).GetComponent<BuffEffectCarrier>();
             spawnedFX.transform.SetParent(Target.TargetPoint, false);
+            spawnedFX.Toggle(true, Source, Target);
         }
         Stacks++;
     }
@@ -41,7 +42,7 @@ public class AppliedBuff
     {
         for(int i = 0; i < Stacks; i++) Buff.RemoveEffect(Target, Potency);
         if(Buff.Triggers != null) foreach (BuffTrigger trigger in Buff.Triggers) trigger.RemoveFrom(Target);
-        if(spawnedFX != null) GameObject.Destroy(spawnedFX);
+        if(spawnedFX != null) spawnedFX.Toggle(false, Source, Target);
     }
 
     public bool Tick()
