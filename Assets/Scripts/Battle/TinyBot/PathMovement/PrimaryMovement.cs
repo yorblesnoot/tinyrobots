@@ -128,6 +128,8 @@ public abstract class PrimaryMovement : MonoBehaviour
         
     }
 
+    public virtual void LandingStance() { }
+
     protected virtual void HandleImpulse()
     {
     }

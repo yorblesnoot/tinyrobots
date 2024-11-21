@@ -187,6 +187,12 @@ public class TinyBot : Targetable
                     .OnComplete(() => EndFall(startHeight));
     }
 
+    protected override void EndFall(float startHeight)
+    {
+        base.EndFall(startHeight);
+        PrimaryMovement.LandingStance();
+    }
+
     private void OnMouseEnter()
     {
         if(UnitControl.PlayerControlledBot != this /*&& ClickableAbility.Active == null*/) PrimaryCursor.SnapToUnit(this);

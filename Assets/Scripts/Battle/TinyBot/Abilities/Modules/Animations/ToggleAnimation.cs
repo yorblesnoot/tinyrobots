@@ -6,12 +6,13 @@ public class ToggleAnimation : AbilityEffect
 {
     [SerializeField] string animatorStateName;
     [SerializeField] Animator animator;
+    [SerializeField] float duration = 0;
     [SerializeField] bool playValue;
 
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
         animator.SetBool(animatorStateName, playValue);
-        yield break;
+        yield return new WaitForSeconds(duration);
     }
 
     public void Stop()

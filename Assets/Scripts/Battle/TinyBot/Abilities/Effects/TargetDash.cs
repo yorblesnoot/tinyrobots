@@ -25,6 +25,7 @@ public class TargetDash : AbilityEffect
             Vector3 velocity = (trajectory[^1] - trajectory[^2]) / intervalTime;
             yield return StartCoroutine(owner.Fall(velocity));
         }
+        else owner.PrimaryMovement.LandingStance();
         Pathfinder3D.GeneratePathingTree(owner.MoveStyle, owner.transform.position);
     }
 }

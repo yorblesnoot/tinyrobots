@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class PassiveAbility : Ability
 {
@@ -18,6 +19,7 @@ public class PassiveAbility : Ability
 
     [SerializeField] SpatialSensor targeter;
     [SerializeField] ParticleSystem particleVisual;
+    [SerializeField] GameObject staticAura;
 
     enum ValidTarget
     {
@@ -41,6 +43,12 @@ public class PassiveAbility : Ability
             particleVisual.Play();
             ParticleSystem.ShapeModule shape = particleVisual.shape;
             shape.radius = range;
+        }
+        if(staticAura != null)
+        {
+            staticAura.SetActive(true);
+            staticAura.transform.localScale = Vector3.one * range;
+            staticAura.transform.SetParent(Owner.transform, true);
         }
         targeter.transform.localScale = 2 * range * Vector3.one;
 

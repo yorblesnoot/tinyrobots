@@ -44,7 +44,7 @@ public class SpiderCrawl : LegMovement
     {
         Vector3 worldForward = goToNeutral ? Vector3.zero : transform.forward * forwardBias;
         Vector3 localForward = anchor.ikTarget.InverseTransformDirection(worldForward);
-        Vector3 firstRaySource = anchor.localBasePosition + localForward;
+        Vector3 firstRaySource = anchor.LocalBasePosition + localForward;
 
 
         firstRaySource.y += anchorUpwardLimit;

@@ -206,9 +206,9 @@ GameObject:
   - component: {fileID: 4391442398949676919}
   - component: {fileID: 6051039431981546468}
   - component: {fileID: 642142236824269102}
-  - component: {fileID: 8051151855791826628}
-  - component: {fileID: 2496942783366484502}
   - component: {fileID: 353867226109267716}
+  - component: {fileID: 5903685323051720892}
+  - component: {fileID: 9008681664637824618}
   m_Layer: 0
   m_Name: Leap
   m_TagString: Untagged
@@ -247,19 +247,20 @@ MonoBehaviour:
   range: 10
   ModifiableRange: 1
   cooldown: 1
-  EffectMagnitude: 0
+  EffectivenessMultiplier: 1
   cost: 1
   icon: {fileID: 21300000, guid: d5fc92820481b43a2986103f885cef46, type: 3}
-  EffectDescription: ' Damage'
   CurrentCooldown: 0
   Owner: {fileID: 0}
   emissionPoint: {fileID: 0}
   Type: 3
+  EndTurn: 0
+  targetRequirement: 0
   trackingToggle: {fileID: 0}
   abilityEffects:
-  - {fileID: 8051151855791826628}
+  - {fileID: 5903685323051720892}
   - {fileID: 642142236824269102}
-  - {fileID: 2496942783366484502}
+  - {fileID: 9008681664637824618}
   endEffects: []
 --- !u!114 &642142236824269102
 MonoBehaviour:
@@ -274,39 +275,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
   intervalTime: 0.08
---- !u!114 &8051151855791826628
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8466846767254302242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9024f05d73b5bfb4aa6af116f34301cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Ability: {fileID: 0}
-  animationName: Hop
-  animator: {fileID: 4928672511436461920}
-  duration: 0.4
---- !u!114 &2496942783366484502
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8466846767254302242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9024f05d73b5bfb4aa6af116f34301cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Ability: {fileID: 0}
-  animationName: Idle
-  animator: {fileID: 4928672511436461920}
-  duration: 0.4
 --- !u!114 &353867226109267716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -324,6 +294,42 @@ MonoBehaviour:
   - Default
   parabolaPoints: 10
   gravityAccel: -0.4
+--- !u!114 &5903685323051720892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8466846767254302242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a769bc2de0dd054fbafef4a7fb38d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
+  animatorStateName: jumping
+  animator: {fileID: 4928672511436461920}
+  duration: 0.4
+  playValue: 1
+--- !u!114 &9008681664637824618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8466846767254302242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a769bc2de0dd054fbafef4a7fb38d82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
+  animatorStateName: jumping
+  animator: {fileID: 4928672511436461920}
+  duration: 0
+  playValue: 0
 --- !u!1001 &1543482867553062048
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -481,15 +487,15 @@ MonoBehaviour:
   lookHeightModifier: 1
   anchors:
   - ikTarget: {fileID: 5476163026689878025}
-    stepping: 0
-    localBasePosition: {x: 0, y: 0, z: 0}
-    distanceFromDeadZone: 0
-    gluedWorldPosition: {x: 0, y: 0, z: 0}
+    Stepping: 0
+    LocalBasePosition: {x: 0, y: 0, z: 0}
+    DistanceFromDeadZone: 0
+    GluedWorldPosition: {x: 0, y: 0, z: 0}
   - ikTarget: {fileID: 7394775066713002943}
-    stepping: 0
-    localBasePosition: {x: 0, y: 0, z: 0}
-    distanceFromDeadZone: 0
-    gluedWorldPosition: {x: 0, y: 0, z: 0}
+    Stepping: 0
+    LocalBasePosition: {x: 0, y: 0, z: 0}
+    DistanceFromDeadZone: 0
+    GluedWorldPosition: {x: 0, y: 0, z: 0}
   anchorZoneRadius: 1.5
   legModel: {fileID: 5779783543885095998}
   anchorUpwardLimit: 3

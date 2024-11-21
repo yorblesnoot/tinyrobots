@@ -19,7 +19,7 @@ public abstract class LegMovement : PrimaryMovement
     [SerializeField] AnimationCurve legRaise;
     [SerializeField] protected float forwardBias = .5f;
 
-    protected bool stepping;
+    protected bool Stepping;
     Dictionary<Transform, (Vector3, Quaternion)> baseLimbPositions;
 
     private void Awake()
@@ -71,33 +71,33 @@ public abstract class LegMovement : PrimaryMovement
         {
             GluePosition(anchor);
         }
-        if (stepping) return;
+        if (Stepping) return;
 
-        anchors = anchors.OrderByDescending(anchor => anchor.distanceFromDeadZone).ToArray();
+        anchors = anchors.OrderByDescending(anchor => anchor.DistanceFromDeadZone).ToArray();
 
         for(int i = 0; i < anchors.Length; i++)
         {
-            if (anchors[i].distanceFromDeadZone > anchorZoneRadius)
+            if (anchors[i].DistanceFromDeadZone > anchorZoneRadius)
             {
                 TryStepToBase(anchors[i], inPlace);
             }
-            if(stepping) return;
+            if(Stepping) return;
         }
         
     }
 
     protected void GluePosition(Anchor anchor)
     {
-        if (anchor.stepping) return;
-        anchor.ikTarget.position = anchor.gluedWorldPosition;
-        anchor.distanceFromDeadZone = LegDistanceFromDeadZone(anchor);
+        if (anchor.Stepping) return;
+        anchor.ikTarget.position = anchor.GluedWorldPosition;
+        anchor.DistanceFromDeadZone = LegDistanceFromDeadZone(anchor);
     }
 
     protected virtual float LegDistanceFromDeadZone(Anchor anchor)
     {
         Vector3 localForward = anchor.ikTarget.parent.InverseTransformDirection(Owner.transform.forward);
         localForward.Normalize();
-        return Vector3.Distance(anchor.ikTarget.localPosition, anchor.localBasePosition + localForward * forwardBias);
+        return Vector3.Distance(anchor.ikTarget.localPosition, anchor.LocalBasePosition + localForward * forwardBias);
     }
     
     protected void TryStepToBase(Anchor anchor, bool goToNeutral = false)
@@ -105,16 +105,16 @@ public abstract class LegMovement : PrimaryMovement
         Vector3 localStartPosition = anchor.ikTarget.localPosition;
         Vector3 finalPosition = GetLimbTarget(anchor, goToNeutral);
         if (finalPosition == default) return;
-        stepping = true;
-        anchor.stepping = true;
+        Stepping = true;
+        anchor.Stepping = true;
         Tween.Position(anchor.ikTarget, finalPosition, legStepDuration).OnComplete(() => CompleteStep(anchor));
     }
 
     private void CompleteStep(Anchor anchor)
     {
         anchor.UpdateGluedPosition();
-        stepping = false;
-        anchor.stepping = false;
+        Stepping = false;
+        anchor.Stepping = false;
     }
 
     protected abstract Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral);
@@ -128,6 +128,15 @@ public abstract class LegMovement : PrimaryMovement
         }
     }
 
+    public override void LandingStance()
+    {
+        foreach (var anchor in anchors)
+        {
+            if (anchor.Stepping) continue;
+            TryStepToBase(anchor, true);
+        }
+    }
+
     protected Vector3 GetMeshNormalAt(Vector3 target)
     {
         return Pathfinder3D.GetCrawlOrientation(Vector3Int.RoundToInt(target));
@@ -138,18 +147,18 @@ public abstract class LegMovement : PrimaryMovement
     {
         
         public Transform ikTarget;
-        [HideInInspector] public bool stepping;
-        [HideInInspector] public Vector3 localBasePosition;
-        [HideInInspector] public float distanceFromDeadZone;
-        [HideInInspector] public Vector3 gluedWorldPosition;
+        [HideInInspector] public bool Stepping;
+        [HideInInspector] public Vector3 LocalBasePosition;
+        [HideInInspector] public float DistanceFromDeadZone;
+        [HideInInspector] public Vector3 GluedWorldPosition;
         public void Initialize()
         {
-            localBasePosition = ikTarget.localPosition;
+            LocalBasePosition = ikTarget.localPosition;
         }
 
         public void UpdateGluedPosition()
         {
-            gluedWorldPosition = ikTarget.position;
+            GluedWorldPosition = ikTarget.position;
         }
     }
 }

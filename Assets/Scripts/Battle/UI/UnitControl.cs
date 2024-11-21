@@ -34,7 +34,7 @@ public class UnitControl : MonoBehaviour
         unitPortrait.sprite = bot.Portrait;
         UpdateOverlay();
         bot.AbilitiesChanged.AddListener(VisualizeAbilityList);
-        bot.EndedTurn.AddListener(EndControl);
+        bot.EndedTurn.AddListener(ReleaseBot);
         bot.Stats.StatModified.AddListener(UpdateOverlay);
     }
 
@@ -45,22 +45,18 @@ public class UnitControl : MonoBehaviour
 
     void ReleaseBot()
     {
+        gameObject.SetActive(false);
+        ClickableAbility.EndUsableAbilityState();
         if (PlayerControlledBot == null) return;
-        PlayerControlledBot.Stats.StatModified.AddListener(UpdateOverlay);
+        PlayerControlledBot.Stats.StatModified.RemoveListener(UpdateOverlay);
         PlayerControlledBot.AbilitiesChanged.RemoveListener(VisualizeAbilityList);
-        PlayerControlledBot.EndedTurn.RemoveListener(EndControl);
+        PlayerControlledBot.EndedTurn.RemoveListener(ReleaseBot);
     }
 
     void EndPlayerTurn()
     {
         if (PrimaryCursor.ActionInProgress) return;
         TurnManager.EndTurn(PlayerControlledBot);
-    }
-
-    void EndControl()
-    {
-        gameObject.SetActive(false);
-        ClickableAbility.EndUsableAbilityState();
     }
 
     void VisualizeAbilityList()
