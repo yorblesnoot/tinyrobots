@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "RedirectDamage", menuName = "ScriptableObjects/DamageFactors/Redirect")]
 public class RedirectDamage : DamageFactor
 {
-
+    public override string LineDescription => "% Damage Redirected";
     public override float UseFactor(float incoming, TinyBot source, TinyBot target, int potency, object data = null)
     {
         TinyBot redirectionTarget = data as TinyBot;

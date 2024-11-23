@@ -66,8 +66,8 @@ public class ActiveAbility : Ability
     {
         Vector3 rawPosition = Owner.transform.position;
         Vector3Int startPosition = Vector3Int.RoundToInt(rawPosition);
-        MainCameraControl.ActionPanTo(GetCameraAimPoint());
-        CurrentCooldown = SceneGlobals.PlayerData.DevMode ? 0 : cooldown;
+        MainCameraControl.ActionPanTo(CurrentTrajectory[^1]);
+        CurrentCooldown = SceneGlobals.PlayerData.DevMode && Owner.Allegiance == Allegiance.PLAYER ? 0 : cooldown;
         PrimaryCursor.ActionInProgress = true;
         yield return new WaitForSeconds(skillDelay);
         ReleaseLockOn();

@@ -123,9 +123,8 @@ public class TinyBot : Targetable
         if(target == this) ToggleActiveLayer(true);
     }
 
-    public void ClearActiveUnit()
+    void ClearActiveUnit()
     {
-        UnitControl.PlayerControlledBot = null;
         ToggleActiveLayer(false);
     }
 

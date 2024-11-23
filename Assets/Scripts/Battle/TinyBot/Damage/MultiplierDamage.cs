@@ -3,6 +3,7 @@ using UnityEngine;
 public class MultiplierDamage : DamageFactor
 {
     [SerializeField] bool universal = true;
+    public override string LineDescription => $"% Damage{(universal ? " from User" : "")}";
     public override AppliedDamageFactor GetCustomFactor(TinyBot target, TinyBot source, int potency)
     {
         return new(this, potency, source);

@@ -40,23 +40,23 @@ public class DeploymentPhase : MonoBehaviour
         foreach (var part in bot.PartModifiers) palette.RecolorPart(part, hologramProfile);
         while (!Input.GetMouseButtonDown(0))
         {
+            yield return null;
             Vector3 clampedPosition = DeploymentZone.ClampInZone(PrimaryCursor.Transform.position);
             if(Pathfinder3D.GetLandingPointBy(clampedPosition, bot.MoveStyle, out Vector3Int landingPoint))
             {
-                if (landingPoint != lastPosition)
-                {
-                    lastPosition = landingPoint;
-                    bot.gameObject.SetActive(true);
-                    Vector3 cleanPosition = bot.PrimaryMovement.SanitizePoint(landingPoint);
-                    bot.transform.position = cleanPosition;
-                    bot.PrimaryMovement.SpawnOrientation();
-                }
+                if (landingPoint == lastPosition) continue;
+
+                lastPosition = landingPoint;
+                bot.gameObject.SetActive(true);
+                Vector3 cleanPosition = bot.PrimaryMovement.SanitizePoint(landingPoint);
+                bot.transform.position = cleanPosition;
+                bot.PrimaryMovement.SpawnOrientation();
             }
             else
             {
                 bot.gameObject.SetActive(false);
             }
-            yield return null;
+            
         }
 
         foreach (var part in bot.PartModifiers) palette.RecolorPart(part, bot.Allegiance);

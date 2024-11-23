@@ -1,4 +1,5 @@
 using Cinemachine;
+using PrimeTween;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -109,7 +110,7 @@ public class MainCameraControl : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Backspace)) RestrictCamera(freeCameraAvailable);
         if(freeCameraAvailable) PlayerControlCamera();
         cams.Brain.ManualUpdate();
-        Cams.Automatic.m_MinDuration = 50;
+        //Cams.Automatic.m_MinDuration = 50;
     }
 
     private void PlayerControlCamera()
@@ -205,17 +206,19 @@ public class MainCameraControl : MonoBehaviour
         transform.position = transform.position.Clamp(minimum, maximum);
     }
 
-    public static void CutToEntity(Transform entity, bool autoCam = true)
+    public static void CutToEntity(Transform entity, bool instant = false)
     {
-        Cams.FocalPoint.transform.position = entity.position;
-        if (autoCam) ToggleAutoCam();
+        Tween.StopAll(Cams.FocalPoint.transform);
+        if (instant) Cams.FocalPoint.transform.position = entity.position;
+        else Tween.Position(Cams.FocalPoint.transform, entity.position, duration: 1f);        
+        ToggleAutoCam();
     }
 
     static void ToggleAutoCam(bool on = true)
     {
         Cams.Automatic.gameObject.SetActive(on);
         Cams.Free.Priority = on ? 0 : 3;
-        Cams.Automatic.m_MinDuration = 0;
+        //Cams.Automatic.m_MinDuration = 0;
     }
 
     static bool tracking;
@@ -246,22 +249,9 @@ public class MainCameraControl : MonoBehaviour
     public static void ActionPanTo(Vector3 target)
     {
         RestrictCamera(true);
-        Instance.StartCoroutine(ActionPan(target, Instance.actionCutDuration));
-    }
-
-    static IEnumerator ActionPan(Vector3 target, float duration)
-    {
-        Vector3 startPosition = Cams.FocalPoint.position;
-        float timeElapsed = 0;
-        while (timeElapsed < duration)
-        {
-            float progress = timeElapsed / duration;
-            Cams.FocalPoint.transform.position = Vector3.Lerp(startPosition, target, .5f * progress);
-            Instance.Zoom(Mathf.Lerp(0, -Instance.actionCutMaxZoom, progress));
-            timeElapsed += Time.deltaTime;
-            yield return null;
-        }
-        RestrictCamera(false);
+        ToggleAutoCam(true);
+        Vector3 finalTarget = Vector3.Lerp(Cams.FocalPoint.position, target, .5f);
+        Tween.Position(Cams.FocalPoint, target, Instance.actionCutDuration).OnComplete(() => RestrictCamera(false));
     }
 
     [System.Serializable]

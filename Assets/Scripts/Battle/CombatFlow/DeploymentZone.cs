@@ -18,7 +18,7 @@ public class DeploymentZone : MonoBehaviour
     {
         active.zoneMarker.SetActive(true);
         active.PositionAreaMarker();
-        MainCameraControl.CutToEntity(active.zoneMarker.transform);
+        MainCameraControl.CutToEntity(active.zoneMarker.transform, true);
     }
 
     public static void EndDeployment()

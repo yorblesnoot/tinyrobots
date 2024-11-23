@@ -47,12 +47,13 @@ public class StatModifier : AbilityEffect
 
     public static string GetLineDescription(StatType stat, BonusMode mode)
     {
+        string statWord = stat.ToString().FirstToUpper();
         return mode switch
         {
-            BonusMode.PERCENTMAX => $"% of Max {stat}",
-            BonusMode.PERCENTCURRENT => $"% of Current {stat}",
-            BonusMode.PERCENTMISSING => $"% of Missing {stat}",
-            _ => $" {stat}"
+            BonusMode.PERCENTMAX => $"% of Max {statWord}",
+            BonusMode.PERCENTCURRENT => $"% of Current {statWord}",
+            BonusMode.PERCENTMISSING => $"% of Missing {statWord}",
+            _ => $" {statWord}"
         };
     }
 }

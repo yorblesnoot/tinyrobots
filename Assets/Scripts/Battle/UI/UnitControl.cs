@@ -14,27 +14,26 @@ public class UnitControl : MonoBehaviour
     [SerializeField] HealthOverlay healthOverlay;
 
     List<ClickableAbility> deployedAbilities;
-    public static TinyBot PlayerControlledBot;
+    public static TinyBot PlayerControlledBot { get; private set; }
     private void Awake()
     {
         ClickableAbility.Activated = null;
         turnEnd.onClick.AddListener(EndPlayerTurn);
         PrimaryCursor.PlayerSelectedBot.AddListener(PlayerControlBot);
+        TinyBot.ClearActiveBot.AddListener(ReleaseBot);
         gameObject.SetActive(false);
     }
 
     readonly static KeyCode[] keyCodes = {KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9 };
 
-    public void PlayerControlBot(TinyBot bot)
+    void PlayerControlBot(TinyBot bot)
     {
-        ReleaseBot();
         PlayerControlledBot = bot;
         gameObject.SetActive(true);
         VisualizeAbilityList();
         unitPortrait.sprite = bot.Portrait;
         UpdateOverlay();
         bot.AbilitiesChanged.AddListener(VisualizeAbilityList);
-        bot.EndedTurn.AddListener(ReleaseBot);
         bot.Stats.StatModified.AddListener(UpdateOverlay);
     }
 
@@ -50,7 +49,7 @@ public class UnitControl : MonoBehaviour
         if (PlayerControlledBot == null) return;
         PlayerControlledBot.Stats.StatModified.RemoveListener(UpdateOverlay);
         PlayerControlledBot.AbilitiesChanged.RemoveListener(VisualizeAbilityList);
-        PlayerControlledBot.EndedTurn.RemoveListener(ReleaseBot);
+        PlayerControlledBot = null;
     }
 
     void EndPlayerTurn()

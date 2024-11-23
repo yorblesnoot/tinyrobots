@@ -6,13 +6,13 @@ public static class StringHelper
 {
     public static string FirstToUpper(this string s)
     {
-        // Check for empty string.
-        if (string.IsNullOrEmpty(s))
+        if (string.IsNullOrEmpty(s)) return string.Empty;
+        char[] chars = s.ToCharArray()[1..];
+        for(int i = 0; i < chars.Length; i++)
         {
-            return string.Empty;
+            chars[i] = char.ToLower(chars[i]);
         }
-        // Return char and concat substring.
-        return char.ToUpper(s[0]) + s[1..];
+        return char.ToUpper(s[0]) + chars.ToString();
     }
 
     public static bool CharacterIsVowel(this string s, int index)

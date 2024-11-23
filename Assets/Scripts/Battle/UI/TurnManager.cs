@@ -87,7 +87,7 @@ public class TurnManager : MonoBehaviour
     {
         TurnTakers = TurnTakers.OrderByDescending<TinyBot, int>(SceneGlobals.PlayerData.DevMode ? PlayerFirstOrder : BotInitOrder).ToList();
         StartNewRound();
-        QueueNextTurnTaker(select);
+        QueueNextTurnTaker(true);
     }
 
     static int BotInitOrder(TinyBot bot)
@@ -132,7 +132,7 @@ public class TurnManager : MonoBehaviour
 
     
 
-    private static void QueueNextTurnTaker(bool select = true)
+    private static void QueueNextTurnTaker(bool initial = true)
     {
         if (currentlyActive.Count == 0)
         {
@@ -140,8 +140,8 @@ public class TurnManager : MonoBehaviour
             GetActiveBots();
         }
         TinyBot next = currentlyActive.First();
-        MainCameraControl.CutToEntity(next.TargetPoint, select);
-        if (select) PrimaryCursor.SelectBot(next);
+        MainCameraControl.CutToEntity(next.TargetPoint);
+        if (initial) PrimaryCursor.SelectBot(next);
     }
 
     private static void StartNewRound()

@@ -13516,7 +13516,7 @@ MonoBehaviour:
   scrollZoneX: 100
   scrollZoneY: 50
   zoomSpeed: 0.2
-  actionCutDuration: 1
+  actionCutDuration: 2
   actionCutMaxZoom: 5
   focalPointDeadzone: 5
   cameraConfineMargin: 2
@@ -14304,8 +14304,8 @@ MonoBehaviour:
   m_UpdateMethod: 3
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
-    m_Style: 0
-    m_Time: 2
+    m_Style: 1
+    m_Time: 1
     m_CustomCurve:
       serializedVersion: 2
       m_Curve: []
@@ -17412,11 +17412,11 @@ MonoBehaviour:
   m_Follow: {fileID: 1329150492}
   m_ShowDebugText: 0
   m_ChildCameras: []
-  m_ActivateAfter: 0
-  m_MinDuration: 50
+  m_ActivateAfter: 1
+  m_MinDuration: 2
   m_RandomizeChoice: 0
   m_DefaultBlend:
-    m_Style: 0
+    m_Style: 1
     m_Time: 1
     m_CustomCurve:
       serializedVersion: 2
