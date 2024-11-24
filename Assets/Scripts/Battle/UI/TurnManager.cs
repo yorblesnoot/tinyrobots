@@ -140,7 +140,7 @@ public class TurnManager : MonoBehaviour
             GetActiveBots();
         }
         TinyBot next = currentlyActive.First();
-        MainCameraControl.CutToEntity(next.TargetPoint);
+        MainCameraControl.PanToPosition(next.TargetPoint.position, true, false);
         if (initial) PrimaryCursor.SelectBot(next);
     }
 

@@ -43,7 +43,7 @@ public class TurnPortrait : MonoBehaviour
     void SelectThroughPortrait()
     {
         PrimaryCursor.SelectBot(thisBot);
-        MainCameraControl.CutToEntity(thisBot.TargetPoint);
+        MainCameraControl.PanToPosition(thisBot.TargetPoint.position, true, false);
     }
 
     public void Clear()

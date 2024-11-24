@@ -11,9 +11,8 @@ public class MainCameraControl : MonoBehaviour
     [SerializeField] float scrollSpeed = 1f;
     [SerializeField] float scrollZoneX;
     [SerializeField] float scrollZoneY;
+    [SerializeField] float panDuration = 2;
     [SerializeField] float zoomSpeed;
-    [SerializeField] float actionCutDuration = 2f;
-    [SerializeField] float actionCutMaxZoom = 5f;
     [SerializeField] int focalPointDeadzone = 5;
     [SerializeField] int cameraConfineMargin = 1;
     [SerializeField] CameraSet cams;
@@ -39,8 +38,8 @@ public class MainCameraControl : MonoBehaviour
         Cams.FocalPoint = transform;
         Instance = this;
         RestrictCamera(false);
-        xInput = Cams.Free.m_XAxis.m_InputAxisName;
-        yInput = Cams.Free.m_YAxis.m_InputAxisName;
+        xInput = Cams.Free.m_XAxis.m_InputAxisName; //Mouse X
+        yInput = Cams.Free.m_YAxis.m_InputAxisName; //Mouse Y
         LockCameraPivot();
     }
     void ConfineCameras(Vector3Int corner)
@@ -85,6 +84,7 @@ public class MainCameraControl : MonoBehaviour
 
     void BeginFocusRotation(InputAction.CallbackContext context)
     {
+        Debug.Log(freeCameraAvailable);
         if (!freeCameraAvailable) return;
         ToggleAutoCam(false);
 
@@ -206,19 +206,37 @@ public class MainCameraControl : MonoBehaviour
         transform.position = transform.position.Clamp(minimum, maximum);
     }
 
-    public static void CutToEntity(Transform entity, bool instant = false)
+    public static void PanToPosition(Vector3 target, bool automatic, bool instant)
     {
         Tween.StopAll(Cams.FocalPoint.transform);
-        if (instant) Cams.FocalPoint.transform.position = entity.position;
-        else Tween.Position(Cams.FocalPoint.transform, entity.position, duration: 1f);        
-        ToggleAutoCam();
+        if(automatic) 
+        if (instant)
+        {
+            ToggleAutoCam();
+            Cams.FocalPoint.transform.position = target;
+        }
+        else
+        {
+            RestrictCamera();
+            PrimaryCursor.ProhibitPathfind();
+            ToggleAutoCam(false);
+            Cams.Automatic.m_MinDuration = 100;
+            Tween.Position(Cams.FocalPoint.transform, target, duration: Instance.panDuration).OnComplete(() => EndPan(automatic));
+        }
+    }
+
+    static void EndPan(bool auto)
+    {
+        PrimaryCursor.ProhibitPathfind(false);
+        Cams.Automatic.m_MinDuration = 0;
+        RestrictCamera(false);
+        ToggleAutoCam(auto);
     }
 
     static void ToggleAutoCam(bool on = true)
     {
         Cams.Automatic.gameObject.SetActive(on);
         Cams.Free.Priority = on ? 0 : 3;
-        //Cams.Automatic.m_MinDuration = 0;
     }
 
     static bool tracking;
@@ -244,14 +262,6 @@ public class MainCameraControl : MonoBehaviour
             Cams.FocalPoint.transform.position = Vector3.Lerp(Cams.FocalPoint.transform.position, target.position, Time.deltaTime);
             yield return null;
         }
-    }
-
-    public static void ActionPanTo(Vector3 target)
-    {
-        RestrictCamera(true);
-        ToggleAutoCam(true);
-        Vector3 finalTarget = Vector3.Lerp(Cams.FocalPoint.position, target, .5f);
-        Tween.Position(Cams.FocalPoint, target, Instance.actionCutDuration).OnComplete(() => RestrictCamera(false));
     }
 
     [System.Serializable]

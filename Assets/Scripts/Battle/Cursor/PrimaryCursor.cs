@@ -38,6 +38,7 @@ public class PrimaryCursor : MonoBehaviour
     [SerializeField] Renderer selectBubble;
 
     public static bool ActionInProgress = false;
+    static bool noPaths = false;
 
     public static UnityEvent<TinyBot> PlayerSelectedBot = new();
     private void Awake()
@@ -73,7 +74,7 @@ public class PrimaryCursor : MonoBehaviour
         else if (Input.GetMouseButtonDown(1)) ClickableAbility.CancelAbility();
 
 
-        if (PlayerControlledBot != null && !abilityActive && PlayerControlledBot.Stats.Max[StatType.MOVEMENT] > 0)
+        if (!noPaths && PlayerControlledBot != null && !abilityActive && PlayerControlledBot.Stats.Max[StatType.MOVEMENT] > 0)
         {
             GenerateMovePreview();
         }
@@ -82,6 +83,11 @@ public class PrimaryCursor : MonoBehaviour
             InvalidatePath();
         }
 
+    }
+
+    public static void ProhibitPathfind(bool on = true)
+    {
+        noPaths = on;
     }
 
     void ToggleInvalidIndicator()
