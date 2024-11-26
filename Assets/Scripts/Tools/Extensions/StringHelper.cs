@@ -12,7 +12,7 @@ public static class StringHelper
         {
             chars[i] = char.ToLower(chars[i]);
         }
-        return char.ToUpper(s[0]) + chars.ToString();
+        return char.ToUpper(s[0]) + new string(chars);
     }
 
     public static bool CharacterIsVowel(this string s, int index)

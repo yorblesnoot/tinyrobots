@@ -28,4 +28,6 @@ public class AbilityBuff : BuffType
             ModdedPart.ApplyMod(ability, pair);
         }
     }
+
+    public override string LineDescription => $" {abilityParameter.ToString().FirstToUpper()}";
 }
