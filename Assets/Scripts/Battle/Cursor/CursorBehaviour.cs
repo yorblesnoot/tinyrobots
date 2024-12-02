@@ -66,6 +66,12 @@ public class CursorBehaviour : MonoBehaviour
         }
     }
 
+    public void Hide()
+    {
+        airCursor.SetActive(false);
+        groundCursor.SetActive(false);
+    }
+
     void AirMode()
     {
         groundCursor.SetActive(false);

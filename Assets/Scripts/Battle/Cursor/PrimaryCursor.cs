@@ -5,7 +5,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
-using System.Linq;
 
 public enum CursorState
 {
@@ -17,7 +16,6 @@ public class PrimaryCursor : MonoBehaviour
 {
 
     public static PrimaryCursor Instance;
-    static CursorBehaviour activeBehaviour;
     
     
     public static Transform Transform;
@@ -37,17 +35,14 @@ public class PrimaryCursor : MonoBehaviour
     [SerializeField] TMP_Text moveCostPreview;
     [SerializeField] Renderer selectBubble;
 
-    public static bool ActionInProgress = false;
-    static bool noPaths = false;
+    public static bool NoCursor { get; private set; }
 
     public static UnityEvent<TinyBot> PlayerSelectedBot = new();
     private void Awake()
     {
         RestrictCursor(false);
         Instance = this;
-        ActionInProgress = false;
         TinyBot.ClearActiveBot.AddListener(InvalidatePath);
-        activeBehaviour = cursorBehaviour;
         Transform = transform;
     }
 
@@ -56,17 +51,18 @@ public class PrimaryCursor : MonoBehaviour
     float currentPathCost;
     private void LateUpdate()
     {
-        bool abilityActive = ClickableAbility.Activated != null;
-
-        //clamp the cursor's position within the bounds of the map~~~~~~~~~~~~~~~~~~~~~
-        if (State == CursorState.FREE) activeBehaviour.ControlCursor();
-        ToggleInvalidIndicator();
-        if (ActionInProgress) 
+         
+        if (NoCursor || !MainCameraControl.FreeCameraAvailable) 
         {
             InvalidatePath();
+            Instance.cursorBehaviour.Hide();
             return; 
         }
-        
+
+        bool abilityActive = ClickableAbility.Activated != null;
+        if (State == CursorState.FREE) Instance.cursorBehaviour.ControlCursor();
+        ToggleInvalidIndicator();
+
         if (Input.GetMouseButtonDown(0))
         {
             ProcessClick(abilityActive);
@@ -74,7 +70,7 @@ public class PrimaryCursor : MonoBehaviour
         else if (Input.GetMouseButtonDown(1)) ClickableAbility.CancelAbility();
 
 
-        if (!noPaths && PlayerControlledBot != null && !abilityActive && PlayerControlledBot.Stats.Max[StatType.MOVEMENT] > 0)
+        if (PlayerControlledBot != null && !abilityActive && PlayerControlledBot.Stats.Max[StatType.MOVEMENT] > 0)
         {
             GenerateMovePreview();
         }
@@ -82,12 +78,6 @@ public class PrimaryCursor : MonoBehaviour
         {
             InvalidatePath();
         }
-
-    }
-
-    public static void ProhibitPathfind(bool on = true)
-    {
-        noPaths = on;
     }
 
     void ToggleInvalidIndicator()
@@ -135,7 +125,7 @@ public class PrimaryCursor : MonoBehaviour
         }
         else if (TargetedBot != null && TargetedBot.Allegiance == Allegiance.PLAYER)
         {
-            SelectBot(TargetedBot);
+            TargetedBot.Select();
             InvalidatePath();
             Unsnap();
         }
@@ -151,17 +141,13 @@ public class PrimaryCursor : MonoBehaviour
     IEnumerator UseSkill(ActiveAbility ability)
     {
         InvalidatePath();
+        ToggleCursor(false);
         yield return StartCoroutine(ability.Execute());
-        
-        ClickableAbility.PlayerUsedAbility?.Invoke();
-        if (ability.EndTurn)
-        {
-            ActionInProgress = true;
-            yield return new WaitForSeconds(1);
-            TurnManager.EndTurn(PlayerControlledBot);
-            ActionInProgress = false;
-        }
 
+        ClickableAbility.PlayerUsedAbility?.Invoke();
+        if (ability.EndTurn) yield return new WaitForSeconds(1);
+        ToggleCursor(true);
+        if (ability.EndTurn) TurnManager.EndTurn(PlayerControlledBot);
     }
 
     void ProcessAndPreviewPath(List<Vector3> possiblePath)
@@ -230,21 +216,11 @@ public class PrimaryCursor : MonoBehaviour
 
     private IEnumerator TraversePath()
     {
-        ActionInProgress = true;
+        ToggleCursor(false);
         yield return StartCoroutine(PlayerControlledBot.PrimaryMovement.TraversePath(currentPath));
         InvalidatePath();
         Pathfinder3D.GeneratePathingTree(PlayerControlledBot.PrimaryMovement.Style, PlayerControlledBot.transform.position);
-        ActionInProgress = false;
-    }
-
-    public static void SelectBot(TinyBot bot)
-    {
-        if (!bot.AvailableForTurn) return;
-        TinyBot.ClearActiveBot.Invoke();
-        PlayerSelectedBot.Invoke(bot);
-        
-        MoveStyle botStyle = bot.PrimaryMovement.Style;
-        Pathfinder3D.GeneratePathingTree(botStyle, bot.transform.position);
+        ToggleCursor(true);
     }
 
     public static void SnapToUnit(TinyBot unit)
@@ -253,7 +229,7 @@ public class PrimaryCursor : MonoBehaviour
         TargetedBot = unit;
         State = CursorState.UNITSNAPPED;
         Transform.position = unit.TargetPoint.position;
-        activeBehaviour.SnapToPosition(unit.TargetPoint.position);
+        Instance.cursorBehaviour.SnapToPosition(unit.TargetPoint.position);
     }
     public static void Unsnap()
     {
@@ -266,5 +242,10 @@ public class PrimaryCursor : MonoBehaviour
     {
         Unsnap();
         State = on ? CursorState.SPACELOCKED : CursorState.FREE;
+    }
+
+    public static void ToggleCursor(bool on)
+    {
+        NoCursor = !on;
     }
 }

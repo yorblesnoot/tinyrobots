@@ -24,6 +24,7 @@ public class MainCameraControl : MonoBehaviour
     string yInput;
 
     public static MainCameraControl Instance;
+    public static bool FreeCameraAvailable { get; private set; } = true;
     private void OnEnable()
     {
         EnableInputSystem();
@@ -84,8 +85,8 @@ public class MainCameraControl : MonoBehaviour
 
     void BeginFocusRotation(InputAction.CallbackContext context)
     {
-        Debug.Log(freeCameraAvailable);
-        if (!freeCameraAvailable) return;
+        Debug.Log(FreeCameraAvailable);
+        if (!FreeCameraAvailable) return;
         ToggleAutoCam(false);
 
         Cams.Free.m_XAxis.m_InputAxisName = xInput;
@@ -99,16 +100,16 @@ public class MainCameraControl : MonoBehaviour
         PrimaryCursor.RestrictCursor(false);
     }
 
-    static bool freeCameraAvailable = true;
+    
     public static void RestrictCamera(bool value = true)
     {
-        freeCameraAvailable = !value;
+        FreeCameraAvailable = !value;
     }
 
     private void LateUpdate()
     {
-        if(Input.GetKeyDown(KeyCode.Backspace)) RestrictCamera(freeCameraAvailable);
-        if(freeCameraAvailable) PlayerControlCamera();
+        if(Input.GetKeyDown(KeyCode.Backspace)) RestrictCamera(FreeCameraAvailable);
+        if(FreeCameraAvailable) PlayerControlCamera();
         cams.Brain.ManualUpdate();
         //Cams.Automatic.m_MinDuration = 50;
     }
@@ -150,7 +151,7 @@ public class MainCameraControl : MonoBehaviour
 
     void ClimbCamera(float value)
     {
-        if (!freeCameraAvailable) return;
+        if (!FreeCameraAvailable) return;
         ToggleAutoCam(false);
         Vector3 climbedPosition = transform.position;
         climbedPosition.y += climbSpeed * value;
@@ -172,7 +173,7 @@ public class MainCameraControl : MonoBehaviour
 
     private void SlideCamera(Vector3 moveOffset)
     {
-        if(!freeCameraAvailable) return;
+        if(!FreeCameraAvailable) return;
         ToggleAutoCam(false);
         Quaternion yRotation = Camera.main.transform.rotation;
         moveOffset *= scrollSpeed;
@@ -209,7 +210,7 @@ public class MainCameraControl : MonoBehaviour
     public static void PanToPosition(Vector3 target, bool automatic, bool instant)
     {
         Tween.StopAll(Cams.FocalPoint.transform);
-        if(automatic) 
+        
         if (instant)
         {
             ToggleAutoCam();
@@ -218,7 +219,6 @@ public class MainCameraControl : MonoBehaviour
         else
         {
             RestrictCamera();
-            PrimaryCursor.ProhibitPathfind();
             ToggleAutoCam(false);
             Cams.Automatic.m_MinDuration = 100;
             Tween.Position(Cams.FocalPoint.transform, target, duration: Instance.panDuration).OnComplete(() => EndPan(automatic));
@@ -227,7 +227,6 @@ public class MainCameraControl : MonoBehaviour
 
     static void EndPan(bool auto)
     {
-        PrimaryCursor.ProhibitPathfind(false);
         Cams.Automatic.m_MinDuration = 0;
         RestrictCamera(false);
         ToggleAutoCam(auto);

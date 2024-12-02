@@ -21,7 +21,7 @@ public class TurnPortrait : MonoBehaviour
     {
         thisBot = bot;
         PrimaryCursor.PlayerSelectedBot.AddListener(HighlightWhenActive);
-        selectButton.onClick.AddListener(SelectThroughPortrait);
+        selectButton.onClick.AddListener(bot.Select);
         bot.Stats.StatModified.AddListener(UpdateHealth);
         SetColorForAllegiance(bot);
         cardPortrait.sprite = bot.Portrait;
@@ -38,12 +38,6 @@ public class TurnPortrait : MonoBehaviour
     {
         if(bot == thisBot) frame.color = activeColor;
         else SetColorForAllegiance(thisBot);
-    }
-
-    void SelectThroughPortrait()
-    {
-        PrimaryCursor.SelectBot(thisBot);
-        MainCameraControl.PanToPosition(thisBot.TargetPoint.position, true, false);
     }
 
     public void Clear()

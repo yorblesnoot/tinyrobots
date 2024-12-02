@@ -70,6 +70,7 @@ public abstract class Mission : MonoBehaviour
             bot.Stats.Current[StatType.HEALTH] = Mathf.RoundToInt(bot.Stats.Max[StatType.HEALTH] * healthRatio);
             TurnManager.AddTurnTaker(bot);
             bots.Add(bot);
+            bot.gameObject.SetActive(false);
         }
         return bots;
     }

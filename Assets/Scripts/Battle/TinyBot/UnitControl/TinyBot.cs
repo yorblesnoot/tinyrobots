@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 
@@ -56,7 +57,6 @@ public class TinyBot : Targetable
         
         PrimaryMovement = primaryMovement;
         PrimaryMovement.Owner = this;
-        PrimaryCursor.PlayerSelectedBot.AddListener(TryToBecomeActive);
         ClearActiveBot.AddListener(ClearActiveUnit);
     }
 
@@ -104,23 +104,37 @@ public class TinyBot : Targetable
         if (Stats.Current[statType] < 0) Stats.Current[statType] = 0;
     }
 
-    public void BeginTurn()
+    public void BecomeAvailableForTurn()
     {
         BeganTurn?.Invoke();
-        Pathfinder3D.SetNodeOccupancy(Vector3Int.RoundToInt(transform.position), false);
         Stats.SetToMax(StatType.ACTION);
         Stats.SetToMax(StatType.MOVEMENT);
-        if (Allegiance == Allegiance.PLAYER) AvailableForTurn = true;
+        AvailableForTurn = true;
+    }
+
+    public void Select()
+    {
+        MainCameraControl.PanToPosition(TargetPoint.position, true, false);
+        if (!AvailableForTurn) return;
+        ClearActiveBot.Invoke();
+        BeginTurn();
+    }
+
+    void BeginTurn()
+    {
+        Pathfinder3D.SetNodeOccupancy(Vector3Int.RoundToInt(transform.position), false);
+        ToggleActiveLayer(true);
+        if (Allegiance == Allegiance.PLAYER)
+        {
+            Pathfinder3D.GeneratePathingTree(PrimaryMovement.Style, transform.position);
+            PrimaryCursor.ToggleCursor(true);
+            PrimaryCursor.PlayerSelectedBot.Invoke(this);
+        }
         else
         {
             botAI ??= new(this);
             StartCoroutine(botAI.TakeTurn());
         }
-    }
-
-    void TryToBecomeActive(TinyBot target)
-    {
-        if(target == this) ToggleActiveLayer(true);
     }
 
     void ClearActiveUnit()

@@ -57,7 +57,7 @@ public class TurnManager : MonoBehaviour
         {
             activeIndex++;
             currentlyActive.Add(bot);
-            bot.BeginTurn();
+            bot.BecomeAvailableForTurn();
         }
         ArrangePortraits(currentlyActive);
     }
@@ -100,25 +100,7 @@ public class TurnManager : MonoBehaviour
         return bot.Allegiance == Allegiance.PLAYER ? 10 : 0;
     }
 
-    static void GetActiveBots()
-    {
-        AddActiveUnit();
-        ArrangePortraits(currentlyActive);
-
-        static void AddActiveUnit()
-        {
-            TinyBot turnTaker = TurnTakers[activeIndex];
-            currentlyActive.Add(TurnTakers[activeIndex]);
-            turnTaker.BeginTurn();
-            activeIndex++;
-            if (turnTaker.Allegiance == Allegiance.PLAYER
-                && activeIndex < TurnTakers.Count
-                && TurnTakers[activeIndex].Allegiance == Allegiance.PLAYER)
-            {
-                AddActiveUnit();
-            }
-        }
-    }
+    
 
     public static void EndTurn(TinyBot bot)
     {
@@ -137,11 +119,24 @@ public class TurnManager : MonoBehaviour
         if (currentlyActive.Count == 0)
         {
             if (activeIndex == TurnTakers.Count) StartNewRound();
-            GetActiveBots();
+            AddActiveUnit();
+            ArrangePortraits(currentlyActive);
+            foreach(var active in currentlyActive) active.BecomeAvailableForTurn();
         }
-        TinyBot next = currentlyActive.First();
-        MainCameraControl.PanToPosition(next.TargetPoint.position, true, false);
-        if (initial) PrimaryCursor.SelectBot(next);
+        currentlyActive.First().Select();
+
+        static void AddActiveUnit()
+        {
+            TinyBot turnTaker = TurnTakers[activeIndex];
+            currentlyActive.Add(TurnTakers[activeIndex]);
+            activeIndex++;
+            if (turnTaker.Allegiance == Allegiance.PLAYER
+                && activeIndex < TurnTakers.Count
+                && TurnTakers[activeIndex].Allegiance == Allegiance.PLAYER)
+            {
+                AddActiveUnit();
+            }
+        }
     }
 
     private static void StartNewRound()

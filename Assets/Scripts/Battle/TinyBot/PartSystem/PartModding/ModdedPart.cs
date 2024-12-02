@@ -31,6 +31,7 @@ public class ModdedPart
     public void InitializePart()
     {
         sample = InstantiateSample(out abilities);
+        sample.SetActive(false);
         MutatePart();
     }
 

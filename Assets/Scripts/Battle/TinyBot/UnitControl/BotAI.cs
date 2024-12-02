@@ -49,6 +49,7 @@ public class BotAI
 
     public IEnumerator TakeTurn()
     {
+
         BeginTurn();
         List<TinyBot> enemies = new();
         List<TinyBot> allies = new();
@@ -160,9 +161,9 @@ public class BotAI
     #region Unit Actions
     void BeginTurn()
     {
+        PrimaryCursor.ToggleCursor(false);
         MainCameraControl.RestrictCamera(true);
         MainCameraControl.TrackTarget(thisBot.transform);
-        thisBot.ToggleActiveLayer(true);
         Pathfinder3D.GeneratePathingTree(thisBot.MoveStyle, thisBot.transform.position);
     }
     void EndTurn()

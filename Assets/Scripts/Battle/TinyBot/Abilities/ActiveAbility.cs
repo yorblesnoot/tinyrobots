@@ -68,7 +68,6 @@ public class ActiveAbility : Ability
         Vector3Int startPosition = Vector3Int.RoundToInt(rawPosition);
         MainCameraControl.PanToPosition(CurrentTrajectory[^1], false, false);
         CurrentCooldown = SceneGlobals.PlayerData.DevMode && Owner.Allegiance == Allegiance.PLAYER ? 0 : cooldown;
-        PrimaryCursor.ActionInProgress = true;
         yield return new WaitForSeconds(skillDelay);
         ReleaseLockOn();
         
@@ -77,7 +76,6 @@ public class ActiveAbility : Ability
         CurrentTargets = new();
         ScheduleAbilityEnd();
         MainCameraControl.PanToPosition(Owner.TargetPoint.position, false, false);
-        PrimaryCursor.ActionInProgress = false;
         if (Vector3Int.RoundToInt(Owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(Owner.MoveStyle, Owner.transform.position);
         
     }
