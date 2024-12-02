@@ -55,7 +55,8 @@ public class BoundsEditor : Editor
     void ConfigureTerrain(Transform child)
     {
         child.gameObject.layer = terrainLayer;
-        if (!child.gameObject.TryGetComponent<MeshCollider>(out _)) child.gameObject.AddComponent<MeshCollider>();
+        if(child.gameObject.TryGetComponent(out Collider collider)) DestroyImmediate(collider);
+        child.gameObject.AddComponent<MeshCollider>();
         EditorUtility.SetDirty(child.gameObject);
     }
 }
