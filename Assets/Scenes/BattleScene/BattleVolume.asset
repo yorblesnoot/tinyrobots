@@ -79,17 +79,17 @@ MonoBehaviour:
     m_OverrideState: 1
     m_Value: 1
   qualityLevel:
-    m_OverrideState: 0
-    m_Value: 4
+    m_OverrideState: 1
+    m_Value: 3
   gridPixelSize:
-    m_OverrideState: 0
-    m_Value: 12
+    m_OverrideState: 1
+    m_Value: 4
   gridSizeZ:
-    m_OverrideState: 0
-    m_Value: 160
+    m_OverrideState: 1
+    m_Value: 196
   maxDistanceVolumetric:
-    m_OverrideState: 0
-    m_Value: 64
+    m_OverrideState: 1
+    m_Value: 150
   depthRatio:
     m_OverrideState: 0
     m_Value: 2
@@ -101,7 +101,7 @@ MonoBehaviour:
     m_Value: 0.05
   fogDensity:
     m_OverrideState: 1
-    m_Value: 93.57
+    m_Value: 8.3
   anisotropy:
     m_OverrideState: 0
     m_Value: 0.2
@@ -121,14 +121,14 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 64
   baseHeight:
-    m_OverrideState: 0
-    m_Value: 0
+    m_OverrideState: 1
+    m_Value: 150
   attenuationBoundarySize:
     m_OverrideState: 0
     m_Value: 10
   litColor:
     m_OverrideState: 1
-    m_Value: {r: 0.07705596, g: 0, b: 0.509434, a: 1}
+    m_Value: {r: 0.04063842, g: 0, b: 0.50980395, a: 1}
   shadowedColor:
     m_OverrideState: 1
     m_Value: {r: 0.0140174385, g: 0.057930097, b: 0.3301887, a: 1}
@@ -143,7 +143,7 @@ MonoBehaviour:
     m_Value: 0
   colorInfluence:
     m_OverrideState: 1
-    m_Value: 0.034
+    m_Value: 0.335
   directionalForward:
     m_OverrideState: 0
     m_Value: {r: 1, g: 1, b: 1, a: 1}
@@ -161,19 +161,19 @@ MonoBehaviour:
     m_Value: 1
   lacunarity:
     m_OverrideState: 0
-    m_Value: 2
+    m_Value: 2.52
   gain:
     m_OverrideState: 0
     m_Value: 0.3
   noiseTiling:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 30
   noiseWindSpeed:
-    m_OverrideState: 0
-    m_Value: {x: 0, y: -1, z: 0}
+    m_OverrideState: 1
+    m_Value: {x: 3, y: 0, z: 3}
   noiseMap:
-    m_OverrideState: 0
-    m_Value: {x: 0, y: 1}
+    m_OverrideState: 1
+    m_Value: {x: 0.34126988, y: 0.7243108}
   volumeNoise:
     m_OverrideState: 0
     m_Value:
@@ -183,6 +183,6 @@ MonoBehaviour:
       gain: 0.35
       seed: 0
       noiseType: 2
-      noiseQuality: 2
+      noiseQuality: 3
       invert: 0
       userTexture: {fileID: 0}
