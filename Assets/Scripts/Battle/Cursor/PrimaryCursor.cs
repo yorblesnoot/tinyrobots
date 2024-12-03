@@ -166,23 +166,28 @@ public class PrimaryCursor : MonoBehaviour
         int pathIndex = 0;
         float currentMove = PlayerControlledBot.Stats.Current[StatType.MOVEMENT];
 
-        while (pathIndex < possiblePath.Count && distances[pathIndex] < currentMove)
+        
+        while(pathIndex < possiblePath.Count)
         {
-            currentPath.Add(possiblePath[pathIndex]);
-            pathIndex++;            
-        }
-        if(pathIndex > 0 && pathIndex < possiblePath.Count)
-        {
-            float extraMove = distances[pathIndex] - currentMove;
-            Vector3 offset = possiblePath[pathIndex] - possiblePath[pathIndex - 1]; 
-            offset.Normalize();
-            Vector3 midPoint = possiblePath[pathIndex - 1] + offset * extraMove;
-            currentPath.Add(midPoint);
-            redPath.Add(midPoint);
-        }
-        while (pathIndex < possiblePath.Count && distances[pathIndex] >= currentMove)
-        {
-            redPath.Add(possiblePath[pathIndex]);
+            if (distances[pathIndex] < currentMove)
+            {
+                currentPath.Add(possiblePath[pathIndex]);
+            }
+            else if (redPath.Count == 0 && pathIndex > 0)
+            {
+                Vector3 direction = possiblePath[pathIndex] - possiblePath[pathIndex - 1];
+                float extraMove =  currentMove - distances[pathIndex - 1];
+                direction.Normalize();
+                Vector3 midPoint = possiblePath[pathIndex - 1] + direction * extraMove;
+                currentPath.Add(midPoint);
+                redPath.Add(midPoint);
+                redPath.Add(possiblePath[pathIndex]);
+            }
+            else
+            {
+                redPath.Add(possiblePath[pathIndex]);
+                
+            }
             pathIndex++;
         }
         

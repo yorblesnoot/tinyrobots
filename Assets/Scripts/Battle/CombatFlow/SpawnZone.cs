@@ -4,34 +4,66 @@ using UnityEngine;
 
 public class SpawnZone : MonoBehaviour
 {
+    enum Mode
+    {
+        CUBE,
+        SPHERE
+    }
+
+    [SerializeField] Mode mode;
     public Allegiance Allegiance;
-    public int Radius = 1;
-    public Vector3 Position { get { return transform.position; } }
+    [SerializeField] Transform limitMarker;
+    float radius;
     static Dictionary<Allegiance, Dictionary<MoveStyle, List<Vector3>>> styleNodes;
     private void Awake()
     {
         if(styleNodes != null) styleNodes = null;
         Pathfinder3D.MapInitialized.AddListener(CalculateZoneNodes);
         gameObject.SetActive(false);
+        radius = Vector3.Distance(transform.position, limitMarker.position);
     }
 
     void CalculateZoneNodes()
     {
         BuildStyleNodes();
-        Vector3Int position = Vector3Int.RoundToInt(transform.position);
-        for(int x = position.x - Radius; x <= position.x + Radius; x++)
+        Vector3 rawSource = transform.position;
+        Vector3 checkEnd = limitMarker.position;
+        if(mode == Mode.SPHERE)
         {
-            for(int y = position.y - Radius; y <= position.y + Radius; y++)
+            Vector3 sphereOffset = Vector3.one * radius;
+            rawSource = transform.position - sphereOffset;
+            checkEnd = transform.position + sphereOffset;
+        }
+
+        Vector3Int checkSource = Vector3Int.RoundToInt(rawSource);
+        Vector3 searchDirection = checkEnd - checkSource;
+        Vector3Int searchSigns = new(Math.Sign(searchDirection.x), Math.Sign(searchDirection.y), Math.Sign(searchDirection.z));
+        Debug.Log($"finding nodes for {Allegiance} from {checkSource} to {checkEnd}. signs are {searchSigns}");
+
+        for(int x = checkSource.x; ConditionalCompare(x, checkEnd.x, searchSigns.x); x += searchSigns.x)
+        {
+            for(int y = checkSource.y; ConditionalCompare(y, checkEnd.y, searchSigns.y); y += searchSigns.y)
             {
-                for(int z = position.z - Radius; z <= position.z + Radius; z++)
+                for(int z = checkSource.z; ConditionalCompare(z, checkEnd.z, searchSigns.z); z += searchSigns.z)
                 {
                     Vector3Int checkedPosition = new(x, y, z);
-                    if (Vector3.Distance(checkedPosition, position) > Radius) continue;
+                    if (mode == Mode.SPHERE && Vector3.Distance(checkedPosition, checkSource) > radius) continue;
                     List<MoveStyle> styles = Pathfinder3D.GetNodeStyles(checkedPosition);
-                    foreach(MoveStyle style in styles) styleNodes[Allegiance][style].Add(checkedPosition);
+                    foreach (MoveStyle style in styles) 
+                    {
+                        Debug.Log($"added {Allegiance} {style} {checkedPosition}");
+                        styleNodes[Allegiance][style].Add(checkedPosition);
+                    }
+                    
                 }
             }
         }
+    }
+
+    bool ConditionalCompare(float x, float y, int sign)
+    {
+        if (sign > 0) return x <= y;
+        else return x >= y;
     }
 
     void BuildStyleNodes()
@@ -48,17 +80,29 @@ public class SpawnZone : MonoBehaviour
 
     public static void PlaceBot(TinyBot bot)
     {
+        Debug.Log($"{bot.Allegiance} {bot.MoveStyle}");
+        Debug.Log(styleNodes[bot.Allegiance][bot.MoveStyle].Count);
+
         List<Vector3> availableSpaces = styleNodes[bot.Allegiance][bot.MoveStyle];
         Vector3 targetSpace =  availableSpaces.GrabRandomly();
         bot.transform.position = targetSpace;
         foreach(var allegiance in styleNodes.Values) 
             foreach (var mode in allegiance.Values) mode.Remove(targetSpace);
+        bot.gameObject.SetActive(true);
         bot.PrimaryMovement.SpawnOrientation();
         bot.StartCoroutine(bot.PrimaryMovement.NeutralStance());
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(Position, Radius);
+        
+        if (mode == Mode.SPHERE)
+        {
+            radius = Vector3.Distance(transform.position, limitMarker.position);
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, radius);
+        }
+        else if (mode == Mode.CUBE) GizmoPlus.DrawWireCuboid(transform.position, limitMarker.position, Color.red);
+
     }
 }
