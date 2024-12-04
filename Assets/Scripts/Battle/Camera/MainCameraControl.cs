@@ -239,20 +239,23 @@ public class MainCameraControl : MonoBehaviour
     public static void TrackTarget(Transform target)
     {
         tracking = true;
+        ToggleAutoCam(true);
         Instance.StartCoroutine(TrackTowardsEntity(target));
     }
 
     public static void ReleaseTracking()
     {
         tracking = false;
+        ToggleAutoCam(false);
     }
 
     static IEnumerator TrackTowardsEntity(Transform target)
     {
+        Transform tracker = Cams.AutoFocalPoint;
         while (tracking)
         {
-            Vector3 targetPosition = Vector3.Lerp(Cams.FreeFocalPoint.transform.position, target.position, Time.deltaTime);
-            Cams.FreeFocalPoint.transform.position = targetPosition;
+            //Vector3 targetPosition = Vector3.Lerp(tracker.position, target.position, Time.deltaTime);
+            tracker.position = target.position;
             yield return null;
         }
     }
