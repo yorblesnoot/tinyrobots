@@ -60,10 +60,12 @@ public class MapScanner
             List<DirectedHit> directedHits = GetHitProfile(a, b, castDimension);
 
             directedHits = directedHits.OrderBy(hit => hit.position[castDimension]).ToList();
-            /*foreach (DirectedHit hit in directedHits)
+            directedHits = CleanRedundantHits(directedHits);
+            foreach (DirectedHit hit in directedHits)
             {
                 Debug.DrawLine(hit.position, hit.position + rayDirection / 5, hit.front ? Color.green : Color.red, 20f);
-            }*/
+            }
+
 
             int hitcount = 0;
             for (int c = 0; c < cSize; c++)
@@ -72,6 +74,7 @@ public class MapScanner
                 {
                     hitcount += directedHits[0].front ? 1 : -1;
                     directedHits.RemoveAt(0);
+
                 }
                 
                 if (hitcount > 0)
@@ -107,6 +110,14 @@ public class MapScanner
             GetHits(interiorMask, ChainSphereCast);
             return directedHits;
 
+            void GetHits(int mask, Func<Vector3, float, Vector3, float, int, RaycastHit[]> cast)
+            {
+                RaycastHit[] fronts = cast(origin, sphereRadius, rayDirection, rayLength, mask);
+                RaycastHit[] backs = cast(end, sphereRadius, -rayDirection, rayLength, mask);
+                directedHits.AddRange(ParseHits(fronts, true));
+                directedHits.AddRange(ParseHits(backs, false));
+            }
+
             static List<DirectedHit> ParseHits(RaycastHit[] hits, bool front)
             {
                 List<DirectedHit> parsed = new();
@@ -118,14 +129,36 @@ public class MapScanner
                 return parsed;
             }
 
-            void GetHits(int mask, Func<Vector3, float, Vector3, float, int, RaycastHit[]> cast)
-            {
-                RaycastHit[] fronts = cast(origin, sphereRadius, rayDirection, rayLength, mask);
-                RaycastHit[] backs = cast(end, sphereRadius, -rayDirection, rayLength, mask);
-                directedHits.AddRange(ParseHits(fronts, true));
-                directedHits.AddRange(ParseHits(backs, false));
-            }
+            
         }
+    }
+
+    List<DirectedHit> CleanRedundantHits(List<DirectedHit> hits)
+    {
+        List<DirectedHit> output = new();
+        bool frontMode = false;
+        int index = 0;
+        while(index < hits.Count)
+        {
+            DirectedHit hit = hits[index];
+            if (hit.front)
+            {
+                if (!frontMode)
+                {
+                    int last = index - 1;
+                    if (last >= 0) output.Add(hits[last]);
+                    output.Add(hit);
+                    frontMode = true;
+                }
+            }
+            else
+            {
+                frontMode = false;
+            }
+            index++;
+        }
+        if (!frontMode && index > 0) output.Add(hits[index-1]);
+        return output;
     }
 
     RaycastHit[] ChainSphereCast(Vector3 origin, float radius, Vector3 direction, float maxDistance, int mask)
