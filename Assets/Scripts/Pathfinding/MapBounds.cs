@@ -29,9 +29,11 @@ public class MapBounds : MonoBehaviour
 public class BoundsEditor : Editor
 {
     int terrainLayer;
+    int interiorLayer;
     private void Awake()
     {
         terrainLayer = LayerMask.NameToLayer("Terrain");
+        interiorLayer = LayerMask.NameToLayer("TerrainInterior");
     }
     public override void OnInspectorGUI()
     {
@@ -54,7 +56,8 @@ public class BoundsEditor : Editor
 
     void ConfigureTerrain(Transform child)
     {
-        child.gameObject.layer = terrainLayer;
+        if (child.GetComponent<MeshRenderer>() == null) return;
+        child.gameObject.layer = child.gameObject.layer == interiorLayer ? interiorLayer : terrainLayer;
         if(child.gameObject.TryGetComponent(out Collider collider)) DestroyImmediate(collider);
         child.gameObject.AddComponent<MeshCollider>();
         EditorUtility.SetDirty(child.gameObject);
