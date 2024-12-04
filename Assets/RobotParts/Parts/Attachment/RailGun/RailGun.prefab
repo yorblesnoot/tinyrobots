@@ -172,11 +172,9 @@ MonoBehaviour:
   range: 40
   ModifiableRange: 0
   cooldown: 3
-  EffectMagnitude: 30
   EffectivenessMultiplier: 1
   cost: 2
   icon: {fileID: 21300000, guid: 482884d1759cf4bdbad2fa53c99aee5c, type: 3}
-  EffectDescription: ' Damage'
   CurrentCooldown: 0
   Owner: {fileID: 0}
   emissionPoint: {fileID: 1266673474873603974}
@@ -202,7 +200,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
-  BaseEffectMagnitude: 30
+  BaseEffectMagnitude: 0
   projectile: {fileID: 5629778864400073585, guid: 29f587667119b7440b657ac1aab27250,
     type: 3}
   travelTime: 0.2
@@ -266,7 +264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
-  BaseEffectMagnitude: 0
+  BaseEffectMagnitude: 30
 --- !u!1 &6575153940852210530
 GameObject:
   m_ObjectHideFlags: 0

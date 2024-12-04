@@ -15,10 +15,11 @@ public class PanCamera : TutorialAction
     }
     public override IEnumerator Execute()
     {
-        MainCameraControl.RestrictCamera();
+        PrimaryCursor.TogglePlayerLockout(true);
         cam.Priority = 5;
         yield return Tween.Custom(dolly, 0, 1, moveDuration, OnChange).ToYieldInstruction();
         cam.Priority = 0;
+        PrimaryCursor.TogglePlayerLockout(false);
     }
 
     void OnChange(CinemachineTrackedDolly dolly, float value)

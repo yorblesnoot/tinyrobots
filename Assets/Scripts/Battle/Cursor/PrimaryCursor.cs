@@ -35,7 +35,7 @@ public class PrimaryCursor : MonoBehaviour
     [SerializeField] TMP_Text moveCostPreview;
     [SerializeField] Renderer selectBubble;
 
-    public static bool NoCursor { get; private set; }
+    public static bool LockoutPlayer { get; private set; }
 
     public static UnityEvent<TinyBot> PlayerSelectedBot = new();
     private void Awake()
@@ -52,7 +52,7 @@ public class PrimaryCursor : MonoBehaviour
     private void LateUpdate()
     {
          
-        if (NoCursor || !MainCameraControl.FreeCameraAvailable) 
+        if (LockoutPlayer || MainCameraControl.CameraAnimating) 
         {
             InvalidatePath();
             Instance.cursorBehaviour.Hide();
@@ -141,12 +141,12 @@ public class PrimaryCursor : MonoBehaviour
     IEnumerator UseSkill(ActiveAbility ability)
     {
         InvalidatePath();
-        ToggleCursor(false);
+        TogglePlayerLockout(true);
         yield return StartCoroutine(ability.Execute());
 
         ClickableAbility.PlayerUsedAbility?.Invoke();
         if (ability.EndTurn) yield return new WaitForSeconds(1);
-        ToggleCursor(true);
+        TogglePlayerLockout(false);
         if (ability.EndTurn) TurnManager.EndTurn(PlayerControlledBot);
     }
 
@@ -221,11 +221,11 @@ public class PrimaryCursor : MonoBehaviour
 
     private IEnumerator TraversePath()
     {
-        ToggleCursor(false);
+        TogglePlayerLockout(true);
         yield return StartCoroutine(PlayerControlledBot.PrimaryMovement.TraversePath(currentPath));
         InvalidatePath();
         Pathfinder3D.GeneratePathingTree(PlayerControlledBot.PrimaryMovement.Style, PlayerControlledBot.transform.position);
-        ToggleCursor(true);
+        TogglePlayerLockout(false);
     }
 
     public static void SnapToUnit(TinyBot unit)
@@ -249,8 +249,8 @@ public class PrimaryCursor : MonoBehaviour
         State = on ? CursorState.SPACELOCKED : CursorState.FREE;
     }
 
-    public static void ToggleCursor(bool on)
+    public static void TogglePlayerLockout(bool on)
     {
-        NoCursor = !on;
+        LockoutPlayer = on;
     }
 }

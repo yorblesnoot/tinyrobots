@@ -54,7 +54,7 @@ public class UnitControl : MonoBehaviour
 
     void EndPlayerTurn()
     {
-        if (PrimaryCursor.NoCursor) return;
+        if (PrimaryCursor.LockoutPlayer) return;
         TurnManager.EndTurn(PlayerControlledBot);
     }
 

@@ -18,7 +18,7 @@ public class DeploymentZone : MonoBehaviour
     {
         active.zoneMarker.SetActive(true);
         active.PositionAreaMarker();
-        MainCameraControl.PanToPosition(active.zoneMarker.transform.position, true, true);
+        MainCameraControl.FindViewOfPosition(active.zoneMarker.transform.position);
     }
 
     public static void EndDeployment()

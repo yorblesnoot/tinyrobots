@@ -38,7 +38,7 @@ public class SpawnZone : MonoBehaviour
         Vector3Int checkSource = Vector3Int.RoundToInt(rawSource);
         Vector3 searchDirection = checkEnd - checkSource;
         Vector3Int searchSigns = new(Math.Sign(searchDirection.x), Math.Sign(searchDirection.y), Math.Sign(searchDirection.z));
-        Debug.Log($"finding nodes for {Allegiance} from {checkSource} to {checkEnd}. signs are {searchSigns}");
+        //Debug.Log($"finding nodes for {Allegiance} from {checkSource} to {checkEnd}. signs are {searchSigns}");
 
         for(int x = checkSource.x; ConditionalCompare(x, checkEnd.x, searchSigns.x); x += searchSigns.x)
         {
@@ -51,7 +51,7 @@ public class SpawnZone : MonoBehaviour
                     List<MoveStyle> styles = Pathfinder3D.GetNodeStyles(checkedPosition);
                     foreach (MoveStyle style in styles) 
                     {
-                        Debug.Log($"added {Allegiance} {style} {checkedPosition}");
+                        //Debug.Log($"added {Allegiance} {style} {checkedPosition}");
                         styleNodes[Allegiance][style].Add(checkedPosition);
                     }
                     
@@ -80,9 +80,6 @@ public class SpawnZone : MonoBehaviour
 
     public static void PlaceBot(TinyBot bot)
     {
-        Debug.Log($"{bot.Allegiance} {bot.MoveStyle}");
-        Debug.Log(styleNodes[bot.Allegiance][bot.MoveStyle].Count);
-
         List<Vector3> availableSpaces = styleNodes[bot.Allegiance][bot.MoveStyle];
         Vector3 targetSpace =  availableSpaces.GrabRandomly();
         bot.transform.position = targetSpace;

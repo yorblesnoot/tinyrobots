@@ -161,16 +161,13 @@ public class BotAI
     #region Unit Actions
     void BeginTurn()
     {
-        PrimaryCursor.ToggleCursor(false);
-        MainCameraControl.RestrictCamera(true);
-        MainCameraControl.TrackTarget(thisBot.transform);
+        PrimaryCursor.TogglePlayerLockout(true);
         Pathfinder3D.GeneratePathingTree(thisBot.MoveStyle, thisBot.transform.position);
     }
     void EndTurn()
     {
         thisBot.ToggleActiveLayer(false);
-        MainCameraControl.RestrictCamera(false);
-        MainCameraControl.ReleaseTracking();
+        PrimaryCursor.TogglePlayerLockout(true);
         TurnManager.EndTurn(thisBot);
     }
 
@@ -178,11 +175,13 @@ public class BotAI
     {
         if (Vector3Int.RoundToInt(thisBot.transform.position) != location)
         {
+            MainCameraControl.TrackTarget(thisBot.TargetPoint);
             List<Vector3> path = Pathfinder3D.FindVectorPath(location, out var moveCosts);
             if(path == null || path.Count == 0) yield break;
             thisBot.SpendResource(Mathf.RoundToInt(moveCosts[^1]), StatType.MOVEMENT);
             yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.TraversePath(path));
             Pathfinder3D.GeneratePathingTree(thisBot.MoveStyle, thisBot.transform.position);
+            MainCameraControl.ReleaseTracking();
         }
     }
     private IEnumerator UseAbility(ActiveAbility ability, GameObject target)

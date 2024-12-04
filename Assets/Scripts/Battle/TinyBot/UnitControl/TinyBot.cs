@@ -1,4 +1,5 @@
 using PrimeTween;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -114,20 +115,18 @@ public class TinyBot : Targetable
 
     public void Select()
     {
-        MainCameraControl.PanToPosition(TargetPoint.position, true, false);
-        if (!AvailableForTurn) return;
-        ClearActiveBot.Invoke();
-        BeginTurn();
+        MainCameraControl.FindViewOfPosition(TargetPoint.position, AvailableForTurn ? BeginTurn : null);
     }
 
     void BeginTurn()
     {
+        ClearActiveBot.Invoke();
         Pathfinder3D.SetNodeOccupancy(Vector3Int.RoundToInt(transform.position), false);
         ToggleActiveLayer(true);
         if (Allegiance == Allegiance.PLAYER)
         {
             Pathfinder3D.GeneratePathingTree(PrimaryMovement.Style, transform.position);
-            PrimaryCursor.ToggleCursor(true);
+            PrimaryCursor.TogglePlayerLockout(false);
             PrimaryCursor.PlayerSelectedBot.Invoke(this);
         }
         else

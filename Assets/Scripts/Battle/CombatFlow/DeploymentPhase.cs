@@ -22,7 +22,7 @@ public class DeploymentPhase : MonoBehaviour
     }
     public static IEnumerator BeginDeployment(List<TinyBot> playerBots, Action endCallback)
     {
-        PrimaryCursor.ToggleCursor(true);
+        PrimaryCursor.TogglePlayerLockout(false);
         DeploymentZone.BeginDeployment();
         yield return Tween.Alpha(instance.deploymentBanner, 1f, instance.fadeDuration).ToYieldInstruction();
         foreach (TinyBot bot in playerBots)

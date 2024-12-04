@@ -9,7 +9,7 @@ public class TutorialDialogue : TutorialAction
     bool dialogueComplete = false;
     public override IEnumerator Execute()
     {
-        MainCameraControl.RestrictCamera();
+        PrimaryCursor.TogglePlayerLockout(true);
         dialogueComplete = false;
         DialogueManager.Instance.StartDialogue(DialogueSO, startId);
         DialogueManager.Instance.EndDialogueEvent.AddListener(FinishDialogue);
@@ -18,7 +18,7 @@ public class TutorialDialogue : TutorialAction
 
     void FinishDialogue()
     {
-        MainCameraControl.RestrictCamera(false);
+        PrimaryCursor.TogglePlayerLockout(false);
         dialogueComplete = true;
     }
 }

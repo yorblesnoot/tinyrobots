@@ -58,7 +58,7 @@ public class BattleEnder : MonoBehaviour
 
     void ClearUI()
     {
-        MainCameraControl.RestrictCamera();
+        PrimaryCursor.TogglePlayerLockout(true);
         PrimaryCursor.RestrictCursor();
         foreach (var obj in clearedUI) obj.SetActive(false);
     }

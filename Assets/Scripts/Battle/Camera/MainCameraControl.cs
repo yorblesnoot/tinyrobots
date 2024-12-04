@@ -1,5 +1,6 @@
 using Cinemachine;
 using PrimeTween;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -23,8 +24,19 @@ public class MainCameraControl : MonoBehaviour
     string xInput;
     string yInput;
 
+    [System.Serializable]
+    class CameraSet
+    {
+        public CinemachineFreeLook Free;
+        public CinemachineClearShot Automatic;
+        public CinemachineBrain Brain;
+        public Transform FreeFocalPoint;
+        public Transform AutoFocalPoint;
+    }
     public static MainCameraControl Instance;
-    public static bool FreeCameraAvailable { get; private set; } = true;
+    public static bool CameraAnimating {  get { return tracking || panning; } }
+    static bool tracking;
+    static bool panning;
     private void OnEnable()
     {
         EnableInputSystem();
@@ -36,9 +48,7 @@ public class MainCameraControl : MonoBehaviour
         mapCorner = new(map.GetLength(0), map.GetLength(1), map.GetLength(2));
         ConfineCameras(mapCorner);
         Cams = cams;
-        Cams.FocalPoint = transform;
         Instance = this;
-        RestrictCamera(false);
         xInput = Cams.Free.m_XAxis.m_InputAxisName; //Mouse X
         yInput = Cams.Free.m_YAxis.m_InputAxisName; //Mouse Y
         LockCameraPivot();
@@ -85,9 +95,7 @@ public class MainCameraControl : MonoBehaviour
 
     void BeginFocusRotation(InputAction.CallbackContext context)
     {
-        Debug.Log(FreeCameraAvailable);
-        if (!FreeCameraAvailable) return;
-        ToggleAutoCam(false);
+        if (PrimaryCursor.LockoutPlayer || CameraAnimating) return;
 
         Cams.Free.m_XAxis.m_InputAxisName = xInput;
         Cams.Free.m_YAxis.m_InputAxisName = yInput;
@@ -100,16 +108,10 @@ public class MainCameraControl : MonoBehaviour
         PrimaryCursor.RestrictCursor(false);
     }
 
-    
-    public static void RestrictCamera(bool value = true)
-    {
-        FreeCameraAvailable = !value;
-    }
-
     private void LateUpdate()
     {
-        if(Input.GetKeyDown(KeyCode.Backspace)) RestrictCamera(FreeCameraAvailable);
-        if(FreeCameraAvailable) PlayerControlCamera();
+        //if(Input.GetKeyDown(KeyCode.Backspace)) RestrictCamera(FreeCameraAvailable);
+        if(!PrimaryCursor.LockoutPlayer && !CameraAnimating) PlayerControlCamera();
         cams.Brain.ManualUpdate();
         //Cams.Automatic.m_MinDuration = 50;
     }
@@ -151,12 +153,10 @@ public class MainCameraControl : MonoBehaviour
 
     void ClimbCamera(float value)
     {
-        if (!FreeCameraAvailable) return;
-        ToggleAutoCam(false);
-        Vector3 climbedPosition = transform.position;
+        Vector3 climbedPosition = Cams.FreeFocalPoint.position;
         climbedPosition.y += climbSpeed * value;
 
-        transform.position = climbedPosition;
+        Cams.FreeFocalPoint.position = climbedPosition;
         ClampFocusInMap();
     }
 
@@ -173,22 +173,20 @@ public class MainCameraControl : MonoBehaviour
 
     private void SlideCamera(Vector3 moveOffset)
     {
-        if(!FreeCameraAvailable) return;
-        ToggleAutoCam(false);
         Quaternion yRotation = Camera.main.transform.rotation;
         moveOffset *= scrollSpeed;
-        Vector3 slidPosition = transform.position + yRotation * moveOffset;
-        transform.position = slidPosition;
+        Vector3 slidPosition = Cams.FreeFocalPoint.position + yRotation * moveOffset;
+        Cams.FreeFocalPoint.position = slidPosition;
         ClampFocusInMap();
     }
 
     private void Zoom(float factor)
     {
-        Vector3 direction = Cams.FocalPoint.position - Camera.main.transform.position;
+        Vector3 direction = Cams.FreeFocalPoint.position - Camera.main.transform.position;
         direction.y = 0;
         direction.Normalize();
         direction *= factor;
-        transform.position += direction;
+        Cams.FreeFocalPoint.position += direction;
         ClampFocusInMap();
     }
 
@@ -204,71 +202,60 @@ public class MainCameraControl : MonoBehaviour
     {
         Vector3 minimum = Vector3.one * focalPointDeadzone;
         Vector3 maximum = mapCorner - minimum;
-        transform.position = transform.position.Clamp(minimum, maximum);
+        Cams.FreeFocalPoint.position = Cams.FreeFocalPoint.position.Clamp(minimum, maximum);
     }
 
-    public static void PanToPosition(Vector3 target, bool automatic, bool instant)
+    public static void FindViewOfPosition(Vector3 target, Action callback = null)
     {
-        Tween.StopAll(Cams.FocalPoint.transform);
-        
-        if (instant)
-        {
-            ToggleAutoCam();
-            Cams.FocalPoint.transform.position = target;
-        }
-        else
-        {
-            RestrictCamera();
-            ToggleAutoCam(false);
-            Cams.Automatic.m_MinDuration = 100;
-            Tween.Position(Cams.FocalPoint.transform, target, duration: Instance.panDuration).OnComplete(() => EndPan(automatic));
-        }
+        Cams.AutoFocalPoint.transform.position = target;
+        ToggleAutoCam();
+        Instance.StartCoroutine(Instance.PanLockout(callback));
+        panning = true;
     }
 
-    static void EndPan(bool auto)
+    public static void PanToPosition(Vector3 target)
     {
-        Cams.Automatic.m_MinDuration = 0;
-        RestrictCamera(false);
-        ToggleAutoCam(auto);
+        panning = true;
+        Tween.Position(Cams.FreeFocalPoint, endValue: target, duration: Instance.panDuration).OnComplete(() => panning = false);
+    }
+
+    IEnumerator PanLockout(Action callback)
+    {
+        yield return new WaitForSeconds(Cams.Brain.m_DefaultBlend.BlendTime);
+        ToggleAutoCam(false);
+        panning = false;
+        callback?.Invoke();
     }
 
     static void ToggleAutoCam(bool on = true)
     {
-        Cams.Automatic.gameObject.SetActive(on);
+        if (!on) Cams.FreeFocalPoint.position = Cams.AutoFocalPoint.position;
+        //Cams.Automatic.gameObject.SetActive(on);
         Cams.Free.Priority = on ? 0 : 3;
+        
     }
 
-    static bool tracking;
-
+    
     public static void TrackTarget(Transform target)
     {
-        if (tracking) return;
         tracking = true;
-        RestrictCamera(true);
         Instance.StartCoroutine(TrackTowardsEntity(target));
     }
 
     public static void ReleaseTracking()
     {
         tracking = false;
-        RestrictCamera(false);
     }
 
     static IEnumerator TrackTowardsEntity(Transform target)
     {
         while (tracking)
         {
-            Cams.FocalPoint.transform.position = Vector3.Lerp(Cams.FocalPoint.transform.position, target.position, Time.deltaTime);
+            Vector3 targetPosition = Vector3.Lerp(Cams.FreeFocalPoint.transform.position, target.position, Time.deltaTime);
+            Cams.FreeFocalPoint.transform.position = targetPosition;
             yield return null;
         }
     }
 
-    [System.Serializable]
-    class CameraSet
-    {
-        public CinemachineFreeLook Free;
-        public CinemachineClearShot Automatic;
-        public CinemachineBrain Brain;
-        public Transform FocalPoint;
-    }
+    
 }
