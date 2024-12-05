@@ -36,7 +36,7 @@ public class CinemachineReverseCollider : CinemachineExtension
     {
         int layerMask = mainCollider.m_CollideAgainst & ~mainCollider.m_TransparentLayers;
         if (castWidth == 0) 
-            return RuntimeUtility.RaycastIgnoreTag(ray, out _, distance - mainCollider.m_MinimumDistanceFromTarget, layerMask, mainCollider.m_IgnoreTag);
+            return RuntimeUtility.RaycastIgnoreTag(ray, out _, distance, layerMask, mainCollider.m_IgnoreTag);
         else return Physics.SphereCast(ray, castWidth, distance, layerMask);
     }
 }

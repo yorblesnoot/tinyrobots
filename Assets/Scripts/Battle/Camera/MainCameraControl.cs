@@ -249,7 +249,6 @@ public class MainCameraControl : MonoBehaviour
     public static void ReleaseTracking()
     {
         tracking = false;
-        ToggleAutoCam(false);
     }
 
     static IEnumerator TrackTowardsEntity(Transform target)
@@ -261,6 +260,7 @@ public class MainCameraControl : MonoBehaviour
             tracker.position = target.position;
             yield return null;
         }
+        ToggleAutoCam(false);
     }
 
     
