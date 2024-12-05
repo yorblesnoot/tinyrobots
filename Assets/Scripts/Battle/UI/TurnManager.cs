@@ -123,7 +123,7 @@ public class TurnManager : MonoBehaviour
             ArrangePortraits(currentlyActive);
             foreach(var active in currentlyActive) active.BecomeAvailableForTurn();
         }
-        currentlyActive.First().Select();
+        currentlyActive.First().Select(true);
 
         static void AddActiveUnit()
         {

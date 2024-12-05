@@ -21,7 +21,7 @@ public class TurnPortrait : MonoBehaviour
     {
         thisBot = bot;
         PrimaryCursor.PlayerSelectedBot.AddListener(HighlightWhenActive);
-        selectButton.onClick.AddListener(bot.Select);
+        selectButton.onClick.AddListener(() => bot.Select());
         bot.Stats.StatModified.AddListener(UpdateHealth);
         SetColorForAllegiance(bot);
         cardPortrait.sprite = bot.Portrait;

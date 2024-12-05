@@ -113,8 +113,9 @@ public class TinyBot : Targetable
         AvailableForTurn = true;
     }
 
-    public void Select()
+    public void Select(bool force = false)
     {
+        if (MainCameraControl.CameraAnimating && !force) return;
         MainCameraControl.FindViewOfPosition(TargetPoint.position, AvailableForTurn ? BeginTurn : null);
     }
 

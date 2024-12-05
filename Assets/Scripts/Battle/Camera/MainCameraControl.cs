@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 
 public class MainCameraControl : MonoBehaviour
 {
+
     [SerializeField] float climbSpeed = 1f;
     [SerializeField] float wasdCameraMultiplier = 1f;
     [SerializeField] float scrollSpeed = 1f;
@@ -15,6 +16,7 @@ public class MainCameraControl : MonoBehaviour
     [SerializeField] float panDuration = 2;
     [SerializeField] float zoomSpeed;
     [SerializeField] int focalPointDeadzone = 5;
+    [SerializeField] bool confineCameras = false;
     [SerializeField] int cameraConfineMargin = 1;
     [SerializeField] CameraSet cams;
     [SerializeField] CinemachineConfiner[] confiners;
@@ -46,7 +48,7 @@ public class MainCameraControl : MonoBehaviour
     public void Initialize(byte[,,] map)
     {
         mapCorner = new(map.GetLength(0), map.GetLength(1), map.GetLength(2));
-        ConfineCameras(mapCorner);
+        if(confineCameras) ConfineCameras(mapCorner);
         Cams = cams;
         Instance = this;
         xInput = Cams.Free.m_XAxis.m_InputAxisName; //Mouse X
@@ -161,10 +163,11 @@ public class MainCameraControl : MonoBehaviour
 
     void PlayerMoveFreeCam(Vector3 position)
     {
-        ToggleAutoCam(false);
         Vector3 minimum = Vector3.one * focalPointDeadzone;
         Vector3 maximum = mapCorner - minimum;
-        Cams.FreeFocalPoint.position = position.Clamp(minimum, maximum);
+        Vector3 newPosition = position.Clamp(minimum, maximum);
+        Cams.FreeFocalPoint.position = newPosition;
+        Cams.AutoFocalPoint.position = newPosition;
     }
 
     private void PanCamera(Vector3 mouse)
@@ -205,19 +208,12 @@ public class MainCameraControl : MonoBehaviour
 
     public static void FindViewOfPosition(Vector3 target, Action callback = null)
     {
-        Instance.StartCoroutine(Instance.PanLockout(target, callback));   
+        Instance.StartCoroutine(Instance.FindView(target, callback));   
     }
 
-    public static void PanToPosition(Vector3 target)
+    
+    IEnumerator FindView(Vector3 target, Action callback)
     {
-        panning = true;
-        Tween.Position(Cams.FreeFocalPoint, endValue: target, duration: Instance.panDuration).OnComplete(() => panning = false);
-    }
-
-    IEnumerator PanLockout(Vector3 target, Action callback)
-    {
-        ToggleAutoCam(false);
-        yield return null;
         Cams.AutoFocalPoint.transform.position = target;
         ToggleAutoCam();
         panning = true;
@@ -226,6 +222,13 @@ public class MainCameraControl : MonoBehaviour
         ToggleAutoCam(false);
         callback?.Invoke();
     }
+
+    public static void PanToPosition(Vector3 target)
+    {
+        panning = true;
+        Tween.Position(Cams.FreeFocalPoint, endValue: target, duration: Instance.panDuration).OnComplete(() => panning = false);
+    }
+
 
     static void ToggleAutoCam(bool on = true)
     {
@@ -246,6 +249,7 @@ public class MainCameraControl : MonoBehaviour
     public static void ReleaseTracking()
     {
         tracking = false;
+        ToggleAutoCam(false);
     }
 
     static IEnumerator TrackTowardsEntity(Transform target)

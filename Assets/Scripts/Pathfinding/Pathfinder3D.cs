@@ -315,7 +315,6 @@ public static class Pathfinder3D
 
     static List<Node> FindPath(Vector3Int endCoords)
     {
-        Debug.Log(endCoords);
         List<Node> finishedList = new();
         if (!nodeMap.TryGetValue(endCoords, out var currentNode)) return null;
 

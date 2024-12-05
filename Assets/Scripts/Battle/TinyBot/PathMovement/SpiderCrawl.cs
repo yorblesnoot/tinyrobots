@@ -42,7 +42,7 @@ public class SpiderCrawl : LegMovement
     }
     protected override Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral)
     {
-        Vector3 worldForward = goToNeutral ? Vector3.zero : transform.forward * forwardBias;
+        Vector3 worldForward = goToNeutral ? Vector3.zero : Owner.transform.forward * forwardBias;
         Vector3 localForward = anchor.ikTarget.InverseTransformDirection(worldForward);
         Vector3 firstRaySource = anchor.LocalBasePosition + localForward;
 

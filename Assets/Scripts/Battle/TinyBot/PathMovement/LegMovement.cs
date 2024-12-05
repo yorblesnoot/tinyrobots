@@ -70,6 +70,7 @@ public abstract class LegMovement : PrimaryMovement
         foreach (var anchor in anchors)
         {
             GluePosition(anchor);
+            anchor.DistanceFromDeadZone = LegDistanceFromDeadZone(anchor, inPlace);
         }
         if (Stepping) return;
 
@@ -90,13 +91,11 @@ public abstract class LegMovement : PrimaryMovement
     {
         if (anchor.Stepping) return;
         anchor.ikTarget.position = anchor.GluedWorldPosition;
-        anchor.DistanceFromDeadZone = LegDistanceFromDeadZone(anchor);
     }
 
-    protected virtual float LegDistanceFromDeadZone(Anchor anchor)
+    protected virtual float LegDistanceFromDeadZone(Anchor anchor, bool inPlace)
     {
-        Vector3 localForward = anchor.ikTarget.parent.InverseTransformDirection(Owner.transform.forward);
-        localForward.Normalize();
+        Vector3 localForward = inPlace ? Vector3.zero : anchor.ikTarget.InverseTransformDirection(Owner.transform.forward).normalized;
         return Vector3.Distance(anchor.ikTarget.localPosition, anchor.LocalBasePosition + localForward * forwardBias);
     }
     
