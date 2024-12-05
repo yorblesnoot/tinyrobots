@@ -156,8 +156,15 @@ public class MainCameraControl : MonoBehaviour
         Vector3 climbedPosition = Cams.FreeFocalPoint.position;
         climbedPosition.y += climbSpeed * value;
 
-        Cams.FreeFocalPoint.position = climbedPosition;
-        ClampFocusInMap();
+        PlayerMoveFreeCam(climbedPosition);
+    }
+
+    void PlayerMoveFreeCam(Vector3 position)
+    {
+        ToggleAutoCam(false);
+        Vector3 minimum = Vector3.one * focalPointDeadzone;
+        Vector3 maximum = mapCorner - minimum;
+        Cams.FreeFocalPoint.position = position.Clamp(minimum, maximum);
     }
 
     private void PanCamera(Vector3 mouse)
@@ -176,8 +183,7 @@ public class MainCameraControl : MonoBehaviour
         Quaternion yRotation = Camera.main.transform.rotation;
         moveOffset *= scrollSpeed;
         Vector3 slidPosition = Cams.FreeFocalPoint.position + yRotation * moveOffset;
-        Cams.FreeFocalPoint.position = slidPosition;
-        ClampFocusInMap();
+        PlayerMoveFreeCam(slidPosition);
     }
 
     private void Zoom(float factor)
@@ -186,8 +192,7 @@ public class MainCameraControl : MonoBehaviour
         direction.y = 0;
         direction.Normalize();
         direction *= factor;
-        Cams.FreeFocalPoint.position += direction;
-        ClampFocusInMap();
+        PlayerMoveFreeCam(Cams.FreeFocalPoint.position + direction);
     }
 
     static void LockCameraPivot()
@@ -198,19 +203,9 @@ public class MainCameraControl : MonoBehaviour
         Cams.Free.m_XAxis.m_InputAxisValue = 0f;
     }
 
-    void ClampFocusInMap()
-    {
-        Vector3 minimum = Vector3.one * focalPointDeadzone;
-        Vector3 maximum = mapCorner - minimum;
-        Cams.FreeFocalPoint.position = Cams.FreeFocalPoint.position.Clamp(minimum, maximum);
-    }
-
     public static void FindViewOfPosition(Vector3 target, Action callback = null)
     {
-        Cams.AutoFocalPoint.transform.position = target;
-        ToggleAutoCam();
-        Instance.StartCoroutine(Instance.PanLockout(callback));
-        panning = true;
+        Instance.StartCoroutine(Instance.PanLockout(target, callback));   
     }
 
     public static void PanToPosition(Vector3 target)
@@ -219,11 +214,16 @@ public class MainCameraControl : MonoBehaviour
         Tween.Position(Cams.FreeFocalPoint, endValue: target, duration: Instance.panDuration).OnComplete(() => panning = false);
     }
 
-    IEnumerator PanLockout(Action callback)
+    IEnumerator PanLockout(Vector3 target, Action callback)
     {
-        yield return new WaitForSeconds(Cams.Brain.m_DefaultBlend.BlendTime);
         ToggleAutoCam(false);
+        yield return null;
+        Cams.AutoFocalPoint.transform.position = target;
+        ToggleAutoCam();
+        panning = true;
+        yield return new WaitForSeconds(Cams.Brain.m_DefaultBlend.BlendTime);
         panning = false;
+        ToggleAutoCam(false);
         callback?.Invoke();
     }
 
@@ -246,7 +246,6 @@ public class MainCameraControl : MonoBehaviour
     public static void ReleaseTracking()
     {
         tracking = false;
-        ToggleAutoCam(false);
     }
 
     static IEnumerator TrackTowardsEntity(Transform target)
