@@ -81,6 +81,7 @@ public static class Pathfinder3D
         static bool NodeIsWalkable(int x, int y, int z)
         {
             if (!NeighborIsTerrain(x, y - 1, z)) return false;
+            /*
             for (int ix = -1; ix < 2; ix++)
             {
                 if (NeighborIsTerrain(x + ix, y + 1, z)) return false;
@@ -89,6 +90,7 @@ public static class Pathfinder3D
             {
                 if (NeighborIsTerrain(x, y + 1, z + iz)) return false;
             }
+            */
             return true;
         }
 
@@ -313,6 +315,7 @@ public static class Pathfinder3D
 
     static List<Node> FindPath(Vector3Int endCoords)
     {
+        Debug.Log(endCoords);
         List<Node> finishedList = new();
         if (!nodeMap.TryGetValue(endCoords, out var currentNode)) return null;
 

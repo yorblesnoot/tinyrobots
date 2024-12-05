@@ -6,7 +6,7 @@ public class BipedalWalk : LegMovement
     List<Vector3> sanitizationPositions;
     readonly float sanOffset = 1.5f;
     readonly float pathHeight = .3f;
-    readonly float legScanHeight = 2f;
+    readonly float legScanHeight = 2.5f;
     readonly float scanOriginHeight = 1;
     int terrainMask;
     protected override void InitializeParameters()

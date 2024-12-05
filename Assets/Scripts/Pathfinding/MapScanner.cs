@@ -58,40 +58,43 @@ public class MapScanner
         void DoubleCastScan(int a, int b)
         {
             List<DirectedHit> directedHits = GetHitProfile(a, b, castDimension);
+            if(directedHits.Count == 0) return;
 
             directedHits = directedHits.OrderBy(hit => hit.position[castDimension]).ToList();
-            directedHits = CleanRedundantHits(directedHits);
             foreach (DirectedHit hit in directedHits)
             {
                 Debug.DrawLine(hit.position, hit.position + rayDirection / 5, hit.front ? Color.green : Color.red, 20f);
             }
 
-
-            int hitcount = 0;
-            for (int c = 0; c < cSize; c++)
+            int index = 0;
+            bool hitBackFace = false;
+            DirectedHit lastFront = directedHits[0].front ? directedHits[0] : default;
+            while(index < directedHits.Count)
             {
-                while (directedHits.Count > 0 && c > directedHits[0].position[castDimension])
+                DirectedHit hit = directedHits[index];
+                if (hit.front && hitBackFace)
                 {
-                    hitcount += directedHits[0].front ? 1 : -1;
-                    directedHits.RemoveAt(0);
-
+                    MarkInteriorRegion(Mathf.RoundToInt(directedHits[index - 1].position[castDimension]));
+                    lastFront = directedHits[index];
                 }
-                
-                if (hitcount > 0)
-                {
-                    AssignGridCoord(c);
-                }
+                hitBackFace = !hit.front;
+                index++;
             }
+            if (hitBackFace) MarkInteriorRegion(Mathf.RoundToInt(directedHits[index - 1].position[castDimension]));
+            else MarkInteriorRegion(cSize - 1);
 
-            void AssignGridCoord(int c)
+            void MarkInteriorRegion(int end)
             {
-                if (c < 0 || c >= cSize) return;
-                Vector3Int coord = Vector3Int.zero;
-                coord[targetDimensions[0]] = a;
-                coord[targetDimensions[1]] = b;
-                coord[castDimension] = c;
-                outputGrid[coord.x, coord.y, coord.z] = 1;
-                Debug.DrawLine(coord, coord + rayDirection / 5, Color.blue, 20f);
+                for (int c = Mathf.RoundToInt(lastFront.position[castDimension]); c < end; c++)
+                {
+                    if (c < 0 || c >= cSize) return;
+                    Vector3Int coord = Vector3Int.zero;
+                    coord[targetDimensions[0]] = a;
+                    coord[targetDimensions[1]] = b;
+                    coord[castDimension] = c;
+                    outputGrid[coord.x, coord.y, coord.z] = 1;
+                    Debug.DrawLine(coord, coord + rayDirection / 5, Color.blue, 20f);
+                }
             }
         }
 
@@ -138,7 +141,7 @@ public class MapScanner
         List<DirectedHit> output = new();
         bool frontMode = false;
         int index = 0;
-        while(index < hits.Count)
+        while (index < hits.Count)
         {
             DirectedHit hit = hits[index];
             if (hit.front)
@@ -157,7 +160,7 @@ public class MapScanner
             }
             index++;
         }
-        if (!frontMode && index > 0) output.Add(hits[index-1]);
+        if (!frontMode && index > 0) output.Add(hits[index - 1]);
         return output;
     }
 
