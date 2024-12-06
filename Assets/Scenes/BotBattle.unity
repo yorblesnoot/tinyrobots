@@ -5696,7 +5696,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerBotOverride: []
   selectFirstBot: 1
-  useDeployment: 0
+  useDeployment: 1
 --- !u!1001 &551735183
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17555,13 +17555,13 @@ MonoBehaviour:
   m_AvoidObstacles: 0
   m_DistanceLimit: 0
   m_MinimumOcclusionTime: 1
-  m_CameraRadius: 5
+  m_CameraRadius: 1
   m_Strategy: 2
   m_MaximumEffort: 7
-  m_SmoothingTime: 1
-  m_Damping: 2
-  m_DampingWhenOccluded: 2
-  m_OptimalTargetDistance: 10
+  m_SmoothingTime: 0
+  m_Damping: 0
+  m_DampingWhenOccluded: 0
+  m_OptimalTargetDistance: 0
 --- !u!114 &1980537371
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17597,7 +17597,7 @@ MonoBehaviour:
   m_RandomizeChoice: 0
   m_DefaultBlend:
     m_Style: 1
-    m_Time: 1
+    m_Time: 1.5
     m_CustomCurve:
       serializedVersion: 2
       m_Curve: []

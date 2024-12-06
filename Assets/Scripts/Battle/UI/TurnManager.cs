@@ -42,6 +42,7 @@ public class TurnManager : MonoBehaviour
     public static void AddTurnTaker(TinyBot bot, int index = 0)
     {
         Singleton.portraitGenerator.AttachPortrait(bot);
+        if (portraitStock.Count == 1) portraitStock.Add(Instantiate(portraitStock[0]));
         portraitStock[0].Become(bot);
         activePortraits.Add(bot, portraitStock[0]);
         portraitStock.RemoveAt(0);

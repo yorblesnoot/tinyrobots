@@ -18,6 +18,7 @@ public abstract class LegMovement : PrimaryMovement
     [SerializeField] protected float anchorDownwardLength = 3f;
     [SerializeField] AnimationCurve legRaise;
     [SerializeField] protected float forwardBias = .5f;
+    [SerializeField] float footHeight = .1f;
 
     protected bool Stepping;
     Dictionary<Transform, (Vector3, Quaternion)> baseLimbPositions;
@@ -44,7 +45,7 @@ public abstract class LegMovement : PrimaryMovement
         LoadLimbPositions();
         foreach (var anchor in anchors)
         {
-            anchor.ikTarget.position = GetLimbTarget(anchor, true);
+            anchor.ikTarget.position = GetRaisedLimbTarget(anchor, true);
             anchor.UpdateGluedPosition();
         }
     }
@@ -102,7 +103,7 @@ public abstract class LegMovement : PrimaryMovement
     protected void TryStepToBase(Anchor anchor, bool goToNeutral = false)
     {
         Vector3 localStartPosition = anchor.ikTarget.localPosition;
-        Vector3 finalPosition = GetLimbTarget(anchor, goToNeutral);
+        Vector3 finalPosition = GetRaisedLimbTarget(anchor, goToNeutral);
         if (finalPosition == default) return;
         Stepping = true;
         anchor.Stepping = true;
@@ -114,6 +115,13 @@ public abstract class LegMovement : PrimaryMovement
         anchor.UpdateGluedPosition();
         Stepping = false;
         anchor.Stepping = false;
+    }
+
+    Vector3 GetRaisedLimbTarget(Anchor anchor, bool goToNeutral = false)
+    {
+        Vector3 target = GetLimbTarget(anchor, goToNeutral);
+        target.y += footHeight;
+        return target;
     }
 
     protected abstract Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral);

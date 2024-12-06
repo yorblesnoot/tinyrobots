@@ -28,24 +28,27 @@ public class DeploymentZone : MonoBehaviour
 
     void PositionAreaMarker()
     {
-        Vector3 scale = (transform.position - corner.position) / 2;
+        Vector3 scale = corner.localPosition / 2;
         scale.y = 1;
         zoneMarker.transform.localScale = scale;
 
-        Vector3 position = (transform.position + corner.position) / 2;
-        zoneMarker.transform.position = position;
+        Vector3 position = corner.localPosition / 2;
+        zoneMarker.transform.localPosition = position;
     }
     
 
     public static Vector3 ClampInZone(Vector3 position)
     {
-        return position.Clamp(active.transform.position, active.corner.position);
+        Vector3 localPosition = active.transform.InverseTransformPoint(position);
+        localPosition = localPosition.Clamp(Vector3.zero, active.corner.localPosition);
+        Vector3 finalPosition = active.transform.TransformPoint(localPosition);
+        Debug.Log(finalPosition);
+        return finalPosition;
     }
 
     private void OnDrawGizmos()
     {
         if (corner == null) return;
         PositionAreaMarker();
-        GizmoPlus.DrawWireCuboid(transform.position, corner.position, Color.green);
     }
 }
