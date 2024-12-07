@@ -83,7 +83,7 @@ public class ClickableAbility : AbilityDisplay
 
     public void Activate()
     {
-        if (!Ability.IsAvailable()) return;
+        if (PrimaryCursor.LockoutPlayer || !Ability.IsAvailable()) return;
         CancelAbility();
         Activated = this;
         Ability.LockOnTo(PrimaryCursor.Transform.gameObject, true);

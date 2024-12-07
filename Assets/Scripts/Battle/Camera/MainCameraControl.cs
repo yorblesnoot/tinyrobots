@@ -242,7 +242,6 @@ public class MainCameraControl : MonoBehaviour
     public static void TrackTarget(Transform target)
     {
         tracking = true;
-        ToggleAutoCam(true);
         Instance.StartCoroutine(TrackTowardsEntity(target));
     }
 
@@ -253,14 +252,13 @@ public class MainCameraControl : MonoBehaviour
 
     static IEnumerator TrackTowardsEntity(Transform target)
     {
-        Transform tracker = Cams.AutoFocalPoint;
+        Transform tracker = Cams.FreeFocalPoint;
         while (tracking)
         {
-            //Vector3 targetPosition = Vector3.Lerp(tracker.position, target.position, Time.deltaTime);
-            tracker.position = target.position;
+            Vector3 targetPosition = Vector3.Lerp(tracker.position, target.position, Time.deltaTime);
+            tracker.position = targetPosition;
             yield return null;
         }
-        ToggleAutoCam(false);
     }
 
     

@@ -149,7 +149,7 @@ public class BotAI
             if(AbilityIsUnavailable(shield)) yield break;
             Vector3 myPosition = thisBot.transform.position;
             List<Vector3> averages = new() {enemies.Select(x => x.TargetPoint.position - myPosition).ToList().Average(), 
-                Pathfinder3D.GetCrawlOrientation(Vector3Int.RoundToInt(thisBot.transform.position)) };
+                Pathfinder3D.GetCrawlOrientation(thisBot.transform.position) };
             if (allies.Count > 0) averages.Add(-allies.Select(x => x.TargetPoint.position - myPosition).ToList().Average());
             Vector3 finalDirection = averages.Average();
             Vector3 finalPosition = myPosition + finalDirection;

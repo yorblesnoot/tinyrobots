@@ -8,26 +8,32 @@ public class BipedalWalk : LegMovement
     readonly float pathHeight = .3f;
     readonly float legScanHeight = 2.5f;
     readonly float scanOriginHeight = 1;
-    int terrainMask;
+
     protected override void InitializeParameters()
     {
         base.InitializeParameters();
-        terrainMask = LayerMask.GetMask("Terrain");
         sanitizationPositions = new() { Vector3.zero, Vector3.left * sanOffset, Vector3.right * sanOffset, Vector3.forward * sanOffset, Vector3.back * sanOffset };
     }
 
     public override List<Vector3> SanitizePath(List<Vector3> path)
     {
         //TODO: something here is causing lots of assertion errors
+        path = ShortcutPath(path);
+        path = AvoidEmptySpace(path);
+        return path;
+    }
+
+    private List<Vector3> AvoidEmptySpace(List<Vector3> path)
+    {
         List<Vector3> newPath = new();
         Vector3 castDirection = Vector3.down;
         foreach (var point in path)
         {
             Vector3 target = point - castDirection * scanOriginHeight;
             List<Vector3> hitpoints = new();
-            foreach(var offset in sanitizationPositions)
+            foreach (var offset in sanitizationPositions)
             {
-                if(Physics.Raycast(target + offset, castDirection, out RaycastHit hit, legScanHeight, terrainMask)) hitpoints.Add(hit.point);
+                if (Physics.Raycast(target + offset, castDirection, out RaycastHit hit, legScanHeight, TerrainMask)) hitpoints.Add(hit.point);
             }
             Vector3 newPoint = hitpoints.Count > 0 ? hitpoints.Average() + -castDirection * pathHeight : point;
             newPath.Add(newPoint);
@@ -35,9 +41,11 @@ public class BipedalWalk : LegMovement
         return newPath;
     }
 
-    protected override Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral)
+    
+
+    protected override Vector3 GetLimbTarget(Anchor anchor, Vector3 legDirection)
     {
-        Vector3 initialPosition = anchor.LocalBasePosition + (goToNeutral ? Vector3.zero : (anchorZoneRadius + forwardBias) * Vector3.forward);
+        Vector3 initialPosition = anchor.LocalBasePosition + (anchorZoneRadius + forwardBias) * legModel.transform.InverseTransformDirection(legDirection);
         Vector3 rayPosition = legModel.transform.TransformPoint(initialPosition);
         rayPosition.y += anchorUpwardLimit;
 

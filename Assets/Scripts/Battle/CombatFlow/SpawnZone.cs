@@ -48,7 +48,7 @@ public class SpawnZone : MonoBehaviour
                 {
                     Vector3Int checkedPosition = new(x, y, z);
                     if (mode == Mode.SPHERE && Vector3.Distance(checkedPosition, checkSource) > radius) continue;
-                    List<MoveStyle> styles = Pathfinder3D.GetNodeStyles(checkedPosition);
+                    HashSet<MoveStyle> styles = Pathfinder3D.GetNodeStyles(checkedPosition);
                     foreach (MoveStyle style in styles) 
                     {
                         //Debug.Log($"added {Allegiance} {style} {checkedPosition}");

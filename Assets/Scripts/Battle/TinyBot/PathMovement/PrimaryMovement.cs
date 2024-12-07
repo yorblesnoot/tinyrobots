@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +16,15 @@ public abstract class PrimaryMovement : MonoBehaviour
     [SerializeField] protected float MoveSpeed = 3;
     [SerializeField] protected float PivotSpeed = 180f;
     [HideInInspector] public float SpeedMultiplier = 1;
+
+    int sanitizeMask;
+    readonly float overlap = .01f;
     public float FinalSpeed { get { return MoveSpeed * SpeedMultiplier; } }
+
+    private void Start()
+    {
+        sanitizeMask = LayerMask.GetMask("Terrain", "Default");
+    }
 
     public IEnumerator TraversePath(List<Vector3> path)
     {
@@ -31,6 +40,46 @@ public abstract class PrimaryMovement : MonoBehaviour
     public virtual List<Vector3> SanitizePath(List<Vector3> path)
     {
         return path;
+    }
+
+    protected List<Vector3> ShortcutPath(List<Vector3> path)
+    {
+        int pathIndex = 0;
+        List<Vector3> cleanPath = new() { path[0] };
+        while (pathIndex < path.Count)
+        {
+            cleanPath.Add(path[pathIndex]);
+            pathIndex = GetNextPoint(path, pathIndex);
+        }
+
+        return cleanPath;
+    }
+
+    int GetNextPoint(List<Vector3> path, int startIndex)
+    {
+        int leapSize = 1;
+        while (LeapedPathOpen(path, startIndex, leapSize + startIndex + 1))
+        {
+            leapSize++;
+        }
+        //if(leapSize > 1) Debug.Log(leapSize);
+        return startIndex + leapSize;
+    }
+
+    bool LeapedPathOpen(List<Vector3> path, int pathIndex, int leapIndex)
+    {
+        if (leapIndex >= path.Count) return false;
+        Vector3 originPoint = path[pathIndex];
+        Vector3 testPoint = path[leapIndex];
+        Vector3 direction = testPoint - originPoint;
+        float distance = Vector3.Distance(originPoint, testPoint) + overlap;
+
+        return LeapedPathIsValid(path[pathIndex], direction, distance, sanitizeMask);
+    }
+
+    protected virtual bool LeapedPathIsValid(Vector3 testSource, Vector3 direction, float distance, int sanitizeMask)
+    {
+        return !Physics.Raycast(testSource, direction, distance, sanitizeMask);
     }
 
     public Vector3 SanitizePoint(Vector3 point)
@@ -50,7 +99,7 @@ public abstract class PrimaryMovement : MonoBehaviour
         {
             timeElapsed += Time.deltaTime;
             unit.rotation = Quaternion.Slerp(startRotation, targetRotation, timeElapsed / pivotDuration);
-            AnimateToOrientation();
+            AnimateToOrientation(Vector3.zero);
             yield return null;
         }
         unit.rotation = targetRotation;
@@ -60,14 +109,21 @@ public abstract class PrimaryMovement : MonoBehaviour
         while (timeElapsed < pathStepDuration)
         {
             unit.position = Vector3.Lerp(startPosition, target, timeElapsed / pathStepDuration);
+            IncorporateBodyMotion(unit);
             timeElapsed += Time.deltaTime;
 
-            AnimateToOrientation();
+            AnimateToOrientation(Owner.transform.forward);
             yield return null;
         }
         BattleEnder.IsMissionOver();
     }
-    public virtual void AnimateToOrientation(bool inPlace = false) { }
+
+    protected virtual void IncorporateBodyMotion(Transform unit)
+    {
+
+    }
+
+    public virtual void AnimateToOrientation(Vector3 direction) { }
     public virtual Quaternion GetRotationAtPosition(Vector3 moveTarget)
     {
         moveTarget.y = transform.position.y;
@@ -98,7 +154,7 @@ public abstract class PrimaryMovement : MonoBehaviour
 
         Quaternion toRotation = Quaternion.LookRotation(direction, Owner.transform.up);
         Owner.transform.rotation = Quaternion.Slerp(Owner.transform.rotation, toRotation, lookSpeed * Time.deltaTime);
-        AnimateToOrientation(true);
+        AnimateToOrientation(Vector3.zero);
     }
 
     public IEnumerator ApplyImpulseToBody(Vector3 direction, float distance, float snapTime, float returnTime)

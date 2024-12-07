@@ -56,8 +56,8 @@ public class ParticleAnimation : AbilityEffect
 
     private static Quaternion GetTerrainParticleFacing(TinyBot owner, List<Vector3> trajectory)
     {
-        Pathfinder3D.GetLandingPointBy(trajectory[^1], owner.MoveStyle, out Vector3Int cleanPosition);
-        Vector3 up = Pathfinder3D.GetCrawlOrientation(cleanPosition);
+        //Pathfinder3D.GetLandingPointBy(trajectory[^1], owner.MoveStyle, out Vector3Int cleanPosition);
+        Vector3 up = Pathfinder3D.GetCrawlOrientation(trajectory[^1]);
         if (up == default) up = Vector3.up;
         return Quaternion.LookRotation(owner.transform.forward, up);
     }

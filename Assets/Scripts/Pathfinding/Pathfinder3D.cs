@@ -223,11 +223,11 @@ public static class Pathfinder3D
 
     #region Map Services
 
-    public static List<MoveStyle> GetNodeStyles(Vector3Int position)
+    public static HashSet<MoveStyle> GetNodeStyles(Vector3Int position)
     {
         if (PointIsOffMap(position.x, position.y, position.z)) return new(); //problem here
         Node node = nodeMap[position];
-        List<MoveStyle> styles = new();
+        HashSet<MoveStyle> styles = new();
         for(int i = 0; i < node.StyleAccess.Count(); i++)
         {
             if (node.StyleAccess[i]) styles.Add((MoveStyle)i);
@@ -260,16 +260,17 @@ public static class Pathfinder3D
             return false;
         }
     }
-    public static Vector3 GetCrawlOrientation(Vector3Int node)
+    public static Vector3 GetCrawlOrientation(Vector3 position)
     {
         Vector3 total = Vector3.zero;
         int number = 0;
+        Vector3Int node = Vector3Int.RoundToInt(position);
         Node source = nodeMap[node];
         foreach(var edge in source.Edges)
         {
             if (!edge.Neighbor.Terrain) continue;
 
-            total += edge.Neighbor.Location - source.Location;
+            total += edge.Neighbor.Location - position;
             number++;
         }
         return -total/number;

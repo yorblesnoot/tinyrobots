@@ -22,6 +22,11 @@ public class SpiderCrawl : LegMovement
         InstantNeutral();
     }
 
+    public override List<Vector3> SanitizePath(List<Vector3> path)
+    {
+        return ShortcutPath(path);
+    }
+
     protected override IEnumerator InterpolatePositionAndRotation(Transform unit, Vector3 target)
     {
         Quaternion startRotation = unit.rotation;
@@ -30,19 +35,21 @@ public class SpiderCrawl : LegMovement
         Vector3 startPosition = unit.position;
         float timeElapsed = 0;
         float pathStepDuration = Vector3.Distance(unit.transform.position, target) / (MoveSpeed * SpeedMultiplier);
+        Vector3 targetLegDirection = targetRotation * Vector3.forward;
+        Debug.DrawLine(Owner.TargetPoint.position, Owner.TargetPoint.position + targetLegDirection, Color.yellow, 20f);
         while (timeElapsed < pathStepDuration)
         {
             unit.SetPositionAndRotation(Vector3.Lerp(startPosition, target, timeElapsed / pathStepDuration), 
                 Quaternion.Slerp(startRotation, targetRotation, timeElapsed / pathStepDuration));
             timeElapsed += Time.deltaTime;
 
-            AnimateToOrientation();
+            AnimateToOrientation(targetLegDirection);
             yield return null;
         }
     }
-    protected override Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral)
+    protected override Vector3 GetLimbTarget(Anchor anchor, Vector3 legDirection)
     {
-        Vector3 worldForward = goToNeutral ? Vector3.zero : Owner.transform.forward * forwardBias;
+        Vector3 worldForward = legDirection * forwardBias;
         Vector3 localForward = anchor.ikTarget.InverseTransformDirection(worldForward);
         Vector3 firstRaySource = anchor.LocalBasePosition + localForward;
 
@@ -61,8 +68,8 @@ public class SpiderCrawl : LegMovement
         Ray firstRay = new(firstRaySource, firstRayDirection);
         Ray secondRay = new(secondRaySource, secondRayDirection);
 
-        Debug.DrawRay(firstRaySource, firstRayDirection * anchorDownwardLength, Color.green, 20);
-        Debug.DrawRay(secondRaySource, secondRayDirection * secondCastLength, Color.red, 20);
+        /*Debug.DrawRay(firstRaySource, firstRayDirection * anchorDownwardLength, Color.green, 20);
+        Debug.DrawRay(secondRaySource, secondRayDirection * secondCastLength, Color.red, 20);*/
 
         if (Physics.Raycast(firstRay, out var hitInfo, anchorDownwardLength, LayerMask.GetMask("Terrain"))
             || Physics.Raycast(secondRay, out hitInfo, secondCastLength, LayerMask.GetMask("Terrain")))
@@ -77,6 +84,7 @@ public class SpiderCrawl : LegMovement
     
     public override Quaternion GetRotationAtPosition(Vector3 moveTarget)
     {
+        Debug.LogWarning("GetRotationAtPosition in SpiderCrawl might have a problem");
         Vector3 targetNormal = GetMeshNormalAt(moveTarget);
         Vector3 lookTarget = moveTarget + targetNormal * lookHeightModifier;
         Quaternion targetRotation = Quaternion.LookRotation(lookTarget - transform.position, targetNormal);

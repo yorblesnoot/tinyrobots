@@ -440,36 +440,14 @@ MonoBehaviour:
   locomotionHeight: 0.7
   sourceBone: {fileID: 1649306643557042191}
   lookSpeed: 1
-  MoveSpeed: 3
-  PivotSpeed: 180
+  MoveSpeed: 6
+  PivotSpeed: 500
   SpeedMultiplier: 1
-  legStepDuration: 0.15
-  lookHeightModifier: 0.8
-  anchors:
-  - ikTarget: {fileID: 8441916846642193854}
-    Stepping: 0
-    LocalBasePosition: {x: -3.66, y: -2.22, z: 0.92}
-    DistanceFromDeadZone: 1.6720688
-    GluedWorldPosition: {x: 4.5485835, y: 25.099884, z: 27.024078}
-  - ikTarget: {fileID: 6089200858207563855}
-    Stepping: 0
-    LocalBasePosition: {x: 0.97, y: -2.22, z: 3.73}
-    DistanceFromDeadZone: 2.975375
-    GluedWorldPosition: {x: 4.5664515, y: 22.958897, z: 27.136864}
-  - ikTarget: {fileID: 7329314620812544283}
-    Stepping: 0
-    LocalBasePosition: {x: 3.57, y: -2.22, z: -0.82}
-    DistanceFromDeadZone: 1.2422546
-    GluedWorldPosition: {x: 4.2433767, y: 22.929523, z: 25.097078}
-  - ikTarget: {fileID: 6403762483325624956}
-    Stepping: 0
-    LocalBasePosition: {x: -1.02, y: -2.22, z: -3.47}
-    DistanceFromDeadZone: 1.2949765
-    GluedWorldPosition: {x: 4.2347097, y: 24.989079, z: 25.04231}
-  anchorZoneRadius: 2.3
-  legModel: {fileID: 6062594318300677067}
+  legStepDuration: 0.05
+  lookHeightModifier: 0.4
+  anchorZoneRadius: 2
   anchorUpwardLimit: 3
-  anchorDownwardLength: 3
+  anchorDownwardLength: 4
   legRaise:
     serializedVersion: 2
     m_Curve:
@@ -494,7 +472,63 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  forwardBias: 0.7
+  bodyArc:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.1986545
+      outSlope: 0.1986545
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.16621044
+    - serializedVersion: 3
+      time: 0.50000626
+      value: 0.058105588
+      inSlope: -0.009666357
+      outSlope: -0.009666357
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.0000088
+      value: 0.0000014305115
+      inSlope: -0.17307697
+      outSlope: -0.17307697
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.1635046
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  forwardBias: 1
+  footHeight: 0.1
+  anchors:
+  - ikTarget: {fileID: 8441916846642193854}
+    Stepping: 0
+    LocalBasePosition: {x: -3.66, y: -2.22, z: 0.92}
+    DistanceFromDeadZone: 1.6720688
+    GluedWorldPosition: {x: 4.5485835, y: 25.099884, z: 27.024078}
+  - ikTarget: {fileID: 6089200858207563855}
+    Stepping: 0
+    LocalBasePosition: {x: 0.97, y: -2.22, z: 3.73}
+    DistanceFromDeadZone: 2.975375
+    GluedWorldPosition: {x: 4.5664515, y: 22.958897, z: 27.136864}
+  - ikTarget: {fileID: 7329314620812544283}
+    Stepping: 0
+    LocalBasePosition: {x: 3.57, y: -2.22, z: -0.82}
+    DistanceFromDeadZone: 1.2422546
+    GluedWorldPosition: {x: 4.2433767, y: 22.929523, z: 25.097078}
+  - ikTarget: {fileID: 6403762483325624956}
+    Stepping: 0
+    LocalBasePosition: {x: -1.02, y: -2.22, z: -3.47}
+    DistanceFromDeadZone: 1.2949765
+    GluedWorldPosition: {x: 4.2347097, y: 24.989079, z: 25.04231}
+  legModel: {fileID: 6062594318300677067}
   firstCastTilt: 0.103
   secondCastTilt: 0.575
   secondCastLength: 3

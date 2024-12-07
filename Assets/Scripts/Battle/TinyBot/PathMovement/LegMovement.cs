@@ -3,29 +3,38 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
 public abstract class LegMovement : PrimaryMovement
 {
-    
+    [Header("Settings")]
     [SerializeField] protected float legStepDuration = .1f;
     [SerializeField] protected float lookHeightModifier = 1f;
 
-    [SerializeField] protected Anchor[] anchors;
     [SerializeField] protected float anchorZoneRadius = 1f;
-    [SerializeField] protected Transform legModel;
+
     [SerializeField] protected float anchorUpwardLimit = 2f;
     [SerializeField] protected float anchorDownwardLength = 3f;
     [SerializeField] AnimationCurve legRaise;
+    [SerializeField] AnimationCurve bodyArc;
     [SerializeField] protected float forwardBias = .5f;
     [SerializeField] float footHeight = .1f;
 
-    protected bool Stepping;
+    [Header("Components")]
+    [SerializeField] protected Anchor[] anchors;
+    [SerializeField] protected Transform legModel;
+
+    
+
+    protected float StepProgress;
     Dictionary<Transform, (Vector3, Quaternion)> baseLimbPositions;
+    protected int TerrainMask;
 
     private void Awake()
     {
         InitializeParameters();
+        TerrainMask = LayerMask.GetMask("Terrain");
         foreach (var anchor in anchors)
         {
             anchor.Initialize();
@@ -45,7 +54,7 @@ public abstract class LegMovement : PrimaryMovement
         LoadLimbPositions();
         foreach (var anchor in anchors)
         {
-            anchor.ikTarget.position = GetRaisedLimbTarget(anchor, true);
+            anchor.ikTarget.position = GetRaisedLimbTarget(anchor, Vector3.zero);
             anchor.UpdateGluedPosition();
         }
     }
@@ -66,14 +75,14 @@ public abstract class LegMovement : PrimaryMovement
         sourceBone.TraverseHierarchy(SaveLimbPosition);
         baseLimbPositions.Remove(sourceBone);
     }
-    public override void AnimateToOrientation(bool inPlace = false)
+    public override void AnimateToOrientation(Vector3 legDirection)
     {
         foreach (var anchor in anchors)
         {
             GluePosition(anchor);
-            anchor.DistanceFromDeadZone = LegDistanceFromDeadZone(anchor, inPlace);
+            anchor.DistanceFromDeadZone = LegDistanceFromDeadZone(anchor, legDirection);
         }
-        if (Stepping) return;
+        if (StepProgress > 0) return;
 
         anchors = anchors.OrderByDescending(anchor => anchor.DistanceFromDeadZone).ToArray();
 
@@ -81,11 +90,10 @@ public abstract class LegMovement : PrimaryMovement
         {
             if (anchors[i].DistanceFromDeadZone > anchorZoneRadius)
             {
-                TryStepToBase(anchors[i], inPlace);
+                TryStepToBase(anchors[i], legDirection);
             }
-            if(Stepping) return;
+            if(StepProgress > 0) break;
         }
-        
     }
 
     protected void GluePosition(Anchor anchor)
@@ -94,43 +102,57 @@ public abstract class LegMovement : PrimaryMovement
         anchor.ikTarget.position = anchor.GluedWorldPosition;
     }
 
-    protected virtual float LegDistanceFromDeadZone(Anchor anchor, bool inPlace)
+    protected virtual float LegDistanceFromDeadZone(Anchor anchor, Vector3 legDirection)
     {
-        Vector3 localForward = inPlace ? Vector3.zero : anchor.ikTarget.InverseTransformDirection(Owner.transform.forward).normalized;
+        Vector3 localForward = anchor.ikTarget.InverseTransformDirection(legDirection).normalized;
         return Vector3.Distance(anchor.ikTarget.localPosition, anchor.LocalBasePosition + localForward * forwardBias);
     }
     
-    protected void TryStepToBase(Anchor anchor, bool goToNeutral = false)
+    protected void TryStepToBase(Anchor anchor, Vector3 legDirection)
     {
         Vector3 localStartPosition = anchor.ikTarget.localPosition;
-        Vector3 finalPosition = GetRaisedLimbTarget(anchor, goToNeutral);
+        Vector3 finalPosition = GetRaisedLimbTarget(anchor, legDirection);
         if (finalPosition == default) return;
-        Stepping = true;
+        StepProgress = .001f;
         anchor.Stepping = true;
-        Tween.Position(anchor.ikTarget, finalPosition, legStepDuration).OnComplete(() => CompleteStep(anchor));
+        Tween.Position(anchor.ikTarget, finalPosition, legStepDuration)
+            .OnUpdate(this, (target, tween) => StepProgress = tween.progress)
+            .OnComplete(() => CompleteStep(anchor));
     }
 
     private void CompleteStep(Anchor anchor)
     {
         anchor.UpdateGluedPosition();
-        Stepping = false;
+        StepProgress = 0;
         anchor.Stepping = false;
     }
 
-    Vector3 GetRaisedLimbTarget(Anchor anchor, bool goToNeutral = false)
+    Vector3 GetRaisedLimbTarget(Anchor anchor, Vector3 legDirection)
     {
-        Vector3 target = GetLimbTarget(anchor, goToNeutral);
+        Vector3 target = GetLimbTarget(anchor, legDirection);
         target.y += footHeight;
         return target;
     }
 
-    protected abstract Vector3 GetLimbTarget(Anchor anchor, bool goToNeutral);
+    protected abstract Vector3 GetLimbTarget(Anchor anchor, Vector3 legDirection);
+
+    readonly float leapSensitivity = 1f;
+    protected override bool LeapedPathIsValid(Vector3 testSource, Vector3 direction, float distance, int sanitizeMask)
+    {
+        if (!base.LeapedPathIsValid(testSource, direction, distance, sanitizeMask)) return false;
+        for (int i = 0; i < distance; i++)
+        {
+            Vector3 testPoint = testSource + direction * i;
+            if (!Physics.CheckSphere(testPoint, leapSensitivity, TerrainMask)) return false;
+        }
+        return true;
+    }
 
     public override IEnumerator NeutralStance()
     {
         foreach (var anchor in anchors)
         {
-            TryStepToBase(anchor, true);
+            TryStepToBase(anchor, Vector3.zero);
             yield return new WaitForSeconds(legStepDuration);
         }
     }
@@ -140,13 +162,22 @@ public abstract class LegMovement : PrimaryMovement
         foreach (var anchor in anchors)
         {
             if (anchor.Stepping) continue;
-            TryStepToBase(anchor, true);
+            TryStepToBase(anchor, Vector3.zero);
         }
     }
 
     protected Vector3 GetMeshNormalAt(Vector3 target)
     {
-        return Pathfinder3D.GetCrawlOrientation(Vector3Int.RoundToInt(target));
+        return Pathfinder3D.GetCrawlOrientation(target);
+    }
+
+    protected override void IncorporateBodyMotion(Transform unit)
+    {
+        float lift = bodyArc.Evaluate(StepProgress);
+        Vector3 newPosition = unit.transform.position;
+        Vector3 direction = Owner.transform.up;
+        newPosition += direction * lift;
+        unit.transform.position = newPosition;
     }
 
     [Serializable]

@@ -13,6 +13,7 @@ public class MapScanner
     string interior = "TerrainInterior";
     readonly int margin = 3;
     readonly float sphereRadius = .0001f;
+    readonly bool debugMode;
 
     struct DirectedHit
     {
@@ -20,10 +21,11 @@ public class MapScanner
         public bool front;
     }
 
-    public MapScanner()
+    public MapScanner(bool debugMode)
     {
         terrainMask = LayerMask.GetMask(terrain);
         interiorMask = LayerMask.GetMask(interior);
+        this.debugMode = debugMode;
     }
 
     readonly int[] dimensions = {0, 1, 2};
@@ -61,10 +63,9 @@ public class MapScanner
             if(directedHits.Count == 0) return;
 
             directedHits = directedHits.OrderBy(hit => hit.position[castDimension]).ToList();
-            foreach (DirectedHit hit in directedHits)
-            {
+            if(debugMode) foreach (DirectedHit hit in directedHits) 
                 Debug.DrawLine(hit.position, hit.position + rayDirection / 5, hit.front ? Color.green : Color.red, 20f);
-            }
+            
 
             int index = 0;
             bool hitBackFace = false;
@@ -93,7 +94,7 @@ public class MapScanner
                     coord[targetDimensions[1]] = b;
                     coord[castDimension] = c;
                     outputGrid[coord.x, coord.y, coord.z] = 1;
-                    Debug.DrawLine(coord, coord + rayDirection / 5, Color.blue, 20f);
+                    if (debugMode) Debug.DrawLine(coord, coord + rayDirection / 5, Color.blue, 20f);
                 }
             }
         }

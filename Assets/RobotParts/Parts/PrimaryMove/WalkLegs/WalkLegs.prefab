@@ -276,7 +276,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
   BaseEffectMagnitude: 0
-  intervalTime: 0.08
+  intervalTime: 0.05
 --- !u!114 &353867226109267716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,26 +480,14 @@ MonoBehaviour:
   locomotionHeight: 0.9
   sourceBone: {fileID: 1365928021841588218}
   lookSpeed: 1
-  MoveSpeed: 3
-  PivotSpeed: 360
+  MoveSpeed: 6
+  PivotSpeed: 500
   SpeedMultiplier: 1
-  legStepDuration: 0.3
+  legStepDuration: 0.2
   lookHeightModifier: 1
-  anchors:
-  - ikTarget: {fileID: 5476163026689878025}
-    Stepping: 0
-    LocalBasePosition: {x: 0, y: 0, z: 0}
-    DistanceFromDeadZone: 0
-    GluedWorldPosition: {x: 0, y: 0, z: 0}
-  - ikTarget: {fileID: 7394775066713002943}
-    Stepping: 0
-    LocalBasePosition: {x: 0, y: 0, z: 0}
-    DistanceFromDeadZone: 0
-    GluedWorldPosition: {x: 0, y: 0, z: 0}
-  anchorZoneRadius: 1.5
-  legModel: {fileID: 5779783543885095998}
+  anchorZoneRadius: 1.2
   anchorUpwardLimit: 3
-  anchorDownwardLength: 4
+  anchorDownwardLength: 5
   legRaise:
     serializedVersion: 2
     m_Curve:
@@ -533,8 +521,53 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  forwardBias: 5
+  forwardBias: 10
   footHeight: 0.1
+  anchors:
+  - ikTarget: {fileID: 5476163026689878025}
+    Stepping: 0
+    LocalBasePosition: {x: 0, y: 0, z: 0}
+    DistanceFromDeadZone: 0
+    GluedWorldPosition: {x: 0, y: 0, z: 0}
+  - ikTarget: {fileID: 7394775066713002943}
+    Stepping: 0
+    LocalBasePosition: {x: 0, y: 0, z: 0}
+    DistanceFromDeadZone: 0
+    GluedWorldPosition: {x: 0, y: 0, z: 0}
+  legModel: {fileID: 5779783543885095998}
+  bodyArc:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.33800468
+      outSlope: 0.33800468
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.12807062
+    - serializedVersion: 3
+      time: 0.5026345
+      value: 0.09902564
+      inSlope: -0.01783676
+      outSlope: -0.01783676
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.0012012
+      value: -0.00030021835
+      inSlope: -0.34469947
+      outSlope: -0.34469947
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.14834552
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &1718307309410784872
 PrefabInstance:
   m_ObjectHideFlags: 0

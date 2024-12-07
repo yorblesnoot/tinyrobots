@@ -5696,7 +5696,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerBotOverride: []
   selectFirstBot: 1
-  useDeployment: 1
+  useDeployment: 0
 --- !u!1001 &551735183
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10515,6 +10515,7 @@ MonoBehaviour:
   marchingCubesRenderer: {fileID: 1110564608}
   mainCameraControl: {fileID: 1188009859}
   turnManager: {fileID: 1202214817}
+  debug: 0
 --- !u!114 &1097076971
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17583,15 +17584,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 1968512384}
   m_Follow: {fileID: 1968512384}
   m_ShowDebugText: 0
-  m_ChildCameras:
-  - {fileID: 1159648236}
-  - {fileID: 1305581196}
-  - {fileID: 1519979681}
-  - {fileID: 2038490603}
-  - {fileID: 884183641}
-  - {fileID: 818697989}
-  - {fileID: 1181760181}
-  - {fileID: 1873713548}
+  m_ChildCameras: []
   m_ActivateAfter: 0
   m_MinDuration: 0
   m_RandomizeChoice: 0
