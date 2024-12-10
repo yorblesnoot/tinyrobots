@@ -270,7 +270,8 @@ public static class Pathfinder3D
         {
             if (!edge.Neighbor.Terrain) continue;
 
-            total += edge.Neighbor.Location - position;
+            Vector3 offset = edge.Neighbor.Location - node;
+            total += offset.normalized;
             number++;
         }
         return -total/number;

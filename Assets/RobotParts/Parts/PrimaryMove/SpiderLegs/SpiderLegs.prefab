@@ -445,9 +445,9 @@ MonoBehaviour:
   SpeedMultiplier: 1
   legStepDuration: 0.05
   lookHeightModifier: 0.4
-  anchorZoneRadius: 2
-  anchorUpwardLimit: 3
-  anchorDownwardLength: 4
+  anchorZoneRadius: 1.5
+  anchorUpwardLimit: 4
+  anchorDownwardLength: 5
   legRaise:
     serializedVersion: 2
     m_Curve:
@@ -507,6 +507,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   forwardBias: 1
   footHeight: 0.1
+  maxDistanceFromGround: 0.8
   anchors:
   - ikTarget: {fileID: 8441916846642193854}
     Stepping: 0

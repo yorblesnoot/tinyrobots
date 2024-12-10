@@ -20,6 +20,7 @@ public abstract class LegMovement : PrimaryMovement
     [SerializeField] AnimationCurve bodyArc;
     [SerializeField] protected float forwardBias = .5f;
     [SerializeField] float footHeight = .1f;
+    [SerializeField] protected float maxDistanceFromGround = 1f;
 
     [Header("Components")]
     [SerializeField] protected Anchor[] anchors;
@@ -38,6 +39,14 @@ public abstract class LegMovement : PrimaryMovement
         foreach (var anchor in anchors)
         {
             anchor.Initialize();
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        foreach(var anchor in anchors)
+        {
+            Gizmos.DrawWireSphere(anchor.ikTarget.position, anchorZoneRadius);
         }
     }
 
@@ -136,14 +145,13 @@ public abstract class LegMovement : PrimaryMovement
 
     protected abstract Vector3 GetLimbTarget(Anchor anchor, Vector3 legDirection);
 
-    readonly float leapSensitivity = 1f;
     protected override bool LeapedPathIsValid(Vector3 testSource, Vector3 direction, float distance, int sanitizeMask)
     {
         if (!base.LeapedPathIsValid(testSource, direction, distance, sanitizeMask)) return false;
         for (int i = 0; i < distance; i++)
         {
             Vector3 testPoint = testSource + direction * i;
-            if (!Physics.CheckSphere(testPoint, leapSensitivity, TerrainMask)) return false;
+            if (!Physics.CheckSphere(testPoint, maxDistanceFromGround, TerrainMask)) return false;
         }
         return true;
     }
@@ -164,11 +172,6 @@ public abstract class LegMovement : PrimaryMovement
             if (anchor.Stepping) continue;
             TryStepToBase(anchor, Vector3.zero);
         }
-    }
-
-    protected Vector3 GetMeshNormalAt(Vector3 target)
-    {
-        return Pathfinder3D.GetCrawlOrientation(target);
     }
 
     protected override void IncorporateBodyMotion(Transform unit)

@@ -1,3 +1,4 @@
+using PrimeTween;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,6 +30,14 @@ public abstract class PrimaryMovement : MonoBehaviour
     public IEnumerator TraversePath(List<Vector3> path)
     {
         MainCameraControl.TrackTarget(Owner.transform);
+        float timeElapsed = 0;
+        while (timeElapsed > .3f)
+        {
+            timeElapsed += Time.deltaTime;
+            PivotToFacePosition(path[0]);
+            yield return null;
+        }
+
         foreach (var target in path)
         {
             yield return StartCoroutine(InterpolatePositionAndRotation(Owner.transform, target));
@@ -89,22 +98,10 @@ public abstract class PrimaryMovement : MonoBehaviour
 
     protected virtual IEnumerator InterpolatePositionAndRotation(Transform unit, Vector3 target)
     {
-        Quaternion startRotation = unit.rotation;
-        Quaternion targetRotation = GetRotationAtPosition(target);
-
+        yield return PivotToOrientationAt(target);
+        
         Vector3 startPosition = unit.position;
         float timeElapsed = 0;
-        float pivotDuration = Quaternion.Angle(startRotation, targetRotation) / (PivotSpeed * SpeedMultiplier);
-        while (timeElapsed < pivotDuration)
-        {
-            timeElapsed += Time.deltaTime;
-            unit.rotation = Quaternion.Slerp(startRotation, targetRotation, timeElapsed / pivotDuration);
-            AnimateToOrientation(Vector3.zero);
-            yield return null;
-        }
-        unit.rotation = targetRotation;
-
-        timeElapsed = 0;
         float pathStepDuration = Vector3.Distance(unit.transform.position, target) / FinalSpeed;
         while (timeElapsed < pathStepDuration)
         {
@@ -116,6 +113,23 @@ public abstract class PrimaryMovement : MonoBehaviour
             yield return null;
         }
         BattleEnder.IsMissionOver();
+    }
+
+    IEnumerator PivotToOrientationAt(Vector3 target)
+    {
+        Quaternion targetRotation = GetRotationAtPosition(target);
+        Transform unit = Owner.transform;
+        Quaternion startRotation = unit.rotation;
+        float timeElapsed = 0;
+        float pivotDuration = Quaternion.Angle(startRotation, targetRotation) / (PivotSpeed * SpeedMultiplier);
+        while (timeElapsed < pivotDuration)
+        {
+            timeElapsed += Time.deltaTime;
+            unit.rotation = Quaternion.Slerp(startRotation, targetRotation, timeElapsed / pivotDuration);
+            AnimateToOrientation(Vector3.zero);
+            yield return null;
+        }
+        unit.rotation = targetRotation;
     }
 
     protected virtual void IncorporateBodyMotion(Transform unit)
@@ -143,9 +157,8 @@ public abstract class PrimaryMovement : MonoBehaviour
     }
     public abstract IEnumerator NeutralStance();
 
-    public virtual void RotateToTrackEntity(GameObject trackingTarget)
+    public virtual void PivotToFacePosition(Vector3 worldTarget)
     {
-        Vector3 worldTarget = trackingTarget.transform.position;
         Vector3 localTarget = Owner.transform.InverseTransformPoint(worldTarget);
         localTarget.y = 0;
         worldTarget = Owner.transform.TransformPoint(localTarget);

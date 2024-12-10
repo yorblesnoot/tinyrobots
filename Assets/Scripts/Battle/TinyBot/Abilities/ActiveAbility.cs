@@ -113,7 +113,7 @@ public class ActiveAbility : Ability
         if (!aiMode)
         {
             if(trackingAnimation != null) trackingAnimation.Aim(CurrentTrajectory);
-            Owner.PrimaryMovement.RotateToTrackEntity(trackedTarget);
+            Owner.PrimaryMovement.PivotToFacePosition(trackedTarget.transform.position);
         }
         
         if (PlayerTargeting)

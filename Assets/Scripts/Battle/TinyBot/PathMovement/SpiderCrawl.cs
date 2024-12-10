@@ -10,10 +10,11 @@ public class SpiderCrawl : LegMovement
     [SerializeField] float secondCastLength;
     [SerializeField] float secondCastHeight = -1;
     
+    
 
     public override void SpawnOrientation()
     {
-        Vector3 normal = GetMeshNormalAt(Owner.transform.position);
+        Vector3 normal = Pathfinder3D.GetCrawlOrientation(Owner.transform.position);
         Vector3 centerDirection = GetCenterColumn() - transform.position;
         Vector3 facing = Vector3.Cross(normal, centerDirection);
         //look position and normal cant be the same?
@@ -24,7 +25,25 @@ public class SpiderCrawl : LegMovement
 
     public override List<Vector3> SanitizePath(List<Vector3> path)
     {
+        path = StandardizeHeight(path);
         return ShortcutPath(path);
+    }
+
+    List<Vector3> StandardizeHeight(List<Vector3> path)
+    {
+        List<Vector3> newPath = new();
+        foreach(var point in path)
+        {
+            Vector3 direction = -Pathfinder3D.GetCrawlOrientation(point);
+            if (!Physics.Raycast(point, direction, out RaycastHit hit, maxDistanceFromGround * 2, TerrainMask))
+            {
+                newPath.Add(point);
+                continue;
+            }
+            Vector3 cleanPoint = hit.point + -direction * maxDistanceFromGround;
+            newPath.Add(cleanPoint);
+        }
+        return newPath;
     }
 
     protected override IEnumerator InterpolatePositionAndRotation(Transform unit, Vector3 target)
@@ -36,7 +55,6 @@ public class SpiderCrawl : LegMovement
         float timeElapsed = 0;
         float pathStepDuration = Vector3.Distance(unit.transform.position, target) / (MoveSpeed * SpeedMultiplier);
         Vector3 targetLegDirection = targetRotation * Vector3.forward;
-        Debug.DrawLine(Owner.TargetPoint.position, Owner.TargetPoint.position + targetLegDirection, Color.yellow, 20f);
         while (timeElapsed < pathStepDuration)
         {
             unit.SetPositionAndRotation(Vector3.Lerp(startPosition, target, timeElapsed / pathStepDuration), 
@@ -85,9 +103,9 @@ public class SpiderCrawl : LegMovement
     public override Quaternion GetRotationAtPosition(Vector3 moveTarget)
     {
         Debug.LogWarning("GetRotationAtPosition in SpiderCrawl might have a problem");
-        Vector3 targetNormal = GetMeshNormalAt(moveTarget);
-        Vector3 lookTarget = moveTarget + targetNormal * lookHeightModifier;
-        Quaternion targetRotation = Quaternion.LookRotation(lookTarget - transform.position, targetNormal);
+        Vector3 targetNormal = Pathfinder3D.GetCrawlOrientation(moveTarget);
+        //Vector3 lookTarget = moveTarget + targetNormal * lookHeightModifier;
+        Quaternion targetRotation = Quaternion.LookRotation(moveTarget - transform.position, targetNormal);
         return targetRotation;
     }
 }
