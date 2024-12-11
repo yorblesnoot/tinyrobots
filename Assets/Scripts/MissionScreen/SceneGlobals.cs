@@ -11,7 +11,10 @@ public class SceneGlobals : MonoBehaviour
     
     [SerializeField] SceneRelay sceneRelay;
     public static SceneRelay SceneRelay {  get { return instance.sceneRelay; } }
-    
+
+    [SerializeField] BotPalette botPalette;
+    public static BotPalette BotPalette { get { return instance.botPalette; } }
+
     private void Awake()
     {
         instance = this;

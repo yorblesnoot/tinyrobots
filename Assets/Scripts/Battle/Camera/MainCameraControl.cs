@@ -112,7 +112,7 @@ public class MainCameraControl : MonoBehaviour
 
     private void LateUpdate()
     {
-        //if(Input.GetKeyDown(KeyCode.Backspace)) RestrictCamera(FreeCameraAvailable);
+        if (Input.GetKeyDown(KeyCode.Backspace)) PrimaryCursor.TogglePlayerLockout(!PrimaryCursor.LockoutPlayer);
         if(!PrimaryCursor.LockoutPlayer && !CameraAnimating) PlayerControlCamera();
         cams.Brain.ManualUpdate();
         //Cams.Automatic.m_MinDuration = 50;

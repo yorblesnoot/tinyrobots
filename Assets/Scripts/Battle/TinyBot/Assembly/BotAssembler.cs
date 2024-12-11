@@ -1,4 +1,3 @@
-using PrimeTween;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +5,6 @@ using UnityEngine;
 public class BotAssembler : MonoBehaviour
 {
     [SerializeField] float botColliderOffset = 1;
-    [SerializeField] BotPalette palette;
     [SerializeField] GameObject suspensionStand;
     [SerializeField] GameObject botBase;
 
@@ -49,7 +47,7 @@ public class BotAssembler : MonoBehaviour
             spawned.SetActive(true);
             PartModifier modifier = spawned.GetComponent<PartModifier>();
             AddPartStats(currentNode.Value);
-            instance.palette.RecolorPart(modifier, allegiance);
+            SceneGlobals.BotPalette.RecolorPart(modifier, allegiance);
             spawnedParts.Add(modifier);
             if(attachmentPoint != null) spawned.transform.SetParent(attachmentPoint.transform, false);
             spawned.transform.localRotation = Quaternion.identity;

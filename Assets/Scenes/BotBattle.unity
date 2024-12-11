@@ -2051,6 +2051,12 @@ PrefabInstance:
       propertyPath: m_Name
       value: Globals
       objectReference: {fileID: 0}
+    - target: {fileID: 3754882395443040712, guid: 9b914375f95ff264b8356d4df4fc5d2c,
+        type: 3}
+      propertyPath: botPalette
+      value: 
+      objectReference: {fileID: 11400000, guid: bd631aaf7054b0240a3da9724c1bb0e6,
+        type: 2}
     - target: {fileID: 4911304060449228267, guid: 9b914375f95ff264b8356d4df4fc5d2c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4177,7 +4183,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deploymentBanner: {fileID: 421531241}
   fadeDuration: 1
-  palette: {fileID: 11400000, guid: 55d5961420d9960419564510536d2377, type: 2}
   hologramMaterial: {fileID: 2100000, guid: 91109e3d8f7abe94eb971adb5d35694e, type: 2}
 --- !u!1001 &426791631
 PrefabInstance:
@@ -4768,7 +4773,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   botColliderOffset: 0.6
-  palette: {fileID: 11400000, guid: 55d5961420d9960419564510536d2377, type: 2}
   suspensionStand: {fileID: 3862043674041813392, guid: 1f8ac24d7ab61134984098e70e22c8e6,
     type: 3}
   botBase: {fileID: 9120402016229796176, guid: 176698837bd8e894b8fd5a9592676de8, type: 3}
@@ -5696,7 +5700,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerBotOverride: []
   selectFirstBot: 1
-  useDeployment: 0
+  useDeployment: 1
 --- !u!1001 &551735183
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8814,7 +8818,7 @@ MonoBehaviour:
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 10
-    NearClipPlane: 0.1
+    NearClipPlane: 1
     FarClipPlane: 5000
     Dutch: 0
     ModeOverride: 0
@@ -14473,11 +14477,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
+  near clip plane: 1
   far clip plane: 1000
   field of view: 60
   orthographic: 0
-  orthographic size: 5
+  orthographic size: 10
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2

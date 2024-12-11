@@ -5,7 +5,6 @@ using UnityEngine;
 public class IllusionSummon : AbilityEffect
 {
     [SerializeField] Material illusionMaterial;
-    [SerializeField] BotPalette palette;
     [SerializeField] MultiplierDamage multiplier;
 
     public override string Description => " % Damage Dealt";
@@ -22,7 +21,7 @@ public class IllusionSummon : AbilityEffect
         summon.Stats.Current[StatType.HEALTH] = 1;
         summon.Stats.Max[StatType.ACTION] = Ability.Owner.Stats.Max[StatType.ACTION];
         summon.Buffs.AddBuff(Ability.Owner, multiplier, Mathf.RoundToInt(Ability.EffectivenessMultiplier * BaseEffectMagnitude));
-        foreach (var part in summon.PartModifiers) palette.RecolorPart(part, new Material[] { illusionMaterial });
+        foreach (var part in summon.PartModifiers) SceneGlobals.BotPalette.RecolorPart(part, new Material[] { illusionMaterial });
     }
 
     

@@ -8,7 +8,6 @@ public class DeploymentPhase : MonoBehaviour
 {
     [SerializeField] CanvasGroup deploymentBanner;
     [SerializeField] float fadeDuration = .5f;
-    [SerializeField] BotPalette palette;
     [SerializeField] Material hologramMaterial;
     Material[] hologramProfile;
 
@@ -38,7 +37,7 @@ public class DeploymentPhase : MonoBehaviour
     IEnumerator DeployUnit(TinyBot bot)
     {
         bot.ToggleActiveLayer(true);
-        foreach (var part in bot.PartModifiers) palette.RecolorPart(part, hologramProfile);
+        foreach (var part in bot.PartModifiers) SceneGlobals.BotPalette.RecolorPart(part, hologramProfile);
         while (!Input.GetMouseButtonDown(0))
         {
             yield return null;
@@ -60,7 +59,7 @@ public class DeploymentPhase : MonoBehaviour
             
         }
 
-        foreach (var part in bot.PartModifiers) palette.RecolorPart(part, bot.Allegiance);
+        foreach (var part in bot.PartModifiers) SceneGlobals.BotPalette.RecolorPart(part, bot.Allegiance);
         bot.ToggleActiveLayer(false);
         yield return null;
     }
