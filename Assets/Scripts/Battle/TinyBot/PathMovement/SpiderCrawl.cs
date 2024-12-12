@@ -104,8 +104,8 @@ public class SpiderCrawl : LegMovement
     {
         Debug.LogWarning("GetRotationAtPosition in SpiderCrawl might have a problem");
         Vector3 targetNormal = Pathfinder3D.GetCrawlOrientation(moveTarget);
-        //Vector3 lookTarget = moveTarget + targetNormal * lookHeightModifier;
-        Quaternion targetRotation = Quaternion.LookRotation(moveTarget - transform.position, targetNormal);
+        Vector3 lookTarget = moveTarget + targetNormal * maxDistanceFromGround;
+        Quaternion targetRotation = Quaternion.LookRotation(lookTarget - transform.position, targetNormal);
         return targetRotation;
     }
 }

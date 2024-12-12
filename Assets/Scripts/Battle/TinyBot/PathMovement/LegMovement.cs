@@ -10,7 +10,6 @@ public abstract class LegMovement : PrimaryMovement
 {
     [Header("Settings")]
     [SerializeField] protected float legStepDuration = .1f;
-    [SerializeField] protected float lookHeightModifier = 1f;
 
     [SerializeField] protected float anchorZoneRadius = 1f;
 
