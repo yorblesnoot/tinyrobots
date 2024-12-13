@@ -1,3 +1,4 @@
+using PrimeTween;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -9,10 +10,9 @@ public class ActivatablePart : PartButton
 {
     [SerializeField] TMP_Text nameDisplay;
     [SerializeField] TMP_Text weightDisplay;
-    [SerializeField] Image buttonImage;
-    [SerializeField] Color activeColor;
+    [SerializeField] CanvasGroup activationOverlay;
     [SerializeField] PartStatIcon[] statDisplays;
-
+    [SerializeField] float activationFadeTime = .5f;
 
 
     public static UnityEvent resetActivation = new();
@@ -50,12 +50,12 @@ public class ActivatablePart : PartButton
     void BecomeActive()
     {
         resetActivation.Invoke();
-        buttonImage.color = activeColor;
+        Tween.Alpha(activationOverlay, 1, duration: activationFadeTime);
         submitPartCallback(PartIdentity);
     }
 
     void BecomeInactive()
     {
-        buttonImage.color = Color.white;
+        Tween.Alpha(activationOverlay, 0, duration: activationFadeTime);
     }
 }
