@@ -32,14 +32,14 @@ public class ActivatablePart : PartButton
         statTypes.Remove(StatType.ENERGY);
         weightDisplay.text = part.FinalStats[StatType.ENERGY].ToString();
         
-        for (int i = 0; i < statDisplays.Count(); i++)
+        /*for (int i = 0; i < statDisplays.Count(); i++)
         {
             if(i < statTypes.Count)
             {
                 statDisplays[i].AssignStat(statTypes[i], part.FinalStats[statTypes[i]]);
             }
             else statDisplays[i].Hide();
-        }
+        }*/
     }
 
     public void SetTextColor(Color color)
