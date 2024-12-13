@@ -19,7 +19,6 @@ public abstract class LegMovement : PrimaryMovement
     [SerializeField] AnimationCurve bodyArc;
     [SerializeField] protected float forwardBias = .5f;
     [SerializeField] float footHeight = .1f;
-    [SerializeField] protected float maxDistanceFromGround = 1f;
 
     [Header("Components")]
     [SerializeField] protected Anchor[] anchors;
@@ -150,7 +149,7 @@ public abstract class LegMovement : PrimaryMovement
         for (int i = 0; i < distance; i++)
         {
             Vector3 testPoint = testSource + direction * i;
-            if (!Physics.CheckSphere(testPoint, maxDistanceFromGround, TerrainMask)) return false;
+            if (!Physics.CheckSphere(testPoint, locomotionHeight, TerrainMask)) return false;
         }
         return true;
     }

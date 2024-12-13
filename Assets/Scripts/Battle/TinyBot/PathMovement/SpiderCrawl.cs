@@ -35,12 +35,12 @@ public class SpiderCrawl : LegMovement
         foreach(var point in path)
         {
             Vector3 direction = -Pathfinder3D.GetCrawlOrientation(point);
-            if (!Physics.Raycast(point, direction, out RaycastHit hit, maxDistanceFromGround * 2, TerrainMask))
+            if (!Physics.Raycast(point, direction, out RaycastHit hit, locomotionHeight * 2, TerrainMask))
             {
                 newPath.Add(point);
                 continue;
             }
-            Vector3 cleanPoint = hit.point + -direction * maxDistanceFromGround;
+            Vector3 cleanPoint = hit.point + -direction * locomotionHeight;
             newPath.Add(cleanPoint);
         }
         return newPath;
@@ -70,8 +70,6 @@ public class SpiderCrawl : LegMovement
         Vector3 worldForward = legDirection * forwardBias;
         Vector3 localForward = anchor.ikTarget.InverseTransformDirection(worldForward);
         Vector3 firstRaySource = anchor.LocalBasePosition + localForward;
-
-
         firstRaySource.y += anchorUpwardLimit;
         Vector3 secondRaySource = firstRaySource;
         secondRaySource.y += secondCastHeight;
@@ -86,8 +84,8 @@ public class SpiderCrawl : LegMovement
         Ray firstRay = new(firstRaySource, firstRayDirection);
         Ray secondRay = new(secondRaySource, secondRayDirection);
 
-        /*Debug.DrawRay(firstRaySource, firstRayDirection * anchorDownwardLength, Color.green, 20);
-        Debug.DrawRay(secondRaySource, secondRayDirection * secondCastLength, Color.red, 20);*/
+        Debug.DrawRay(firstRaySource, firstRayDirection * anchorDownwardLength, Color.green, 20);
+        Debug.DrawRay(secondRaySource, secondRayDirection * secondCastLength, Color.red, 20);
 
         if (Physics.Raycast(firstRay, out var hitInfo, anchorDownwardLength, LayerMask.GetMask("Terrain"))
             || Physics.Raycast(secondRay, out hitInfo, secondCastLength, LayerMask.GetMask("Terrain")))
@@ -104,7 +102,7 @@ public class SpiderCrawl : LegMovement
     {
         Debug.LogWarning("GetRotationAtPosition in SpiderCrawl might have a problem");
         Vector3 targetNormal = Pathfinder3D.GetCrawlOrientation(moveTarget);
-        Vector3 lookTarget = moveTarget + targetNormal * maxDistanceFromGround;
+        Vector3 lookTarget = moveTarget + targetNormal * locomotionHeight;
         Quaternion targetRotation = Quaternion.LookRotation(lookTarget - transform.position, targetNormal);
         return targetRotation;
     }

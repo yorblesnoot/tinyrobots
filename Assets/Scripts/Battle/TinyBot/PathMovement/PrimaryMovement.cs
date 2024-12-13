@@ -8,15 +8,16 @@ public abstract class PrimaryMovement : MonoBehaviour
 {
     [field: SerializeField] public MoveStyle Style { get; protected set; }
     [HideInInspector] public TinyBot Owner;
+    [HideInInspector] public float SpeedMultiplier = 1;
 
-    
+
     public float locomotionHeight;
     public Transform sourceBone;
 
     [SerializeField] float lookSpeed = 1f;
     [SerializeField] protected float MoveSpeed = 3;
     [SerializeField] protected float PivotSpeed = 180f;
-    [HideInInspector] public float SpeedMultiplier = 1;
+    
 
     int sanitizeMask;
     readonly float overlap = .01f;

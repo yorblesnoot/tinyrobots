@@ -432,17 +432,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Style>k__BackingField: 1
   Owner: {fileID: 0}
+  SpeedMultiplier: 1
   locomotionHeight: 0.7
   sourceBone: {fileID: 2133691576895098215}
   lookSpeed: 1
   MoveSpeed: 6
   PivotSpeed: 500
-  SpeedMultiplier: 1
   legStepDuration: 0.05
-  lookHeightModifier: 0.4
   anchorZoneRadius: 1
-  anchorUpwardLimit: 4
-  anchorDownwardLength: 5
+  anchorUpwardLimit: 8
+  anchorDownwardLength: 3
   legRaise:
     serializedVersion: 2
     m_Curve:
@@ -502,7 +501,6 @@ MonoBehaviour:
     m_RotationOrder: 4
   forwardBias: 1
   footHeight: 0.1
-  maxDistanceFromGround: 0.8
   anchors:
   - ikTarget: {fileID: 8441916846642193854}
     Stepping: 0
@@ -525,10 +523,10 @@ MonoBehaviour:
     DistanceFromDeadZone: 1.2949765
     GluedWorldPosition: {x: 4.2347097, y: 24.989079, z: 25.04231}
   legModel: {fileID: 8580522158597767772}
-  firstCastTilt: 0.103
+  firstCastTilt: 0
   secondCastTilt: 0.575
   secondCastLength: 3
-  secondCastHeight: -2
+  secondCastHeight: -4
 --- !u!1001 &4762952281848964444
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -610,7 +608,7 @@ PrefabInstance:
     - target: {fileID: 3222229788524741193, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7316358378114325001, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
@@ -709,7 +707,7 @@ PrefabInstance:
     - target: {fileID: 3222229788524741193, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7316358378114325001, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
@@ -969,7 +967,7 @@ Animator:
   m_GameObject: {fileID: 8962149916288145638}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5caf9e55ab3364941b5649359bb80da2, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1115,7 +1113,7 @@ PrefabInstance:
     - target: {fileID: 3222229788524741193, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7316358378114325001, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
@@ -1214,7 +1212,7 @@ PrefabInstance:
     - target: {fileID: 3222229788524741193, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7316358378114325001, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
