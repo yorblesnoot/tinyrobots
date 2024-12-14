@@ -1,4 +1,6 @@
+using PrimeTween;
 using System;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -9,9 +11,11 @@ public class PartSlot : MonoBehaviour
     [SerializeField] GameObject incompatibleIndicator;
     [SerializeField] CraftablePart empty;
     [SerializeField] float cameraApproachDistance = 3f;
+    [SerializeField] string hologramAlphaPropName = "_AlphaMult";
+    [SerializeField] float hologramFadeTime = .5f;
 
     [HideInInspector] public AttachmentPoint AttachmentPoint;
-    GameObject mockup;
+    PartModifier mockup;
 
     public ModdedPart PartIdentity { get; private set; }
     public SlotType SlotType { get { return AttachmentPoint == null ? SlotType.CHASSIS : AttachmentPoint.SlotType; } }
@@ -40,6 +44,8 @@ public class PartSlot : MonoBehaviour
         else if (PartCanSlot(BlueprintControl.ActivePart.BasePart.Type, SlotType)) SlotPart();
     }
 
+    
+
     public static bool PartCanSlot(SlotType part, SlotType slot)
     {
         if(slot == SlotType.ALL || part == SlotType.ALL) return true;
@@ -56,7 +62,7 @@ public class PartSlot : MonoBehaviour
         ModdedPart activePart = BlueprintControl.ActivePart;
         if (activePart.BasePart.PrimaryLocomotion && PrimaryLocomotionSlotted) return;
         SetPartIdentity(activePart);
-        BlueprintControl.SlotActivePart();
+        BlueprintControl.ConsumeActivePart();
     }
 
     public void ClearPartIdentity(bool destroy, bool toInventory)
@@ -67,7 +73,7 @@ public class PartSlot : MonoBehaviour
         {
             if (mockup != null)
             {
-                mockup.SetActive(false);
+                mockup.gameObject.SetActive(false);
                 mockup.transform.SetParent(null, true);
             }
             if (PartIdentity.BasePart.PrimaryLocomotion) PrimaryLocomotionSlotted = false;
@@ -92,28 +98,54 @@ public class PartSlot : MonoBehaviour
         }
     }
 
+    private void OnMouseEnter()
+    {
+        if (PartIdentity != null || BlueprintControl.ActivePart == null || !PartCanSlot(BlueprintControl.ActivePart.BasePart.Type, SlotType)) return;
+        DecorateMockup(BlueprintControl.ActivePart);
+        SceneGlobals.BotPalette.RecolorPart(mockup, BotPalette.Special.HOLOGRAM);
+        AnimateHologram(true);
+    }
+
+    static Sequence activeSequence;
+    void AnimateHologram(bool on)
+    {
+        if(activeSequence.isAlive) activeSequence.Stop();
+        activeSequence = Sequence.Create();
+        foreach(Renderer renderer in mockup.mainRenderers)
+        {
+            foreach(Material material in renderer.materials)
+            {
+                Tween.StopAll(material);
+                activeSequence.Group(Tween.MaterialProperty(material, Shader.PropertyToID(hologramAlphaPropName), 
+                    startValue: on ? 0 : 1, endValue: on ? 1 : 0, duration: hologramFadeTime));
+                
+            }
+        }
+        if (!on) activeSequence.OnComplete(ClearMockup);
+
+        void ClearMockup()
+        {
+            mockup.gameObject.SetActive(false);
+            mockup = null;
+        }
+    }
+
+    private void OnMouseExit()
+    {
+        if (mockup == null || PartIdentity != null) return;
+        AnimateHologram(false);
+    }
+
+    
+
     public PartSlot[] SetPartIdentity(ModdedPart part)
     {
         PrimaryLocomotionSlotted |= part.BasePart.PrimaryLocomotion;
         SlottedPart.Invoke(part, true);
         slotAnimator.SetBool(contractionAnimation, true);
-        mockup = part.Sample;
-        if (mockup.TryGetComponent(out Collider collider)) collider.enabled = false;
-        mockup.SetActive(true);
-        Animator partAnimator = mockup.GetComponentInChildren<Animator>();
-        if (partAnimator != null) partAnimator.speed = 0;
-        PartModifier modifier = mockup.GetComponent<PartModifier>();
-        if (modifier.mainRenderers != null)
-        {
-            foreach (Renderer renderer in modifier.mainRenderers)
-            {
-                //palette.RecolorPart(renderer, allegiance);
-            }
-        }
-
-        mockup.transform.SetParent(AttachmentPoint == null ? transform : AttachmentPoint.transform, false);
-        mockup.transform.localPosition = Vector3.zero;
-        mockup.transform.localRotation = Quaternion.identity;
+        
+        DecorateMockup(part);
+        SceneGlobals.BotPalette.RecolorPart(mockup, Allegiance.PLAYER);
         AttachmentPoint[] attachmentPoints = mockup.GetComponentsInChildren<AttachmentPoint>();
         PartIdentity = part;
 
@@ -127,6 +159,18 @@ public class PartSlot : MonoBehaviour
         }
 
         return childSlots;
+    }
+
+    private void DecorateMockup(ModdedPart part)
+    {
+        mockup = part.Sample.GetComponent<PartModifier>();
+        if (mockup.TryGetComponent(out Collider collider)) collider.enabled = false;
+        mockup.gameObject.SetActive(true);
+        Animator partAnimator = mockup.GetComponentInChildren<Animator>();
+        if (partAnimator != null) partAnimator.speed = 0;
+        mockup.transform.SetParent(AttachmentPoint == null ? transform : AttachmentPoint.transform, false);
+        mockup.transform.localPosition = Vector3.zero;
+        mockup.transform.localRotation = Quaternion.identity;
     }
 
     public TreeNode<ModdedPart> BuildTree()

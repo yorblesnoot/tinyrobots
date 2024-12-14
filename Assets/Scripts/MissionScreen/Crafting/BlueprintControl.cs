@@ -70,7 +70,7 @@ public class BlueprintControl : MonoBehaviour
         }
     }
 
-    public static void SlotActivePart()
+    public static void ConsumeActivePart()
     {
 
         if (!SceneGlobals.PlayerData.DevMode) SceneGlobals.PlayerData.PartInventory.Remove(ActivePart);

@@ -1,12 +1,25 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "BotPalette", menuName = "ScriptableObjects/BotPalette")]
 public class BotPalette : ScriptableObject
 {
-    [SerializeField] SerializableDictionary<Allegiance, Material[]> palettePicker;
+    public enum Special
+    {
+        HOLOGRAM
+    }
+
+    [FormerlySerializedAs("palettePicker")][SerializeField] SerializableDictionary<Allegiance, Material[]> allegiancePalette;
+    [SerializeField] SerializableDictionary<Special, Material[]> specialPalette;
     public void RecolorPart(PartModifier part, Allegiance allegiance)
     {
-        Material[] activePalette = palettePicker[allegiance];
+        Material[] activePalette = allegiancePalette[allegiance];
+        RecolorPart(part, activePalette);
+    }
+
+    public void RecolorPart(PartModifier part, Special special)
+    {
+        Material[] activePalette = specialPalette[special];
         RecolorPart(part, activePalette);
     }
 
@@ -29,3 +42,5 @@ public class BotPalette : ScriptableObject
         renderer.materials = targetPalette;
     }
 }
+
+

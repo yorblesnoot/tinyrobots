@@ -8,8 +8,6 @@ public class DeploymentPhase : MonoBehaviour
 {
     [SerializeField] CanvasGroup deploymentBanner;
     [SerializeField] float fadeDuration = .5f;
-    [SerializeField] Material hologramMaterial;
-    Material[] hologramProfile;
 
     static DeploymentPhase instance;
 
@@ -17,7 +15,6 @@ public class DeploymentPhase : MonoBehaviour
     {
         instance = this;
         deploymentBanner.alpha = 0;
-        hologramProfile = new Material[] { hologramMaterial};
     }
     public static IEnumerator BeginDeployment(List<TinyBot> playerBots, Action endCallback)
     {
@@ -37,7 +34,7 @@ public class DeploymentPhase : MonoBehaviour
     IEnumerator DeployUnit(TinyBot bot)
     {
         bot.ToggleActiveLayer(true);
-        foreach (var part in bot.PartModifiers) SceneGlobals.BotPalette.RecolorPart(part, hologramProfile);
+        foreach (var part in bot.PartModifiers) SceneGlobals.BotPalette.RecolorPart(part, BotPalette.Special.HOLOGRAM);
         while (!Input.GetMouseButtonDown(0))
         {
             yield return null;
