@@ -4183,7 +4183,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deploymentBanner: {fileID: 421531241}
   fadeDuration: 1
-  hologramMaterial: {fileID: 2100000, guid: 91109e3d8f7abe94eb971adb5d35694e, type: 2}
 --- !u!1001 &426791631
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8984,6 +8983,31 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2134400761}
     m_Modifications:
+    - target: {fileID: 3202487593657246232, guid: e82961cbb5cf2544e9858088106ee6fc,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3202487593657246232, guid: e82961cbb5cf2544e9858088106ee6fc,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3202487593657246232, guid: e82961cbb5cf2544e9858088106ee6fc,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3202487593657246232, guid: e82961cbb5cf2544e9858088106ee6fc,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3202487593657246232, guid: e82961cbb5cf2544e9858088106ee6fc,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3379639185664892798, guid: e82961cbb5cf2544e9858088106ee6fc,
         type: 3}
       propertyPath: m_Name
@@ -9023,6 +9047,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_fontSize
       value: 22.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941061183168211468, guid: e82961cbb5cf2544e9858088106ee6fc,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941061183168211468, guid: e82961cbb5cf2544e9858088106ee6fc,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941061183168211468, guid: e82961cbb5cf2544e9858088106ee6fc,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941061183168211468, guid: e82961cbb5cf2544e9858088106ee6fc,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4941061183168211468, guid: e82961cbb5cf2544e9858088106ee6fc,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6432312590650204053, guid: e82961cbb5cf2544e9858088106ee6fc,
         type: 3}
@@ -10519,7 +10568,7 @@ MonoBehaviour:
   marchingCubesRenderer: {fileID: 1110564608}
   mainCameraControl: {fileID: 1188009859}
   turnManager: {fileID: 1202214817}
-  debug: 0
+  debug: 1
 --- !u!114 &1097076971
 MonoBehaviour:
   m_ObjectHideFlags: 0
