@@ -81,7 +81,7 @@ MonoBehaviour:
     m_Value: 1
   qualityLevel:
     m_OverrideState: 1
-    m_Value: 3
+    m_Value: 4
   gridPixelSize:
     m_OverrideState: 1
     m_Value: 4
@@ -90,7 +90,7 @@ MonoBehaviour:
     m_Value: 196
   maxDistanceVolumetric:
     m_OverrideState: 1
-    m_Value: 150
+    m_Value: 1452.4
   depthRatio:
     m_OverrideState: 0
     m_Value: 2
@@ -102,10 +102,10 @@ MonoBehaviour:
     m_Value: 0.05
   fogDensity:
     m_OverrideState: 1
-    m_Value: 8.3
+    m_Value: 14.2
   anisotropy:
-    m_OverrideState: 0
-    m_Value: 0.2
+    m_OverrideState: 1
+    m_Value: 0.431
   lightIntensity:
     m_OverrideState: 0
     m_Value: 1
@@ -123,19 +123,19 @@ MonoBehaviour:
     m_Value: 64
   baseHeight:
     m_OverrideState: 1
-    m_Value: 150
+    m_Value: -10
   attenuationBoundarySize:
-    m_OverrideState: 0
-    m_Value: 10
+    m_OverrideState: 1
+    m_Value: 5.02
   litColor:
     m_OverrideState: 1
-    m_Value: {r: 0.04063842, g: 0, b: 0.50980395, a: 1}
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
   shadowedColor:
     m_OverrideState: 1
-    m_Value: {r: 0.0140174385, g: 0.057930097, b: 0.3301887, a: 1}
+    m_Value: {r: 0, g: 0, b: 0, a: 1}
   emitColor:
     m_OverrideState: 1
-    m_Value: {r: 0.36467603, g: 0.40171647, b: 0.5188679, a: 1}
+    m_Value: {r: 0.0014684947, g: 0.014520392, b: 0.028301895, a: 1}
   colorRamp:
     m_OverrideState: 0
     m_Value: {fileID: 0}
@@ -144,7 +144,7 @@ MonoBehaviour:
     m_Value: 0
   colorInfluence:
     m_OverrideState: 1
-    m_Value: 0.335
+    m_Value: 0.811
   directionalForward:
     m_OverrideState: 0
     m_Value: {r: 1, g: 1, b: 1, a: 1}
@@ -168,22 +168,22 @@ MonoBehaviour:
     m_Value: 0.3
   noiseTiling:
     m_OverrideState: 1
-    m_Value: 30
+    m_Value: 102.34
   noiseWindSpeed:
     m_OverrideState: 1
-    m_Value: {x: 3, y: 0, z: 3}
+    m_Value: {x: 17.4, y: 1.23, z: 0}
   noiseMap:
     m_OverrideState: 1
-    m_Value: {x: 0.34126988, y: 0.7243108}
+    m_Value: {x: 0.1956715, y: 0.7032306}
   volumeNoise:
     m_OverrideState: 0
     m_Value:
       frequency: 8
-      octaves: 4
-      lacunarity: 2
-      gain: 0.35
+      octaves: 1
+      lacunarity: 6
+      gain: 0.775
       seed: 0
-      noiseType: 2
+      noiseType: 3
       noiseQuality: 3
       invert: 0
       userTexture: {fileID: 0}
@@ -199,7 +199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97c23e3b12dc18c42a140437e53d3951, type: 3}
   m_Name: Tonemapping
   m_EditorClassIdentifier: 
-  active: 1
+  active: 0
   mode:
     m_OverrideState: 1
     m_Value: 2
