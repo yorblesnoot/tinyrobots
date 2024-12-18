@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 public class PartySelector : MonoBehaviour
@@ -14,6 +15,7 @@ public class PartySelector : MonoBehaviour
     [SerializeField] List<PartySelectionPortrait> partyPortraits;
     [SerializeField] BotConverter converter;
     [SerializeField] Button startButton;
+    [SerializeField] PartyMemberPreview partyPreview;
     
 
     List<BotCharacter> party = new();
@@ -22,12 +24,22 @@ public class PartySelector : MonoBehaviour
     private void Start()
     {
         startButton.onClick.AddListener(StartGame);
-        converter.CoreLibrary.Where(core => core.Playable).ToList().PassDataToUI(selectionPortraits, PopulatePortrait);
+        List<BotCharacter> playables = converter.CoreLibrary.Where(core => core.Playable).ToList();
+        foreach (BotCharacter character in playables) character.Initialize();
+        playables.PassDataToUI(selectionPortraits, PopulatePortrait);
+        activeCharacter = playables[0];
+        partyPreview.Become(playables[0]);
     }
 
     void PopulatePortrait(BotCharacter character, PartySelectionPortrait portrait)
     {
-        portrait.Become(character, () => SelectCharacter(character));
+        portrait.Become(character, () => SelectCharacter(character), () => FastSelectCharacter(character));
+    }
+
+    void FastSelectCharacter(BotCharacter character)
+    {
+        AddCharacterToParty(character);
+        partyPreview.Become(character);
     }
 
     void SelectCharacter(BotCharacter character)
@@ -39,7 +51,7 @@ public class PartySelector : MonoBehaviour
         else
         {
             activeCharacter = character;
-            ShowCharacterInfo(character);
+            partyPreview.Become(character);
         }
     }
 

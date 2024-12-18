@@ -30,7 +30,10 @@ public class BotCharacter : SOWithGUID
     [field: SerializeField] public BotRecord StarterRecord {  get; private set; }
     [SerializeField] CraftablePart corePart;
 
-    
+    public string GetCoreName()
+    {
+        return DisplayName == "" ? name.Replace("Character", "") : DisplayName;
+    }
 
     //skill tree?
 }

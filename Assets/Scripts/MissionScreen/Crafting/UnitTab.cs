@@ -13,13 +13,10 @@ public class UnitTab : MonoBehaviour
     {
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(clickEffect);
-        coreName.text = GetCoreName(core);
+        coreName.text = core.GetCoreName();
     }
 
-    public static string GetCoreName(BotCharacter character)
-    {
-         return character.DisplayName == "" ? character.name.Replace("Character", "") : character.DisplayName;
-    }
+    
 
     public void Highlight(bool on = true)
     {

@@ -11,7 +11,6 @@ public class ActivatablePart : PartButton
     [SerializeField] TMP_Text nameDisplay;
     [SerializeField] TMP_Text weightDisplay;
     [SerializeField] CanvasGroup activationOverlay;
-    [SerializeField] PartStatIcon[] statDisplays;
     [SerializeField] float activationFadeTime = .5f;
 
 
