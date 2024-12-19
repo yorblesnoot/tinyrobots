@@ -9,6 +9,12 @@ public class PartySelectionPortrait : MonoBehaviour, IPointerClickHandler
     [SerializeField] Button button;
 
     UnityAction onRightClick;
+    Sprite defaultSprite;
+
+    private void Awake()
+    {
+        defaultSprite = portrait.sprite;
+    }
 
     public void Become(BotCharacter character, UnityAction onClick, UnityAction rightClick = null)
     {
@@ -19,7 +25,7 @@ public class PartySelectionPortrait : MonoBehaviour, IPointerClickHandler
 
     public void Clear()
     {
-        portrait.sprite = null;
+        portrait.sprite = defaultSprite;
         onRightClick = null;
         button.onClick.RemoveAllListeners();
     }
