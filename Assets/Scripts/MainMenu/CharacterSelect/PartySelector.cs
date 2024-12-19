@@ -16,19 +16,24 @@ public class PartySelector : MonoBehaviour
     [SerializeField] BotConverter converter;
     [SerializeField] Button startButton;
     [SerializeField] PartyMemberPreview partyPreview;
+    [SerializeField] Transform corePosition;
     
 
     List<BotCharacter> party = new();
 
     BotCharacter activeCharacter;
-    private void Start()
+    private void Awake()
     {
         startButton.onClick.AddListener(StartGame);
+        corePosition.gameObject.GetComponent<MeshRenderer>().enabled = false;
+    }
+    private void Start()
+    {
+        
         List<BotCharacter> playables = converter.CoreLibrary.Where(core => core.Playable).ToList();
         foreach (BotCharacter character in playables) character.Initialize();
         playables.PassDataToUI(selectionPortraits, PopulatePortrait);
-        activeCharacter = playables[0];
-        partyPreview.Become(playables[0]);
+        SetActiveCharacter(playables[0]);
     }
 
     void PopulatePortrait(BotCharacter character, PartySelectionPortrait portrait)
@@ -39,7 +44,7 @@ public class PartySelector : MonoBehaviour
     void FastSelectCharacter(BotCharacter character)
     {
         AddCharacterToParty(character);
-        partyPreview.Become(character);
+        SetActiveCharacter(character);
     }
 
     void SelectCharacter(BotCharacter character)
@@ -50,8 +55,8 @@ public class PartySelector : MonoBehaviour
         }
         else
         {
-            activeCharacter = character;
-            partyPreview.Become(character);
+            
+            SetActiveCharacter(character);
         }
     }
 
@@ -71,9 +76,15 @@ public class PartySelector : MonoBehaviour
         partyPortraits.Insert(0, portait);
     }
 
-    void ShowCharacterInfo(BotCharacter character)
+    void SetActiveCharacter(BotCharacter character)
     {
-
+        if(activeCharacter != null && activeCharacter != character) activeCharacter.ModdedCore.Sample.SetActive(false);
+        activeCharacter = character;
+        GameObject sample = character.ModdedCore.Sample;
+        sample.SetActive(true);
+        sample.transform.SetParent(corePosition);
+        sample.transform.localPosition = Vector3.zero;
+        partyPreview.Become(character);
     }
 
     void StartGame()

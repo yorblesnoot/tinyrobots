@@ -17,11 +17,6 @@ public class GameStarter : MonoBehaviour
         loadButton.gameObject.SetActive(container.SaveExists());
     }
 
-    public void NewGame()
-    {
-        characterSelect.SetActive(true);
-    }
-
     public void LoadGame()
     {
         container.LoadPlayerData();
