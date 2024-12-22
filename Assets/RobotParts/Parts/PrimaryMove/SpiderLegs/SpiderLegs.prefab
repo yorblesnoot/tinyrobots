@@ -356,12 +356,12 @@ PrefabInstance:
     - target: {fileID: 5192667463394062400, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5192667463394062400, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5192667463394062400, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
@@ -376,7 +376,7 @@ PrefabInstance:
     - target: {fileID: 5192667463394062400, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 5192667463394062400, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
@@ -433,15 +433,15 @@ MonoBehaviour:
   <Style>k__BackingField: 1
   Owner: {fileID: 0}
   SpeedMultiplier: 1
-  locomotionHeight: 0.7
+  locomotionHeight: 0.5
   sourceBone: {fileID: 2133691576895098215}
   lookSpeed: 1
   MoveSpeed: 6
   PivotSpeed: 500
   legStepDuration: 0.05
   anchorZoneRadius: 1
-  anchorUpwardLimit: 8
-  anchorDownwardLength: 3
+  anchorUpwardLimit: 6.63
+  anchorDownwardLength: 2.06
   legRaise:
     serializedVersion: 2
     m_Curve:
@@ -504,29 +504,29 @@ MonoBehaviour:
   anchors:
   - ikTarget: {fileID: 8441916846642193854}
     Stepping: 0
-    LocalBasePosition: {x: -3.66, y: -2.22, z: 0.92}
+    LocalBasePosition: {x: 6.538273, y: -4.257178, z: -6.5382714}
     DistanceFromDeadZone: 1.6720688
     GluedWorldPosition: {x: 4.5485835, y: 25.099884, z: 27.024078}
   - ikTarget: {fileID: 6089200858207563855}
     Stepping: 0
-    LocalBasePosition: {x: 0.97, y: -2.22, z: 3.73}
+    LocalBasePosition: {x: -6.5382743, y: -4.2571726, z: -6.5382743}
     DistanceFromDeadZone: 2.975375
     GluedWorldPosition: {x: 4.5664515, y: 22.958897, z: 27.136864}
   - ikTarget: {fileID: 7329314620812544283}
     Stepping: 0
-    LocalBasePosition: {x: 3.57, y: -2.22, z: -0.82}
+    LocalBasePosition: {x: 6.538268, y: -4.2571783, z: 6.538275}
     DistanceFromDeadZone: 1.2422546
     GluedWorldPosition: {x: 4.2433767, y: 22.929523, z: 25.097078}
   - ikTarget: {fileID: 6403762483325624956}
     Stepping: 0
-    LocalBasePosition: {x: -1.02, y: -2.22, z: -3.47}
+    LocalBasePosition: {x: -6.5382767, y: -4.257173, z: 6.538275}
     DistanceFromDeadZone: 1.2949765
     GluedWorldPosition: {x: 4.2347097, y: 24.989079, z: 25.04231}
   legModel: {fileID: 8580522158597767772}
-  firstCastTilt: 0
-  secondCastTilt: 0.575
-  secondCastLength: 3
-  secondCastHeight: -4
+  firstCastTilt: 0.025
+  secondCastTilt: 0.73
+  secondCastLength: 2.46
+  secondCastHeight: -4.7
 --- !u!1001 &4762952281848964444
 PrefabInstance:
   m_ObjectHideFlags: 0

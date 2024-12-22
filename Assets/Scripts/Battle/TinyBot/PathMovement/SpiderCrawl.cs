@@ -65,27 +65,10 @@ public class SpiderCrawl : LegMovement
             yield return null;
         }
     }
-    protected override Vector3 GetLimbTarget(Anchor anchor, Vector3 legDirection)
+    protected override Vector3 GetLimbTarget(Anchor anchor, Vector3 movementDirection)
     {
-        Vector3 worldForward = legDirection * forwardBias;
-        Vector3 localForward = anchor.ikTarget.InverseTransformDirection(worldForward);
-        Vector3 firstRaySource = anchor.LocalBasePosition + localForward;
-        firstRaySource.y += anchorUpwardLimit;
-        Vector3 secondRaySource = firstRaySource;
-        secondRaySource.y += secondCastHeight;
-
-        firstRaySource = legModel.TransformPoint(firstRaySource) + worldForward;
-        secondRaySource = legModel.TransformPoint(secondRaySource) + worldForward;
-        Vector3 centerDirection = transform.position - firstRaySource;
-        centerDirection.Normalize();
-        Vector3 firstRayDirection = Vector3.Slerp(-Owner.transform.up, centerDirection, firstCastTilt);
-        Vector3 secondRayDirection = Vector3.Slerp(-Owner.transform.up, centerDirection, secondCastTilt);
-
-        Ray firstRay = new(firstRaySource, firstRayDirection);
-        Ray secondRay = new(secondRaySource, secondRayDirection);
-
-        Debug.DrawRay(firstRaySource, firstRayDirection * anchorDownwardLength, Color.green, 20);
-        Debug.DrawRay(secondRaySource, secondRayDirection * secondCastLength, Color.red, 20);
+        Ray firstRay, secondRay;
+        CastFromAnchor(anchor, movementDirection, out firstRay, out secondRay);
 
         if (Physics.Raycast(firstRay, out var hitInfo, anchorDownwardLength, LayerMask.GetMask("Terrain"))
             || Physics.Raycast(secondRay, out hitInfo, secondCastLength, LayerMask.GetMask("Terrain")))
@@ -97,7 +80,30 @@ public class SpiderCrawl : LegMovement
             return default;
         }
     }
-    
+
+    private void CastFromAnchor(Anchor anchor, Vector3 movementDirection, out Ray firstRay, out Ray secondRay, float duration = 20f)
+    {
+        Vector3 worldForward = movementDirection * forwardBias;
+        Vector3 localForward = anchor.ikTarget.InverseTransformDirection(worldForward);
+        Vector3 firstRaySource = anchor.LocalBasePosition + localForward;
+        firstRaySource.y += anchorUpwardLimit;
+        Vector3 secondRaySource = firstRaySource;
+        secondRaySource.y += secondCastHeight;
+
+        firstRaySource = legModel.TransformPoint(firstRaySource) + worldForward;
+        secondRaySource = legModel.TransformPoint(secondRaySource) + worldForward;
+        Vector3 centerDirection = transform.position - firstRaySource;
+        centerDirection.Normalize();
+        Vector3 ownerUp = Owner == null ? Vector3.up : Owner.transform.up;
+        Vector3 firstRayDirection = Vector3.Slerp(-ownerUp, centerDirection, firstCastTilt);
+        Vector3 secondRayDirection = Vector3.Slerp(-ownerUp, centerDirection, secondCastTilt);
+
+        firstRay = new(firstRaySource, firstRayDirection);
+        secondRay = new(secondRaySource, secondRayDirection);
+        Debug.DrawRay(firstRaySource, firstRayDirection * anchorDownwardLength, Color.green, duration);
+        Debug.DrawRay(secondRaySource, secondRayDirection * secondCastLength, Color.red, duration);
+    }
+
     public override Quaternion GetRotationAtPosition(Vector3 moveTarget)
     {
         Debug.LogWarning("GetRotationAtPosition in SpiderCrawl might have a problem");
@@ -105,5 +111,23 @@ public class SpiderCrawl : LegMovement
         Vector3 lookTarget = moveTarget + targetNormal * locomotionHeight;
         Quaternion targetRotation = Quaternion.LookRotation(lookTarget - transform.position, targetNormal);
         return targetRotation;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        foreach(Anchor anchor in anchors)
+        {
+            anchor.Initialize();
+            Ray[] rays = new Ray[2];
+            CastFromAnchor(anchor, Vector3.zero, out rays[0], out rays[1], .1f);
+            GizmoForRay(rays[0], anchorDownwardLength);
+            GizmoForRay(rays[1], secondCastLength);
+        }
+
+        void GizmoForRay(Ray ray, float distance)
+        {
+            Vector3 destination = ray.origin + ray.direction * distance;
+            Gizmos.DrawLine(ray.origin, destination);
+        }
     }
 }

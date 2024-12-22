@@ -61,7 +61,8 @@ public abstract class LegMovement : PrimaryMovement
         LoadLimbPositions();
         foreach (var anchor in anchors)
         {
-            anchor.ikTarget.position = GetRaisedLimbTarget(anchor, Vector3.zero);
+            if (!GetRaisedLimbTarget(anchor, Vector3.zero, out Vector3 position)) continue;
+            anchor.ikTarget.position = position;
             anchor.UpdateGluedPosition();
         }
     }
@@ -115,11 +116,10 @@ public abstract class LegMovement : PrimaryMovement
         return Vector3.Distance(anchor.ikTarget.localPosition, anchor.LocalBasePosition + localForward * forwardBias);
     }
     
-    protected void TryStepToBase(Anchor anchor, Vector3 legDirection)
+    protected void TryStepToBase(Anchor anchor, Vector3 movementDirection)
     {
         Vector3 localStartPosition = anchor.ikTarget.localPosition;
-        Vector3 finalPosition = GetRaisedLimbTarget(anchor, legDirection);
-        if (finalPosition == default) return;
+        if (!GetRaisedLimbTarget(anchor, movementDirection, out Vector3 finalPosition)) return;
         StepProgress = .001f;
         anchor.Stepping = true;
         Tween.Position(anchor.ikTarget, finalPosition, legStepDuration)
@@ -134,14 +134,15 @@ public abstract class LegMovement : PrimaryMovement
         anchor.Stepping = false;
     }
 
-    Vector3 GetRaisedLimbTarget(Anchor anchor, Vector3 legDirection)
+    bool GetRaisedLimbTarget(Anchor anchor, Vector3 movementDirection, out Vector3 raisedTarget)
     {
-        Vector3 target = GetLimbTarget(anchor, legDirection);
-        target.y += footHeight;
-        return target;
+        raisedTarget = GetLimbTarget(anchor, movementDirection);
+        if(raisedTarget == default) return false;
+        raisedTarget.y += footHeight;
+        return true;
     }
 
-    protected abstract Vector3 GetLimbTarget(Anchor anchor, Vector3 legDirection);
+    protected abstract Vector3 GetLimbTarget(Anchor anchor, Vector3 movementDirection);
 
     protected override bool LeapedPathIsValid(Vector3 testSource, Vector3 direction, float distance, int sanitizeMask)
     {
