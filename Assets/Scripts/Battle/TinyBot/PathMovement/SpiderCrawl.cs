@@ -6,7 +6,7 @@ using UnityEngine;
 public class SpiderCrawl : LegMovement
 {
     public override void SpawnOrientation()
-    {
+    { 
         Vector3 normal = Pathfinder3D.GetCrawlOrientation(Owner.transform.position);
         Vector3 centerDirection = GetCenterColumn() - transform.position;
         Vector3 facing = Vector3.Cross(normal, centerDirection);
@@ -33,7 +33,7 @@ public class SpiderCrawl : LegMovement
                 newPath.Add(point);
                 continue;
             }
-            Vector3 cleanPoint = hit.point;
+            Vector3 cleanPoint = hit.point - direction * PathHeight;
             newPath.Add(cleanPoint);
         }
         return newPath;
@@ -61,10 +61,10 @@ public class SpiderCrawl : LegMovement
 
     public override Quaternion GetRotationAtPosition(Vector3 moveTarget)
     {
-        //check for issues
         Vector3 targetNormal = Pathfinder3D.GetCrawlOrientation(moveTarget);
-        Vector3 lookTarget = moveTarget + targetNormal * Owner.TargetPoint.localPosition.magnitude;
-        Quaternion targetRotation = Quaternion.LookRotation(moveTarget - transform.position, targetNormal);
+        Vector3 lookTarget = moveTarget + targetNormal * PathHeight;
+        Quaternion targetRotation = Quaternion.LookRotation(lookTarget - Owner.transform.position, targetNormal);
+        Debug.DrawLine(Owner.transform.position, lookTarget, Color.blue, 2f);
         return targetRotation;
     }
 }

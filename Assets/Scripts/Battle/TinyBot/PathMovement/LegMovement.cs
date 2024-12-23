@@ -37,6 +37,7 @@ public abstract class LegMovement : PrimaryMovement
     public override float LocomotionHeight => locomotionHeight;
     float locomotionHeight;
 
+    protected readonly float PathHeight = .2f;
 
     private void Awake()
     {
@@ -201,8 +202,6 @@ public abstract class LegMovement : PrimaryMovement
 
         firstRay = new(firstRaySource, firstRayDirection);
         secondRay = new(secondRaySource, secondRayDirection);
-        Debug.DrawRay(firstRaySource, firstRayDirection * anchorDownwardLength, Color.green, duration);
-        Debug.DrawRay(secondRaySource, secondRayDirection * secondCastLength, Color.red, duration);
     }
 
     Vector3 GetLimbTarget(Anchor anchor, Vector3 movementDirection)

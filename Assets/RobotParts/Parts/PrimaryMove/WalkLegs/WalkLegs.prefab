@@ -552,17 +552,17 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  forwardBias: 1
+  forwardBias: 1.5
   footHeight: 0.1
   anchors:
   - ikTarget: {fileID: 5476163026689878025}
     Stepping: 0
-    LocalBasePosition: {x: -5.75, y: -13.05, z: 0.06}
+    LocalBasePosition: {x: -5.75, y: -9.05, z: 0.06}
     DistanceFromDeadZone: 0
     GluedWorldPosition: {x: 0, y: 0, z: 0}
   - ikTarget: {fileID: 7394775066713002943}
     Stepping: 0
-    LocalBasePosition: {x: 5.32, y: -13.01, z: -0.05}
+    LocalBasePosition: {x: 5.32, y: -9.01, z: -0.05}
     DistanceFromDeadZone: 0
     GluedWorldPosition: {x: 0, y: 0, z: 0}
   legModel: {fileID: 5779783543885095998}
@@ -809,7 +809,7 @@ PrefabInstance:
     - target: {fileID: 2859665975889210439, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -13.01
+      value: -9.01
       objectReference: {fileID: 0}
     - target: {fileID: 2859665975889210439, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
@@ -1597,7 +1597,7 @@ PrefabInstance:
     - target: {fileID: 2859665975889210439, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -13.05
+      value: -9.05
       objectReference: {fileID: 0}
     - target: {fileID: 2859665975889210439, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}

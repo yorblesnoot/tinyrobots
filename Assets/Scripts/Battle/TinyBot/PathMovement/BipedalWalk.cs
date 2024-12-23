@@ -5,7 +5,6 @@ public class BipedalWalk : LegMovement
 {
     List<Vector3> sanitizationPositions;
     readonly float sanOffset = 1.5f;
-    readonly float pathHeight = .3f;
     readonly float legScanHeight = 2.5f;
     readonly float scanOriginHeight = 1;
 
@@ -36,6 +35,7 @@ public class BipedalWalk : LegMovement
                 if (Physics.Raycast(target + offset, castDirection, out RaycastHit hit, legScanHeight, TerrainMask)) hitpoints.Add(hit.point);
             }
             Vector3 newPoint = hitpoints.Count > 0 ? hitpoints.Average() : point;
+            newPoint += Vector3.up * PathHeight;
             newPath.Add(newPoint);
         }
         return newPath;

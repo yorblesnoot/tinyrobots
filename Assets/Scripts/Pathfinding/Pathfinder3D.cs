@@ -260,22 +260,47 @@ public static class Pathfinder3D
             return false;
         }
     }
-    public static Vector3 GetCrawlOrientation(Vector3 position)
+
+    static readonly int crawlRadius = 3;
+
+    public static Vector3 GetCrawlOrientation(Vector3 source)
+    {
+        List<Vector3> directions = new();
+        int layerMask = LayerMask.GetMask("Terrain");
+        Vector3Int sourceNode = Vector3Int.RoundToInt(source);
+        List<Node> sphere = SearchSphere(sourceNode, crawlRadius);
+        foreach (var node in sphere)
+        {
+            
+            Vector3 direction = node.Location - source;
+            if (!Physics.Raycast(source, direction, out RaycastHit hit, crawlRadius, layerMask)) continue;
+            Vector3 priority = hit.point - node.Location;
+            //Debug.DrawLine(source, source + direction, Color.blue, 1f);
+
+            directions.Add(priority);
+        }
+        Vector3 final = directions.Average();
+        final.Normalize();
+        //Debug.DrawLine(source, source + final, Color.red, 1f);
+        return final;
+    }
+
+    /*public static Vector3 GetCrawlOrientation(Vector3 source)
     {
         Vector3 total = Vector3.zero;
         int number = 0;
-        Vector3Int node = Vector3Int.RoundToInt(position);
-        Node source = nodeMap[node];
-        foreach(var edge in source.Edges)
+        Vector3Int node = Vector3Int.RoundToInt(source);
+        List<Node> sphere = SearchSphere(node, crawlRadius);
+        foreach(var neighbor in sphere)
         {
-            if (!edge.Neighbor.Terrain) continue;
+            if (!neighbor.Terrain) continue;
 
-            Vector3 offset = edge.Neighbor.Location - node;
+            Vector3 offset = neighbor.Location - source;
             total += offset.normalized;
             number++;
         }
         return -total/number;
-    }
+    }*/
     public static bool PointIsOffMap(int x, int y, int z)
     {
         if (x < 0 || y < 0 || z < 0) return true;

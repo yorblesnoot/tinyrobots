@@ -82,7 +82,7 @@ public class SpawnZone : MonoBehaviour
     {
         List<Vector3> availableSpaces = styleNodes[bot.Allegiance][bot.MoveStyle];
         Vector3 targetSpace =  availableSpaces.GrabRandomly();
-        bot.transform.position = targetSpace;
+        bot.transform.position = bot.PrimaryMovement.SanitizePoint(targetSpace);
         foreach(var allegiance in styleNodes.Values) 
             foreach (var mode in allegiance.Values) mode.Remove(targetSpace);
         bot.gameObject.SetActive(true);
