@@ -5,7 +5,9 @@ using UnityEngine;
 
 public class PropellerFly : PrimaryMovement
 {
-    
+    public override float LocomotionHeight => locomotionHeight;
+    [SerializeField] float locomotionHeight;
+
     private void Awake()
     {
         Style = MoveStyle.FLY;

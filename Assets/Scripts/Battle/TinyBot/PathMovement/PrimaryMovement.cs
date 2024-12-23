@@ -11,7 +11,7 @@ public abstract class PrimaryMovement : MonoBehaviour
     [HideInInspector] public float SpeedMultiplier = 1;
 
 
-    public float locomotionHeight;
+    public abstract float LocomotionHeight { get; }
     public Transform sourceBone;
 
     [SerializeField] float lookSpeed = 1f;
@@ -72,7 +72,7 @@ public abstract class PrimaryMovement : MonoBehaviour
         {
             leapSize++;
         }
-        //if(leapSize > 1) Debug.Log(leapSize);
+        if(leapSize > 1) Debug.Log(leapSize);
         return startIndex + leapSize;
     }
 

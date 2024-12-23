@@ -35,27 +35,9 @@ public class BipedalWalk : LegMovement
             {
                 if (Physics.Raycast(target + offset, castDirection, out RaycastHit hit, legScanHeight, TerrainMask)) hitpoints.Add(hit.point);
             }
-            Vector3 newPoint = hitpoints.Count > 0 ? hitpoints.Average() + -castDirection * pathHeight : point;
+            Vector3 newPoint = hitpoints.Count > 0 ? hitpoints.Average() : point;
             newPath.Add(newPoint);
         }
         return newPath;
-    }
-
-    
-
-    protected override Vector3 GetLimbTarget(Anchor anchor, Vector3 legDirection)
-    {
-        Vector3 initialPosition = anchor.LocalBasePosition + (anchorZoneRadius + forwardBias) * legModel.transform.InverseTransformDirection(legDirection);
-        Vector3 rayPosition = legModel.transform.TransformPoint(initialPosition);
-        rayPosition.y += anchorUpwardLimit;
-
-        Debug.DrawLine(rayPosition, rayPosition + Vector3.down * anchorDownwardLength, Color.green, 30);
-        
-        Ray ray = new(rayPosition, Vector3.down);
-        if (Physics.Raycast(ray, out var hitInfo, anchorDownwardLength, LayerMask.GetMask("Terrain")))
-        {
-            return hitInfo.point;
-        }
-        else return default;
     }
 }

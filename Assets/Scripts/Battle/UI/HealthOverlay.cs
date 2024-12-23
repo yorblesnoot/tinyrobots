@@ -16,6 +16,7 @@ public class HealthOverlay : MonoBehaviour
     {
         healthOverlay.maxValue = max;
         int missingHealth = max - current;
+        if (healthOverlay.value == missingHealth) return;
         Tween.UISliderValue(healthOverlay, missingHealth, changeDuration);
         if (healthCount == null) return;
         healthCount.text = $"{current}/{max}";

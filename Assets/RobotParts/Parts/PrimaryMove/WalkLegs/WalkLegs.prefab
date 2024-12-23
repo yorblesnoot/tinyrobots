@@ -477,17 +477,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Style>k__BackingField: 2
   Owner: {fileID: 0}
-  locomotionHeight: 0.9
+  SpeedMultiplier: 1
   sourceBone: {fileID: 1365928021841588218}
   lookSpeed: 1
   MoveSpeed: 6
   PivotSpeed: 500
-  SpeedMultiplier: 1
   legStepDuration: 0.2
-  lookHeightModifier: 1
   anchorZoneRadius: 1.2
-  anchorUpwardLimit: 3
-  anchorDownwardLength: 5
+  anchorUpwardLimit: 10.53
+  anchorDownwardLength: 2.04
   legRaise:
     serializedVersion: 2
     m_Curve:
@@ -521,20 +519,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  forwardBias: 10
-  footHeight: 0.1
-  anchors:
-  - ikTarget: {fileID: 5476163026689878025}
-    Stepping: 0
-    LocalBasePosition: {x: 0, y: 0, z: 0}
-    DistanceFromDeadZone: 0
-    GluedWorldPosition: {x: 0, y: 0, z: 0}
-  - ikTarget: {fileID: 7394775066713002943}
-    Stepping: 0
-    LocalBasePosition: {x: 0, y: 0, z: 0}
-    DistanceFromDeadZone: 0
-    GluedWorldPosition: {x: 0, y: 0, z: 0}
-  legModel: {fileID: 5779783543885095998}
   bodyArc:
     serializedVersion: 2
     m_Curve:
@@ -568,6 +552,24 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  forwardBias: 1
+  footHeight: 0.1
+  anchors:
+  - ikTarget: {fileID: 5476163026689878025}
+    Stepping: 0
+    LocalBasePosition: {x: -5.75, y: -13.05, z: 0.06}
+    DistanceFromDeadZone: 0
+    GluedWorldPosition: {x: 0, y: 0, z: 0}
+  - ikTarget: {fileID: 7394775066713002943}
+    Stepping: 0
+    LocalBasePosition: {x: 5.32, y: -13.01, z: -0.05}
+    DistanceFromDeadZone: 0
+    GluedWorldPosition: {x: 0, y: 0, z: 0}
+  legModel: {fileID: 5779783543885095998}
+  firstCastTilt: 0.007
+  secondCastHeight: -8.59
+  secondCastLength: 1.04
+  secondCastTilt: 0.274
 --- !u!1001 &1718307309410784872
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -807,7 +809,7 @@ PrefabInstance:
     - target: {fileID: 2859665975889210439, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -14.24
+      value: -13.01
       objectReference: {fileID: 0}
     - target: {fileID: 2859665975889210439, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
@@ -1595,7 +1597,7 @@ PrefabInstance:
     - target: {fileID: 2859665975889210439, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -14.28
+      value: -13.05
       objectReference: {fileID: 0}
     - target: {fileID: 2859665975889210439, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
@@ -1641,6 +1643,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3222229788524741193, guid: b499e808ee74873419d800fb19e90ae0,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

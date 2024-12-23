@@ -10,6 +10,10 @@ public class ImmobileMovement : PrimaryMovement
     int terrainMask;
     Vector3 gluedPosition;
     Quaternion gluedRotation;
+
+    public override float LocomotionHeight => locomotionHeight;
+    [SerializeField] float locomotionHeight;
+
     private void Awake()
     {
         terrainMask = LayerMask.GetMask("Terrain");
