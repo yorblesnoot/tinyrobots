@@ -484,8 +484,8 @@ MonoBehaviour:
   PivotSpeed: 500
   legStepDuration: 0.2
   anchorZoneRadius: 1.2
-  anchorUpwardLimit: 10.53
-  anchorDownwardLength: 2.04
+  anchorUpwardLimit: 8.6
+  anchorDownwardLength: 2.16
   legRaise:
     serializedVersion: 2
     m_Curve:
@@ -499,8 +499,8 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0.029676227
     - serializedVersion: 3
-      time: 0.4919463
-      value: 0.6901519
+      time: 0.49876106
+      value: 0.40227422
       inSlope: 0.005707074
       outSlope: 0.005707074
       tangentMode: 0
@@ -557,19 +557,19 @@ MonoBehaviour:
   anchors:
   - ikTarget: {fileID: 5476163026689878025}
     Stepping: 0
-    LocalBasePosition: {x: -5.75, y: -9.05, z: 0.06}
+    LocalBasePosition: {x: -5.75, y: -11.4, z: 0.06}
     DistanceFromDeadZone: 0
     GluedWorldPosition: {x: 0, y: 0, z: 0}
   - ikTarget: {fileID: 7394775066713002943}
     Stepping: 0
-    LocalBasePosition: {x: 5.32, y: -9.01, z: -0.05}
+    LocalBasePosition: {x: 5.32, y: -11.36, z: -0.05}
     DistanceFromDeadZone: 0
     GluedWorldPosition: {x: 0, y: 0, z: 0}
   legModel: {fileID: 5779783543885095998}
   firstCastTilt: 0.007
-  secondCastHeight: -8.59
-  secondCastLength: 1.04
-  secondCastTilt: 0.274
+  secondCastHeight: -6.02
+  secondCastLength: 1.11
+  secondCastTilt: 0.252
 --- !u!1001 &1718307309410784872
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -809,7 +809,7 @@ PrefabInstance:
     - target: {fileID: 2859665975889210439, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -9.01
+      value: -11.36
       objectReference: {fileID: 0}
     - target: {fileID: 2859665975889210439, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
@@ -1597,7 +1597,7 @@ PrefabInstance:
     - target: {fileID: 2859665975889210439, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -9.05
+      value: -11.4
       objectReference: {fileID: 0}
     - target: {fileID: 2859665975889210439, guid: b499e808ee74873419d800fb19e90ae0,
         type: 3}

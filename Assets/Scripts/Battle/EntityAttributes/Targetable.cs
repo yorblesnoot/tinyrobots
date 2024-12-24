@@ -22,17 +22,6 @@ public abstract class Targetable : MonoBehaviour
 
     protected Renderer[] PartRenderers;
 
-    private void Awake()
-    {
-        Pathfinder3D.GetOccupancy.AddListener(DeclareOccupancy);
-    }
-
-    void DeclareOccupancy(Vector3[] positions)
-    {
-        if (positions.Contains(transform.position)) return;
-        Pathfinder3D.SetNodeOccupancy(Vector3Int.RoundToInt(transform.position), true);
-    }
-
     public virtual void SetOutlineColor(Color color)
     {
         
@@ -41,7 +30,6 @@ public abstract class Targetable : MonoBehaviour
     public virtual void Die(Vector3 hitSource = default)
     {
         StopAllCoroutines();
-        Pathfinder3D.GetOccupancy.RemoveListener(DeclareOccupancy);
         GetComponent<Collider>().isTrigger = false;
         IsDead = true;
     }

@@ -5,6 +5,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using Unity.VisualScripting;
 
 public enum CursorState
 {
@@ -44,6 +45,11 @@ public class PrimaryCursor : MonoBehaviour
         Instance = this;
         TinyBot.ClearActiveBot.AddListener(InvalidatePath);
         Transform = transform;
+    }
+
+    private void OnDestroy()
+    {
+        PlayerSelectedBot.RemoveAllListeners();
     }
 
     Vector3Int lastPosition;

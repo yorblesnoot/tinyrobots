@@ -50,7 +50,6 @@ public class TinyBot : Targetable
     {
         DamageCalculator = GetComponent<DamageCalculator>();
         Buffs = new BuffController(this);
-        PartRenderers = GetComponentsInChildren<Renderer>();
         PhysicsBody = GetComponent<Rigidbody>();
         PartModifiers = parts;
         SetAbilities(abilities);
@@ -59,6 +58,24 @@ public class TinyBot : Targetable
         PrimaryMovement = primaryMovement;
         PrimaryMovement.Owner = this;
         ClearActiveBot.AddListener(ClearActiveUnit);
+        AbilitiesChanged.AddListener(() => cachedMaterials = CacheMaterials());
+        Pathfinder3D.GetOccupancy.AddListener(DeclareOccupancy);
+    }
+
+    private void OnDestroy()
+    {
+        BeganTurn.RemoveAllListeners();
+        EndedTurn.RemoveAllListeners();
+        ReceivedHit.RemoveAllListeners();
+        AbilitiesChanged.RemoveAllListeners();
+        ClearActiveBot.RemoveListener(ClearActiveUnit);
+        foreach(var material in cachedMaterials) Resources.UnloadAsset(material);
+    }
+
+    void DeclareOccupancy(Vector3[] positions)
+    {
+        if (positions.Contains(transform.position)) return;
+        Pathfinder3D.SetNodeOccupancy(Vector3Int.RoundToInt(transform.position), true);
     }
 
     private void SetAbilities(List<Ability> abilities)
@@ -80,18 +97,27 @@ public class TinyBot : Targetable
         AbilitiesChanged.Invoke();
     }
 
+    List<Material> cachedMaterials;
     public override void SetOutlineColor(Color color)
     {
+        cachedMaterials ??= CacheMaterials();
+        foreach (var m in cachedMaterials)
+        {
+            m.SetColor("_OutlineColor", color);
+        }
+}
+
+    List<Material> CacheMaterials()
+    {
+        List<Material> materials = new();
         foreach (PartModifier mod in PartModifiers)
         {
-            foreach(Renderer ren in mod.mainRenderers)
+            foreach (Renderer ren in mod.mainRenderers)
             {
-                foreach (var m in ren.materials)
-                {
-                    m.SetColor("_OutlineColor", color);
-                }
+                materials.AddRange(ren.materials);
             }
         }
+        return materials;
     }
 
     public override MoveStyle GetMoveStyle()
@@ -145,8 +171,8 @@ public class TinyBot : Targetable
     public override void Die(Vector3 hitSource = default)
     {
         base.Die(hitSource);
-        
-        if(PrimaryCursor.TargetedBot == this) PrimaryCursor.Unsnap();
+        Pathfinder3D.GetOccupancy.RemoveListener(DeclareOccupancy);
+        if (PrimaryCursor.TargetedBot == this) PrimaryCursor.Unsnap();
         Vector3 hitPush = (transform.position - hitSource).normalized * deathPushMulti;
         foreach(var part in PartModifiers)
         {

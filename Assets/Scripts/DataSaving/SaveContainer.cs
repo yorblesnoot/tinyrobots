@@ -92,7 +92,6 @@ public class SaveContainer
     {
         public List<string> partInventory;
         public List<CoreData> coreInventory;
-        public List<string> bots;
         public MapData map;
         public int difficulty;
     }

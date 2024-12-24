@@ -39,6 +39,7 @@ public static class Pathfinder3D
         foreach (Node node in nodeMap.Values) SetNeighbors(node);
         FloodWalkable();
         MapInitialized.Invoke();
+        MapInitialized.RemoveAllListeners();
     }
     static void SetNeighbors(Node current)
     {

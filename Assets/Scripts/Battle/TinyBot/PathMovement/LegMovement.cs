@@ -37,8 +37,6 @@ public abstract class LegMovement : PrimaryMovement
     public override float LocomotionHeight => locomotionHeight;
     float locomotionHeight;
 
-    protected readonly float PathHeight = .2f;
-
     private void Awake()
     {
         InitializeParameters();
@@ -120,14 +118,21 @@ public abstract class LegMovement : PrimaryMovement
     
     protected void TryStepToBase(Anchor anchor, Vector3 movementDirection)
     {
-        Vector3 localStartPosition = anchor.ikTarget.localPosition;
+        Vector3 startPosition = anchor.ikTarget.position;
         if (!GetRaisedLimbTarget(anchor, movementDirection, out Vector3 finalPosition)) return;
         if(finalPosition == anchor.ikTarget.position) return;
         StepProgress = .001f;
         anchor.Stepping = true;
-        Tween.Position(anchor.ikTarget, finalPosition, legStepDuration)
-            .OnUpdate(this, (target, tween) => StepProgress = tween.progress)
-            .OnComplete(() => CompleteStep(anchor));
+        Tween.Custom(0, 1, legStepDuration, onValueChange: UpdateFootPosition).OnComplete(() => CompleteStep(anchor));
+
+        void UpdateFootPosition(float progress)
+        {
+            Vector3 interimPosition = Vector3.Lerp(startPosition, finalPosition, progress);
+            Vector3 upAmount = movementDirection != Vector3.zero ? Owner.transform.up * legRaise.Evaluate(progress) : Vector3.zero;
+            anchor.ikTarget.position = interimPosition + upAmount;
+            StepProgress = progress;
+        }
+
     }
 
     private void CompleteStep(Anchor anchor)

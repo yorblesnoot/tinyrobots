@@ -106,7 +106,7 @@ public class BotAssembler : MonoBehaviour
     static void SetBotTallness(PrimaryMovement locomotion, Transform initialAttachmentPoint, TinyBot bot)
     {
         Vector3 locomotionTarget = bot.transform.position;
-        locomotionTarget.y += locomotion.LocomotionHeight;
+        locomotionTarget.y += locomotion.LocomotionHeight - locomotion.PathHeight;
         Vector3 locomotionOffset =  initialAttachmentPoint.position - locomotion.transform.position;
         Vector3 chassisPosition = locomotionTarget + locomotionOffset;
         chassisPosition = bot.transform.InverseTransformPoint(chassisPosition);

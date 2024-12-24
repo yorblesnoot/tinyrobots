@@ -21,6 +21,7 @@ public abstract class PrimaryMovement : MonoBehaviour
 
     int sanitizeMask;
     readonly float overlap = .01f;
+    public readonly float PathHeight = .2f;
     public float FinalSpeed { get { return MoveSpeed * SpeedMultiplier; } }
 
     private void Start()

@@ -23,9 +23,14 @@ public abstract class Mission : MonoBehaviour
         if(!useDeployment) TurnManager.BeginTurnSequence(selectFirstBot);
     }
 
+    private void OnDestroy()
+    {
+        TurnManager.RoundEnded.RemoveListener(RoundEnd);
+    }
 
 
-    
+
+
     public TinyBot SpawnBot(Allegiance allegiance, BotRecord botRecord)
     {
         var tree = SceneGlobals.PlayerData.BotConverter.StringToBot(botRecord.Record);
