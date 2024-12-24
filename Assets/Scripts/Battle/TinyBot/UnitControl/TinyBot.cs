@@ -69,6 +69,7 @@ public class TinyBot : Targetable
         ReceivedHit.RemoveAllListeners();
         AbilitiesChanged.RemoveAllListeners();
         ClearActiveBot.RemoveListener(ClearActiveUnit);
+        if (cachedMaterials == null) return;
         foreach(var material in cachedMaterials) Resources.UnloadAsset(material);
     }
 
