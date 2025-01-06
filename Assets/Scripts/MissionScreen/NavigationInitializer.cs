@@ -5,8 +5,7 @@ using UnityEngine;
 public class NavigationInitializer : MonoBehaviour
 {
     [SerializeField] TowerBuilder towerBuilder;
-    [SerializeField] UnitSwitcher unitSwitcher;
-    [SerializeField] PartSlot originSlot;
+    [SerializeField] BotCrafter unitSwitcher;
     [SerializeField] GameObject mainUI;
     void Start()
     {
@@ -15,7 +14,6 @@ public class NavigationInitializer : MonoBehaviour
         towerBuilder.DeployTowerFloor(SceneGlobals.PlayerData.MapData, SceneGlobals.SceneRelay.GenerateNavMap);
         SceneGlobals.SceneRelay.GenerateNavMap = false;
         
-        originSlot.gameObject.SetActive(true);
         mainUI.SetActive(true);
     }
 

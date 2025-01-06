@@ -11,7 +11,7 @@ public class CraftBotStatsDisplay : MonoBehaviour
     [SerializeField] TMP_Text weightDisplay;
     [SerializeField] TMP_Text healthDisplay;
     [SerializeField] AbilityDisplay[] abilityDisplays;
-    [SerializeField] BlueprintControl blueprintControl;
+    [SerializeField] VisualizedPartInventory blueprintControl;
 
     Dictionary<StatType, StatEntry> entries;
     List<ModdedPart> activeParts = new();
@@ -34,7 +34,7 @@ public class CraftBotStatsDisplay : MonoBehaviour
 
     public bool IsDeployable()
     {
-        return totalWeight <= UnitSwitcher.ActiveCore.EnergyCapacity;
+        return totalWeight <= BotCrafter.ActiveCore.EnergyCapacity;
     }
 
     public void RefreshDisplays()
@@ -56,8 +56,8 @@ public class CraftBotStatsDisplay : MonoBehaviour
         }
 
         foreach(var entry in entries.Values) entry.Display.text = entry.Value.ToString();
-        healthDisplay.text = $"{Mathf.RoundToInt(UnitSwitcher.ActiveCore.HealthRatio * totalHealth)} / {totalHealth}";
-        weightDisplay.text = $"{totalWeight} / {UnitSwitcher.ActiveCore.EnergyCapacity}";
+        healthDisplay.text = $"{Mathf.RoundToInt(BotCrafter.ActiveCore.HealthRatio * totalHealth)} / {totalHealth}";
+        weightDisplay.text = $"{totalWeight} / {BotCrafter.ActiveCore.EnergyCapacity}";
         weightDisplay.color = IsDeployable() ?  Color.white : Color.red;
 
         activeAbilities.PassDataToUI(abilityDisplays, (ability, display) => display.Become(ability));

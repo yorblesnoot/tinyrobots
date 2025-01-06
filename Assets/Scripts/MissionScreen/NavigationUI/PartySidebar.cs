@@ -5,7 +5,7 @@ using UnityEngine;
 public class PartySidebar : MonoBehaviour
 {
     [SerializeField] PartyPortrait[] portraits;
-    [SerializeField] UnitSwitcher unitSwitcher;
+    [SerializeField] BotCrafter unitSwitcher;
     private void OnEnable()
     {
         List<BotCharacter> cores = SceneGlobals.PlayerData.CoreInventory;

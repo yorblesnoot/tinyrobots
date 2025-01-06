@@ -24,11 +24,14 @@ public class PartSlot : MonoBehaviour
 
     public static UnityEvent<ModdedPart, bool> SlottedPart = new();
     public static bool PrimaryLocomotionSlotted {get; private set;}
+
+    static ModdedPart activePart {  get { return BotCrafter.Instance.PartInventory.ActivePart; } }
+    static VisualizedPartInventory inventory {  get { return BotCrafter.Instance.PartInventory; } }
     private void OnEnable()
     {
         PartIdentity = null;
         activeIndicator.transform.localPosition = Vector3.zero;
-        Vector3 towardsCamera = -BlueprintControl.GetCameraForward();
+        Vector3 towardsCamera = -BotCrafter.GetCameraForward();
         activeIndicator.transform.SetPositionAndRotation(transform.position + towardsCamera * cameraApproachDistance, 
             Quaternion.LookRotation(towardsCamera));
     }
@@ -38,10 +41,10 @@ public class PartSlot : MonoBehaviour
         if (PartIdentity != null && PartIdentity.BasePart.Type != SlotType.CORE)
         {
             ClearPartIdentity(false, true);
-            BlueprintControl.HideUnusableSlots();
+            BotCrafter.HideUnusableSlots(inventory.ActivePart);
         }
-        else if (BlueprintControl.ActivePart == null) return;
-        else if (PartCanSlot(BlueprintControl.ActivePart.BasePart.Type, SlotType)) SlotPart();
+        else if (activePart == null) return;
+        else if (PartCanSlot(activePart.BasePart.Type, SlotType)) PlayerSlotPart();
     }
 
     
@@ -57,12 +60,11 @@ public class PartSlot : MonoBehaviour
         return false;
     }
 
-    void SlotPart()
+    void PlayerSlotPart()
     {
-        ModdedPart activePart = BlueprintControl.ActivePart;
         if (activePart.BasePart.PrimaryLocomotion && PrimaryLocomotionSlotted) return;
         SetPartIdentity(activePart);
-        BlueprintControl.ConsumeActivePart();
+        BotCrafter.Instance.PartInventory.ConsumeActivePart();
     }
 
     public void ClearPartIdentity(bool destroy, bool toInventory)
@@ -89,7 +91,7 @@ public class PartSlot : MonoBehaviour
             //this ordering is to avoid disrupting the smart filter, which checks part identity when the list is updated
             ModdedPart returnPart = PartIdentity;
             PartIdentity = null;
-            if (toInventory) BlueprintControl.ReturnPart(returnPart);
+            if (toInventory) inventory.AddPart(returnPart);
         }
 
         if (destroy)
@@ -100,8 +102,8 @@ public class PartSlot : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        if (PartIdentity != null || BlueprintControl.ActivePart == null || !PartCanSlot(BlueprintControl.ActivePart.BasePart.Type, SlotType)) return;
-        DecorateMockup(BlueprintControl.ActivePart);
+        if (PartIdentity != null || activePart == null || !PartCanSlot(activePart.BasePart.Type, SlotType)) return;
+        DecorateMockup(activePart);
         SceneGlobals.BotPalette.RecolorPart(mockup, BotPalette.Special.HOLOGRAM);
         AnimateHologram(true);
     }
@@ -152,7 +154,7 @@ public class PartSlot : MonoBehaviour
         childSlots = new PartSlot[attachmentPoints.Length];
         for (int i = 0; i < attachmentPoints.Length; i++)
         {
-            GameObject slot = Instantiate(BlueprintControl.NewSlot);
+            GameObject slot = Instantiate(BotCrafter.Instance.NewSlot);
             slot.transform.position = attachmentPoints[i].transform.position;
             childSlots[i] = slot.GetComponent<PartSlot>();
             childSlots[i].AttachmentPoint = attachmentPoints[i];

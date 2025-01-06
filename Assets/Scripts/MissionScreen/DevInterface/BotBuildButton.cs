@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class BotBuildButton : MonoBehaviour
 {
-    [SerializeField] BlueprintControl blueprintControl;
+    [SerializeField] BotCrafter crafter;
     [SerializeField] string filePath = "Assets/DataSO/RobotRecords/";
     [SerializeField] string fileName = "record";
 
@@ -18,8 +18,8 @@ public class BotBuildButton : MonoBehaviour
 
     private void GenerateRecord()
     {
-        if(!blueprintControl.gameObject.activeInHierarchy) return;
-        blueprintControl.BuildBot();
+        if(!crafter.gameObject.activeInHierarchy) return;
+        crafter.BuildBot();
         BotRecord record = ScriptableObject.CreateInstance<BotRecord>();
         record.Record = GUIUtility.systemCopyBuffer;
         string finalPath = filePath + fileName + extension;
