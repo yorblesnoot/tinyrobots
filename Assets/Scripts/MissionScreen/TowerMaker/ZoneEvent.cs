@@ -9,6 +9,8 @@ public abstract class ZoneEvent : MonoBehaviour
     [SerializeField] protected GameObject marker;
     Dictionary<TowerNavZone, GameObject> zoneMarkers = new();
     public int weight;
+    public bool ClearedOnUse = true;
+
     public abstract void Activate(TowerNavZone zone, UnityAction eventComplete);
     public virtual void Visualize(TowerNavZone zone)
     {

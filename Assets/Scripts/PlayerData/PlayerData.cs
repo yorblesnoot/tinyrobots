@@ -19,6 +19,7 @@ public class PlayerData : ScriptableObject
     public List<ModdedPart> PartInventory;
     public List<BotCharacter> CoreInventory;
     public MapData MapData;
+    public ShopData ShopData;
     
     public int Difficulty = 3;
 

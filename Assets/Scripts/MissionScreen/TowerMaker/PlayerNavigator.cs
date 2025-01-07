@@ -49,7 +49,7 @@ public class PlayerNavigator : MonoBehaviour
 
     void CompleteEvent()
     {
-        if (OccupiedZone.ZoneEvent != null)
+        if (OccupiedZone.ZoneEvent != null && OccupiedZone.ZoneEvent.ClearedOnUse)
         {
             OccupiedZone.ZoneEvent.Clear(OccupiedZone);
             OccupiedZone.ZoneEvent = null;

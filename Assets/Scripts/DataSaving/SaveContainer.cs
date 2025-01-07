@@ -25,10 +25,11 @@ public class SaveContainer
     {
         Save save = new()
         {
-            partInventory = playerData.PartInventory.Select(part => BotConverter.PartToString(part)).ToList(),
-            map = playerData.MapData,
-            difficulty = playerData.Difficulty,
-            coreInventory = SaveCores()
+            PartInventory = SaveInventory(playerData.PartInventory),
+            Map = playerData.MapData,
+            Shops = playerData.ShopData,
+            Difficulty = playerData.Difficulty,
+            CoreInventory = SaveCores()
         };
         string saveJSON = JsonUtility.ToJson(save, true);
         File.WriteAllText(savePath, saveJSON);
@@ -42,9 +43,9 @@ public class SaveContainer
         {
             CoreData coreData = new()
             {
-                guid = core.Id,
-                healthRatio = core.HealthRatio,
-                bot = BotConverter.BotToString(core.Bot)
+                Guid = core.Id,
+                HealthRatio = core.HealthRatio,
+                Bot = BotConverter.BotToString(core.Bot)
             };
             coreInventory.Add(coreData);
         }
@@ -59,20 +60,32 @@ public class SaveContainer
         string saveJSON = File.ReadAllText(savePath);
         Save save = JsonUtility.FromJson<Save>(saveJSON);
         
-        playerData.MapData = save.map;
-        playerData.Difficulty = save.difficulty;
-        playerData.PartInventory = save.partInventory.Select(s => { converter.GetPartFromSequence(s, 0, out ModdedPart part); return part; }).ToList();
+        playerData.MapData = save.Map;
+        playerData.ShopData = save.Shops;
+        playerData.ShopData.Initialize();
+        playerData.Difficulty = save.Difficulty;
+        playerData.PartInventory = LoadInventory(save.PartInventory, converter);
         playerData.CoreInventory = LoadCores(save, converter);
+    }
+
+    public static List<string> SaveInventory(List<ModdedPart> input)
+    {
+        return input.Select(part => BotConverter.PartToString(part)).ToList();
+    }
+
+    public static List<ModdedPart> LoadInventory(List<string> input, BotConverter converter)
+    {
+        return input.Select(s => { converter.GetPartFromSequence(s, 0, out ModdedPart part); return part; }).ToList();
     }
 
     List<BotCharacter> LoadCores(Save save, BotConverter converter)
     {
         List<BotCharacter> finalCores = new();
-        foreach(var core in save.coreInventory)
+        foreach(var core in save.CoreInventory)
         {
-            BotCharacter loadedCore = converter.GetCore(core.guid);
-            loadedCore.Bot = converter.StringToBot(core.bot);
-            loadedCore.HealthRatio = core.healthRatio;
+            BotCharacter loadedCore = converter.GetCore(core.Guid);
+            loadedCore.Bot = converter.StringToBot(core.Bot);
+            loadedCore.HealthRatio = core.HealthRatio;
             finalCores.Add(loadedCore);
         }
         return finalCores;
@@ -90,17 +103,18 @@ public class SaveContainer
 
     class Save
     {
-        public List<string> partInventory;
-        public List<CoreData> coreInventory;
-        public MapData map;
-        public int difficulty;
+        public List<string> PartInventory;
+        public List<CoreData> CoreInventory;
+        public MapData Map;
+        public ShopData Shops;
+        public int Difficulty;
     }
 
     [Serializable]
     class CoreData
     {
-        public string guid;
-        public string bot;
-        public float healthRatio;
+        public string Guid;
+        public string Bot;
+        public float HealthRatio;
     }
 }

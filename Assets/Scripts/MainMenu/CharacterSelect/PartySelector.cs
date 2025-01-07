@@ -105,6 +105,7 @@ public class PartySelector : MonoBehaviour
         SceneGlobals.PlayerData.PartInventory = new();
         SceneGlobals.PlayerData.Difficulty = startDifficulty;
         SceneGlobals.PlayerData.MapData = new();
+        SceneGlobals.PlayerData.ShopData = new();
         SceneLoader.Load(SceneType.NAVIGATION);
     }
 }

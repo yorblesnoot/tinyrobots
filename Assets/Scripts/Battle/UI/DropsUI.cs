@@ -16,6 +16,7 @@ public class DropsUI : MonoBehaviour
         gameObject.SetActive(true);
         
         List<ModdedPart> parts = partGenerator.GenerateDropList();
+        SceneGlobals.PlayerData.PartInventory.AddRange(parts);
 
         for (int i = 0; i < dropDisplays.Length; i++)
         {

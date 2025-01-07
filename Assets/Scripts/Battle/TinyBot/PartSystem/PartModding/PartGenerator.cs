@@ -29,11 +29,7 @@ public class PartGenerator : MonoBehaviour
         while (droppedRarities.Count < dropCount) droppedRarities.Add(rarityPalette.GetWeightedRarity(tier));
         droppedRarities = droppedRarities.OrderByDescending(x => x.ModCounts[0]).ToList();
 
-        List<ModdedPart> output = droppedRarities.Select(r => Generate(r)).ToList();
-
-
-        SceneGlobals.PlayerData.PartInventory.AddRange(output);
-        return output;
+        return droppedRarities.Select(r => Generate(r)).ToList();
     }
     public ModdedPart Generate(RarityDefinition rarity, CraftablePart partBase = null)
     {
