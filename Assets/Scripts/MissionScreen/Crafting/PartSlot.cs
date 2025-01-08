@@ -63,7 +63,7 @@ public class PartSlot : MonoBehaviour
     {
         if (activePart.BasePart.PrimaryLocomotion && PrimaryLocomotionSlotted) return;
         SetPartIdentity(activePart);
-        BotCrafter.Instance.PartInventory.ConsumeActivePart();
+        BotCrafter.Instance.PartInventory.RemovePart(BotCrafter.Instance.PartInventory.ActivePart);
     }
 
     public void ClearPartIdentity(bool destroy, bool toInventory)

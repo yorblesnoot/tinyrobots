@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PlayerData", menuName = "ScriptableObjects/Singletons/PlayerData")]
-public class PlayerData : ScriptableObject
+public class PlayerData : ScriptableObject, ITrader
 {
     public void LoadDefaultInventory()
     {
@@ -16,12 +16,13 @@ public class PlayerData : ScriptableObject
             core.Bot = BotConverter.StringToBot(core.StarterRecord.Record);
         }
     }
-    public List<ModdedPart> PartInventory;
+    [field: SerializeField] public List<ModdedPart> PartInventory { get; set; }
     public List<BotCharacter> CoreInventory;
     public MapData MapData;
     public ShopData ShopData;
     
     public int Difficulty = 3;
+    [field: SerializeField] public int PartCurrency { get; set; }
 
 
     public bool DevMode;
@@ -29,6 +30,7 @@ public class PlayerData : ScriptableObject
     [Header("Components")]
     public BotConverter BotConverter;
 }
+
 
 
 

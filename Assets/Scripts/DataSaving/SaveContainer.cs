@@ -27,13 +27,32 @@ public class SaveContainer
         {
             PartInventory = SaveInventory(playerData.PartInventory),
             Map = playerData.MapData,
-            Shops = playerData.ShopData,
+            Shops = SaveShops(playerData.ShopData),
             Difficulty = playerData.Difficulty,
             CoreInventory = SaveCores()
         };
         string saveJSON = JsonUtility.ToJson(save, true);
         File.WriteAllText(savePath, saveJSON);
         //Debug.Log(saveJSON);
+    }
+
+    ShopData SaveShops(ShopData data)
+    {
+        foreach (Shop shop in data.Shops)
+        {
+            shop.SavedInventory = SaveInventory(shop.PartInventory);
+        }
+        return data;
+    }
+
+    ShopData LoadShops(ShopData data, BotConverter converter)
+    {
+        foreach (Shop shop in data.Shops)
+        {
+            shop.PartInventory = LoadInventory(shop.SavedInventory, converter);
+        }
+        data.Initialize();
+        return data;
     }
 
     private List<CoreData> SaveCores()
@@ -61,8 +80,7 @@ public class SaveContainer
         Save save = JsonUtility.FromJson<Save>(saveJSON);
         
         playerData.MapData = save.Map;
-        playerData.ShopData = save.Shops;
-        playerData.ShopData.Initialize();
+        playerData.ShopData = LoadShops(save.Shops, converter);
         playerData.Difficulty = save.Difficulty;
         playerData.PartInventory = LoadInventory(save.PartInventory, converter);
         playerData.CoreInventory = LoadCores(save, converter);
@@ -108,6 +126,7 @@ public class SaveContainer
         public MapData Map;
         public ShopData Shops;
         public int Difficulty;
+        public int Money;
     }
 
     [Serializable]

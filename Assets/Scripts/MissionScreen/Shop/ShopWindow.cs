@@ -6,7 +6,8 @@ using UnityEngine.Events;
 public class ShopWindow : MonoBehaviour
 {
     UnityAction closeCallback;
-    [SerializeField] BuyPanel buyPanel;
+    [SerializeField] TradePanel buyPanel;
+    [SerializeField] TradePanel sellPanel;
     private void Awake()
     {
         gameObject.SetActive(false);
@@ -16,6 +17,7 @@ public class ShopWindow : MonoBehaviour
         gameObject.SetActive(true);
         closeCallback = eventCallback;
         buyPanel.Display(SceneGlobals.PlayerData.ShopData[location]);
+        sellPanel.Display(SceneGlobals.PlayerData);
     }
 
     private void OnDisable()

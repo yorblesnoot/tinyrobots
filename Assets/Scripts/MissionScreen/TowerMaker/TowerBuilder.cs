@@ -71,17 +71,17 @@ public class TowerBuilder : MonoBehaviour
         {
             SavedNavZone saved = data.Zones[i];
             
-            TowerPiece piece = allPieces[saved.pieceIndex];
-            TowerNavZone zone = InstantiatePiece(piece, saved.position, saved.rotation);
+            TowerPiece piece = allPieces[saved.PieceIndex];
+            TowerNavZone zone = InstantiatePiece(piece, saved.Position, saved.Rotation);
             zone.ZoneIndex = i;
-            PrimeZone(zone, saved.eventType);
+            PrimeZone(zone, saved.EventType);
             zones.Add(zone);
         }
         for (int i = 0; i < data.Zones.Count; i++)
         {
             SavedNavZone node = data.Zones[i];
-            zones[i].Neighbors = node.neighborIndices.Select(x => zones[x]).ToHashSet();
-            if (data.Zones[i].revealed) zones[i].RevealNeighbors(true);
+            zones[i].Neighbors = node.NeighborIndices.Select(x => zones[x]).ToHashSet();
+            if (data.Zones[i].Revealed) zones[i].RevealNeighbors(true);
         }
         return zones[data.ZoneLocation];
     }
@@ -126,12 +126,12 @@ public class TowerBuilder : MonoBehaviour
             zones[i].ZoneIndex = i;
             SavedNavZone node = new()
             {
-                pieceIndex = zones[i].TowerPiece.pieceIndex,
-                position = zones[i].transform.position,
-                rotation = zones[i].transform.rotation,
-                neighborIndices = zones[i].Neighbors.Select(neighbor => zones.IndexOf(neighbor)).ToArray(),
-                revealed = false,
-                eventType = zones[i].ZoneEventType,
+                PieceIndex = zones[i].TowerPiece.pieceIndex,
+                Position = zones[i].transform.position,
+                Rotation = zones[i].transform.rotation,
+                NeighborIndices = zones[i].Neighbors.Select(neighbor => zones.IndexOf(neighbor)).ToArray(),
+                Revealed = false,
+                EventType = zones[i].ZoneEventType,
         };
             map.Add(node);
         }

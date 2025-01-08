@@ -23,7 +23,7 @@ public class DropsUI : MonoBehaviour
             bool generate = i < parts.Count;
             dropDisplays[i].gameObject.SetActive(generate);
             if (!generate) continue;
-            dropDisplays[i].DisplayPart(parts[i], PreviewPart);
+            dropDisplays[i].DisplayPart(parts[i], PreviewPart, parts[i].FinalStats[StatType.ENERGY]);
             dropDisplays[i].SetTextColor(parts[i].Rarity.TextColor);
         }
     }

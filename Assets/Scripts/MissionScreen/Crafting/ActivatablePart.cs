@@ -1,12 +1,10 @@
 using PrimeTween;
-using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class ActivatablePart : PartButton
+public class ActivatablePart : PartButton, IPointerClickHandler
 {
     [SerializeField] TMP_Text nameDisplay;
     [SerializeField] TMP_Text weightDisplay;
@@ -17,28 +15,20 @@ public class ActivatablePart : PartButton
     public static UnityEvent resetActivation = new();
 
     UnityAction<ModdedPart> submitPartCallback;
-    public override void DisplayPart(ModdedPart part, UnityAction<ModdedPart> activationCallback)
+    UnityAction<ModdedPart> secondaryCallback;
+    bool active = false;
+    public override void DisplayPart(ModdedPart part, UnityAction<ModdedPart> activationCallback, int value, UnityAction<ModdedPart> secondaryActivation = null)
     {
         Group = GetComponent<CanvasGroup>();
         submitPartCallback = activationCallback;
+        secondaryCallback = secondaryActivation;
         PartIdentity = part;
         nameDisplay.text = part.BasePart.name;
         selectButton.onClick.RemoveAllListeners();
         selectButton.onClick.AddListener(BecomeActive);
         resetActivation.AddListener(BecomeInactive);
 
-        List<StatType> statTypes = part.FinalStats.Keys.ToList();
-        statTypes.Remove(StatType.ENERGY);
-        weightDisplay.text = part.FinalStats[StatType.ENERGY].ToString();
-        
-        /*for (int i = 0; i < statDisplays.Count(); i++)
-        {
-            if(i < statTypes.Count)
-            {
-                statDisplays[i].AssignStat(statTypes[i], part.FinalStats[statTypes[i]]);
-            }
-            else statDisplays[i].Hide();
-        }*/
+        weightDisplay.text = value.ToString();
     }
 
     public void SetTextColor(Color color)
@@ -48,13 +38,30 @@ public class ActivatablePart : PartButton
 
     void BecomeActive()
     {
+        bool previouslyActive = active;
         resetActivation.Invoke();
-        Tween.Alpha(activationOverlay, 1, duration: activationFadeTime);
-        submitPartCallback(PartIdentity);
+        if(previouslyActive) secondaryCallback?.Invoke(PartIdentity);
+        else
+        {
+            Tween.Alpha(activationOverlay, 1, duration: activationFadeTime);
+            submitPartCallback(PartIdentity);
+        }
+        active = !previouslyActive;
     }
 
     void BecomeInactive()
     {
+        active = false;
+        if (activationOverlay.alpha == 0) return;
         Tween.Alpha(activationOverlay, 0, duration: activationFadeTime);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        Debug.Log("clicked");
+        if(eventData.button == PointerEventData.InputButton.Right)
+        {
+            secondaryCallback(PartIdentity);
+        }
     }
 }

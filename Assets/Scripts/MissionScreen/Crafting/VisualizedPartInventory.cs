@@ -18,7 +18,9 @@ public class VisualizedPartInventory : MonoBehaviour
     List<ModdedPart> inventorySource;
 
     public ModdedPart ActivePart {  get; private set; }
-    public static UnityEvent<ModdedPart> PartActivated = new();
+    public UnityEvent<ModdedPart> PartActivated = new();
+    public UnityEvent<ModdedPart> PartDoubleActivated = new();
+    public int CostMultiplier = 0;
 
     void SetActivePart(ModdedPart part)
     {
@@ -39,10 +41,10 @@ public class VisualizedPartInventory : MonoBehaviour
         if(filterControl != null) filterControl.FiltersChanged.RemoveAllListeners();
     }
 
-    public void ConsumeActivePart()
+    public void RemovePart(ModdedPart part)
     {
 
-        if (!SceneGlobals.PlayerData.DevMode) inventorySource.Remove(ActivePart);
+        if (!SceneGlobals.PlayerData.DevMode) inventorySource.Remove(part);
         SetActivePart(null);
 
         ActivatablePart.resetActivation.Invoke();
@@ -67,10 +69,13 @@ public class VisualizedPartInventory : MonoBehaviour
             }
             partDisplays[i].gameObject.SetActive(true);
             ModdedPart part = filteredParts[i];
-            partDisplays[i].DisplayPart(part, SetActivePart);
+            int value = CostMultiplier > 0 ? PartEconomy.GetCost(part) * CostMultiplier : part.EnergyCost;
+            partDisplays[i].DisplayPart(part, SetActivePart, value, PartDoubleActivated.Invoke);
             partDisplays[i].SetTextColor(part.Rarity.TextColor);
         }
 
         for(int i = filteredParts.Count; i < partDisplays.Count; i++) partDisplays[i].gameObject.SetActive(false);
     }
+
+
 }

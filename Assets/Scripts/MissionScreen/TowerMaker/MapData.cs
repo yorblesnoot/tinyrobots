@@ -13,10 +13,10 @@ public class MapData
 [Serializable]
 public class SavedNavZone
 {
-    public int pieceIndex;
-    public Vector3 position;
-    public Quaternion rotation;
-    public int[] neighborIndices;
-    public bool revealed;
-    public int eventType;
+    public int PieceIndex;
+    public Vector3 Position;
+    public Quaternion Rotation;
+    public int[] NeighborIndices;
+    public bool Revealed;
+    public int EventType;
 }

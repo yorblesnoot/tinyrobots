@@ -40,7 +40,7 @@ public class BotCrafter : MonoBehaviour
             BotCharacter core = playerData.CoreInventory[i];
             tabs[i].AssignTab(() => SwitchCharacter(core), core);
         }
-        VisualizedPartInventory.PartActivated.AddListener(HideUnusableSlots);
+        PartInventory.PartActivated.AddListener(HideUnusableSlots);
         PartInventory.Initialize(SceneGlobals.PlayerData.PartInventory);
         OriginSlot.gameObject.SetActive(true);
     }
