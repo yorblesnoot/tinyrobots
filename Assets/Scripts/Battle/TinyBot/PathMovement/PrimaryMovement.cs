@@ -73,7 +73,7 @@ public abstract class PrimaryMovement : MonoBehaviour
         {
             leapSize++;
         }
-        if(leapSize > 1) Debug.Log(leapSize);
+        //if(leapSize > 1) Debug.Log(leapSize);
         return startIndex + leapSize;
     }
 

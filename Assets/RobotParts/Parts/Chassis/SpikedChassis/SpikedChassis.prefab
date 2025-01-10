@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2744516518611649984
 Transform:
   m_ObjectHideFlags: 0
@@ -49,8 +49,8 @@ ParticleSystem:
   ringBufferLoopRange: {x: 0, y: 1}
   emitterVelocityMode: 1
   looping: 1
-  prewarm: 0
-  playOnAwake: 0
+  prewarm: 1
+  playOnAwake: 1
   useUnscaledTime: 0
   autoRandomSeed: 1
   startDelay:
@@ -4880,11 +4880,9 @@ MonoBehaviour:
   range: 2
   ModifiableRange: 1
   cooldown: 0
-  EffectMagnitude: 0
   EffectivenessMultiplier: 1
   cost: 0
   icon: {fileID: 21300000, guid: ebff662845e054b529080169db2a2f72, type: 3}
-  EffectDescription: ' Damage'
   CurrentCooldown: 0
   Owner: {fileID: 0}
   emissionPoint: {fileID: 0}
@@ -4897,6 +4895,7 @@ MonoBehaviour:
     - {fileID: 7903811093348112724}
   targeter: {fileID: 2086499050853252097}
   particleVisual: {fileID: 5644848923440041672}
+  staticAura: {fileID: 0}
   validTarget: 2
 --- !u!114 &7903811093348112724
 MonoBehaviour:

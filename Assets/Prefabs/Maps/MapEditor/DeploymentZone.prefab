@@ -41,6 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2325239680072318190}
   - component: {fileID: 1893531526369029442}
+  - component: {fileID: 3224441420155663661}
   m_Layer: 0
   m_Name: DeploymentZone
   m_TagString: Untagged
@@ -79,6 +80,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zoneMarker: {fileID: 6017633416281047755}
   corner: {fileID: 4775535025181822710}
+--- !u!114 &3224441420155663661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1917275605646917003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9fa9da9c93f7e574da625a6a58e78c0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mode: 0
+  Allegiance: 0
+  limitMarker: {fileID: 4775535025181822710}
 --- !u!1001 &6864475823986900890
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -90,7 +106,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 5aef7387779bd14419d2060bc90fc8f9,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: -1.385
+      value: 1.385
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5aef7387779bd14419d2060bc90fc8f9,
         type: 3}
@@ -100,7 +116,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 5aef7387779bd14419d2060bc90fc8f9,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: -1.6075
+      value: 1.6075
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5aef7387779bd14419d2060bc90fc8f9,
         type: 3}

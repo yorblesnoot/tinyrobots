@@ -9,11 +9,12 @@ public class NavigationInitializer : MonoBehaviour
     [SerializeField] GameObject mainUI;
     void Start()
     {
+        SceneGlobals.PlayerData.ShopData.Initialize();
         PlayerNavigator.MoveComplete.AddListener(SaveGame);
         unitSwitcher.Initialize();
         towerBuilder.DeployTowerFloor(SceneGlobals.PlayerData.MapData, SceneGlobals.SceneRelay.GenerateNavMap);
         SceneGlobals.SceneRelay.GenerateNavMap = false;
-        SceneGlobals.PlayerData.ShopData.Initialize();
+        
         
         mainUI.SetActive(true);
     }

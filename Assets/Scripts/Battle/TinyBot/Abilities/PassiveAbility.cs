@@ -40,7 +40,8 @@ public class PassiveAbility : Ability
         }
         if(particleVisual != null)
         {
-            particleVisual.Play();
+            //Debug.Log("played aura particle " + name);
+            particleVisual.gameObject.SetActive(true);
             ParticleSystem.ShapeModule shape = particleVisual.shape;
             shape.radius = range;
         }

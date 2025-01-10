@@ -51,7 +51,7 @@ public class SpawnZone : MonoBehaviour
                     HashSet<MoveStyle> styles = Pathfinder3D.GetNodeStyles(checkedPosition);
                     foreach (MoveStyle style in styles) 
                     {
-                        Debug.Log($"added {Allegiance} {style} {checkedPosition}");
+                        //Debug.Log($"added {Allegiance} {style} {checkedPosition}");
                         styleNodes[Allegiance][style].Add(checkedPosition);
                     }
                     

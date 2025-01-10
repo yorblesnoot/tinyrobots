@@ -42,7 +42,6 @@ public class DeploymentZone : MonoBehaviour
         Vector3 localPosition = active.transform.InverseTransformPoint(position);
         localPosition = localPosition.Clamp(Vector3.zero, active.corner.localPosition);
         Vector3 finalPosition = active.transform.TransformPoint(localPosition);
-        Debug.Log(finalPosition);
         return finalPosition;
     }
 
