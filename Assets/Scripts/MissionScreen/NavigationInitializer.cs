@@ -13,6 +13,7 @@ public class NavigationInitializer : MonoBehaviour
         unitSwitcher.Initialize();
         towerBuilder.DeployTowerFloor(SceneGlobals.PlayerData.MapData, SceneGlobals.SceneRelay.GenerateNavMap);
         SceneGlobals.SceneRelay.GenerateNavMap = false;
+        SceneGlobals.PlayerData.ShopData.Initialize();
         
         mainUI.SetActive(true);
     }

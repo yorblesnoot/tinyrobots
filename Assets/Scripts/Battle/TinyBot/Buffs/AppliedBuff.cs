@@ -19,7 +19,7 @@ public class AppliedBuff
         Buff = buff;
         Potency = potency;
         Source = source;
-        //maxDuration = duration;
+        maxDuration = buff.Duration;
         Target = target;
         elapsedDuration = 0;
     }

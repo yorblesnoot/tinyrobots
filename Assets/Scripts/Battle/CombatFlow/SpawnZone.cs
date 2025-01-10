@@ -51,7 +51,7 @@ public class SpawnZone : MonoBehaviour
                     HashSet<MoveStyle> styles = Pathfinder3D.GetNodeStyles(checkedPosition);
                     foreach (MoveStyle style in styles) 
                     {
-                        //Debug.Log($"added {Allegiance} {style} {checkedPosition}");
+                        Debug.Log($"added {Allegiance} {style} {checkedPosition}");
                         styleNodes[Allegiance][style].Add(checkedPosition);
                     }
                     
@@ -81,6 +81,7 @@ public class SpawnZone : MonoBehaviour
     public static void PlaceBot(TinyBot bot)
     {
         List<Vector3> availableSpaces = styleNodes[bot.Allegiance][bot.MoveStyle];
+        if (availableSpaces.Count == 0) Debug.LogError($"{bot.Allegiance} Bot with Movement {bot.MoveStyle} was unable to find space within a Spawn Zone.");
         Vector3 targetSpace =  availableSpaces.GrabRandomly();
         bot.transform.position = bot.PrimaryMovement.SanitizePoint(targetSpace);
         foreach(var allegiance in styleNodes.Values) 

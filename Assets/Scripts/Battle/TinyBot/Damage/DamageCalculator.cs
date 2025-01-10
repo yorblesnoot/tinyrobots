@@ -11,8 +11,8 @@ public class DamageCalculator : MonoBehaviour
 
     private void Awake()
     {
-        appliedFactors = baseFactors.ToDictionary(f => f, f => new AppliedDamageFactor(f, 0));
         owner = gameObject.GetComponent<TinyBot>();
+        appliedFactors = baseFactors.ToDictionary(f => f, f => new AppliedDamageFactor(f, 0, owner));
     }
 
     public void AddFactor(AppliedDamageFactor applied)

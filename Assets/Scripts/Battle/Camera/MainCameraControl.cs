@@ -37,6 +37,7 @@ public class MainCameraControl : MonoBehaviour
     }
     public static MainCameraControl Instance;
     public static bool CameraAnimating {  get { return tracking || panning; } }
+    public static BoxCollider CameraBounds;
     static bool tracking;
     static bool panning;
     private void OnEnable()
@@ -61,17 +62,17 @@ public class MainCameraControl : MonoBehaviour
         {
             layer = LayerMask.NameToLayer("Ignore Raycast")
         };
-        BoxCollider boundingCollider = boundingBox.AddComponent<BoxCollider>();
-        boundingCollider.center = corner / 2;
+        CameraBounds = boundingBox.AddComponent<BoxCollider>();
+        CameraBounds.center = corner / 2;
         corner.x -= cameraConfineMargin;
         corner.y -= cameraConfineMargin;
         corner.z -= cameraConfineMargin;
 
-        boundingCollider.size = corner;
+        CameraBounds.size = corner;
         
         foreach(var cam in confiners)
         {
-            cam.m_BoundingVolume = boundingCollider;
+            cam.m_BoundingVolume = CameraBounds;
         }
     }
 

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 public class BuffController
 {
@@ -28,7 +29,8 @@ public class BuffController
 
     void ProgressBuffs()
     {
-        foreach (var buff in ActiveBuffs.Keys)
+        List<BuffType> applied = ActiveBuffs.Keys.ToList();
+        foreach (var buff in applied)
         {
             if(ActiveBuffs[buff].Tick()) ActiveBuffs.Remove(buff);
         }

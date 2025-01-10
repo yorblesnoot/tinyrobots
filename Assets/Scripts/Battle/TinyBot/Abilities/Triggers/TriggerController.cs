@@ -27,7 +27,15 @@ public abstract class TriggerController
     public virtual void Initialize(TinyBot owner, Ability ability)
     {
         Owner = owner;
+        TinyBot.BotDied.AddListener(CheckForOwnerDeath);
         activeTriggers = new();
+    }
+
+    void CheckForOwnerDeath(TinyBot bot)
+    {
+        if (bot != Owner) return;
+        RemoveFrom(Owner);
+        TinyBot.BotDied.RemoveListener(CheckForOwnerDeath);
     }
 
 

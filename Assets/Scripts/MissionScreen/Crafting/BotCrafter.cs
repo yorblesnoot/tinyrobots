@@ -129,10 +129,12 @@ public class BotCrafter : MonoBehaviour
 
     public static void HideUnusableSlots(ModdedPart active)
     {
+        Debug.Log(active);
         Instance.OriginSlot.Traverse(HideIfIncompatible);
 
         void HideIfIncompatible(PartSlot slot)
         {
+            Debug.Log(slot);
             if (active == null) slot.Hide(false);
             else if (active.BasePart.PrimaryLocomotion && PartSlot.PrimaryLocomotionSlotted) slot.Hide(true);
             else slot.Hide(!PartSlot.PartCanSlot(active.BasePart.Type, slot.SlotType));

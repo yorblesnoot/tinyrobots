@@ -11,7 +11,6 @@ public class ModdedPart
     public Dictionary<ModType, int> Mods;
     //public int[] ExtraAbilities;
     public List<PartMutator> Mutators = new();
-    public int EnergyCost { get; private set; }
     public GameObject Sample { get { if (sample == null) InitializePart(); return sample; } }
     GameObject sample;
 

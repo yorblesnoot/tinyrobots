@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BattleEnder : MonoBehaviour
 {
@@ -40,9 +41,9 @@ public class BattleEnder : MonoBehaviour
         instance.relay.BattleComplete = true;
         instance.dropsUI.ShowDrops();
 
-        foreach(TinyBot bot in TurnManager.TurnTakers)
+        foreach(TinyBot bot in TurnManager.TurnTakers.Where(bot => bot.Allegiance == Allegiance.PLAYER))
         {
-            if (bot.Allegiance != Allegiance.PLAYER) continue;
+            if(bot == null) continue;
             bot.LinkedCore.HealthRatio = (float)bot.Stats.Current[StatType.HEALTH] / bot.Stats.Max[StatType.HEALTH];
         }
     }

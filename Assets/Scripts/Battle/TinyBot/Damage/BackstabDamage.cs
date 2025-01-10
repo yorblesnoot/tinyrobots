@@ -7,7 +7,7 @@ public class BackstabDamage : DamageFactor
 {
     [SerializeField] float backstabMultiplier = 1.5f;
 
-    public override float UseFactor(float incoming, TinyBot source, TinyBot target, int potency, object data = null)
+    public override float UseFactor(float incoming, TinyBot source, TinyBot target, int potency, TinyBot factorOwner = null)
     {
         if (source == null) return incoming;
         Vector3 hitDirection = (source.TargetPoint.position - target.TargetPoint.position).normalized;

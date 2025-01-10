@@ -104,6 +104,7 @@ public class PartySelector : MonoBehaviour
         SceneGlobals.SceneRelay.GenerateNavMap = true;
         SceneGlobals.PlayerData.PartInventory = new();
         SceneGlobals.PlayerData.Difficulty = startDifficulty;
+        SceneGlobals.PlayerData.PartCurrency = 0;
         SceneGlobals.PlayerData.MapData = new();
         SceneGlobals.PlayerData.ShopData = new();
         SceneLoader.Load(SceneType.NAVIGATION);

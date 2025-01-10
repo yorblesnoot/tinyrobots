@@ -15,7 +15,6 @@ public class ShopData
         Shops.Select(s => s.Location).ToList().DebugContents();
         shopCodex = Shops.ToDictionary(shop => shop.Location, shop => shop);
     }
-    public int PlayerFunds;
     public List<Shop> Shops = new();
     Dictionary<int, Shop> shopCodex = new();
     public void GenerateShop(int zone, PartGenerator generator)

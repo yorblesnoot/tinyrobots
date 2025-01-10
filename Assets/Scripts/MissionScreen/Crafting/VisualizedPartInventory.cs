@@ -31,6 +31,7 @@ public class VisualizedPartInventory : MonoBehaviour
 
     public void Initialize(List<ModdedPart> source)
     {
+        ActivePart = null;
         partOverviewPanel.gameObject.SetActive(false);
         inventorySource = source;
         if(filterControl != null) filterControl.FiltersChanged.AddListener(UpdatePartDisplays);
@@ -69,7 +70,7 @@ public class VisualizedPartInventory : MonoBehaviour
             }
             partDisplays[i].gameObject.SetActive(true);
             ModdedPart part = filteredParts[i];
-            int value = CostMultiplier > 0 ? PartEconomy.GetCost(part) * CostMultiplier : part.EnergyCost;
+            int value = CostMultiplier > 0 ? PartEconomy.GetCost(part) * CostMultiplier : part.FinalStats[StatType.ENERGY];
             partDisplays[i].DisplayPart(part, SetActivePart, value, PartDoubleActivated.Invoke);
             partDisplays[i].SetTextColor(part.Rarity.TextColor);
         }

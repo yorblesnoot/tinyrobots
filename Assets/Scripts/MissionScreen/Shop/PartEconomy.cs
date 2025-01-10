@@ -17,7 +17,7 @@ public class PartEconomy : MonoBehaviour
 
     public static int GetCost(ModdedPart part)
     {
-        return instance.baseCost + part.EnergyCost * instance.weightCost + part.Mutators.Count * instance.modCost;
+        return instance.baseCost + part.FinalStats[StatType.ENERGY] * instance.weightCost + part.Mutators.Count * instance.modCost;
     }
 
     public static int GetShopBudget()

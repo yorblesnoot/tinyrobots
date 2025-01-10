@@ -8,10 +8,6 @@ public class ShopWindow : MonoBehaviour
     UnityAction closeCallback;
     [SerializeField] TradePanel buyPanel;
     [SerializeField] TradePanel sellPanel;
-    private void Awake()
-    {
-        gameObject.SetActive(false);
-    }
     public void Open(int location, UnityAction eventCallback)
     {
         gameObject.SetActive(true);

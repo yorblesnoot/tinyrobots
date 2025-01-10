@@ -70,7 +70,7 @@ public class TinyBot : Targetable
         AbilitiesChanged.RemoveAllListeners();
         ClearActiveBot.RemoveListener(ClearActiveUnit);
         if (cachedMaterials == null) return;
-        foreach(var material in cachedMaterials) Resources.UnloadAsset(material);
+        // foreach(var material in cachedMaterials) Resources.UnloadAsset(material); //whats going on with this?
     }
 
     void DeclareOccupancy(Vector3[] positions)
