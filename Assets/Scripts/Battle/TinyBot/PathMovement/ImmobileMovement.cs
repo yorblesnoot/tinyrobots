@@ -41,7 +41,7 @@ public class ImmobileMovement : PrimaryMovement
         gluedPosition.y += ikOffset;
         Vector3 lookDirection = Owner.transform.forward;
         lookDirection.y = 0;
-        ikTarget.rotation = Quaternion.LookRotation(lookDirection, Vector3.down);
+        ikTarget.rotation = Quaternion.LookRotation(lookDirection, -hit.normal);
         HandleImpulse();
         yield return null;
         gluedRotation = rotatorBase.rotation;
