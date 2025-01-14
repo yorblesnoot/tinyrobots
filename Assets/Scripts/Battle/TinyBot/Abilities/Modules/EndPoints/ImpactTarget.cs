@@ -38,4 +38,10 @@ public class ImpactTarget : TargetPoint
     {
         return FindTargets(trajectory);
     }
+
+    public override bool TargetIsAttained(Vector3 position, List<Vector3> trajectory)
+    {
+        if(position == trajectory[^1]) return true;
+        return false;
+    }
 }

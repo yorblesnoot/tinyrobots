@@ -34,7 +34,6 @@ public class DeploymentPhase : MonoBehaviour
     IEnumerator DeployUnit(TinyBot bot)
     {
         TinyBot echo = bot.BotEcho;
-        echo.ToggleActiveLayer(true);
         //foreach (var part in bot.PartModifiers) SceneGlobals.BotPalette.RecolorPart(part, BotPalette.Special.HOLOGRAM);
         while (!Input.GetMouseButtonDown(0))
         {

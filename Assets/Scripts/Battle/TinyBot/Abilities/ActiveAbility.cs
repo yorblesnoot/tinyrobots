@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -98,27 +96,35 @@ public class ActiveAbility : Ability
         while (trackedTarget != null)
         {
             EvaluateTrajectory(trackedTarget.transform.position, emissionPoint.transform.position, false);
-            if(draw && CurrentTrajectory[^1] != trackedTarget.transform.position)
+            ActiveAbility aimer = this;
+            if(draw && !TargetType.TargetIsAttained(trackedTarget.transform.position, CurrentTrajectory))
             {
-                EvaluateAlternateCastPositions(out Vector3 position);
-
+                if(EvaluateAlternateCastPositions(out Vector3Int position))
+                {
+                    PrimaryCursor.Instance.GenerateMovePreview(position);
+                    aimer = Owner.EchoMap[this];
+                    aimer.CurrentTrajectory = CurrentTrajectory;
+                }
             }
             PhysicalAimAlongTrajectory();
-            if (draw) DrawPlayerTargeting();
+            if (draw) aimer.DrawPlayerTargeting();
             yield return null;
         }
     }
 
-    bool EvaluateAlternateCastPositions(out Vector3 alternatePosition)
+
+
+    bool EvaluateAlternateCastPositions(out Vector3Int alternatePosition)
     {
         List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations(Mathf.FloorToInt(Owner.Stats.Current[StatType.MOVEMENT]));
         alternatePosition = default;
         foreach (Vector3Int location in pathableLocations)
         {
             EvaluateTrajectory(trackedTarget.transform.position, location, true);
-            if (CurrentTrajectory[^1] != trackedTarget.transform.position)
+            if (TargetType.TargetIsAttained(trackedTarget.transform.position, CurrentTrajectory))
             {
                 alternatePosition = location;
+                EvaluateTrajectory(trackedTarget.transform.position, location, false);
                 return true;
             }
         }

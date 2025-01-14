@@ -43,4 +43,10 @@ public class SpatialTarget : TargetPoint
         SliceTargeter.Hide();
         SliceTargeter.Sensor.ResetIntersecting();
     }
+
+    public override bool TargetIsAttained(Vector3 position, List<Vector3> trajectory)
+    {
+        if(Vector3.Distance(position, trajectory[^1]) > TargetRadius) return false;
+        return true;
+    }
 }

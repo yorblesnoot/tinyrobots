@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UIElements;
 using Random = UnityEngine.Random;
 
 
@@ -45,7 +44,9 @@ public class TinyBot : Targetable
     public List<PassiveAbility> PassiveAbilities { get; private set;}
 
     [HideInInspector] public DamageCalculator DamageCalculator;
-    public TinyBot BotEcho;
+
+    [HideInInspector] public TinyBot BotEcho;
+    public Dictionary<ActiveAbility, ActiveAbility> EchoMap;
 
     public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement)
     {

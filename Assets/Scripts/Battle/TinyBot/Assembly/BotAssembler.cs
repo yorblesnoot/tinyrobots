@@ -40,7 +40,7 @@ public class BotAssembler : MonoBehaviour
         
         List<Ability> abilities = GetAbilityList(spawnedParts, botUnit);
         botUnit.Initialize(abilities, spawnedParts, locomotion);
-        if (allegiance == Allegiance.PLAYER && echo == false) botUnit.BotEcho = CreateEcho(treeRoot, allegiance);
+        if (allegiance == Allegiance.PLAYER && echo == false) botUnit.BotEcho = CreateEcho(treeRoot, allegiance, botUnit);
 
         return botUnit;
 
@@ -84,15 +84,17 @@ public class BotAssembler : MonoBehaviour
         }
     }
 
-    private static TinyBot CreateEcho(TreeNode<ModdedPart> treeRoot, Allegiance allegiance)
+    private static TinyBot CreateEcho(TreeNode<ModdedPart> treeRoot, Allegiance allegiance, TinyBot botUnit)
     {
         treeRoot.Traverse((part) => part.InitializePart());
         TinyBot echo = BuildBot(treeRoot, allegiance, true);
         echo.gameObject.name = "Echo";
         echo.ToggleActiveLayer(true);
         Collider collider = echo.GetComponent<Collider>();
-        foreach (var passive in echo.PassiveAbilities) passive.Deactivate();
         Destroy(collider);
+        foreach (var passive in echo.PassiveAbilities) passive.Deactivate();
+        botUnit.EchoMap = new();
+        for(int i = 0; i < echo.ActiveAbilities.Count; i++) botUnit.EchoMap.Add(botUnit.ActiveAbilities[i], echo.ActiveAbilities[i]);
         return echo;
     }
 

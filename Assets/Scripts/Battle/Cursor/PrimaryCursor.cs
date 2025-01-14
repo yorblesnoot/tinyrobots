@@ -84,7 +84,7 @@ public class PrimaryCursor : MonoBehaviour
         }
         else
         {
-            InvalidatePath();
+            //InvalidatePath();
         }
     }
 
@@ -100,7 +100,7 @@ public class PrimaryCursor : MonoBehaviour
         }
     }
 
-    private void GenerateMovePreview(Vector3Int pathPosition)
+    public void GenerateMovePreview(Vector3Int pathPosition)
     {
         if (pathPosition == lastPosition) return;
 

@@ -1,8 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class PassiveAbility : Ability
 {
@@ -82,6 +79,7 @@ public class PassiveAbility : Ability
 
     public void Deactivate()
     {
+        if(targeter == null) return;
         targeter.UnitEnteredZone.RemoveAllListeners();
         targeter.UnitLeftZone.RemoveAllListeners();
     }

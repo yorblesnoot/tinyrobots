@@ -27,11 +27,27 @@ public class GraftPart : AbilityEffect
 
         List<PartModifier> parts = bot.PartModifiers.Where(part => part.SourcePart.BasePart.Type == SlotType.LATERAL && part.Abilities.Count() > 0).ToList();
         PartModifier target = parts.GrabRandomly(false);
-        target.GetComponent<Rigidbody>().isKinematic = true;
+        GraftPartToUnit(owner, target, graftAnimationDuration);
+
+        if(owner.BotEcho == null) return;
+        target.SourcePart.InitializePart();
+        PartModifier clone = target.SourcePart.Sample.GetComponent<PartModifier>();
+        GraftPartToUnit(owner.BotEcho, clone, .1f);
+        for(int i = 0; i < target.Abilities.Count(); i++)
+        {
+            ActiveAbility active = target.Abilities[i] as ActiveAbility;
+            if(active == null) continue;
+            owner.EchoMap.Add(active, clone.Abilities[i] as ActiveAbility);
+        }
+    }
+
+    private void GraftPartToUnit(TinyBot owner, PartModifier target, float duration)
+    {
+        if(target.TryGetComponent<Rigidbody>(out var body)) body.isKinematic = true;
         GameObject slot = availableSlots.GrabRandomly();
         target.transform.SetParent(slot.transform.parent, true);
-        Tween.LocalPosition(target.transform, slot.transform.localPosition, graftAnimationDuration);
-        Tween.LocalRotation(target.transform, slot.transform.localRotation, graftAnimationDuration);
+        Tween.LocalPosition(target.transform, slot.transform.localPosition, duration);
+        Tween.LocalRotation(target.transform, slot.transform.localRotation, duration);
         slot.SetActive(false);
 
         foreach (var ability in target.Abilities)
