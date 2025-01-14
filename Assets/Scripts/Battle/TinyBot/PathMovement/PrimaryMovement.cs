@@ -31,6 +31,7 @@ public abstract class PrimaryMovement : MonoBehaviour
 
     public IEnumerator TraversePath(List<Vector3> path)
     {
+        Debug.Log("attempting to traverse");
         MainCameraControl.TrackTarget(Owner.transform);
         float timeElapsed = 0;
         while (timeElapsed > .3f)
@@ -146,10 +147,16 @@ public abstract class PrimaryMovement : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(moveTarget - transform.position);
         return targetRotation;
     }
-    public virtual void SpawnOrientation()
+    public void SpawnOrientation(Vector3 direction = default)
     {
-        Owner.transform.LookAt(GetCenterColumn());
+        if(direction == default) direction = GetCenterColumn() - transform.position;
+        Owner.transform.rotation = Quaternion.LookRotation(direction, GetUpVector());
         InstantNeutral();
+    }
+
+    protected virtual Vector3 GetUpVector()
+    {
+        return Vector3.up;
     }
 
     protected abstract void InstantNeutral();

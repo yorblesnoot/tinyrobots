@@ -14,10 +14,12 @@ public class BotAssembler : MonoBehaviour
         instance = this;
     }
 
-    public static TinyBot BuildBot(TreeNode<ModdedPart> treeRoot, Allegiance allegiance)
+    public static TinyBot BuildBot(TreeNode<ModdedPart> treeRoot, Allegiance allegiance, bool echo = false)
     {
+        
         GameObject spawnedBase = Instantiate(instance.botBase);
         TinyBot botUnit = spawnedBase.GetComponent<TinyBot>();
+        
         PrimaryMovement locomotion = null;
         List<PartModifier> spawnedParts = new();
         UnitStats botStats = new();
@@ -38,6 +40,7 @@ public class BotAssembler : MonoBehaviour
         
         List<Ability> abilities = GetAbilityList(spawnedParts, botUnit);
         botUnit.Initialize(abilities, spawnedParts, locomotion);
+        if (allegiance == Allegiance.PLAYER && echo == false) botUnit.BotEcho = CreateEcho(treeRoot, allegiance);
 
         return botUnit;
 
@@ -47,7 +50,8 @@ public class BotAssembler : MonoBehaviour
             spawned.SetActive(true);
             PartModifier modifier = spawned.GetComponent<PartModifier>();
             AddPartStats(currentNode.Value);
-            SceneGlobals.BotPalette.RecolorPart(modifier, allegiance);
+            if (echo) SceneGlobals.BotPalette.RecolorPart(modifier, BotPalette.Special.HOLOGRAM);
+            else SceneGlobals.BotPalette.RecolorPart(modifier, allegiance);
             spawnedParts.Add(modifier);
             if(attachmentPoint != null) spawned.transform.SetParent(attachmentPoint.transform, false);
             spawned.transform.localRotation = Quaternion.identity;
@@ -78,6 +82,18 @@ public class BotAssembler : MonoBehaviour
                 botStats.Max[stat.Key] += stat.Value;
             }
         }
+    }
+
+    private static TinyBot CreateEcho(TreeNode<ModdedPart> treeRoot, Allegiance allegiance)
+    {
+        treeRoot.Traverse((part) => part.InitializePart());
+        TinyBot echo = BuildBot(treeRoot, allegiance, true);
+        echo.gameObject.name = "Echo";
+        echo.ToggleActiveLayer(true);
+        Collider collider = echo.GetComponent<Collider>();
+        foreach (var passive in echo.PassiveAbilities) passive.Deactivate();
+        Destroy(collider);
+        return echo;
     }
 
     public static void SummonBot(TreeNode<ModdedPart> tree, TinyBot owner, Vector3 position, Action<TinyBot> botConditioning = null)

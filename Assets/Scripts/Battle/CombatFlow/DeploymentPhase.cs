@@ -33,31 +33,32 @@ public class DeploymentPhase : MonoBehaviour
     Vector3Int lastPosition;
     IEnumerator DeployUnit(TinyBot bot)
     {
-        bot.ToggleActiveLayer(true);
-        foreach (var part in bot.PartModifiers) SceneGlobals.BotPalette.RecolorPart(part, BotPalette.Special.HOLOGRAM);
+        TinyBot echo = bot.BotEcho;
+        echo.ToggleActiveLayer(true);
+        //foreach (var part in bot.PartModifiers) SceneGlobals.BotPalette.RecolorPart(part, BotPalette.Special.HOLOGRAM);
         while (!Input.GetMouseButtonDown(0))
         {
             yield return null;
             Vector3 clampedPosition = DeploymentZone.ClampInZone(PrimaryCursor.Transform.position);
-            if(Pathfinder3D.GetLandingPointBy(clampedPosition, bot.MoveStyle, out Vector3Int landingPoint))
+            if(Pathfinder3D.GetLandingPointBy(clampedPosition, echo.MoveStyle, out Vector3Int landingPoint))
             {
                 if (landingPoint == lastPosition) continue;
 
                 lastPosition = landingPoint;
-                bot.gameObject.SetActive(true);
-                Vector3 cleanPosition = bot.PrimaryMovement.SanitizePoint(landingPoint);
-                bot.transform.position = cleanPosition;
-                bot.PrimaryMovement.SpawnOrientation();
+                bot.PlaceAt(landingPoint);
             }
             else
             {
-                bot.gameObject.SetActive(false);
+                echo.gameObject.SetActive(false);
             }
             
         }
 
-        foreach (var part in bot.PartModifiers) SceneGlobals.BotPalette.RecolorPart(part, bot.Allegiance);
-        bot.ToggleActiveLayer(false);
+        //foreach (var part in echo.PartModifiers) SceneGlobals.BotPalette.RecolorPart(part, echo.Allegiance);
+        echo.gameObject.SetActive(false);
+        bot.PlaceAt(lastPosition);
         yield return null;
     }
+
+    
 }

@@ -39,6 +39,8 @@ public class PrimaryCursor : MonoBehaviour
     public static bool LockoutPlayer { get; private set; }
 
     public static UnityEvent<TinyBot> PlayerSelectedBot = new();
+
+    TinyBot activeEcho;
     private void Awake()
     {
         RestrictCursor(false);
@@ -78,7 +80,7 @@ public class PrimaryCursor : MonoBehaviour
 
         if (PlayerControlledBot != null && !abilityActive && PlayerControlledBot.Stats.Max[StatType.MOVEMENT] > 0)
         {
-            GenerateMovePreview();
+            GenerateMovePreview(Vector3Int.RoundToInt(transform.position));
         }
         else
         {
@@ -98,16 +100,15 @@ public class PrimaryCursor : MonoBehaviour
         }
     }
 
-    private void GenerateMovePreview()
+    private void GenerateMovePreview(Vector3Int pathPosition)
     {
-        Vector3Int cursorPosition = Vector3Int.RoundToInt(transform.position);
-        if (cursorPosition == lastPosition) return;
+        if (pathPosition == lastPosition) return;
 
-        if (!Pathfinder3D.GetLandingPointBy(cursorPosition, PlayerControlledBot.MoveStyle, out Vector3Int targetPosition)
-            && !Pathfinder3D.GetBestApproachPath(cursorPosition, pathSearchRadius, PlayerControlledBot.MoveStyle, out targetPosition)) 
+        if (!Pathfinder3D.GetLandingPointBy(pathPosition, PlayerControlledBot.MoveStyle, out Vector3Int targetPosition)
+            && !Pathfinder3D.GetBestApproachPath(pathPosition, pathSearchRadius, PlayerControlledBot.MoveStyle, out targetPosition)) 
             return;
 
-        lastPosition = cursorPosition;
+        lastPosition = pathPosition;
         List<Vector3> possiblePath = Pathfinder3D.FindVectorPath(targetPosition, out List<float> distances);
         if (possiblePath == null || possiblePath.Count == 0) return;
         ProcessAndPreviewPath(possiblePath);
@@ -205,6 +206,8 @@ public class PrimaryCursor : MonoBehaviour
         redLine.positionCount = redPath.Count;
         redLine.SetPositions(redPath.ToArray());
         moveCostPreview.color = redPath.Count > 0 ? Color.red : Color.white;
+        activeEcho = PlayerControlledBot.BotEcho;
+        activeEcho.PlaceAt(currentPath[^1], currentPath[^1] - currentPath[^2]);
     }
 
     List<float> GetPathDistances(List<Vector3> points)
@@ -219,6 +222,12 @@ public class PrimaryCursor : MonoBehaviour
 
     void InvalidatePath()
     {
+        if (activeEcho != null)
+        {
+            activeEcho.gameObject.SetActive(false);
+            activeEcho = null;
+        }
+
         currentPath = null;
         numRotator.SetActive(false);
         pathingLine.positionCount = 0;

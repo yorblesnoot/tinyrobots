@@ -79,4 +79,10 @@ public class PassiveAbility : Ability
             else applier.RemoveFrom(bot);
         }
     }
+
+    public void Deactivate()
+    {
+        targeter.UnitEnteredZone.RemoveAllListeners();
+        targeter.UnitLeftZone.RemoveAllListeners();
+    }
 }

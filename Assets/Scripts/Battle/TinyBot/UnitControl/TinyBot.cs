@@ -45,6 +45,7 @@ public class TinyBot : Targetable
     public List<PassiveAbility> PassiveAbilities { get; private set;}
 
     [HideInInspector] public DamageCalculator DamageCalculator;
+    public TinyBot BotEcho;
 
     public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement)
     {
@@ -60,6 +61,7 @@ public class TinyBot : Targetable
         ClearActiveBot.AddListener(ClearActiveUnit);
         AbilitiesChanged.AddListener(() => cachedMaterials = CacheMaterials());
         Pathfinder3D.GetOccupancy.AddListener(DeclareOccupancy);
+        ActiveAbility.ResetHighlights.AddListener(() => SetOutlineColor(Color.white));
     }
 
     private void OnDestroy()
@@ -232,6 +234,14 @@ public class TinyBot : Targetable
         base.EndFall(startHeight);
         PrimaryMovement.LandingStance();
         Tween.Delay(.5f, () => StartCoroutine(PrimaryMovement.NeutralStance()));
+    }
+
+    public void PlaceAt(Vector3 landingPoint, Vector3 facing = default)
+    {
+        gameObject.SetActive(true);
+        Vector3 cleanPosition = PrimaryMovement.SanitizePoint(landingPoint);
+        transform.position = cleanPosition;
+        PrimaryMovement.SpawnOrientation(facing);
     }
 
     private void OnMouseEnter()

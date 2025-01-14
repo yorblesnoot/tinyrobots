@@ -5,15 +5,9 @@ using UnityEngine;
 
 public class SpiderCrawl : LegMovement
 {
-    public override void SpawnOrientation()
-    { 
-        Vector3 normal = Pathfinder3D.GetCrawlOrientation(Owner.transform.position);
-        Vector3 centerDirection = GetCenterColumn() - transform.position;
-        Vector3 facing = Vector3.Cross(normal, centerDirection);
-        //look position and normal cant be the same?
-        Owner.transform.rotation = Quaternion.LookRotation(facing, normal);
-        
-        InstantNeutral();
+    protected override Vector3 GetUpVector()
+    {
+        return Pathfinder3D.GetCrawlOrientation(Owner.transform.position);
     }
 
     public override List<Vector3> SanitizePath(List<Vector3> path)

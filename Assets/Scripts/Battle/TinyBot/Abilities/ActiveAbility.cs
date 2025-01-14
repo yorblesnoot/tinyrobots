@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Playables;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ActiveAbility : Ability
 {
@@ -19,10 +21,7 @@ public class ActiveAbility : Ability
     public AbilityType Type;
     public bool EndTurn = false;
     [SerializeField] TargetRequirement targetRequirement;
-      
-    
     [SerializeField] ToggleAnimation trackingToggle;
-
     [SerializeField] AbilityEffect[] abilityEffects;
     [SerializeField] AbilityEffect[] endEffects;
 
@@ -39,6 +38,7 @@ public class ActiveAbility : Ability
     HashSet<System.Object> prohibitionSources = new();
     
     [HideInInspector] public bool Locked { get { return prohibitionSources.Count > 0; } }
+    [HideInInspector] public static UnityEvent ResetHighlights = new();
 
     public float TotalRange { get { return range + TargetType.TargetRadius; } }
     public override bool IsActive => true;
@@ -93,42 +93,65 @@ public class ActiveAbility : Ability
 
     protected virtual IEnumerator PerformEffects() { yield break; }
 
-    IEnumerator TrackTarget()
+    IEnumerator TrackTarget(bool draw)
     {
         while (trackedTarget != null)
         {
-            AimAt(trackedTarget, emissionPoint.transform.position, false);
+            EvaluateTrajectory(trackedTarget.transform.position, emissionPoint.transform.position, false);
+            if(draw && CurrentTrajectory[^1] != trackedTarget.transform.position)
+            {
+                EvaluateAlternateCastPositions(out Vector3 position);
+
+            }
+            PhysicalAimAlongTrajectory();
+            if (draw) DrawPlayerTargeting();
             yield return null;
         }
     }
 
-    public List<Targetable> AimAt(GameObject target, Vector3 sourcePosition, bool aiMode = false)
+    bool EvaluateAlternateCastPositions(out Vector3 alternatePosition)
     {
-        Vector3 rangeTarget = GetRangeLimitedTarget(sourcePosition, target);
-        CurrentTrajectory = TrajectoryDefinition.GetTrajectory(sourcePosition, rangeTarget, out RaycastHit hit, aiMode);
-        TrajectoryCollided = hit.collider != null;
-        List<Targetable> newTargets = range == 0 ? new() { Owner } 
-        : aiMode ? TargetType.FindTargetsAI(CurrentTrajectory) : TargetType.FindTargets(CurrentTrajectory);
+        List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations(Mathf.FloorToInt(Owner.Stats.Current[StatType.MOVEMENT]));
+        alternatePosition = default;
+        foreach (Vector3Int location in pathableLocations)
+        {
+            EvaluateTrajectory(trackedTarget.transform.position, location, true);
+            if (CurrentTrajectory[^1] != trackedTarget.transform.position)
+            {
+                alternatePosition = location;
+                return true;
+            }
+        }
+        return false;
+    }
 
-        if (!aiMode)
-        {
-            if(trackingAnimation != null) trackingAnimation.Aim(CurrentTrajectory);
-            Owner.PrimaryMovement.PivotToFacePosition(trackedTarget.transform.position);
-        }
-        
-        if (PlayerTargeting)
-        {
-            TrajectoryDefinition.Draw(CurrentTrajectory);
-            TargetType.Draw(CurrentTrajectory);
-            SetHighlightedTargets(newTargets);
-        }
+    public List<Targetable> EvaluateTrajectory(Vector3 targetPosition, Vector3 sourcePosition, bool imaginary)
+    {
+        Vector3 rangeTarget = GetRangeLimitedTarget(sourcePosition, targetPosition);
+        CurrentTrajectory = TrajectoryDefinition.GetTrajectory(sourcePosition, rangeTarget, out RaycastHit hit, imaginary);
+        TrajectoryCollided = hit.collider != null;
+        List<Targetable> newTargets = range == 0 ? new() { Owner } : (imaginary ? TargetType.FindTargetsAI(CurrentTrajectory) : TargetType.FindTargets(CurrentTrajectory));
         CurrentTargets = new(newTargets);
         return newTargets;
     }
 
-    Vector3 GetRangeLimitedTarget(Vector3 sourcePosition, GameObject target)
+    public void PhysicalAimAlongTrajectory()
     {
-        Vector3 targetPosition = target.transform.position;
+        if (trackingAnimation != null) trackingAnimation.Aim(CurrentTrajectory);
+        Owner.PrimaryMovement.PivotToFacePosition(trackedTarget.transform.position);
+    }
+
+    public void DrawPlayerTargeting()
+    {
+        TrajectoryDefinition.Draw(CurrentTrajectory);
+        TargetType.Draw(CurrentTrajectory);
+        SetHighlightedTargets(CurrentTargets);
+    }
+
+
+
+    Vector3 GetRangeLimitedTarget(Vector3 sourcePosition, Vector3 targetPosition)
+    {
         float distance = Vector3.Distance(sourcePosition, targetPosition);
         Vector3 direction = (targetPosition - sourcePosition).normalized;
         return sourcePosition + direction * Mathf.Min(distance, range);
@@ -162,7 +185,7 @@ public class ActiveAbility : Ability
         if(trackingToggle != null) StartCoroutine(trackingToggle.PerformEffect(Owner, CurrentTrajectory, CurrentTargets));
         trackedTarget = target;
         PlayerTargeting = draw;
-        StartCoroutine(TrackTarget());
+        StartCoroutine(TrackTarget(draw));
     }
     public virtual void ReleaseLockOn()
     {
@@ -175,37 +198,13 @@ public class ActiveAbility : Ability
 
     private void SetHighlightedTargets(List<Targetable> newTargets)
     {
-        newTargets ??= new();
+        ResetHighlights?.Invoke();
+        if (newTargets == null) return;
         for (int i = 0; i < newTargets.Count; i++)
         {
             Targetable bot = newTargets[i];
             if (bot == null) newTargets.Remove(bot);
-            else if (!CurrentTargets.Contains(bot)) bot.SetOutlineColor(Color.red);
-        }
-        foreach(Targetable target in CurrentTargets)
-        {
-            if(target == null) continue;
-            if(!newTargets.Contains(target)) target.SetOutlineColor(Color.white);
-        }
-    }
-    Vector3 GetCameraAimPoint()
-    {
-        if (CurrentTargets != null && CurrentTargets.Count > 0)
-        {
-            Vector3 average = Vector3.zero;
-            foreach (var target in CurrentTargets)
-            {
-                average += target.transform.position;
-            }
-            average /= CurrentTargets.Count;
-            return average;
-        }
-        else
-        {
-            Vector3 offset = PrimaryCursor.Transform.position - Owner.transform.position;
-            offset = offset.normalized;
-            offset *= Mathf.Min(range, offset.magnitude);
-            return offset + Owner.transform.position;
+            bot.SetOutlineColor(Color.red);
         }
     }
 
