@@ -54,14 +54,14 @@ MonoBehaviour:
   range: 10
   ModifiableRange: 1
   cooldown: 3
-  EffectMagnitude: 5
+  EffectivenessMultiplier: 1
   cost: 1
   icon: {fileID: 21300000, guid: e86c94d6498544255ba708eb4b975121, type: 3}
-  EffectDescription: ' Damage'
   CurrentCooldown: 0
   Owner: {fileID: 0}
-  emissionPoint: {fileID: 0}
+  emissionPoint: {fileID: 2948140425868578402}
   Type: 0
+  EndTurn: 0
   targetRequirement: 0
   trackingToggle: {fileID: 0}
   abilityEffects:
@@ -82,6 +82,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
   armGrab: {fileID: 6213933421517428230}
   armDrop: {fileID: 639554009074477753}
   thrownAirTime: 0.5
@@ -98,6 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
   ikTarget: {fileID: 2419956447974706190}
   windupTime: 0.7
   windDistance: 1
@@ -131,6 +133,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
 --- !u!114 &3941757722735645014
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -409,14 +412,14 @@ MonoBehaviour:
   range: 1
   ModifiableRange: 0
   cooldown: 3
-  EffectMagnitude: 0
+  EffectivenessMultiplier: 1
   cost: 1
   icon: {fileID: 21300000, guid: 8ba259bb0a28241f686bb8959ab8d3bf, type: 3}
-  EffectDescription: ' Damage'
   CurrentCooldown: 0
   Owner: {fileID: 0}
-  emissionPoint: {fileID: 7519672149628714507}
+  emissionPoint: {fileID: 2948140425868578402}
   Type: 0
+  EndTurn: 0
   targetRequirement: 2
   trackingToggle: {fileID: 0}
   abilityEffects:
@@ -440,6 +443,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
   armThrow: {fileID: 3328195909937798841}
   Grabbed: {fileID: 0}
 --- !u!114 &4046753275453398220
@@ -497,6 +501,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
   ikTarget: {fileID: 2419956447974706190}
   armMoveDuration: 0.5
 --- !u!114 &3016547542891081560
@@ -512,8 +517,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
   animatorStateName: open
   animator: {fileID: 8908244470698263005}
+  duration: 0
   playValue: 1
 --- !u!114 &2976051054577289365
 MonoBehaviour:
@@ -528,8 +535,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
   animatorStateName: open
   animator: {fileID: 8908244470698263005}
+  duration: 0
   playValue: 0
 --- !u!114 &6476705628180564292
 MonoBehaviour:
@@ -544,6 +553,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
   ikTarget: {fileID: 2419956447974706190}
   raiseHeight: 1
   armMoveDuration: 0.5
@@ -560,6 +570,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
   armGrab: {fileID: 6213933421517428230}
 --- !u!1001 &448946663622926409
 PrefabInstance:
@@ -842,7 +853,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7abefd68e34c06f4c9b549402f976aa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UnitTargeted:
+  UnitEnteredZone:
+    m_PersistentCalls:
+      m_Calls: []
+  UnitLeftZone:
     m_PersistentCalls:
       m_Calls: []
 --- !u!135 &2275762513095240437
@@ -1532,12 +1546,6 @@ Transform:
 --- !u!137 &7482303397399038935 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 2912400592030377877, guid: b67d57af0d7c87c4e8fc0add77992636,
-    type: 3}
-  m_PrefabInstance: {fileID: 5745633957063470146}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &7519672149628714507 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: -6347917825726426551, guid: b67d57af0d7c87c4e8fc0add77992636,
     type: 3}
   m_PrefabInstance: {fileID: 5745633957063470146}
   m_PrefabAsset: {fileID: 0}

@@ -24,7 +24,7 @@ public class HookPull : HookAbility
         yield return StartCoroutine(LaunchWithLine(projectile, trajectory, intervalTime));
         trajectory.Reverse();
         Vector3 direction = (trajectory[0] - trajectory[^1]).normalized;
-        trajectory[^1] = Ability.emissionPoint.transform.position + direction * dropDistance;
+        trajectory[^1] = Ability.emissionPoint.position + direction * dropDistance;
 
         if (target != null)
         {

@@ -39,9 +39,8 @@ public class ImpactTarget : TargetPoint
         return FindTargets(trajectory);
     }
 
-    public override bool TargetIsAttained(Vector3 position, List<Vector3> trajectory)
+    public override float GetTargetQuality(Vector3 position, List<Vector3> trajectory)
     {
-        if(position == trajectory[^1]) return true;
-        return false;
+        return Vector3.Distance(position, trajectory[^1]);
     }
 }

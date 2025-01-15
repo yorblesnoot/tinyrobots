@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -57,11 +58,21 @@ public class ActiveAbility : Ability
     public override void Initialize(TinyBot botUnit)
     {
         base.Initialize(botUnit);
-        if (emissionPoint == null) emissionPoint = Owner.gameObject;
+        if (emissionPoint == null) emissionPoint = Owner.transform;
     }
 
     public IEnumerator Execute()
     {
+        GameObject dummy = new();
+        dummy.transform.position = CurrentTrajectory[^1];
+        yield return Execute(dummy);
+    }
+
+    public IEnumerator Execute(GameObject target)
+    {
+        LockOnTo(target, false);
+        yield return new WaitForSeconds(1f);
+        Owner.SpendResource(cost, StatType.ACTION);
         Vector3 rawPosition = Owner.transform.position;
         Vector3Int startPosition = Vector3Int.RoundToInt(rawPosition);
         MainCameraControl.PanToPosition(CurrentTrajectory[^1]);
@@ -91,21 +102,24 @@ public class ActiveAbility : Ability
 
     protected virtual IEnumerator PerformEffects() { yield break; }
 
+    readonly float targetOffsetTolerance = .5f;
     IEnumerator TrackTarget(bool draw)
     {
         while (trackedTarget != null)
         {
-            EvaluateTrajectory(trackedTarget.transform.position, emissionPoint.transform.position, false);
+            Vector3 targetPosition = trackedTarget.transform.position;
+            EvaluateTrajectory(targetPosition, emissionPoint.position, false);
             ActiveAbility aimer = this;
-            if(draw && !TargetType.TargetIsAttained(trackedTarget.transform.position, CurrentTrajectory))
+            if (draw && TargetType.GetTargetQuality(targetPosition, CurrentTrajectory) > targetOffsetTolerance)
             {
-                if(EvaluateAlternateCastPositions(out Vector3Int position))
-                {
-                    PrimaryCursor.Instance.GenerateMovePreview(position);
-                    aimer = Owner.EchoMap[this];
-                    aimer.CurrentTrajectory = CurrentTrajectory;
-                }
+                Vector3Int alternate = EvaluateAlternateCastPositions();
+                Vector3 facing = targetPosition - alternate;
+                PrimaryCursor.Instance.GenerateMovePreview(alternate, facing);
+                aimer = Owner.EchoMap[this];
+                aimer.EvaluateTrajectory(targetPosition, aimer.emissionPoint.position, false);
+                CurrentTrajectory = aimer.CurrentTrajectory;
             }
+            else PrimaryCursor.InvalidatePath();
             PhysicalAimAlongTrajectory();
             if (draw) aimer.DrawPlayerTargeting();
             yield return null;
@@ -113,22 +127,20 @@ public class ActiveAbility : Ability
     }
 
 
-
-    bool EvaluateAlternateCastPositions(out Vector3Int alternatePosition)
+    readonly float distanceStrength = .1f;
+    Vector3Int EvaluateAlternateCastPositions()
     {
         List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations(Mathf.FloorToInt(Owner.Stats.Current[StatType.MOVEMENT]));
-        alternatePosition = default;
+        PriorityQueue<Vector3Int, float> priority = new();
         foreach (Vector3Int location in pathableLocations)
         {
             EvaluateTrajectory(trackedTarget.transform.position, location, true);
-            if (TargetType.TargetIsAttained(trackedTarget.transform.position, CurrentTrajectory))
-            {
-                alternatePosition = location;
-                EvaluateTrajectory(trackedTarget.transform.position, location, false);
-                return true;
-            }
+            float quality = TargetType.GetTargetQuality(trackedTarget.transform.position, CurrentTrajectory);
+            if (quality == 0) return location;
+            quality += Vector3.Distance(location, Owner.transform.position) * distanceStrength;
+            priority.Enqueue(location, quality);
         }
-        return false;
+        return priority.Dequeue();
     }
 
     public List<Targetable> EvaluateTrajectory(Vector3 targetPosition, Vector3 sourcePosition, bool imaginary)
@@ -186,7 +198,7 @@ public class ActiveAbility : Ability
         return true;
     }
 
-    public virtual void LockOnTo(GameObject target, bool draw)
+    public void LockOnTo(GameObject target, bool draw)
     {
         if(trackingToggle != null) StartCoroutine(trackingToggle.PerformEffect(Owner, CurrentTrajectory, CurrentTargets));
         trackedTarget = target;

@@ -147,12 +147,6 @@ public abstract class PrimaryMovement : MonoBehaviour
         Quaternion targetRotation = Quaternion.LookRotation(moveTarget - transform.position);
         return targetRotation;
     }
-    public void SpawnOrientation(Vector3 direction = default)
-    {
-        if(direction == default) direction = GetCenterColumn() - transform.position;
-        Owner.transform.rotation = Quaternion.LookRotation(direction, GetUpVector());
-        InstantNeutral();
-    }
 
     protected virtual Vector3 GetUpVector()
     {
@@ -160,13 +154,10 @@ public abstract class PrimaryMovement : MonoBehaviour
     }
 
     protected abstract void InstantNeutral();
-    protected Vector3 GetCenterColumn()
-    {
-        return new(Pathfinder3D.XSize / 2, Owner.transform.position.y, Pathfinder3D.ZSize / 2);
-    }
+    
     public abstract IEnumerator NeutralStance();
 
-    public virtual void PivotToFacePosition(Vector3 worldTarget)
+    public void PivotToFacePosition(Vector3 worldTarget, bool instant = false)
     {
         Vector3 localTarget = Owner.transform.InverseTransformPoint(worldTarget);
         localTarget.y = 0;
@@ -175,8 +166,9 @@ public abstract class PrimaryMovement : MonoBehaviour
         Vector3 direction = worldTarget - Owner.transform.position;
 
         Quaternion toRotation = Quaternion.LookRotation(direction, Owner.transform.up);
-        Owner.transform.rotation = Quaternion.Slerp(Owner.transform.rotation, toRotation, lookSpeed * Time.deltaTime);
-        AnimateToOrientation(Vector3.zero);
+        Owner.transform.rotation = instant ? toRotation : Quaternion.Slerp(Owner.transform.rotation, toRotation, lookSpeed * Time.deltaTime);
+        if (instant) InstantNeutral(); 
+        else AnimateToOrientation(Vector3.zero);
     }
 
     public IEnumerator ApplyImpulseToBody(Vector3 direction, float distance, float snapTime, float returnTime)

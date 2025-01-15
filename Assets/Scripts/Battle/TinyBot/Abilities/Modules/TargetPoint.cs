@@ -12,5 +12,5 @@ public abstract class TargetPoint : MonoBehaviour
 
     public abstract void EndTargeting();
 
-    public abstract bool TargetIsAttained(Vector3 position, List<Vector3> trajectory);
+    public abstract float GetTargetQuality(Vector3 position, List<Vector3> trajectory);
 }

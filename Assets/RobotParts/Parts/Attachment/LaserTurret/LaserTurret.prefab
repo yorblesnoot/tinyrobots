@@ -269,14 +269,12 @@ MonoBehaviour:
   range: 20
   ModifiableRange: 0
   cooldown: 1
-  EffectMagnitude: 10
   EffectivenessMultiplier: 1
   cost: 1
   icon: {fileID: 21300000, guid: ef488320a1037477b9937ad14125f21b, type: 3}
-  EffectDescription: ' Damage'
   CurrentCooldown: 0
   Owner: {fileID: 0}
-  emissionPoint: {fileID: 5367564025516129834}
+  emissionPoint: {fileID: 2593048839118334272}
   Type: 0
   EndTurn: 0
   targetRequirement: 0
@@ -657,6 +655,12 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2836518906955395485}
   m_SourcePrefab: {fileID: 100100000, guid: c2625f0d9f8225f42bc27754fa7e7d1f, type: 3}
+--- !u!4 &2593048839118334272 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7232982580706906625, guid: c2625f0d9f8225f42bc27754fa7e7d1f,
+    type: 3}
+  m_PrefabInstance: {fileID: 5160258190624734017}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3483470166529341865 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -591327442483133720, guid: c2625f0d9f8225f42bc27754fa7e7d1f,
@@ -666,12 +670,6 @@ Transform:
 --- !u!4 &4617968656050150570 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c2625f0d9f8225f42bc27754fa7e7d1f,
-    type: 3}
-  m_PrefabInstance: {fileID: 5160258190624734017}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &5367564025516129834 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1000221815533028715, guid: c2625f0d9f8225f42bc27754fa7e7d1f,
     type: 3}
   m_PrefabInstance: {fileID: 5160258190624734017}
   m_PrefabAsset: {fileID: 0}

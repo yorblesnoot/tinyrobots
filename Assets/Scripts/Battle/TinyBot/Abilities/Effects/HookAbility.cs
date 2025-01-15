@@ -31,7 +31,7 @@ public abstract class HookAbility : AbilityEffect
                 timeElapsed += Time.deltaTime;
                 float interpolator = timeElapsed / intervalTime;
                 launched.transform.position = Vector3.Lerp(trajectory[i], trajectory[i + 1], interpolator);
-                Vector3[] linePoints = new Vector3[2] { Ability.emissionPoint.transform.position, projectile.transform.position };
+                Vector3[] linePoints = new Vector3[2] { Ability.emissionPoint.position, projectile.transform.position };
                 line.SetPositions(linePoints);
                 yield return null;
             }

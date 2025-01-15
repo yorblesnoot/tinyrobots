@@ -44,7 +44,7 @@ public class DeploymentPhase : MonoBehaviour
                 if (landingPoint == lastPosition) continue;
 
                 lastPosition = landingPoint;
-                bot.PlaceAt(landingPoint);
+                echo.PlaceAt(landingPoint, SpawnZone.GetCenterColumn(echo));
             }
             else
             {
@@ -55,7 +55,7 @@ public class DeploymentPhase : MonoBehaviour
 
         //foreach (var part in echo.PartModifiers) SceneGlobals.BotPalette.RecolorPart(part, echo.Allegiance);
         echo.gameObject.SetActive(false);
-        bot.PlaceAt(lastPosition);
+        bot.PlaceAt(lastPosition, SpawnZone.GetCenterColumn(bot));
         yield return null;
     }
 

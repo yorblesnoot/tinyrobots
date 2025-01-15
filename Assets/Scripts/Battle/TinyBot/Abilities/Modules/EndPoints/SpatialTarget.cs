@@ -44,9 +44,9 @@ public class SpatialTarget : TargetPoint
         SliceTargeter.Sensor.ResetIntersecting();
     }
 
-    public override bool TargetIsAttained(Vector3 position, List<Vector3> trajectory)
+    public override float GetTargetQuality(Vector3 position, List<Vector3> trajectory)
     {
-        if(Vector3.Distance(position, trajectory[^1]) > TargetRadius) return false;
-        return true;
+        float offset = Vector3.Distance(position, trajectory[^1]) - TargetRadius;
+        return Mathf.Clamp(offset, 0, float.MaxValue);
     }
 }

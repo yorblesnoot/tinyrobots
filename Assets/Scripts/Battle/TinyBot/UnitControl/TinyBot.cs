@@ -242,7 +242,7 @@ public class TinyBot : Targetable
         gameObject.SetActive(true);
         Vector3 cleanPosition = PrimaryMovement.SanitizePoint(landingPoint);
         transform.position = cleanPosition;
-        PrimaryMovement.SpawnOrientation(facing);
+        PrimaryMovement.PivotToFacePosition(transform.position + facing, true);
     }
 
     private void OnMouseEnter()

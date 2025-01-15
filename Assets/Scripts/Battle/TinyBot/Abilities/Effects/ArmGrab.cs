@@ -12,7 +12,7 @@ public class ArmGrab : AbilityEffect
         Grabbed = targets[0];
         Grabbed.ToggleActiveLayer(true);
         Pathfinder3D.EvaluateNodeOccupancy(owner.transform.position, Grabbed.transform.position);
-        Grabbed.transform.SetParent(Ability.emissionPoint.transform, true);
+        Grabbed.transform.SetParent(Ability.emissionPoint, true);
         owner.Stats.Current[StatType.MOVEMENT] /= 2;
         ToggleAbilityLock(owner);
         yield return null;

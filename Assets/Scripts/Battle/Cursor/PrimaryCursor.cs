@@ -5,7 +5,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
-using Unity.VisualScripting;
 
 public enum CursorState
 {
@@ -100,7 +99,7 @@ public class PrimaryCursor : MonoBehaviour
         }
     }
 
-    public void GenerateMovePreview(Vector3Int pathPosition)
+    public void GenerateMovePreview(Vector3Int pathPosition, Vector3 echoFacing = default)
     {
         if (pathPosition == lastPosition) return;
 
@@ -112,36 +111,98 @@ public class PrimaryCursor : MonoBehaviour
         List<Vector3> possiblePath = Pathfinder3D.FindVectorPath(targetPosition, out List<float> distances);
         if (possiblePath == null || possiblePath.Count == 0) return;
         ProcessAndPreviewPath(possiblePath);
+        activeEcho = PlayerControlledBot.BotEcho;
+        if (echoFacing == default) echoFacing = currentPath[^1] - currentPath[^2];
+        activeEcho.PlaceAt(currentPath[^1], echoFacing);
+    }
+
+    void ProcessAndPreviewPath(List<Vector3> possiblePath)
+    {
+        numRotator.SetActive(true);
+        numRotator.transform.SetParent(null);
+        possiblePath = PlayerControlledBot.PrimaryMovement.SanitizePath(possiblePath);
+        //get the indices in the raw path of the new path points
+        //then replace the old distance list with 
+        List<float> distances = GetPathDistances(possiblePath);
+
+        numRotator.transform.position = possiblePath[^1];
+        moveCostPreview.text = Mathf.CeilToInt(distances[^1]).ToString() + " ft";
+        currentPath = new();
+        List<Vector3> redPath = new();
+        int pathIndex = 0;
+        float currentMove = PlayerControlledBot.Stats.Current[StatType.MOVEMENT];
+
+
+        while (pathIndex < possiblePath.Count)
+        {
+            if (distances[pathIndex] < currentMove)
+            {
+                currentPath.Add(possiblePath[pathIndex]);
+            }
+            else if (redPath.Count == 0 && pathIndex > 0)
+            {
+                Vector3 direction = possiblePath[pathIndex] - possiblePath[pathIndex - 1];
+                float extraMove = currentMove - distances[pathIndex - 1];
+                direction.Normalize();
+                Vector3 midPoint = possiblePath[pathIndex - 1] + direction * extraMove;
+                currentPath.Add(midPoint);
+                redPath.Add(midPoint);
+                redPath.Add(possiblePath[pathIndex]);
+            }
+            else
+            {
+                redPath.Add(possiblePath[pathIndex]);
+
+            }
+            pathIndex++;
+        }
+
+        DrawPaths(distances, redPath);
+    }
+
+    private void DrawPaths(List<float> distances, List<Vector3> redPath)
+    {
+        int validCount = currentPath.Count;
+        pathingLine.positionCount = validCount;
+        pathingLine.SetPositions(currentPath.ToArray());
+
+        currentPathCost = validCount > 0 ? distances[validCount - 1] : 0;
+        redLine.positionCount = redPath.Count;
+        redLine.SetPositions(redPath.ToArray());
+        moveCostPreview.color = redPath.Count > 0 ? Color.red : Color.white;
     }
 
     private void ProcessClick(bool anAbilityIsActive)
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
-        if (anAbilityIsActive)
+        if (TargetedBot != null && TargetedBot.Allegiance == Allegiance.PLAYER)
+        {
+            TargetedBot.Select();
+            InvalidatePath();
+            Unsnap();
+        }
+        else StartCoroutine(MoveAndCast());
+    }
+
+    IEnumerator MoveAndCast()
+    {
+        bool abilityActive = ClickableAbility.Activated != null;
+        if(abilityActive) ClickableAbility.Activated.Ability.ReleaseLockOn();
+        if (currentPath != null && PlayerControlledBot != null && currentPath.Count > 0)
+        {
+            PlayerControlledBot.SpendResource(Mathf.CeilToInt(currentPathCost), StatType.MOVEMENT);
+            yield return TraversePath();
+        }
+        if (abilityActive)
         {
             ActiveAbility skill = ClickableAbility.Activated.Ability;
             if (skill.IsUsable()
             && skill.cost <= PlayerControlledBot.Stats.Current[StatType.ACTION])
             {
                 PlayerControlledBot.SpendResource(skill.cost, StatType.ACTION);
-                Instance.statDisplay.SyncStatDisplay(PlayerControlledBot);
-
                 StartCoroutine(UseSkill(skill));
-                ClickableAbility.EndUsableAbilityState();
+                Instance.statDisplay.SyncStatDisplay(PlayerControlledBot);
             }
-        }
-        else if (TargetedBot != null && TargetedBot.Allegiance == Allegiance.PLAYER)
-        {
-            TargetedBot.Select();
-            InvalidatePath();
-            Unsnap();
-        }
-        //traverse a confirmed path
-        else if (currentPath != null && PlayerControlledBot != null)
-        {
-            if (currentPath.Count == 0) return;
-            PlayerControlledBot.SpendResource(Mathf.CeilToInt(currentPathCost), StatType.MOVEMENT);
-            StartCoroutine(TraversePath());
         }
     }
 
@@ -157,59 +218,6 @@ public class PrimaryCursor : MonoBehaviour
         if (ability.EndTurn) TurnManager.EndTurn(PlayerControlledBot);
     }
 
-    void ProcessAndPreviewPath(List<Vector3> possiblePath)
-    {
-        numRotator.SetActive(true);
-        numRotator.transform.SetParent(null);
-        possiblePath = PlayerControlledBot.PrimaryMovement.SanitizePath(possiblePath);
-        //get the indices in the raw path of the new path points
-        //then replace the old distance list with 
-        List<float> distances = GetPathDistances(possiblePath);
-        
-        numRotator.transform.position = possiblePath[^1];
-        moveCostPreview.text = Mathf.CeilToInt(distances[^1]).ToString() + " ft";
-        currentPath = new();
-        List<Vector3> redPath = new();
-        int pathIndex = 0;
-        float currentMove = PlayerControlledBot.Stats.Current[StatType.MOVEMENT];
-
-        
-        while(pathIndex < possiblePath.Count)
-        {
-            if (distances[pathIndex] < currentMove)
-            {
-                currentPath.Add(possiblePath[pathIndex]);
-            }
-            else if (redPath.Count == 0 && pathIndex > 0)
-            {
-                Vector3 direction = possiblePath[pathIndex] - possiblePath[pathIndex - 1];
-                float extraMove =  currentMove - distances[pathIndex - 1];
-                direction.Normalize();
-                Vector3 midPoint = possiblePath[pathIndex - 1] + direction * extraMove;
-                currentPath.Add(midPoint);
-                redPath.Add(midPoint);
-                redPath.Add(possiblePath[pathIndex]);
-            }
-            else
-            {
-                redPath.Add(possiblePath[pathIndex]);
-                
-            }
-            pathIndex++;
-        }
-        
-        int validCount = currentPath.Count;
-        pathingLine.positionCount = validCount;
-        pathingLine.SetPositions(currentPath.ToArray());
-        
-        currentPathCost = validCount > 0 ? distances[validCount-1] : 0;
-        redLine.positionCount = redPath.Count;
-        redLine.SetPositions(redPath.ToArray());
-        moveCostPreview.color = redPath.Count > 0 ? Color.red : Color.white;
-        activeEcho = PlayerControlledBot.BotEcho;
-        activeEcho.PlaceAt(currentPath[^1], currentPath[^1] - currentPath[^2]);
-    }
-
     List<float> GetPathDistances(List<Vector3> points)
     {
         List<float> output = new() { 0 };
@@ -220,18 +228,18 @@ public class PrimaryCursor : MonoBehaviour
         return output;
     }
 
-    void InvalidatePath()
+    public static void InvalidatePath()
     {
-        if (activeEcho != null)
+        if (Instance.activeEcho != null)
         {
-            activeEcho.gameObject.SetActive(false);
-            activeEcho = null;
+            Instance.activeEcho.gameObject.SetActive(false);
+            Instance.activeEcho = null;
         }
 
-        currentPath = null;
-        numRotator.SetActive(false);
-        pathingLine.positionCount = 0;
-        redLine.positionCount = 0;
+        Instance.currentPath = null;
+        Instance.numRotator.SetActive(false);
+        Instance.pathingLine.positionCount = 0;
+        Instance.redLine.positionCount = 0;
     }
 
     private IEnumerator TraversePath()

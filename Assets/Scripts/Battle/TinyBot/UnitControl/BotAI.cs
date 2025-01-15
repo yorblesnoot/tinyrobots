@@ -186,9 +186,6 @@ public class BotAI
     }
     private IEnumerator UseAbility(ActiveAbility ability, GameObject target)
     {
-        ability.LockOnTo(target, false);
-        yield return new WaitForSeconds(lockTime);
-        thisBot.SpendResource(ability.cost, StatType.ACTION);
         yield return thisBot.StartCoroutine(ability.Execute());
         yield return new WaitForSeconds(lockTime);
         if (ability.EndTurn)
@@ -233,7 +230,7 @@ public class BotAI
     Vector3 GunPositionAt(ActiveAbility ability, Vector3 position)
     {
         Quaternion locationRotation = thisBot.PrimaryMovement.GetRotationAtPosition(position);
-        Vector3 gunPosition = ability.emissionPoint.transform.position;
+        Vector3 gunPosition = ability.emissionPoint.position;
         Vector3 localGun = thisBot.transform.InverseTransformPoint(gunPosition);
         Vector3 rotatedGun = locationRotation * localGun;
         return position + rotatedGun;

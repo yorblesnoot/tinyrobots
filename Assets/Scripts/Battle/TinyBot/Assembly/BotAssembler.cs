@@ -104,7 +104,7 @@ public class BotAssembler : MonoBehaviour
         TinyBot summon = BuildBot(tree, owner.Allegiance);
         Pathfinder3D.GetLandingPointBy(position, summon.MoveStyle, out Vector3Int cleanPosition);
         summon.transform.position = summon.PrimaryMovement.SanitizePoint(cleanPosition);
-        summon.PrimaryMovement.SpawnOrientation();
+        summon.PrimaryMovement.PivotToFacePosition(owner.transform.position, true);
         botConditioning?.Invoke(summon);
         TurnManager.RegisterSummon(summon);
         Pathfinder3D.EvaluateNodeOccupancy(owner.transform.position);

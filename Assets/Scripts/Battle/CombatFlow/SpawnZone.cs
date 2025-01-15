@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class SpawnZone : MonoBehaviour
 {
@@ -87,8 +88,13 @@ public class SpawnZone : MonoBehaviour
         foreach(var allegiance in styleNodes.Values) 
             foreach (var mode in allegiance.Values) mode.Remove(targetSpace);
         bot.gameObject.SetActive(true);
-        bot.PrimaryMovement.SpawnOrientation();
+        bot.PrimaryMovement.PivotToFacePosition(GetCenterColumn(bot), true);
         bot.StartCoroutine(bot.PrimaryMovement.NeutralStance());
+    }
+
+    public static Vector3 GetCenterColumn(TinyBot bot)
+    {
+        return new(Pathfinder3D.XSize / 2, bot.transform.position.y, Pathfinder3D.ZSize / 2);
     }
 
     private void OnDrawGizmos()
