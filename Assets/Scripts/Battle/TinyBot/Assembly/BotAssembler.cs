@@ -37,6 +37,11 @@ public class BotAssembler : MonoBehaviour
         }
         SetBotTallness(locomotion, botUnit.TargetPoint, botUnit);
         RestructureHierarchy(locomotion, botUnit.TargetPoint, botUnit.transform);
+        foreach(PartModifier partModifier in spawnedParts)
+        {
+            if (echo) SceneGlobals.BotPalette.RecolorPart(partModifier, BotPalette.Special.HOLOGRAM);
+            else SceneGlobals.BotPalette.RecolorPart(partModifier, allegiance);
+        }
         
         List<Ability> abilities = GetAbilityList(spawnedParts, botUnit);
         botUnit.Initialize(abilities, spawnedParts, locomotion);
@@ -50,13 +55,10 @@ public class BotAssembler : MonoBehaviour
             spawned.SetActive(true);
             PartModifier modifier = spawned.GetComponent<PartModifier>();
             AddPartStats(currentNode.Value);
-            if (echo) SceneGlobals.BotPalette.RecolorPart(modifier, BotPalette.Special.HOLOGRAM);
-            else SceneGlobals.BotPalette.RecolorPart(modifier, allegiance);
             spawnedParts.Add(modifier);
             if(attachmentPoint != null) spawned.transform.SetParent(attachmentPoint.transform, false);
             spawned.transform.localRotation = Quaternion.identity;
             if (currentNode.Value.BasePart.PrimaryLocomotion) locomotion = spawned.GetComponent<PrimaryMovement>();
-
             List<TreeNode<ModdedPart>> children = currentNode.Children;
             AttachmentPoint[] attachmentPoints = spawned.GetComponentsInChildren<AttachmentPoint>();
 

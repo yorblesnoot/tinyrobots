@@ -13,10 +13,10 @@ public class PropellerFly : PrimaryMovement
         Style = MoveStyle.FLY;
     }
 
-    public override Quaternion GetRotationAtPosition(Vector3 moveTarget)
+    public override Quaternion GetRotationFromFacing(Vector3 position, Vector3 facing)
     {
-        moveTarget.y = transform.position.y;
-        Quaternion targetRotation = moveTarget == transform.position ? transform.rotation : Quaternion.LookRotation(moveTarget - transform.position);
+        position.y = transform.position.y;
+        Quaternion targetRotation = position == transform.position ? transform.rotation : Quaternion.LookRotation(facing);
         return targetRotation;
     }
 

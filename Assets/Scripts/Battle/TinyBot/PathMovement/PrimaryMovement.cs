@@ -119,8 +119,8 @@ public abstract class PrimaryMovement : MonoBehaviour
 
     IEnumerator PivotToOrientationAt(Vector3 target)
     {
-        Quaternion targetRotation = GetRotationAtPosition(target);
         Transform unit = Owner.transform;
+        Quaternion targetRotation = GetRotationFromFacing(unit.position, target - unit.position);
         Quaternion startRotation = unit.rotation;
         float timeElapsed = 0;
         float pivotDuration = Quaternion.Angle(startRotation, targetRotation) / (PivotSpeed * SpeedMultiplier);
@@ -140,14 +140,16 @@ public abstract class PrimaryMovement : MonoBehaviour
     }
 
     public virtual void AnimateToOrientation(Vector3 direction) { }
-    public virtual Quaternion GetRotationAtPosition(Vector3 moveTarget)
+    public virtual Quaternion GetRotationFromFacing(Vector3 position, Vector3 facing)
     {
-        moveTarget.y = transform.position.y;
-        Quaternion targetRotation = Quaternion.LookRotation(moveTarget - transform.position);
+        Vector3 targetNormal = GetUpVector(position);
+        Vector3 lookTarget = Vector3.ProjectOnPlane(facing, targetNormal);
+        Quaternion targetRotation = Quaternion.LookRotation(lookTarget, targetNormal);
+        Debug.DrawLine(Owner.transform.position, lookTarget, Color.blue, 2f);
         return targetRotation;
     }
 
-    protected virtual Vector3 GetUpVector()
+    protected virtual Vector3 GetUpVector(Vector3 position)
     {
         return Vector3.up;
     }
@@ -158,13 +160,7 @@ public abstract class PrimaryMovement : MonoBehaviour
 
     public void PivotToFacePosition(Vector3 worldTarget, bool instant = false)
     {
-        Vector3 localTarget = Owner.transform.InverseTransformPoint(worldTarget);
-        localTarget.y = 0;
-        worldTarget = Owner.transform.TransformPoint(localTarget);
-
-        Vector3 direction = worldTarget - Owner.transform.position;
-
-        Quaternion toRotation = Quaternion.LookRotation(direction, Owner.transform.up);
+        Quaternion toRotation = GetRotationFromFacing(Owner.transform.position, worldTarget - Owner.transform.position);
         Owner.transform.rotation = instant ? toRotation : Quaternion.Slerp(Owner.transform.rotation, toRotation, lookSpeed * Time.deltaTime);
         if (instant) InstantNeutral(); 
         else AnimateToOrientation(Vector3.zero);

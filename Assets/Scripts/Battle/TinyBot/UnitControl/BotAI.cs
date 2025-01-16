@@ -199,12 +199,11 @@ public class BotAI
     #region Decision Tools
     TinyBot AbilityHasTarget(ActiveAbility ability, List<TinyBot> targets, Vector3Int baseLocation)
     {
-        Vector3 location = GunPositionAt(ability, baseLocation);
-        if (Physics.CheckSphere(location, terrainCheckSize, terrainMask)) return null;
-        Debug.DrawRay(location, Vector3.down, Color.blue, 10f);
-
         foreach (var targetBot in targets)
         {
+            Vector3 facing = targetBot.TargetPoint.position - baseLocation;
+            Vector3 location = GunPositionAt(ability, baseLocation, facing);
+            if (Physics.CheckSphere(location, terrainCheckSize, terrainMask)) return null;
             Transform targetPoint = targetBot.TargetPoint;
             if (ability.range > 0 && Vector3.Distance(targetPoint.position, location) > ability.TotalRange) continue;
 
@@ -227,9 +226,9 @@ public class BotAI
     {
         return ability.cost > thisBot.Stats.Current[StatType.ACTION] || !ability.IsAvailable();
     }
-    Vector3 GunPositionAt(ActiveAbility ability, Vector3 position)
+    Vector3 GunPositionAt(ActiveAbility ability, Vector3 position, Vector3 facing)
     {
-        Quaternion locationRotation = thisBot.PrimaryMovement.GetRotationAtPosition(position);
+        Quaternion locationRotation = thisBot.PrimaryMovement.GetRotationFromFacing(position, facing);
         Vector3 gunPosition = ability.emissionPoint.position;
         Vector3 localGun = thisBot.transform.InverseTransformPoint(gunPosition);
         Vector3 rotatedGun = locationRotation * localGun;

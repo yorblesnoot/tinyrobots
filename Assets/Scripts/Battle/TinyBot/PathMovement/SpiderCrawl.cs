@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class SpiderCrawl : LegMovement
 {
-    protected override Vector3 GetUpVector()
+    protected override Vector3 GetUpVector(Vector3 position)
     {
-        return Pathfinder3D.GetCrawlOrientation(Owner.transform.position);
+        return Pathfinder3D.GetCrawlOrientation(position);
     }
 
     public override List<Vector3> SanitizePath(List<Vector3> path)
@@ -36,7 +36,7 @@ public class SpiderCrawl : LegMovement
     protected override IEnumerator InterpolatePositionAndRotation(Transform unit, Vector3 target)
     {
         Quaternion startRotation = unit.rotation;
-        Quaternion targetRotation = GetRotationAtPosition(target);
+        Quaternion targetRotation = GetRotationFromFacing(target, target - unit.position);
 
         Vector3 startPosition = unit.position;
         float timeElapsed = 0;
@@ -51,14 +51,5 @@ public class SpiderCrawl : LegMovement
             AnimateToOrientation(targetLegDirection);
             yield return null;
         }
-    }
-
-    public override Quaternion GetRotationAtPosition(Vector3 moveTarget)
-    {
-        Vector3 targetNormal = Pathfinder3D.GetCrawlOrientation(moveTarget);
-        Vector3 lookTarget = moveTarget + targetNormal * PathHeight;
-        Quaternion targetRotation = Quaternion.LookRotation(lookTarget - Owner.transform.position, targetNormal);
-        Debug.DrawLine(Owner.transform.position, lookTarget, Color.blue, 2f);
-        return targetRotation;
     }
 }
