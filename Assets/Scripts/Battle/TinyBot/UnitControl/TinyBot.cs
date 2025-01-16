@@ -245,6 +245,16 @@ public class TinyBot : Targetable
         PrimaryMovement.PivotToFacePosition(transform.position + facing, true);
     }
 
+    public void DeclareEcho()
+    {
+        gameObject.name = "Echo";
+        ToggleActiveLayer(true);
+        Collider collider = GetComponent<Collider>();
+        Destroy(collider);
+        Pathfinder3D.GetOccupancy.RemoveListener(DeclareOccupancy);
+        foreach (var passive in PassiveAbilities) passive.Deactivate();
+    }
+
     private void OnMouseEnter()
     {
         if(UnitControl.PlayerControlledBot != this /*&& ClickableAbility.Active == null*/) PrimaryCursor.SnapToUnit(this);

@@ -88,11 +88,7 @@ public class BotAssembler : MonoBehaviour
     {
         treeRoot.Traverse((part) => part.InitializePart());
         TinyBot echo = BuildBot(treeRoot, allegiance, true);
-        echo.gameObject.name = "Echo";
-        echo.ToggleActiveLayer(true);
-        Collider collider = echo.GetComponent<Collider>();
-        Destroy(collider);
-        foreach (var passive in echo.PassiveAbilities) passive.Deactivate();
+        echo.DeclareEcho();
         botUnit.EchoMap = new();
         for(int i = 0; i < echo.ActiveAbilities.Count; i++) botUnit.EchoMap.Add(botUnit.ActiveAbilities[i], echo.ActiveAbilities[i]);
         return echo;

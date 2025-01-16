@@ -103,18 +103,25 @@ public class ActiveAbility : Ability
     protected virtual IEnumerator PerformEffects() { yield break; }
 
     readonly float targetOffsetTolerance = .5f;
+    Vector3Int lastPosition;
     IEnumerator TrackTarget(bool draw)
     {
         while (trackedTarget != null)
         {
             Vector3 targetPosition = trackedTarget.transform.position;
+            Vector3Int cleanPosition = Vector3Int.RoundToInt(targetPosition);
             EvaluateTrajectory(targetPosition, emissionPoint.position, false);
             ActiveAbility aimer = this;
             if (draw && TargetType.GetTargetQuality(targetPosition, CurrentTrajectory) > targetOffsetTolerance)
             {
-                Vector3Int alternate = EvaluateAlternateCastPositions();
-                Vector3 facing = targetPosition - alternate;
-                PrimaryCursor.Instance.GenerateMovePreview(alternate, facing);
+                if (cleanPosition != lastPosition)
+                {
+                    Vector3Int alternate = EvaluateAlternateCastPositions(targetPosition);
+                    if (alternate == default) alternate = lastPosition;
+                    Vector3 facing = targetPosition - alternate;
+                    PrimaryCursor.Instance.GenerateMovePreview(alternate, facing);
+                }
+                lastPosition = cleanPosition;
                 aimer = Owner.EchoMap[this];
                 aimer.EvaluateTrajectory(targetPosition, aimer.emissionPoint.position, false);
                 CurrentTrajectory = aimer.CurrentTrajectory;
@@ -128,19 +135,27 @@ public class ActiveAbility : Ability
 
 
     readonly float distanceStrength = .1f;
-    Vector3Int EvaluateAlternateCastPositions()
+    
+    Vector3Int EvaluateAlternateCastPositions(Vector3 targetPosition)
     {
-        List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations(Mathf.FloorToInt(Owner.Stats.Current[StatType.MOVEMENT]));
+        List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations(Owner.Stats.Current[StatType.MOVEMENT])
+            .Where(position => Vector3.Distance(position, targetPosition) <= TotalRange).ToList();
         PriorityQueue<Vector3Int, float> priority = new();
+        Vector3Int position = default;
         foreach (Vector3Int location in pathableLocations)
         {
-            EvaluateTrajectory(trackedTarget.transform.position, location, true);
-            float quality = TargetType.GetTargetQuality(trackedTarget.transform.position, CurrentTrajectory);
-            if (quality == 0) return location;
+            EvaluateTrajectory(targetPosition, location, true);
+            float quality = TargetType.GetTargetQuality(targetPosition, CurrentTrajectory);
+            if (quality == 0)
+            {
+                position = location;
+                break;
+            }
             quality += Vector3.Distance(location, Owner.transform.position) * distanceStrength;
             priority.Enqueue(location, quality);
         }
-        return priority.Dequeue();
+        if(position == default && pathableLocations.Count > 0) position = priority.Dequeue();
+        return position;
     }
 
     public List<Targetable> EvaluateTrajectory(Vector3 targetPosition, Vector3 sourcePosition, bool imaginary)

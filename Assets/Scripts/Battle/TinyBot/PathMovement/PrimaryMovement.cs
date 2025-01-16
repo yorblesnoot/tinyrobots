@@ -31,7 +31,6 @@ public abstract class PrimaryMovement : MonoBehaviour
 
     public IEnumerator TraversePath(List<Vector3> path)
     {
-        Debug.Log("attempting to traverse");
         MainCameraControl.TrackTarget(Owner.transform);
         float timeElapsed = 0;
         while (timeElapsed > .3f)

@@ -58,7 +58,6 @@ public class PrimaryCursor : MonoBehaviour
     float currentPathCost;
     private void LateUpdate()
     {
-         
         if (LockoutPlayer || MainCameraControl.CameraAnimating) 
         {
             InvalidatePath();
@@ -80,10 +79,6 @@ public class PrimaryCursor : MonoBehaviour
         if (PlayerControlledBot != null && !abilityActive && PlayerControlledBot.Stats.Max[StatType.MOVEMENT] > 0)
         {
             GenerateMovePreview(Vector3Int.RoundToInt(transform.position));
-        }
-        else
-        {
-            //InvalidatePath();
         }
     }
 
@@ -186,6 +181,7 @@ public class PrimaryCursor : MonoBehaviour
 
     IEnumerator MoveAndCast()
     {
+        Debug.Log("tried to move and cast");
         bool abilityActive = ClickableAbility.Activated != null;
         if(abilityActive) ClickableAbility.Activated.Ability.ReleaseLockOn();
         if (currentPath != null && PlayerControlledBot != null && currentPath.Count > 0)
@@ -215,6 +211,7 @@ public class PrimaryCursor : MonoBehaviour
         ClickableAbility.PlayerUsedAbility?.Invoke();
         if (ability.EndTurn) yield return new WaitForSeconds(1);
         TogglePlayerLockout(false);
+        ClickableAbility.EndUsableAbilityState();
         if (ability.EndTurn) TurnManager.EndTurn(PlayerControlledBot);
     }
 
@@ -230,6 +227,7 @@ public class PrimaryCursor : MonoBehaviour
 
     public static void InvalidatePath()
     {
+        Debug.Log("invalidated path");
         if (Instance.activeEcho != null)
         {
             Instance.activeEcho.gameObject.SetActive(false);
