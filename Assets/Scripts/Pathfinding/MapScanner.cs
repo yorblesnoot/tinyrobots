@@ -82,7 +82,7 @@ public class MapScanner
                 index++;
             }
             if (hitBackFace) MarkInteriorRegion(Mathf.RoundToInt(directedHits[index - 1].position[castDimension]));
-            else MarkInteriorRegion(cSize - 1);
+            else MarkInteriorRegion(cSize);
 
             void MarkInteriorRegion(int end)
             {
@@ -135,34 +135,6 @@ public class MapScanner
 
             
         }
-    }
-
-    List<DirectedHit> CleanRedundantHits(List<DirectedHit> hits)
-    {
-        List<DirectedHit> output = new();
-        bool frontMode = false;
-        int index = 0;
-        while (index < hits.Count)
-        {
-            DirectedHit hit = hits[index];
-            if (hit.front)
-            {
-                if (!frontMode)
-                {
-                    int last = index - 1;
-                    if (last >= 0) output.Add(hits[last]);
-                    output.Add(hit);
-                    frontMode = true;
-                }
-            }
-            else
-            {
-                frontMode = false;
-            }
-            index++;
-        }
-        if (!frontMode && index > 0) output.Add(hits[index - 1]);
-        return output;
     }
 
     RaycastHit[] ChainSphereCast(Vector3 origin, float radius, Vector3 direction, float maxDistance, int mask)

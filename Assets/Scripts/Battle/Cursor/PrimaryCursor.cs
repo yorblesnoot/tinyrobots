@@ -71,7 +71,7 @@ public class PrimaryCursor : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            ProcessClick(abilityActive);
+            ProcessClick();
         }
         else if (Input.GetMouseButtonDown(1)) ClickableAbility.CancelAbility();
 
@@ -107,7 +107,7 @@ public class PrimaryCursor : MonoBehaviour
         if (possiblePath == null || possiblePath.Count == 0) return;
         ProcessAndPreviewPath(possiblePath);
         activeEcho = PlayerControlledBot.BotEcho;
-        if (echoFacing == default) echoFacing = currentPath[^1] - currentPath[^2];
+        if (echoFacing == default) echoFacing = currentPath[^1] - (currentPath.Count > 1 ? currentPath[^2] : PlayerControlledBot.transform.position);
         activeEcho.PlaceAt(currentPath[^1], echoFacing);
     }
 
@@ -167,7 +167,7 @@ public class PrimaryCursor : MonoBehaviour
         moveCostPreview.color = redPath.Count > 0 ? Color.red : Color.white;
     }
 
-    private void ProcessClick(bool anAbilityIsActive)
+    private void ProcessClick()
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
         if (TargetedBot != null && TargetedBot.Allegiance == Allegiance.PLAYER)
@@ -183,7 +183,11 @@ public class PrimaryCursor : MonoBehaviour
     {
         Debug.Log("tried to move and cast");
         bool abilityActive = ClickableAbility.Activated != null;
-        if(abilityActive) ClickableAbility.Activated.Ability.ReleaseLockOn();
+        if (abilityActive)
+        {
+            if (!ClickableAbility.Activated.Ability.IsUsable()) yield break; //if ability is not usable, do nothing
+            ClickableAbility.Activated.Ability.ReleaseLockOn();
+        }
         if (currentPath != null && PlayerControlledBot != null && currentPath.Count > 0)
         {
             PlayerControlledBot.SpendResource(Mathf.CeilToInt(currentPathCost), StatType.MOVEMENT);
@@ -192,10 +196,8 @@ public class PrimaryCursor : MonoBehaviour
         if (abilityActive)
         {
             ActiveAbility skill = ClickableAbility.Activated.Ability;
-            if (skill.IsUsable()
-            && skill.cost <= PlayerControlledBot.Stats.Current[StatType.ACTION])
+            if (skill.cost <= PlayerControlledBot.Stats.Current[StatType.ACTION])
             {
-                PlayerControlledBot.SpendResource(skill.cost, StatType.ACTION);
                 StartCoroutine(UseSkill(skill));
                 Instance.statDisplay.SyncStatDisplay(PlayerControlledBot);
             }
@@ -227,7 +229,6 @@ public class PrimaryCursor : MonoBehaviour
 
     public static void InvalidatePath()
     {
-        Debug.Log("invalidated path");
         if (Instance.activeEcho != null)
         {
             Instance.activeEcho.gameObject.SetActive(false);

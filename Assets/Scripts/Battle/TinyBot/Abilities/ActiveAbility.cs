@@ -102,26 +102,26 @@ public class ActiveAbility : Ability
 
     protected virtual IEnumerator PerformEffects() { yield break; }
 
-    readonly float targetOffsetTolerance = .5f;
-    Vector3Int lastPosition;
+    readonly float targetOffsetTolerance = .1f;
+    Vector3Int lastValidCastSource;
     IEnumerator TrackTarget(bool draw)
     {
         while (trackedTarget != null)
         {
             Vector3 targetPosition = trackedTarget.transform.position;
-            Vector3Int cleanPosition = Vector3Int.RoundToInt(targetPosition);
+            Vector3Int cleanTarget = Vector3Int.RoundToInt(targetPosition);
             EvaluateTrajectory(targetPosition, emissionPoint.position, false);
             ActiveAbility aimer = this;
             if (draw && TargetType.GetTargetQuality(targetPosition, CurrentTrajectory) > targetOffsetTolerance)
             {
-                if (cleanPosition != lastPosition)
+                if (cleanTarget != lastValidCastSource)
                 {
-                    Vector3Int alternate = EvaluateAlternateCastPositions(targetPosition);
-                    if (alternate == default) alternate = lastPosition;
-                    Vector3 facing = targetPosition - alternate;
-                    PrimaryCursor.Instance.GenerateMovePreview(alternate, facing);
+                    Vector3Int alternateCastSource = EvaluateAlternateCastPositions(targetPosition);
+                    if (alternateCastSource == default) alternateCastSource = lastValidCastSource;
+                    else lastValidCastSource = alternateCastSource;
+                    Vector3 facing = targetPosition - alternateCastSource;
+                    PrimaryCursor.Instance.GenerateMovePreview(alternateCastSource, facing);
                 }
-                lastPosition = cleanPosition;
                 aimer = Owner.EchoMap[this];
                 aimer.EvaluateTrajectory(targetPosition, aimer.emissionPoint.position, false);
                 CurrentTrajectory = aimer.CurrentTrajectory;

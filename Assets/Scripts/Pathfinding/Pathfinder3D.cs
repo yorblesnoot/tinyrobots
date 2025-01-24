@@ -248,18 +248,18 @@ public static class Pathfinder3D
     public static bool GetLandingPointBy(Vector3 target, MoveStyle style, out Vector3Int coords)
     {
         coords = Vector3Int.RoundToInt(target);
-        if (!nodeMap.ContainsKey(coords)) return false;
-        if (nodeMap[coords].IsAccessible(style)) return true;
-        else
+        if (!nodeMap.TryGetValue(coords, out Node origin)) return false;
+        List<Node> nodes = origin.Edges.Select(edge => edge.Neighbor).ToList();
+        nodes.Add(origin);
+        List<Vector3Int> candidates = new();
+        foreach (var node in nodes)
         {
-            foreach (var edge in nodeMap[coords].Edges)
-            {
-                if (!nodeMap[edge.Neighbor.Location].IsAccessible(style)) continue;
-                coords = edge.Neighbor.Location;
-                return true;
-            }
-            return false;
+            if(node.Occupied || node.Terrain || !node.IsAccessible(style)) continue;
+            candidates.Add(node.Location);
         }
+        if(candidates.Count == 0) return false;
+        coords = candidates.OrderBy(place => Vector3.Distance(place, target)).First();
+        return true;
     }
 
     static readonly int crawlRadius = 3;
@@ -268,21 +268,20 @@ public static class Pathfinder3D
     {
         List<Vector3> directions = new();
         int layerMask = LayerMask.GetMask("Terrain");
-        Vector3Int sourceNode = Vector3Int.RoundToInt(source);
+        GetLandingPointBy(source, MoveStyle.CRAWL, out Vector3Int sourceNode);
         List<Node> sphere = SearchSphere(sourceNode, crawlRadius);
         foreach (var node in sphere)
         {
-            
             Vector3 direction = node.Location - source;
             if (!Physics.Raycast(source, direction, out RaycastHit hit, crawlRadius, layerMask)) continue;
             Vector3 priority = hit.point - node.Location;
-            //Debug.DrawLine(source, source + direction, Color.blue, 1f);
+            Debug.DrawLine(source, source + direction, Color.blue, 1f);
 
             directions.Add(priority);
         }
         Vector3 final = directions.Average();
         final.Normalize();
-        //Debug.DrawLine(source, source + final, Color.red, 1f);
+        Debug.DrawLine(source, source + final, Color.red, 1f);
         return final;
     }
 

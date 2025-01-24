@@ -14,7 +14,7 @@ public class MapBounds : MonoBehaviour
 
     public Vector3Int GetMapSize()
     {
-        return Vector3Int.FloorToInt(outerCorner.position);
+        return Vector3Int.CeilToInt(outerCorner.position);
     }
 
     private void OnDrawGizmos()

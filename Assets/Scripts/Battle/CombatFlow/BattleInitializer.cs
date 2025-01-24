@@ -17,7 +17,7 @@ public class BattleInitializer : MonoBehaviour
 
     [SerializeField] MainCameraControl mainCameraControl;
     [SerializeField] TurnManager turnManager;
-    [SerializeField] bool debug = false;
+    [SerializeField] bool debugMapGeneration = false;
     private void Start()
     {
         byte[,,] mapGrid = GenerateMap();
@@ -38,7 +38,7 @@ public class BattleInitializer : MonoBehaviour
         else
         {
             GameObject map = Instantiate(relay.BattleMap, Vector3.zero, Quaternion.identity);
-            MapScanner voxelizer = new(debug);
+            MapScanner voxelizer = new(debugMapGeneration);
             mapGrid = voxelizer.GetVoxelGrid(map);
         }
 
