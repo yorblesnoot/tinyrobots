@@ -78,9 +78,9 @@ public class PartySelector : MonoBehaviour
 
     void SetActiveCharacter(BotCharacter character)
     {
-        if(activeCharacter != null && activeCharacter != character) activeCharacter.ModdedCore.Sample.SetActive(false);
+        if(activeCharacter != null && activeCharacter != character) activeCharacter.ModdedCore.Sample.gameObject.SetActive(false);
         activeCharacter = character;
-        GameObject sample = character.ModdedCore.Sample;
+        GameObject sample = character.ModdedCore.Sample.gameObject;
         sample.SetActive(true);
         sample.transform.SetParent(corePosition);
         sample.transform.localPosition = Vector3.zero;

@@ -11,9 +11,8 @@ public class PlayerData : ScriptableObject, ITrader
                 .Select(part => BotConverter.GetDefaultPart(part)).ToList();
         foreach(BotCharacter core in CoreInventory)
         {
-            if (core.Bot != null || core.StarterRecord == null) continue;
-            
-            core.Bot = BotConverter.StringToBot(core.StarterRecord.Record);
+            if (RandomizeParty) core.Bot = BotRandomizer.GeneratePartTree(core.ModdedCore, BotConverter);
+            else if (core.Bot == null && core.StarterRecord != null) core.Bot = BotConverter.StringToBot(core.StarterRecord.Record);
         }
     }
     [field: SerializeField] public List<ModdedPart> PartInventory { get; set; }
@@ -26,6 +25,7 @@ public class PlayerData : ScriptableObject, ITrader
 
 
     public bool DevMode;
+    public bool RandomizeParty;
 
     [Header("Components")]
     public BotConverter BotConverter;

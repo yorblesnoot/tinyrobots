@@ -107,9 +107,16 @@ public class PrimaryCursor : MonoBehaviour
         if (possiblePath == null || possiblePath.Count == 0) return;
         ProcessAndPreviewPath(possiblePath);
         activeEcho = PlayerControlledBot.BotEcho;
+        if (currentPath.Count == 0)
+        {
+            activeEcho.gameObject.SetActive(false);
+            return;
+        }
         if (echoFacing == default) echoFacing = currentPath[^1] - (currentPath.Count > 1 ? currentPath[^2] : PlayerControlledBot.transform.position);
         activeEcho.PlaceAt(currentPath[^1], echoFacing);
     }
+
+
 
     void ProcessAndPreviewPath(List<Vector3> possiblePath)
     {
@@ -170,7 +177,7 @@ public class PrimaryCursor : MonoBehaviour
     private void ProcessClick()
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
-        if (TargetedBot != null && TargetedBot.Allegiance == Allegiance.PLAYER)
+        if (TargetedBot != null && TargetedBot.Allegiance == Allegiance.PLAYER && ClickableAbility.Activated == null)
         {
             TargetedBot.Select();
             InvalidatePath();
@@ -181,7 +188,6 @@ public class PrimaryCursor : MonoBehaviour
 
     IEnumerator MoveAndCast()
     {
-        Debug.Log("tried to move and cast");
         bool abilityActive = ClickableAbility.Activated != null;
         if (abilityActive)
         {

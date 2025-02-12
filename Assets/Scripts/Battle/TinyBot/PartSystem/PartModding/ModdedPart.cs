@@ -11,8 +11,8 @@ public class ModdedPart
     public Dictionary<ModType, int> Mods;
     //public int[] ExtraAbilities;
     public List<PartMutator> Mutators = new();
-    public GameObject Sample { get { if (sample == null) InitializePart(); return sample; } }
-    GameObject sample;
+    public PartModifier Sample { get { if (sample == null) InitializePart(); return sample; } }
+    PartModifier sample;
 
     public Ability[] Abilities { get { if (abilities == null) InitializePart(); return abilities; } }
     Ability[] abilities;
@@ -29,17 +29,17 @@ public class ModdedPart
     public void InitializePart()
     {
         sample = InstantiateSample(out abilities);
-        sample.SetActive(false);
+        sample.gameObject.SetActive(false);
         MutatePart();
     }
 
-    public GameObject InstantiateSample(out Ability[] abilities)
+    public PartModifier InstantiateSample(out Ability[] abilities)
     {
-        GameObject output = GameObject.Instantiate(BasePart.AttachableObject);
-        PartModifier partMod = output.GetComponent<PartModifier>();
+        GameObject go = Object.Instantiate(BasePart.AttachableObject);
+        PartModifier partMod = go.GetComponent<PartModifier>();
         partMod.SourcePart = this;
         abilities = partMod.Abilities;
-        return output;
+        return partMod;
     }
 
     void MutatePart()

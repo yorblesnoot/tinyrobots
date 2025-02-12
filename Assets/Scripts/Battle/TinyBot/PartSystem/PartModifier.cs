@@ -7,11 +7,13 @@ public class PartModifier : MonoBehaviour
 
     public List<TreeNode<ModdedPart>> SubTrees;
     public List<Renderer> mainRenderers;
+    [HideInInspector] public AttachmentPoint[] AttachmentPoints;
     [HideInInspector] public Ability[] Abilities;
     [HideInInspector] public ModdedPart SourcePart;
 
     private void Awake()
     {
         Abilities = abilityContainer.GetComponentsInChildren<Ability>();
+        AttachmentPoints = gameObject.GetComponentsInChildren<AttachmentPoint>();
     }
 }

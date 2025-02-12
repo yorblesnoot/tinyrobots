@@ -129,14 +129,14 @@ public static class Pathfinder3D
             node.Parent = null;
             node.Visited = false;
         }
-        Queue<Node> frontier = new();
-        //PriorityQueue<Node, float> frontier = new();
+        //Queue<Node> frontier = new();
+        PriorityQueue<Node, float> frontier = new();
         //frontier.EnsureCapacity(xSize * ySize * zSize / 4);
 
         start.G = 0;
 
-        frontier.Enqueue(start);
-        //frontier.Enqueue(start, start.G);
+        //frontier.Enqueue(start);
+        frontier.Enqueue(start, start.G);
 
         while (frontier.Count > 0)
         {
@@ -153,8 +153,8 @@ public static class Pathfinder3D
                 {
                     neighbor.G = possibleG;
                     neighbor.Parent = current;
-                    frontier.Enqueue(neighbor);
-                    //frontier.Enqueue(neighbor, neighbor.G);
+                    //frontier.Enqueue(neighbor);
+                    frontier.Enqueue(neighbor, neighbor.G);
                 }
             }
         }
@@ -272,10 +272,11 @@ public static class Pathfinder3D
         List<Node> sphere = SearchSphere(sourceNode, crawlRadius);
         foreach (var node in sphere)
         {
-            Vector3 direction = node.Location - source;
+            Vector3 direction = (node.Location - source).normalized;
             if (!Physics.Raycast(source, direction, out RaycastHit hit, crawlRadius, layerMask)) continue;
-            Vector3 priority = hit.point - node.Location;
-            Debug.DrawLine(source, source + direction, Color.blue, 1f);
+            Vector3 maximum = source + direction * crawlRadius;
+            Vector3 priority = hit.point - maximum;
+            Debug.DrawLine(source, maximum, Color.blue, 1f);
 
             directions.Add(priority);
         }

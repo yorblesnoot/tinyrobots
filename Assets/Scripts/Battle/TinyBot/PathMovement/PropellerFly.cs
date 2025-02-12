@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PropellerFly : PrimaryMovement
@@ -15,9 +14,8 @@ public class PropellerFly : PrimaryMovement
 
     public override Quaternion GetRotationFromFacing(Vector3 position, Vector3 facing)
     {
-        position.y = transform.position.y;
-        Quaternion targetRotation = position == transform.position ? transform.rotation : Quaternion.LookRotation(facing);
-        return targetRotation;
+        if(facing.normalized == Vector3.up) return Owner.transform.rotation;
+        return base.GetRotationFromFacing(position, facing);
     }
 
     public override IEnumerator NeutralStance()

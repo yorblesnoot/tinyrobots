@@ -51,22 +51,22 @@ public class BotAssembler : MonoBehaviour
 
         GameObject RecursiveConstruction(TreeNode<ModdedPart> currentNode, AttachmentPoint attachmentPoint = null)
         {
-            GameObject spawned = currentNode.Value.Sample;
+            PartModifier modifier = currentNode.Value.Sample;
+            GameObject spawned = modifier.gameObject;
             spawned.SetActive(true);
-            PartModifier modifier = spawned.GetComponent<PartModifier>();
+            
             AddPartStats(currentNode.Value);
             spawnedParts.Add(modifier);
             if(attachmentPoint != null) spawned.transform.SetParent(attachmentPoint.transform, false);
             spawned.transform.localRotation = Quaternion.identity;
             if (currentNode.Value.BasePart.PrimaryLocomotion) locomotion = spawned.GetComponent<PrimaryMovement>();
             List<TreeNode<ModdedPart>> children = currentNode.Children;
-            AttachmentPoint[] attachmentPoints = spawned.GetComponentsInChildren<AttachmentPoint>();
 
             for (int i = 0; i < children.Count; i++)
             {
                 modifier.SubTrees = new();
-                if(attachmentPoints[i].ContainsSubTree) modifier.SubTrees.Add(children[i]);
-                else RecursiveConstruction(children[i], attachmentPoints[i]);
+                if(modifier.AttachmentPoints[i].ContainsSubTree) modifier.SubTrees.Add(children[i]);
+                else RecursiveConstruction(children[i], modifier.AttachmentPoints[i]);
             }
             return spawned;
         }

@@ -133,13 +133,12 @@ public class ActiveAbility : Ability
         }
     }
 
-
-    readonly float distanceStrength = .1f;
-    
     Vector3Int EvaluateAlternateCastPositions(Vector3 targetPosition)
     {
         List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations(Owner.Stats.Current[StatType.MOVEMENT])
-            .Where(position => Vector3.Distance(position, targetPosition) <= TotalRange).ToList();
+            .Where(position => Vector3.Distance(position, targetPosition) <= TotalRange)
+            .OrderBy(position => Vector3.Distance(position, Owner.transform.position))
+            .ToList();
         PriorityQueue<Vector3Int, float> priority = new();
         Vector3Int position = default;
         foreach (Vector3Int location in pathableLocations)
@@ -151,7 +150,6 @@ public class ActiveAbility : Ability
                 position = location;
                 break;
             }
-            quality += Vector3.Distance(location, Owner.transform.position) * distanceStrength;
             priority.Enqueue(location, quality);
         }
         if(position == default && pathableLocations.Count > 0) position = priority.Dequeue();

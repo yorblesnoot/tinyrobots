@@ -253,6 +253,7 @@ public class TinyBot : Targetable
         Destroy(collider);
         Pathfinder3D.GetOccupancy.RemoveListener(DeclareOccupancy);
         foreach (var passive in PassiveAbilities) passive.Deactivate();
+        gameObject.SetActive(false);
     }
 
     private void OnMouseEnter()
