@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class ActiveAbility : Ability
 {   
@@ -17,7 +15,6 @@ public class ActiveAbility : Ability
     [HideInInspector] public TargetPoint TargetType;
     protected Trajectory TrajectoryDefinition;
     TrackingAnimation trackingAnimation;
-    GameObject trackedTarget;
 
     readonly float skillDelay = .5f;
     HashSet<System.Object> prohibitionSources = new();
@@ -77,8 +74,6 @@ public class ActiveAbility : Ability
 
     public virtual void EndAbility()
     {
-        LineMaker.HideLine();
-        TargetType.Hide();
         if(DurationModule != null) DurationModule.ClearCallback();
         if(trackingAnimation != null) trackingAnimation.ResetTracking();
         foreach(var effect in endEffects)
@@ -88,7 +83,13 @@ public class ActiveAbility : Ability
     public void PhysicalAimAlongTrajectory(List<Vector3> trajectory)
     {
         if (trackingAnimation != null) trackingAnimation.Aim(trajectory);
-        Owner.PrimaryMovement.PivotToFacePosition(trackedTarget.transform.position);
+        Owner.PrimaryMovement.PivotToFacePosition(trajectory[^1]);
+    }
+
+    public void ResetAim()
+    {
+        trackingAnimation.ResetTracking();
+        trackingToggle.Stop();
     }
 
     void ScheduleAbilityEnd()

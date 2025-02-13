@@ -161,6 +161,7 @@ GameObject:
   - component: {fileID: 5015652637622662206}
   - component: {fileID: 2455562850691036458}
   - component: {fileID: 7285447138792446022}
+  - component: {fileID: 8620366701723112400}
   m_Layer: 0
   m_Name: TinyBot
   m_TagString: Bot
@@ -271,7 +272,9 @@ MonoBehaviour:
       m_Calls: []
   LinkedCore: {fileID: 0}
   PrimaryMovement: {fileID: 0}
+  Caster: {fileID: 0}
   DamageCalculator: {fileID: 0}
+  BotEcho: {fileID: 0}
 --- !u!114 &2455562850691036458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -314,3 +317,15 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 1
+--- !u!114 &8620366701723112400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9120402016229796176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 231668398bdcef74c9147678ebdfa97f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

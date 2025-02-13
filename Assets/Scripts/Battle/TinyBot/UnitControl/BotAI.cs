@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System;
+using static UnityEditor.FilePathAttribute;
 
 public class BotAI
 {
@@ -72,18 +73,19 @@ public class BotAI
             primaries.Shuffle();
             foreach (var ability in primaries)
             {
+                thisBot.Caster.Prepare(ability);
                 if (AbilityIsUnavailable(ability)) continue;
-                List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations(Mathf.FloorToInt(thisBot.Stats.Current[StatType.MOVEMENT]));
-                foreach (Vector3Int location in pathableLocations)
+                List<TinyBot> targets = new(ability.Type == AbilityType.ATTACK ? enemies : allies);
+                foreach(var target in targets)
                 {
-                    TinyBot target = AbilityHasTarget(ability, ability.Type == AbilityType.ATTACK ? enemies : allies, location);
-                    //check if the ability has a valid target from each 
-                    if (target == null) continue;
-                    //move to location
-                    yield return PathToCastingPosition(location);
+                    Vector3 targetPoint = target.TargetPoint.position;
+                    Vector3Int origin = thisBot.Caster.FindCastingPosition(targetPoint);
+                    thisBot.Caster.SetActiveCast(targetPoint, origin, true);
+                    if (origin == default) continue;
+                    yield return PathToCastingPosition(origin);
 
                     //lock on and use ability
-                    yield return UseAbility(ability, target.TargetPoint.gameObject);
+                    yield return UseAbility(ability);
                     yield return AttackPhase();
                     yield break;
                 }
@@ -109,7 +111,7 @@ public class BotAI
                 {
                     if (!DashCanReach(ability, location)) continue;
 
-                    yield return UseAbility(ability, pointer);
+                    yield return UseAbility(ability); //TODO: FIX
                     yield return AttackPhase();
                     yield break;
                 }
@@ -154,7 +156,7 @@ public class BotAI
             Vector3 finalDirection = averages.Average();
             Vector3 finalPosition = myPosition + finalDirection;
             pointer.transform.position = finalPosition;
-            yield return UseAbility(shield, pointer);
+            yield return UseAbility(shield); //TODO: FIX
         }
     }
     
@@ -184,56 +186,28 @@ public class BotAI
             MainCameraControl.ReleaseTracking();
         }
     }
-    private IEnumerator UseAbility(ActiveAbility ability, GameObject target)
+    private IEnumerator UseAbility(ActiveAbility ability)
     {
-        yield return thisBot.StartCoroutine(ability.Execute());
-        yield return new WaitForSeconds(lockTime);
-        if (ability.EndTurn)
-        {
-            TurnManager.EndTurn(thisBot);
-            thisBot.StopAllCoroutines();
-        }
+        yield return thisBot.Caster.CastSequence();
+        if (ability.EndTurn) thisBot.StopAllCoroutines();
     }
     #endregion
 
     #region Decision Tools
-    TinyBot AbilityHasTarget(ActiveAbility ability, List<TinyBot> targets, Vector3Int baseLocation)
-    {
-        foreach (var targetBot in targets)
-        {
-            Vector3 facing = targetBot.TargetPoint.position - baseLocation;
-            Vector3 location = GunPositionAt(ability, baseLocation, facing);
-            if (Physics.CheckSphere(location, terrainCheckSize, terrainMask)) return null;
-            Transform targetPoint = targetBot.TargetPoint;
-            if (ability.range > 0 && Vector3.Distance(targetPoint.position, location) > ability.TotalRange) continue;
-
-            List<Targetable> hits = ability.SimulateCast(targetPoint.position, location, true);
-            if (hits == null || hits.Count == 0 || !hits.Contains(targetBot)) continue;
-            Debug.DrawRay(location, Vector3.up, Color.yellow, 10f);
-            return targetBot;
-        }
-        return null;
-    }
+    
     bool DashCanReach(ActiveAbility ability, Vector3Int position)
     {
         Debug.DrawRay(position, Vector3.up, Color.yellow, 10f);
         pointer.transform.position = position;
         ability.SimulateCast(position, thisBot.transform.position, true);
-        if (ability.IsUsable()) return true;
+        //if (ability.IsUsable()) return true; //TODO: FIX
         return false;
     }
     private bool AbilityIsUnavailable(ActiveAbility ability)
     {
         return ability.cost > thisBot.Stats.Current[StatType.ACTION] || !ability.IsAvailable();
     }
-    Vector3 GunPositionAt(ActiveAbility ability, Vector3 position, Vector3 facing)
-    {
-        Quaternion locationRotation = thisBot.PrimaryMovement.GetRotationFromFacing(position, facing);
-        Vector3 gunPosition = ability.emissionPoint.position;
-        Vector3 localGun = thisBot.transform.InverseTransformPoint(gunPosition);
-        Vector3 rotatedGun = locationRotation * localGun;
-        return position + rotatedGun;
-    }
+    
     Func<Vector3Int, float> DistanceFromOptimalRange(Vector3 closestEnemyPosition)
     {
         return location => Mathf.Abs(Vector3.Distance(location, closestEnemyPosition) - optimalDistance);

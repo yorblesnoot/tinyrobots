@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Playables;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,7 +10,9 @@ public class BotCaster : MonoBehaviour
     bool tracking;
     protected ActiveAbility Ability;
     protected PossibleCast PossibleCast;
-    [HideInInspector] public static UnityEvent ResetHighlights = new();
+    List<Vector3Int> pathableLocations;
+    public static UnityEvent ResetHighlights = new();
+    public static UnityEvent ClearIndicators = new();
 
     private void Awake()
     {
@@ -21,8 +22,12 @@ public class BotCaster : MonoBehaviour
     public void Prepare(ActiveAbility ability)
     {
         Ability = ability;
-        if (owner.Allegiance == Allegiance.PLAYER)
-            StartCoroutine(PlayerAimAbility(ability, PrimaryCursor.Transform.gameObject));
+        
+        pathableLocations = Pathfinder3D.GetPathableLocations(owner.Stats.Current[StatType.MOVEMENT])
+            .OrderBy(position => Vector3.Distance(position, owner.transform.position))
+            .ToList();
+        if (owner.Allegiance == Allegiance.PLAYER) StartCoroutine(PlayerAimAbility(ability, PrimaryCursor.Transform.gameObject));
+
     }
 
     public void Confirm()
@@ -34,9 +39,15 @@ public class BotCaster : MonoBehaviour
     {
         tracking = false;
         HidePlayerTargeting();
+        Ability = null;
     }
 
     readonly float finalizeAimDuration = 1.0f;
+    public IEnumerator CastSequence()
+    {
+        yield return CastSequence(PossibleCast);
+    }
+
     IEnumerator CastSequence(PossibleCast cast)
     {
         tracking = false;
@@ -56,31 +67,32 @@ public class BotCaster : MonoBehaviour
         if (Vector3Int.RoundToInt(owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(owner.MoveStyle, owner.transform.position);
         if (Ability.EndTurn) yield return new WaitForSeconds(1);
         PrimaryCursor.TogglePlayerLockout(false);
-        Cancel();
         if (Ability.EndTurn) TurnManager.EndTurn(owner);
+        Cancel();
     }
 
     IEnumerator PlayerAimAbility(ActiveAbility ability, GameObject trackedTarget)
     {
         tracking = true;
+        
         while (tracking == true)
         {
             Vector3 targetPosition = trackedTarget.transform.position;
             Vector3Int cleanTarget = Vector3Int.RoundToInt(targetPosition);
-            PossibleCast = ability.SimulateCast(targetPosition, ability.emissionPoint.position, false);
+            SetActiveCast(targetPosition, ability.emissionPoint.position, false);
             ActiveAbility aimer = ability;
             if (GetTargetQuality(targetPosition, PossibleCast.Trajectory) > targetOffsetTolerance)
             {
                 if (cleanTarget != lastValidCastSource)
                 {
-                    Vector3Int alternateCastSource = EvaluateAlternateCastPositions(targetPosition);
+                    Vector3Int alternateCastSource = FindClosestCastingPosition(targetPosition);
                     if (alternateCastSource == default) alternateCastSource = lastValidCastSource;
                     else lastValidCastSource = alternateCastSource;
                     Vector3 facing = targetPosition - alternateCastSource;
                     PrimaryCursor.Instance.GenerateMovePreview(alternateCastSource, facing);
                 }
                 aimer = owner.EchoMap[ability];
-                PossibleCast = aimer.SimulateCast(targetPosition, aimer.emissionPoint.position, false);
+                SetActiveCast(targetPosition, aimer.emissionPoint.position, false);
             }
             else PrimaryCursor.InvalidatePath();
             aimer.PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
@@ -89,32 +101,50 @@ public class BotCaster : MonoBehaviour
         }
     }
 
+    public void SetActiveCast(Vector3 targetPosition, Vector3 sourcePosition, bool imaginary = false)
+    {
+        PossibleCast = Ability.SimulateCast(targetPosition, sourcePosition, imaginary);
+    }
+
     readonly float targetOffsetTolerance = .1f;
     Vector3Int lastValidCastSource;
-    Vector3Int EvaluateAlternateCastPositions(Vector3 targetPosition)
+    Vector3Int FindClosestCastingPosition(Vector3 targetPosition)
     {
-        List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations(owner.Stats.Current[StatType.MOVEMENT])
-            .Where(position => Vector3.Distance(position, targetPosition) <= Ability.TotalRange)
-            .OrderBy(position => Vector3.Distance(position, owner.transform.position))
-            .ToList();
         PriorityQueue<Vector3Int, float> priority = new();
+        Vector3Int position = FindCastingPosition(targetPosition, priority);
+        if (position == default && priority.Count > 0) position = priority.Dequeue();
+        return position;
+    }
+
+    public Vector3Int FindCastingPosition(Vector3 targetPosition, PriorityQueue<Vector3Int, float> priority = null)
+    {
         Vector3Int position = default;
+        Debug.Log(pathableLocations);
         foreach (Vector3Int location in pathableLocations)
         {
-            PossibleCast cast = Ability.SimulateCast(targetPosition, location, true);
+            if (Vector3.Distance(location, targetPosition) > Ability.TotalRange) continue;
+            Vector3 emissionLocation = GunPositionAt(Ability, location, targetPosition - location);
+            PossibleCast cast = Ability.SimulateCast(targetPosition, emissionLocation, true);
             float quality = GetTargetQuality(targetPosition, cast.Trajectory);
             if (quality == 0)
             {
                 position = location;
                 break;
             }
-            priority.Enqueue(location, quality);
+            priority?.Enqueue(location, quality);
         }
-        if (position == default && pathableLocations.Count > 0) position = priority.Dequeue();
         return position;
     }
 
-    
+    Vector3 GunPositionAt(ActiveAbility ability, Vector3 position, Vector3 facing)
+    {
+        Quaternion locationRotation = owner.PrimaryMovement.GetRotationFromFacing(position, facing);
+        Vector3 gunPosition = ability.emissionPoint.position;
+        Vector3 localGun = owner.transform.InverseTransformPoint(gunPosition);
+        Vector3 rotatedGun = locationRotation * localGun;
+        return position + rotatedGun;
+    }
+
 
     public float GetTargetQuality(Vector3 position, List<Vector3> trajectory)
     {

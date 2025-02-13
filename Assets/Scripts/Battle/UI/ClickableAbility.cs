@@ -62,7 +62,7 @@ public class ClickableAbility : AbilityDisplay
     {
         if (Activated == null) return;
         Activated.image.color = Color.white;
-        Activated.Ability.ReleaseLockOn();
+        Activated.Ability.Owner.Caster.Cancel();
         Activated = null;
     }
 
