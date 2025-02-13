@@ -86,7 +86,7 @@ public class ClickableAbility : AbilityDisplay
         if (PrimaryCursor.LockoutPlayer || !Ability.IsAvailable()) return;
         CancelAbility();
         Activated = this;
-        Ability.LockOnTo(PrimaryCursor.Transform.gameObject, true);
+        UnitControl.PlayerControlledBot.Caster.Prepare(Ability);
         image.color = Color.red;
     }
 }

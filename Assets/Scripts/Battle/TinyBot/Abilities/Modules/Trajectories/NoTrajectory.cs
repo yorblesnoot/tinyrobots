@@ -14,9 +14,4 @@ public class NoTrajectory : Trajectory
     {
         return new Vector3[] { source, target };
     }
-
-    public override void Draw(List<Vector3> trajectory)
-    {
-        return;
-    }
 }

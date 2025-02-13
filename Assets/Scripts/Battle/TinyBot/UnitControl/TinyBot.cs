@@ -40,6 +40,7 @@ public class TinyBot : Targetable
     [HideInInspector] public BuffController Buffs;
     [HideInInspector] public BotCharacter LinkedCore;
     [HideInInspector] public PrimaryMovement PrimaryMovement;
+    [HideInInspector] public BotCaster Caster;
     public List<ActiveAbility> ActiveAbilities { get; private set; }
     public List<PassiveAbility> PassiveAbilities { get; private set;}
 
@@ -51,6 +52,7 @@ public class TinyBot : Targetable
     public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement)
     {
         DamageCalculator = GetComponent<DamageCalculator>();
+        Caster = GetComponent<BotCaster>();
         Buffs = new BuffController(this);
         PhysicsBody = GetComponent<Rigidbody>();
         PartModifiers = parts;
@@ -62,7 +64,8 @@ public class TinyBot : Targetable
         ClearActiveBot.AddListener(ClearActiveUnit);
         AbilitiesChanged.AddListener(() => cachedMaterials = CacheMaterials());
         Pathfinder3D.GetOccupancy.AddListener(DeclareOccupancy);
-        ActiveAbility.ResetHighlights.AddListener(() => SetOutlineColor(Color.white));
+        BotCaster.ResetHighlights.AddListener(() => SetOutlineColor(Color.white));
+        
     }
 
     private void OnDestroy()

@@ -20,16 +20,6 @@ public abstract class Trajectory : MonoBehaviour
         return trajectory;
     }
 
-    public virtual void Draw(List<Vector3> trajectory)
-    {
-        LineMaker.DrawLine(trajectory.ToArray());
-    }
-
-    public virtual void Hide()
-    {
-        LineMaker.HideLine();
-    }
-
     protected abstract Vector3[] CalculateTrajectory(Vector3 source, Vector3 target);
 
     protected List<Vector3> CastAlongPoints(Vector3[] castTargets, int mask, out RaycastHit hit, float radius = 0)

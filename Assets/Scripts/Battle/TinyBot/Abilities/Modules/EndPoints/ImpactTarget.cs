@@ -16,7 +16,7 @@ public class ImpactTarget : TargetPoint
         
     }
 
-    public override void EndTargeting()
+    public override void Hide()
     {
         
     }
@@ -37,10 +37,5 @@ public class ImpactTarget : TargetPoint
     public override List<Targetable> FindTargetsAI(List<Vector3> trajectory)
     {
         return FindTargets(trajectory);
-    }
-
-    public override float GetTargetQuality(Vector3 position, List<Vector3> trajectory)
-    {
-        return Vector3.Distance(position, trajectory[^1]);
     }
 }

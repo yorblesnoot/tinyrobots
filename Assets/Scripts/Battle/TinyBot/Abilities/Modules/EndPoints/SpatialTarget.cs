@@ -37,16 +37,10 @@ public class SpatialTarget : TargetPoint
         return targets;
     }
 
-    public override void EndTargeting()
+    public override void Hide()
     {
         SliceTargeter.ToggleVisual(false);
         SliceTargeter.Hide();
         SliceTargeter.Sensor.ResetIntersecting();
-    }
-
-    public override float GetTargetQuality(Vector3 position, List<Vector3> trajectory)
-    {
-        float offset = Vector3.Distance(position, trajectory[^1]) - TargetRadius;
-        return Mathf.Clamp(offset, 0, float.MaxValue);
     }
 }

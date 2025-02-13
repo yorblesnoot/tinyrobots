@@ -10,7 +10,5 @@ public abstract class TargetPoint : MonoBehaviour
     public abstract List<Targetable> FindTargetsAI(List<Vector3> trajectory);
     public abstract void Draw(List<Vector3> trajectory);
 
-    public abstract void EndTargeting();
-
-    public abstract float GetTargetQuality(Vector3 position, List<Vector3> trajectory);
+    public abstract void Hide();
 }

@@ -84,14 +84,7 @@ public class PrimaryCursor : MonoBehaviour
 
     void ToggleInvalidIndicator()
     {
-        if(ClickableAbility.Activated == null || ClickableAbility.Activated.Ability.IsUsable())
-        {
-            selectBubble.material = validMaterial;
-        }
-        else
-        {
-            selectBubble.material = invalidMaterial;
-        }
+        
     }
 
     public void GenerateMovePreview(Vector3Int pathPosition, Vector3 echoFacing = default)
@@ -189,11 +182,7 @@ public class PrimaryCursor : MonoBehaviour
     IEnumerator MoveAndCast()
     {
         bool abilityActive = ClickableAbility.Activated != null;
-        if (abilityActive)
-        {
-            if (!ClickableAbility.Activated.Ability.IsUsable()) yield break; //if ability is not usable, do nothing
-            ClickableAbility.Activated.Ability.ReleaseLockOn();
-        }
+        if (abilityActive && !PlayerControlledBot.Caster.IsCastValid()) yield break;
         if (currentPath != null && PlayerControlledBot != null && currentPath.Count > 0)
         {
             PlayerControlledBot.SpendResource(Mathf.CeilToInt(currentPathCost), StatType.MOVEMENT);
@@ -204,23 +193,11 @@ public class PrimaryCursor : MonoBehaviour
             ActiveAbility skill = ClickableAbility.Activated.Ability;
             if (skill.cost <= PlayerControlledBot.Stats.Current[StatType.ACTION])
             {
-                StartCoroutine(UseSkill(skill));
+                InvalidatePath();
+                PlayerControlledBot.Caster.Confirm();
                 Instance.statDisplay.SyncStatDisplay(PlayerControlledBot);
             }
         }
-    }
-
-    IEnumerator UseSkill(ActiveAbility ability)
-    {
-        InvalidatePath();
-        TogglePlayerLockout(true);
-        yield return StartCoroutine(ability.Execute());
-
-        ClickableAbility.PlayerUsedAbility?.Invoke();
-        if (ability.EndTurn) yield return new WaitForSeconds(1);
-        TogglePlayerLockout(false);
-        ClickableAbility.EndUsableAbilityState();
-        if (ability.EndTurn) TurnManager.EndTurn(PlayerControlledBot);
     }
 
     List<float> GetPathDistances(List<Vector3> points)

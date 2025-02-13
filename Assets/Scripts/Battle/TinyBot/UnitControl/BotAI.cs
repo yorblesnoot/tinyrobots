@@ -207,7 +207,7 @@ public class BotAI
             Transform targetPoint = targetBot.TargetPoint;
             if (ability.range > 0 && Vector3.Distance(targetPoint.position, location) > ability.TotalRange) continue;
 
-            List<Targetable> hits = ability.EvaluateTrajectory(targetPoint.position, location, true);
+            List<Targetable> hits = ability.SimulateCast(targetPoint.position, location, true);
             if (hits == null || hits.Count == 0 || !hits.Contains(targetBot)) continue;
             Debug.DrawRay(location, Vector3.up, Color.yellow, 10f);
             return targetBot;
@@ -218,7 +218,7 @@ public class BotAI
     {
         Debug.DrawRay(position, Vector3.up, Color.yellow, 10f);
         pointer.transform.position = position;
-        ability.EvaluateTrajectory(position, thisBot.transform.position, true);
+        ability.SimulateCast(position, thisBot.transform.position, true);
         if (ability.IsUsable()) return true;
         return false;
     }
