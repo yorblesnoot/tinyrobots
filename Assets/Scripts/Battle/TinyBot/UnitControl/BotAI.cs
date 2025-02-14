@@ -73,8 +73,8 @@ public class BotAI
             primaries.Shuffle();
             foreach (var ability in primaries)
             {
-                thisBot.Caster.Prepare(ability);
-                if (AbilityIsUnavailable(ability)) continue;
+                ;
+                if (!thisBot.Caster.TryPrepare(ability)) continue;
                 List<TinyBot> targets = new(ability.Type == AbilityType.ATTACK ? enemies : allies);
                 foreach(var target in targets)
                 {
@@ -97,7 +97,7 @@ public class BotAI
         {
             foreach (var ability in dashes)
             {
-                if (AbilityIsUnavailable(ability)) continue;
+                if (!thisBot.Caster.TryPrepare(ability)) continue;
 
                 List<Vector3Int> dashLocations = Pathfinder3D.GetDashTargets(thisBot.transform.position, 
                 ability.range, thisBot.PrimaryMovement.Style).OrderBy(DistanceFromOptimalRange(closestEnemyPosition)).ToList();
@@ -148,7 +148,7 @@ public class BotAI
             shields.Shuffle();
             if(shields.Count == 0) yield break;
             ActiveAbility shield = shields[0];
-            if(AbilityIsUnavailable(shield)) yield break;
+            if(!thisBot.Caster.TryPrepare(shield)) yield break;
             Vector3 myPosition = thisBot.transform.position;
             List<Vector3> averages = new() {enemies.Select(x => x.TargetPoint.position - myPosition).ToList().Average(), 
                 Pathfinder3D.GetCrawlOrientation(thisBot.transform.position) };
@@ -202,10 +202,6 @@ public class BotAI
         ability.SimulateCast(position, thisBot.transform.position, true);
         //if (ability.IsUsable()) return true; //TODO: FIX
         return false;
-    }
-    private bool AbilityIsUnavailable(ActiveAbility ability)
-    {
-        return ability.cost > thisBot.Stats.Current[StatType.ACTION] || !ability.IsAvailable();
     }
     
     Func<Vector3Int, float> DistanceFromOptimalRange(Vector3 closestEnemyPosition)

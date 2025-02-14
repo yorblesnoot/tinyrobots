@@ -71,10 +71,10 @@ public abstract class Targetable : MonoBehaviour
         Die(transform.position);
     }
 
+    protected readonly int ActiveLayer = 6;
     public void ToggleActiveLayer(bool active)
     {
-        if (active) gameObject.layer = 6;
-        else gameObject.layer = 0;
+        gameObject.layer = active ? ActiveLayer : 0;
     }
 
     protected virtual void Land(Vector3Int coords, float startHeight)

@@ -9,17 +9,17 @@ public class BotSelector : MonoBehaviour
     {
         gameObject.SetActive(false);
         overlayLayer = gameObject.layer;
-        TinyBot.ClearActiveBot.AddListener(Deselect);
-        PrimaryCursor.PlayerSelectedBot.AddListener(Select);
+        TinyBot.ClearActiveBot.AddListener(DeselectVisual);
+        PrimaryCursor.PlayerSelectedBot.AddListener(SelectVisual);
     }
-    public void Select(TinyBot bot)
+    public void SelectVisual(TinyBot bot)
     {
         gameObject.SetActive(true);
         transform.SetParent(bot.transform);
         transform.position = bot.TargetPoint.position;
     }
 
-    void Deselect()
+    void DeselectVisual()
     {
         transform.SetParent(null);
         gameObject.layer = overlayLayer;

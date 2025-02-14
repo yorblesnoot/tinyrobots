@@ -8,35 +8,39 @@ public class BotCaster : MonoBehaviour
 {
     TinyBot owner;
     bool tracking;
-    protected ActiveAbility Ability;
+    public ActiveAbility Ability { get; private set; }
     protected PossibleCast PossibleCast;
     List<Vector3Int> pathableLocations;
     public static UnityEvent ResetHighlights = new();
-    public static UnityEvent ClearIndicators = new();
+    public static UnityEvent ClearCasting = new();
 
     private void Awake()
     {
         owner = GetComponent<TinyBot>();
+        TinyBot.ClearActiveBot.AddListener(ClearCasting.Invoke);
+        ClearCasting.AddListener(Cancel);
     }
 
-    public void Prepare(ActiveAbility ability)
+    public bool TryPrepare(ActiveAbility ability)
     {
+        if (!ability.IsAvailable() || owner.Stats.Current[StatType.ENERGY] < ability.cost) return false;
         Ability = ability;
         
         pathableLocations = Pathfinder3D.GetPathableLocations(owner.Stats.Current[StatType.MOVEMENT])
             .OrderBy(position => Vector3.Distance(position, owner.transform.position))
             .ToList();
         if (owner.Allegiance == Allegiance.PLAYER) StartCoroutine(PlayerAimAbility(ability, PrimaryCursor.Transform.gameObject));
-
+        return true;
     }
 
-    public void Confirm()
+    public void CastLoadedSkill()
     {
         StartCoroutine(CastSequence(PossibleCast));
     }
 
-    public void Cancel()
+    void Cancel()
     {
+        if(Ability == null) return;
         tracking = false;
         HidePlayerTargeting();
         Ability = null;
@@ -50,8 +54,7 @@ public class BotCaster : MonoBehaviour
 
     IEnumerator CastSequence(PossibleCast cast)
     {
-        tracking = false;
-        HidePlayerTargeting();
+        EndTracking();
         PrimaryCursor.TogglePlayerLockout(true);
         float timeElapsed = 0;
         while(timeElapsed < finalizeAimDuration)
@@ -63,12 +66,11 @@ public class BotCaster : MonoBehaviour
         Vector3Int startPosition = Vector3Int.RoundToInt(owner.transform.position);
         MainCameraControl.PanToPosition(cast.Trajectory[^1]);
         yield return Ability.Execute(cast.Trajectory, cast.Targets);
-        ClickableAbility.PlayerUsedAbility?.Invoke();
         if (Vector3Int.RoundToInt(owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(owner.MoveStyle, owner.transform.position);
         if (Ability.EndTurn) yield return new WaitForSeconds(1);
         PrimaryCursor.TogglePlayerLockout(false);
         if (Ability.EndTurn) TurnManager.EndTurn(owner);
-        Cancel();
+        ClearCasting.Invoke();
     }
 
     IEnumerator PlayerAimAbility(ActiveAbility ability, GameObject trackedTarget)
@@ -95,7 +97,7 @@ public class BotCaster : MonoBehaviour
                 SetActiveCast(targetPosition, aimer.emissionPoint.position, false);
             }
             else PrimaryCursor.InvalidatePath();
-            aimer.PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
+            ability.PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
             DrawPlayerTargeting(PossibleCast);
             yield return null;
         }
@@ -106,7 +108,7 @@ public class BotCaster : MonoBehaviour
         PossibleCast = Ability.SimulateCast(targetPosition, sourcePosition, imaginary);
     }
 
-    readonly float targetOffsetTolerance = .1f;
+    readonly float targetOffsetTolerance = .5f;
     Vector3Int lastValidCastSource;
     Vector3Int FindClosestCastingPosition(Vector3 targetPosition)
     {
@@ -119,19 +121,18 @@ public class BotCaster : MonoBehaviour
     public Vector3Int FindCastingPosition(Vector3 targetPosition, PriorityQueue<Vector3Int, float> priority = null)
     {
         Vector3Int position = default;
-        Debug.Log(pathableLocations);
-        foreach (Vector3Int location in pathableLocations)
+        foreach (Vector3Int pathablePoint in pathableLocations)
         {
-            if (Vector3.Distance(location, targetPosition) > Ability.TotalRange) continue;
-            Vector3 emissionLocation = GunPositionAt(Ability, location, targetPosition - location);
-            PossibleCast cast = Ability.SimulateCast(targetPosition, emissionLocation, true);
+            if (Vector3.Distance(pathablePoint, targetPosition) > Ability.TotalRange) continue;
+            Vector3 emissionLocation = GunPositionAt(Ability, pathablePoint, targetPosition - pathablePoint);
+            PossibleCast cast = Ability.SimulateCast(targetPosition, emissionLocation, false);
             float quality = GetTargetQuality(targetPosition, cast.Trajectory);
-            if (quality == 0)
+            if (quality <= targetOffsetTolerance)
             {
-                position = location;
+                position = pathablePoint;
                 break;
             }
-            priority?.Enqueue(location, quality);
+            priority?.Enqueue(pathablePoint, quality);
         }
         return position;
     }
@@ -146,7 +147,7 @@ public class BotCaster : MonoBehaviour
     }
 
 
-    public float GetTargetQuality(Vector3 position, List<Vector3> trajectory)
+    float GetTargetQuality(Vector3 position, List<Vector3> trajectory)
     {
         float offset = Vector3.Distance(position, trajectory[^1]) - Ability.TargetType.TargetRadius;
         return Mathf.Clamp(offset, 0, float.MaxValue);
@@ -157,6 +158,12 @@ public class BotCaster : MonoBehaviour
         if (cast.Trajectory != null && cast.Trajectory.Count > 0) LineMaker.DrawLine(cast.Trajectory.ToArray());
         Ability.TargetType.Draw(cast.Trajectory);
         SetHighlightedTargets(cast.Targets);
+    }
+
+    public void EndTracking()
+    {
+        tracking = false;
+        HidePlayerTargeting();
     }
 
     void HidePlayerTargeting()

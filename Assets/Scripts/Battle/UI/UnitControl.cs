@@ -17,7 +17,6 @@ public class UnitControl : MonoBehaviour
     public static TinyBot PlayerControlledBot { get; private set; }
     private void Awake()
     {
-        ClickableAbility.Activated = null;
         turnEnd.onClick.AddListener(EndPlayerTurn);
         PrimaryCursor.PlayerSelectedBot.AddListener(PlayerControlBot);
         TinyBot.ClearActiveBot.AddListener(ReleaseBot);
@@ -45,11 +44,12 @@ public class UnitControl : MonoBehaviour
     void ReleaseBot()
     {
         gameObject.SetActive(false);
-        ClickableAbility.EndUsableAbilityState();
+        BotCaster.ClearCasting.Invoke();
         if (PlayerControlledBot == null) return;
         PlayerControlledBot.Stats.StatModified.RemoveListener(UpdateOverlay);
         PlayerControlledBot.AbilitiesChanged.RemoveListener(VisualizeAbilityList);
         PlayerControlledBot = null;
+        deployedAbilities = null;
     }
 
     void EndPlayerTurn()
@@ -60,8 +60,6 @@ public class UnitControl : MonoBehaviour
 
     void VisualizeAbilityList()
     {
-        
-        ClickableAbility.EndUsableAbilityState();
         deployedAbilities = new();
         PlayerControlledBot.ActiveAbilities.PassDataToUI(clickableAbilities, AddActive);
         PlayerControlledBot.PassiveAbilities.PassDataToUI(unclickableAbilities, AddPassive);

@@ -13,10 +13,10 @@ public abstract class Trajectory : MonoBehaviour
     {
         BlockingLayerMask = LayerMask.GetMask(blockingLayers);
     }
-    public virtual List<Vector3> GetTrajectory(Vector3 sourcePosition, Vector3 target, out RaycastHit hit, bool aiMode = false)
+    public virtual List<Vector3> GetTrajectory(Vector3 sourcePosition, Vector3 target, out RaycastHit hit, bool wide = false)
     {
         Vector3[] targets = CalculateTrajectory(sourcePosition, target);
-        List < Vector3 > trajectory = CastAlongPoints(targets, BlockingLayerMask, out hit, aiMode ? BotAI.terrainCheckSize : 0);
+        List < Vector3 > trajectory = CastAlongPoints(targets, BlockingLayerMask, out hit, wide ? BotAI.terrainCheckSize : 0);
         return trajectory;
     }
 

@@ -149,12 +149,13 @@ public class TinyBot : Targetable
     public void Select(bool force = false)
     {
         if (MainCameraControl.CameraAnimating && !force) return;
+        if(gameObject.layer == ActiveLayer) return;
+        ClearActiveBot.Invoke();
         MainCameraControl.FindViewOfPosition(TargetPoint.position, AvailableForTurn ? BeginTurn : null);
     }
 
     void BeginTurn()
     {
-        ClearActiveBot.Invoke();
         Pathfinder3D.SetNodeOccupancy(Vector3Int.RoundToInt(transform.position), false);
         ToggleActiveLayer(true);
         if (Allegiance == Allegiance.PLAYER)

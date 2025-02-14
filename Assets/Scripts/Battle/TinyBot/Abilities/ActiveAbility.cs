@@ -54,13 +54,13 @@ public class ActiveAbility : Ability
         //MainCameraControl.FindViewOfPosition(Owner.TargetPoint.position, false, false);
     }
 
-    public PossibleCast SimulateCast(Vector3 targetPosition, Vector3 sourcePosition, bool imaginary)
+    public PossibleCast SimulateCast(Vector3 targetPosition, Vector3 sourcePosition, bool wide)
     {
         PossibleCast eval = new();
         Vector3 rangeTarget = GetRangeLimitedTarget(sourcePosition, targetPosition);
-        eval.Trajectory = TrajectoryDefinition.GetTrajectory(sourcePosition, rangeTarget, out RaycastHit hit, imaginary);
+        eval.Trajectory = TrajectoryDefinition.GetTrajectory(sourcePosition, rangeTarget, out RaycastHit hit, wide);
         eval.Hit = hit.collider != null;
-        List<Targetable> newTargets = range == 0 ? new() { Owner } : (imaginary ? TargetType.FindTargetsAI(eval.Trajectory) : TargetType.FindTargets(eval.Trajectory));
+        List<Targetable> newTargets = range == 0 ? new() { Owner } : TargetType.FindTargets(eval.Trajectory);
         eval.Targets = new(newTargets);
         return eval;
     }

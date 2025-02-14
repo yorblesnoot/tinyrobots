@@ -33,9 +33,4 @@ public class ImpactTarget : TargetPoint
         } 
         return targets;
     }
-
-    public override List<Targetable> FindTargetsAI(List<Vector3> trajectory)
-    {
-        return FindTargets(trajectory);
-    }
 }

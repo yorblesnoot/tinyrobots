@@ -6,8 +6,6 @@ public abstract class TargetPoint : MonoBehaviour
 {
     public float TargetRadius = 0;
     public abstract List<Targetable> FindTargets(List<Vector3> trajectory);
-
-    public abstract List<Targetable> FindTargetsAI(List<Vector3> trajectory); //collapse these into one
     public abstract void Draw(List<Vector3> trajectory);
 
     public abstract void Hide();

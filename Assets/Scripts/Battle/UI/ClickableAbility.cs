@@ -15,23 +15,29 @@ public class ClickableAbility : AbilityDisplay
     [SerializeField] List<Image> actionPoints;
 
     [HideInInspector] public ActiveAbility Ability;
-    public static ClickableAbility Activated;
-    private void OnEnable()
+    BotCaster caster;
+    private void Awake()
     {
         PlayerUsedAbility.AddListener(UpdateUsability);
-        TinyBot.ClearActiveBot.AddListener(CancelAbility);
+        BotCaster.ClearCasting.AddListener(EndUsableAbilityState);
+        button.onClick.AddListener(Activate);
     }
 
-    
+    private void OnDestroy()
+    {
+        PlayerUsedAbility.RemoveListener(UpdateUsability);
+        BotCaster.ClearCasting.RemoveListener(EndUsableAbilityState);
+        button.onClick.RemoveListener(Activate);
+    }
 
     public override void Become(Ability ability)
     {
         base.Become(ability);
         Ability = ability as ActiveAbility;
+        caster = ability.Owner.Caster;
         button.interactable = true;
         ability.Owner.BeganTurn.AddListener(UpdateUsability);
-        button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(Activate);
+        
         SetPips(ability.cost);
         UpdateUsability();
     }
@@ -50,27 +56,16 @@ public class ClickableAbility : AbilityDisplay
 
     void OnDisable()
     {
+        if (Ability != null) Ability.Owner.BeganTurn.RemoveListener(UpdateUsability);
         image.color = Color.white;
+        Ability = null;
         SetPips(0);
-        PlayerUsedAbility.RemoveListener(UpdateUsability);
-        TinyBot.ClearActiveBot.RemoveListener(CancelAbility);
-        button.onClick.RemoveAllListeners();
-        if(Ability != null) Ability.Owner.BeganTurn.RemoveListener(UpdateUsability);
+        
     }
 
-    public static void EndUsableAbilityState()
+    void EndUsableAbilityState()
     {
-        if (Activated == null) return;
-        Activated.image.color = Color.white;
-        Activated.Ability.Owner.Caster.Cancel();
-        Activated = null;
-    }
-
-    public static void CancelAbility()
-    {
-        if(Activated == null) return;
-        Activated.Ability.EndAbility();
-        EndUsableAbilityState();
+        image.color = Color.white;
     }
 
     void SetPips(int pips)
@@ -83,10 +78,9 @@ public class ClickableAbility : AbilityDisplay
 
     public void Activate()
     {
-        if (PrimaryCursor.LockoutPlayer || !Ability.IsAvailable()) return;
-        CancelAbility();
-        Activated = this;
-        UnitControl.PlayerControlledBot.Caster.Prepare(Ability);
+        if (PrimaryCursor.LockoutPlayer) return;
+        BotCaster.ClearCasting.Invoke();
+        if (!caster.TryPrepare(Ability)) return;
         image.color = Color.red;
     }
 }

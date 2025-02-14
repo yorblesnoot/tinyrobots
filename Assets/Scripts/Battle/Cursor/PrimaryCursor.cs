@@ -16,8 +16,8 @@ public class PrimaryCursor : MonoBehaviour
 {
 
     public static PrimaryCursor Instance;
-    
-    
+
+
     public static Transform Transform;
     public static CursorState State;
     public static TinyBot TargetedBot;
@@ -38,6 +38,8 @@ public class PrimaryCursor : MonoBehaviour
     public static bool LockoutPlayer { get; private set; }
 
     public static UnityEvent<TinyBot> PlayerSelectedBot = new();
+
+    bool skillActive { get { return PlayerControlledBot != null && PlayerControlledBot.Caster.Ability != null; } }
 
     TinyBot activeEcho;
     private void Awake()
@@ -65,15 +67,12 @@ public class PrimaryCursor : MonoBehaviour
             return; 
         }
 
-        bool abilityActive = ClickableAbility.Activated != null;
+        bool abilityActive = PlayerControlledBot.Caster.Ability != null;
         if (State == CursorState.FREE) Instance.cursorBehaviour.ControlCursor();
         ToggleInvalidIndicator();
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            ProcessClick();
-        }
-        else if (Input.GetMouseButtonDown(1)) ClickableAbility.CancelAbility();
+        if (Input.GetMouseButtonDown(0)) ProcessClick();
+        else if (Input.GetMouseButtonDown(1)) BotCaster.ClearCasting.Invoke();
 
 
         if (PlayerControlledBot != null && !abilityActive && PlayerControlledBot.Stats.Max[StatType.MOVEMENT] > 0)
@@ -170,7 +169,11 @@ public class PrimaryCursor : MonoBehaviour
     private void ProcessClick()
     {
         if (EventSystem.current.IsPointerOverGameObject()) return;
-        if (TargetedBot != null && TargetedBot.Allegiance == Allegiance.PLAYER && ClickableAbility.Activated == null)
+
+        //if there is an ability active, 
+
+
+        if (TargetedBot != null && TargetedBot.Allegiance == Allegiance.PLAYER && !skillActive)
         {
             TargetedBot.Select();
             InvalidatePath();
@@ -181,23 +184,28 @@ public class PrimaryCursor : MonoBehaviour
 
     IEnumerator MoveAndCast()
     {
-        bool abilityActive = ClickableAbility.Activated != null;
-        if (abilityActive && !PlayerControlledBot.Caster.IsCastValid()) yield break;
+        if (skillActive)
+        {
+            if (!PlayerControlledBot.Caster.IsCastValid()) yield break;
+            PlayerControlledBot.Caster.EndTracking();
+        } 
         if (currentPath != null && PlayerControlledBot != null && currentPath.Count > 0)
         {
             PlayerControlledBot.SpendResource(Mathf.CeilToInt(currentPathCost), StatType.MOVEMENT);
             yield return TraversePath();
         }
-        if (abilityActive)
+        if (skillActive)
         {
-            ActiveAbility skill = ClickableAbility.Activated.Ability;
-            if (skill.cost <= PlayerControlledBot.Stats.Current[StatType.ACTION])
-            {
-                InvalidatePath();
-                PlayerControlledBot.Caster.Confirm();
-                Instance.statDisplay.SyncStatDisplay(PlayerControlledBot);
-            }
+            PlayerCastAbility();
         }
+    }
+
+    void PlayerCastAbility()
+    {
+        InvalidatePath();
+        PlayerControlledBot.Caster.CastLoadedSkill();
+        Instance.statDisplay.SyncStatDisplay(PlayerControlledBot);
+        ClickableAbility.PlayerUsedAbility.Invoke();
     }
 
     List<float> GetPathDistances(List<Vector3> points)

@@ -6,16 +6,13 @@ public class SliceTargeter : MonoBehaviour
 {
     public int SensorLayer = 11;
     public List<MeshRenderer> Slices;
-    [SerializeField] SpatialSensor sensor;
     static SliceTargeter instance;
     public static Transform Transform;
-    public static SpatialSensor Sensor;
     static int active = 0;
     private void Awake()
     {
         instance = this;
         Transform = transform;
-        Sensor = sensor;
     }
 
     public static void SetShape(int degree, float radius)
