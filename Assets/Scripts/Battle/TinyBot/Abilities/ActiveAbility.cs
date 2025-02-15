@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class ActiveAbility : Ability
 {   
@@ -54,15 +56,37 @@ public class ActiveAbility : Ability
         //MainCameraControl.FindViewOfPosition(Owner.TargetPoint.position, false, false);
     }
 
-    public PossibleCast SimulateCast(Vector3 targetPosition, Vector3 sourcePosition, bool wide)
+    public PossibleCast SimulateCast(Vector3 castTarget, Vector3 ownerPosition = default, bool wide = false)
     {
-        PossibleCast eval = new();
-        Vector3 rangeTarget = GetRangeLimitedTarget(sourcePosition, targetPosition);
-        eval.Trajectory = TrajectoryDefinition.GetTrajectory(sourcePosition, rangeTarget, out RaycastHit hit, wide);
+        Vector3 emissionSource;
+        Vector3 rangeSource;
+        if(ownerPosition == default)
+        {
+            ownerPosition = Owner.transform.position;
+            emissionSource = emissionPoint.position;
+            rangeSource = transform.position;
+        }
+        else
+        {
+            Vector3 facing = castTarget - ownerPosition;
+            emissionSource = JointPositionAt(emissionPoint.position, ownerPosition, facing);
+            rangeSource = JointPositionAt(transform.position, ownerPosition, facing);
+        }
+        PossibleCast eval = new() { Source = ownerPosition };
+        Vector3 rangeTarget = GetRangeLimitedTarget(rangeSource, castTarget);
+        eval.Trajectory = TrajectoryDefinition.GetTrajectory(emissionSource, rangeTarget, out RaycastHit hit, wide);
         eval.Hit = hit.collider != null;
         List<Targetable> newTargets = range == 0 ? new() { Owner } : TargetType.FindTargets(eval.Trajectory);
         eval.Targets = new(newTargets);
         return eval;
+    }
+
+    Vector3 JointPositionAt(Vector3 jointPosition, Vector3 position, Vector3 facing)
+    {
+        Quaternion locationRotation = Owner.PrimaryMovement.GetRotationFromFacing(position, facing);
+        Vector3 localGun = Owner.transform.InverseTransformPoint(jointPosition);
+        Vector3 rotatedGun = locationRotation * localGun;
+        return position + rotatedGun;
     }
 
     Vector3 GetRangeLimitedTarget(Vector3 sourcePosition, Vector3 targetPosition)

@@ -76,76 +76,54 @@ public class BotCaster : MonoBehaviour
     IEnumerator PlayerAimAbility(ActiveAbility ability, GameObject trackedTarget)
     {
         tracking = true;
-        
+        Vector3Int lastCastTarget = default;
+        Vector3 lastCastSource = owner.transform.position;
         while (tracking == true)
         {
             Vector3 targetPosition = trackedTarget.transform.position;
             Vector3Int cleanTarget = Vector3Int.RoundToInt(targetPosition);
-            SetActiveCast(targetPosition, ability.emissionPoint.position, false);
-            ActiveAbility aimer = ability;
+            PossibleCast = Ability.SimulateCast(targetPosition);
+            ability.PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
+            ActiveAbility aimer;
             if (GetTargetQuality(targetPosition, PossibleCast.Trajectory) > targetOffsetTolerance)
             {
-                if (cleanTarget != lastValidCastSource)
+                if(cleanTarget == lastCastTarget)
                 {
-                    Vector3Int alternateCastSource = FindClosestCastingPosition(targetPosition);
-                    if (alternateCastSource == default) alternateCastSource = lastValidCastSource;
-                    else lastValidCastSource = alternateCastSource;
-                    Vector3 facing = targetPosition - alternateCastSource;
-                    PrimaryCursor.Instance.GenerateMovePreview(alternateCastSource, facing);
+                    PossibleCast = Ability.SimulateCast(targetPosition, lastCastSource);
                 }
-                aimer = owner.EchoMap[ability];
-                SetActiveCast(targetPosition, aimer.emissionPoint.position, false);
+                else if (FindValidCast(targetPosition, out PossibleCast validCast))
+                {
+                    lastCastSource = validCast.Source;
+                    Vector3 facing = targetPosition - validCast.Source;
+                    PrimaryCursor.Instance.GenerateMovePreview(Vector3Int.RoundToInt(validCast.Source), facing);
+                    PossibleCast = validCast;
+                }
+                lastCastTarget = cleanTarget;
             }
             else PrimaryCursor.InvalidatePath();
-            ability.PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
             DrawPlayerTargeting(PossibleCast);
             yield return null;
         }
     }
 
-    public void SetActiveCast(Vector3 targetPosition, Vector3 sourcePosition, bool imaginary = false)
-    {
-        PossibleCast = Ability.SimulateCast(targetPosition, sourcePosition, imaginary);
-    }
-
     readonly float targetOffsetTolerance = .5f;
-    Vector3Int lastValidCastSource;
-    Vector3Int FindClosestCastingPosition(Vector3 targetPosition)
+    bool FindValidCast(Vector3 targetPosition, out PossibleCast cast)
     {
-        PriorityQueue<Vector3Int, float> priority = new();
-        Vector3Int position = FindCastingPosition(targetPosition, priority);
-        if (position == default && priority.Count > 0) position = priority.Dequeue();
-        return position;
-    }
-
-    public Vector3Int FindCastingPosition(Vector3 targetPosition, PriorityQueue<Vector3Int, float> priority = null)
-    {
-        Vector3Int position = default;
+        cast = default;
         foreach (Vector3Int pathablePoint in pathableLocations)
         {
             if (Vector3.Distance(pathablePoint, targetPosition) > Ability.TotalRange) continue;
-            Vector3 emissionLocation = GunPositionAt(Ability, pathablePoint, targetPosition - pathablePoint);
-            PossibleCast cast = Ability.SimulateCast(targetPosition, emissionLocation, false);
-            float quality = GetTargetQuality(targetPosition, cast.Trajectory);
+
+            PossibleCast possibleCast = Ability.SimulateCast(targetPosition, pathablePoint, false);
+            float quality = GetTargetQuality(targetPosition, possibleCast.Trajectory);
             if (quality <= targetOffsetTolerance)
             {
-                position = pathablePoint;
-                break;
+                cast = possibleCast;
+                return true;
             }
-            priority?.Enqueue(pathablePoint, quality);
         }
-        return position;
+        return false;
     }
-
-    Vector3 GunPositionAt(ActiveAbility ability, Vector3 position, Vector3 facing)
-    {
-        Quaternion locationRotation = owner.PrimaryMovement.GetRotationFromFacing(position, facing);
-        Vector3 gunPosition = ability.emissionPoint.position;
-        Vector3 localGun = owner.transform.InverseTransformPoint(gunPosition);
-        Vector3 rotatedGun = locationRotation * localGun;
-        return position + rotatedGun;
-    }
-
 
     float GetTargetQuality(Vector3 position, List<Vector3> trajectory)
     {
@@ -193,6 +171,7 @@ public class BotCaster : MonoBehaviour
 
 public struct PossibleCast
 {
+    public Vector3 Source;
     public List<Vector3> Trajectory;
     public List<Targetable> Targets;
     public bool Hit;

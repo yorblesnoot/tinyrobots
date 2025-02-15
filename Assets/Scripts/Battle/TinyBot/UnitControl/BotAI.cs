@@ -79,10 +79,10 @@ public class BotAI
                 foreach(var target in targets)
                 {
                     Vector3 targetPoint = target.TargetPoint.position;
-                    Vector3Int origin = thisBot.Caster.FindCastingPosition(targetPoint);
-                    thisBot.Caster.SetActiveCast(targetPoint, origin, true);
-                    if (origin == default) continue;
-                    yield return PathToCastingPosition(origin);
+                    //Vector3Int origin = thisBot.Caster.FindCastingPosition(targetPoint);
+                    //thisBot.Caster.SetActiveCast(targetPoint, origin, true);
+                    //if (origin == default) continue;
+                    //yield return PathToCastingPosition(origin);
 
                     //lock on and use ability
                     yield return UseAbility(ability);
@@ -199,7 +199,7 @@ public class BotAI
     {
         Debug.DrawRay(position, Vector3.up, Color.yellow, 10f);
         pointer.transform.position = position;
-        ability.SimulateCast(position, thisBot.transform.position, true);
+        //ability.SimulateCast(position, thisBot.transform.position, true);
         //if (ability.IsUsable()) return true; //TODO: FIX
         return false;
     }

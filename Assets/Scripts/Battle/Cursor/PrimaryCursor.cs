@@ -67,7 +67,6 @@ public class PrimaryCursor : MonoBehaviour
             return; 
         }
 
-        bool abilityActive = PlayerControlledBot.Caster.Ability != null;
         if (State == CursorState.FREE) Instance.cursorBehaviour.ControlCursor();
         ToggleInvalidIndicator();
 
@@ -75,7 +74,7 @@ public class PrimaryCursor : MonoBehaviour
         else if (Input.GetMouseButtonDown(1)) BotCaster.ClearCasting.Invoke();
 
 
-        if (PlayerControlledBot != null && !abilityActive && PlayerControlledBot.Stats.Max[StatType.MOVEMENT] > 0)
+        if (PlayerControlledBot != null && !skillActive && PlayerControlledBot.Stats.Max[StatType.MOVEMENT] > 0)
         {
             GenerateMovePreview(Vector3Int.RoundToInt(transform.position));
         }
