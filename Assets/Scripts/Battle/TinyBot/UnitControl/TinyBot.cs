@@ -49,18 +49,19 @@ public class TinyBot : Targetable
     [HideInInspector] public TinyBot BotEcho;
     public Dictionary<ActiveAbility, ActiveAbility> EchoMap;
 
-    public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement)
+    public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement, bool echo = false)
     {
-        DamageCalculator = GetComponent<DamageCalculator>();
-        Caster = GetComponent<BotCaster>();
-        Buffs = new BuffController(this);
-        PhysicsBody = GetComponent<Rigidbody>();
-        PartModifiers = parts;
-        SetAbilities(abilities);
-
         
         PrimaryMovement = primaryMovement;
         PrimaryMovement.Owner = this;
+        Buffs = new BuffController(this);
+        SetAbilities(abilities, echo);
+        if (echo) return;
+        DamageCalculator = GetComponent<DamageCalculator>();
+        Caster = GetComponent<BotCaster>();
+        PhysicsBody = GetComponent<Rigidbody>();
+        PartModifiers = parts;
+
         ClearActiveBot.AddListener(ClearActiveUnit);
         AbilitiesChanged.AddListener(() => cachedMaterials = CacheMaterials());
         Pathfinder3D.GetOccupancy.AddListener(DeclareOccupancy);
@@ -85,12 +86,13 @@ public class TinyBot : Targetable
         Pathfinder3D.SetNodeOccupancy(Vector3Int.RoundToInt(transform.position), true);
     }
 
-    private void SetAbilities(List<Ability> abilities)
+    private void SetAbilities(List<Ability> abilities, bool echo = false)
     {
         ActiveAbilities = new();
         PassiveAbilities = new();
         foreach (var ability in abilities)
         {
+            if (echo && !ability.IsActive) continue;
             AddAbility(ability);
         }
     }
@@ -255,8 +257,6 @@ public class TinyBot : Targetable
         ToggleActiveLayer(true);
         Collider collider = GetComponent<Collider>();
         Destroy(collider);
-        Pathfinder3D.GetOccupancy.RemoveListener(DeclareOccupancy);
-        foreach (var passive in PassiveAbilities) passive.Deactivate();
         gameObject.SetActive(false);
     }
 

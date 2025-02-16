@@ -24,7 +24,7 @@ public class ActiveAbility : Ability
     [HideInInspector] public bool Locked { get { return prohibitionSources.Count > 0; } }
     
 
-    public float TotalRange { get { return range + TargetType.TargetRadius; } }
+    public float TotalRange { get { return range + TargetType.AddedRange; } }
     public override bool IsActive => true;
 
     protected override AbilityEffect[] Effects => abilityEffects;
@@ -63,8 +63,9 @@ public class ActiveAbility : Ability
         if(ownerPosition == default)
         {
             ownerPosition = Owner.transform.position;
-            emissionSource = emissionPoint.position;
+            
             rangeSource = transform.position;
+            emissionSource = rangeSource;//emissionPoint.position;
         }
         else
         {

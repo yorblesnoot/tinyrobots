@@ -4,9 +4,13 @@ using UnityEngine;
 
 public abstract class TargetPoint : MonoBehaviour
 {
-    public float TargetRadius = 0;
+    [SerializeField] protected float TargetRadius = 0;
+    public virtual float AddedRange => TargetRadius;
+
     public abstract List<Targetable> FindTargets(List<Vector3> trajectory);
     public abstract void Draw(List<Vector3> trajectory);
 
     public abstract void Hide();
+
+    
 }

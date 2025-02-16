@@ -236,7 +236,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Description: Strike with the blade at close range, dealing moderate damage in a
     small area.
-  range: 0.5
+  range: 3
   ModifiableRange: 0
   cooldown: 1
   EffectivenessMultiplier: 1
@@ -253,6 +253,7 @@ MonoBehaviour:
   - {fileID: 8481281637002415656}
   - {fileID: 6420332332597587671}
   endEffects: []
+  TargetType: {fileID: 0}
 --- !u!114 &6420332332597587671
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,6 +317,7 @@ MonoBehaviour:
   TargetRadius: 3
   maxTargets: 5
   spatialDegree: 20
+  containWithinTrajectory: 1
 --- !u!1 &8658645440822617628
 GameObject:
   m_ObjectHideFlags: 0

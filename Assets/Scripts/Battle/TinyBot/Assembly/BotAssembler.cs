@@ -44,7 +44,7 @@ public class BotAssembler : MonoBehaviour
         }
         
         List<Ability> abilities = GetAbilityList(spawnedParts, botUnit);
-        botUnit.Initialize(abilities, spawnedParts, locomotion);
+        botUnit.Initialize(abilities, spawnedParts, locomotion, echo);
         if (allegiance == Allegiance.PLAYER && echo == false) botUnit.BotEcho = CreateEcho(treeRoot, allegiance, botUnit);
 
         return botUnit;

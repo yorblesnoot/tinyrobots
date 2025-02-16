@@ -99,6 +99,7 @@ public class BotCaster : MonoBehaviour
                     PossibleCast = validCast;
                 }
                 lastCastTarget = cleanTarget;
+                //owner.EchoMap[ability].PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
             }
             else PrimaryCursor.InvalidatePath();
             DrawPlayerTargeting(PossibleCast);
@@ -127,7 +128,7 @@ public class BotCaster : MonoBehaviour
 
     float GetTargetQuality(Vector3 position, List<Vector3> trajectory)
     {
-        float offset = Vector3.Distance(position, trajectory[^1]) - Ability.TargetType.TargetRadius;
+        float offset = Vector3.Distance(position, trajectory[^1]) - Ability.TargetType.AddedRange;
         return Mathf.Clamp(offset, 0, float.MaxValue);
     }
 
