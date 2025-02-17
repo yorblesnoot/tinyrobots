@@ -50,18 +50,20 @@ MonoBehaviour:
   range: 5
   ModifiableRange: 1
   cooldown: 1
-  EffectMagnitude: 0
+  EffectivenessMultiplier: 1
   cost: 0
   icon: {fileID: 21300000, guid: fd27e3f6b435d4425a4e5034f96cdef3, type: 3}
-  EffectDescription: ' Damage'
   CurrentCooldown: 0
   Owner: {fileID: 0}
   emissionPoint: {fileID: 0}
   Type: 3
+  EndTurn: 0
+  targetRequirement: 0
   trackingToggle: {fileID: 0}
   abilityEffects:
   - {fileID: 8417426881783264267}
   endEffects: []
+  TargetType: {fileID: 0}
 --- !u!114 &8417426881783264267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,7 +77,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
   intervalTime: 0.2
+  fallWithMomentum: 0
 --- !u!114 &1323384398262838132
 MonoBehaviour:
   m_ObjectHideFlags: 0

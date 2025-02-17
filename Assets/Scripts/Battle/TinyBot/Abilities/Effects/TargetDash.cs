@@ -6,6 +6,7 @@ using UnityEngine;
 public class TargetDash : AbilityEffect
 {
     [SerializeField] float intervalTime = .2f;
+    [SerializeField] bool fallWithMomentum = true;
 
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
@@ -22,7 +23,7 @@ public class TargetDash : AbilityEffect
         }
         if (!landingPoint)
         {
-            Vector3 velocity = (trajectory[^1] - trajectory[^2]) / intervalTime;
+            Vector3 velocity = fallWithMomentum ? (trajectory[^1] - trajectory[^2]) / intervalTime : Vector3.zero;
             yield return StartCoroutine(owner.Fall(velocity));
         }
         else owner.PrimaryMovement.LandingStance();

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -55,5 +56,23 @@ public static class PhysicsHelper
         {
             mainModules[i].startSpeed = combinedVelocity;
         }
+    }
+
+    public static List<Collider> OverlapCone(Vector3 position, float radius, Vector3 direction, float coneAngle, int layerMask)
+    {
+        List<Collider> output = new();
+        Vector3 normalDirection = direction.normalized;
+        Vector3 end = position + normalDirection * radius;
+        Collider[] hits = Physics.OverlapSphere(position, radius, layerMask);
+
+        foreach (Collider hit in hits)
+        {
+            Vector3 closestPoint = hit.ClosestPoint(end);
+            Vector3 targetDirection = (closestPoint - position).normalized;
+            float degree = Vector3.Angle(targetDirection, direction) * 2;
+            if (degree > coneAngle) continue;
+            output.Add(hit);
+        }
+        return output;
     }
 }

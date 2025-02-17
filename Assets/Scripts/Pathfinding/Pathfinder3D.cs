@@ -276,7 +276,7 @@ public static class Pathfinder3D
             if (!Physics.Raycast(source, direction, out RaycastHit hit, crawlRadius, layerMask)) continue;
             Vector3 maximum = source + direction * crawlRadius;
             Vector3 priority = hit.point - maximum;
-            Debug.DrawLine(source, maximum, Color.blue, 1f);
+            //Debug.DrawLine(source, maximum, Color.blue, 1f);
 
             directions.Add(priority);
         }

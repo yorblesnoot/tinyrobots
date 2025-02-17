@@ -145,7 +145,7 @@ public abstract class PrimaryMovement : MonoBehaviour
         Vector3 targetNormal = GetUpVector(position);
         Vector3 lookTarget = Vector3.ProjectOnPlane(facing, targetNormal);
         Quaternion targetRotation = Quaternion.LookRotation(lookTarget, targetNormal);
-        Debug.DrawLine(Owner.transform.position, lookTarget, Color.blue, 2f);
+        //Debug.DrawLine(Owner.transform.position, lookTarget, Color.blue, 2f);
         return targetRotation;
     }
 
