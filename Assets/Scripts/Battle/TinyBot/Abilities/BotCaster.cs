@@ -160,7 +160,7 @@ public class BotCaster : MonoBehaviour
         {
             Targetable bot = newTargets[i];
             if (bot == null) newTargets.Remove(bot);
-            bot.SetOutlineColor(Color.red);
+            bot.SetOutlineColor(Ability.GetOutlineColor());
         }
     }
 

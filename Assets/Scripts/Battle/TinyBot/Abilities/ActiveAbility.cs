@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class ActiveAbility : Ability
 {   
@@ -145,7 +143,14 @@ public class ActiveAbility : Ability
     {
         if(prohibit) prohibitionSources.Add(source);
         else prohibitionSources.Remove(source);
+        ClickableAbility.RefreshUsability.Invoke();
     }
+
+    public Color GetOutlineColor() => targetRequirement switch
+    {
+        TargetRequirement.ALLY => Color.green,
+        _ => Color.red,
+    };
 
     enum TargetRequirement
     {

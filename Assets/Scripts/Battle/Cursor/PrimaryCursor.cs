@@ -76,7 +76,12 @@ public class PrimaryCursor : MonoBehaviour
 
         if (PlayerControlledBot != null && !skillActive && PlayerControlledBot.Stats.Max[StatType.MOVEMENT] > 0)
         {
-            GenerateMovePreview(Vector3Int.RoundToInt(transform.position));
+            Vector3Int pathPosition = Vector3Int.RoundToInt(transform.position);
+            if (pathPosition == lastPosition) return;
+            if (!Pathfinder3D.GetLandingPointBy(pathPosition, PlayerControlledBot.MoveStyle, out Vector3Int targetPosition)
+            && !Pathfinder3D.GetBestApproachPath(pathPosition, pathSearchRadius, PlayerControlledBot.MoveStyle, out targetPosition))
+                return;
+            GenerateMovePreview(targetPosition);
         }
     }
 
@@ -87,14 +92,8 @@ public class PrimaryCursor : MonoBehaviour
 
     public void GenerateMovePreview(Vector3Int pathPosition, Vector3 echoFacing = default)
     {
-        if (pathPosition == lastPosition) return;
-
-        if (!Pathfinder3D.GetLandingPointBy(pathPosition, PlayerControlledBot.MoveStyle, out Vector3Int targetPosition)
-            && !Pathfinder3D.GetBestApproachPath(pathPosition, pathSearchRadius, PlayerControlledBot.MoveStyle, out targetPosition)) 
-            return;
-
         lastPosition = pathPosition;
-        List<Vector3> possiblePath = Pathfinder3D.FindVectorPath(targetPosition, out List<float> distances);
+        List<Vector3> possiblePath = Pathfinder3D.FindVectorPath(pathPosition, out _);
         if (possiblePath == null || possiblePath.Count == 0) return;
         ProcessAndPreviewPath(possiblePath);
         activeEcho = PlayerControlledBot.BotEcho;
@@ -204,7 +203,7 @@ public class PrimaryCursor : MonoBehaviour
         InvalidatePath();
         PlayerControlledBot.Caster.CastLoadedSkill();
         Instance.statDisplay.SyncStatDisplay(PlayerControlledBot);
-        ClickableAbility.PlayerUsedAbility.Invoke();
+        ClickableAbility.RefreshUsability.Invoke();
     }
 
     List<float> GetPathDistances(List<Vector3> points)

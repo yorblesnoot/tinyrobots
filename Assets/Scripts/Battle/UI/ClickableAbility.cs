@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ClickableAbility : AbilityDisplay
 {
-    public static UnityEvent PlayerUsedAbility = new();
+    public static UnityEvent RefreshUsability = new();
 
     [SerializeField] Button button;
     [SerializeField] TMP_Text cooldown;
@@ -18,14 +18,14 @@ public class ClickableAbility : AbilityDisplay
     BotCaster caster;
     private void Awake()
     {
-        PlayerUsedAbility.AddListener(UpdateUsability);
+        RefreshUsability.AddListener(UpdateUsability);
         BotCaster.ClearCasting.AddListener(EndUsableAbilityState);
         button.onClick.AddListener(Activate);
     }
 
     private void OnDestroy()
     {
-        PlayerUsedAbility.RemoveListener(UpdateUsability);
+        RefreshUsability.RemoveListener(UpdateUsability);
         BotCaster.ClearCasting.RemoveListener(EndUsableAbilityState);
         button.onClick.RemoveListener(Activate);
     }
