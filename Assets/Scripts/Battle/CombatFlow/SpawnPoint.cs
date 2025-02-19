@@ -14,7 +14,7 @@ public class SpawnPoint : MonoBehaviour
     private void Deploy(EncounterMission placer)
     {
         TinyBot spawnedBot = placer.SpawnBot(botAllegiance, botRecord);
-        bool validLocation = Pathfinder3D.GetLandingPointBy(transform.position, spawnedBot.PrimaryMovement.Style, out Vector3Int coords);
+        bool validLocation = Pathfinder3D.GetLandingPointBy(transform.position, spawnedBot.Movement.Style, out Vector3Int coords);
         if (!validLocation) Debug.LogError($"Spawner for {botRecord.name} placed at illegal position");
         //placer.OrientBot(spawnedBot, coords);
         gameObject.SetActive(false);

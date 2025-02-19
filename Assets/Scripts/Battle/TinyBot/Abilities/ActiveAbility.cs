@@ -26,6 +26,7 @@ public class ActiveAbility : Ability
     public override bool IsActive => true;
 
     protected override AbilityEffect[] Effects => abilityEffects;
+    Vector3 baseEmissionPosition;
 
     private void Awake()
     {
@@ -42,6 +43,7 @@ public class ActiveAbility : Ability
     {
         base.Initialize(botUnit);
         if (emissionPoint == null) emissionPoint = Owner.transform;
+        baseEmissionPosition = emissionPoint.localPosition;
     }
 
     public IEnumerator Execute(List<Vector3> trajectory, List<Targetable> targets)
@@ -68,7 +70,7 @@ public class ActiveAbility : Ability
         else
         {
             Vector3 facing = castTarget - ownerPosition;
-            emissionSource = JointPositionAt(emissionPoint.position, ownerPosition, facing);
+            emissionSource = JointPositionAt(emissionPoint.position, ownerPosition, facing, false);
             rangeSource = JointPositionAt(transform.position, ownerPosition, facing);
         }
         PossibleCast eval = new() { Source = ownerPosition };
@@ -80,10 +82,11 @@ public class ActiveAbility : Ability
         return eval;
     }
 
-    Vector3 JointPositionAt(Vector3 jointPosition, Vector3 position, Vector3 facing)
+    Vector3 JointPositionAt(Vector3 jointPosition, Vector3 position, Vector3 facing, bool local = true)
     {
-        Quaternion locationRotation = Owner.PrimaryMovement.GetRotationFromFacing(position, facing);
-        Vector3 localGun = Owner.transform.InverseTransformPoint(jointPosition);
+        Vector3 localGun = local ? jointPosition : Owner.transform.InverseTransformPoint(jointPosition);
+        Quaternion locationRotation = Owner.Movement.GetRotationFromFacing(position, facing);
+        
         Vector3 rotatedGun = locationRotation * localGun;
         return position + rotatedGun;
     }
@@ -107,7 +110,7 @@ public class ActiveAbility : Ability
     {
         if (trackingAnimation != null) trackingAnimation.Aim(trajectory);
         if (range == 0) return;
-        Owner.PrimaryMovement.PivotToFacePosition(trajectory[^1]);
+        Owner.Movement.PivotToFacePosition(trajectory[^1]);
     }
 
     public void ResetAim()

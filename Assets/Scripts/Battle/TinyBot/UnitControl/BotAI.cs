@@ -8,17 +8,16 @@ using static UnityEditor.FilePathAttribute;
 public class BotAI
 {
     public static readonly float terrainCheckSize = 1.1f;
-    readonly TinyBot thisBot;
+    readonly TinyBot owner;
     readonly int terrainMask;
     readonly float optimalDistance;
     readonly GameObject pointer;
-    readonly float lockTime = 1f;
     
     List<ActiveAbility> primaries, dashes, shields;
     #region Initialization
     public BotAI(TinyBot bot)
     {
-        thisBot = bot;
+        owner = bot;
         pointer = new("AIPointer");
         terrainMask = LayerMask.GetMask("Terrain");
         optimalDistance = FindOptimalDistance();
@@ -29,7 +28,7 @@ public class BotAI
         primaries = new();
         dashes = new();
         shields = new();
-        foreach (ActiveAbility ability in thisBot.ActiveAbilities)
+        foreach (ActiveAbility ability in owner.ActiveAbilities)
         {
             if (ability.Type == AbilityType.DASH) dashes.Add(ability);
             else if (ability.Type == AbilityType.SHIELD) shields.Add(ability);
@@ -38,7 +37,7 @@ public class BotAI
     }
     float FindOptimalDistance()
     {
-        List<ActiveAbility> rangedAttacks = thisBot.ActiveAbilities.Where(skill => skill.range > 0 && skill.Type == AbilityType.ATTACK).ToList();
+        List<ActiveAbility> rangedAttacks = owner.ActiveAbilities.Where(skill => skill.range > 0 && skill.Type == AbilityType.ATTACK).ToList();
         if(rangedAttacks.Count == 0)
         {
             return 10;
@@ -57,10 +56,10 @@ public class BotAI
         Vector3 closestEnemyPosition;
         foreach (TinyBot bot in TurnManager.TurnTakers)
         {
-            if(bot.Allegiance == thisBot.Allegiance) allies.Add(bot);
+            if(bot.Allegiance == owner.Allegiance) allies.Add(bot);
             else enemies.Add(bot);
         }
-        enemies = enemies.OrderBy(unit => Vector3.Distance(unit.transform.position, thisBot.transform.position)).ToList();
+        enemies = enemies.OrderBy(unit => Vector3.Distance(unit.transform.position, owner.transform.position)).ToList();
         closestEnemyPosition = enemies[0].transform.position;
 
         yield return AttackPhase();
@@ -74,7 +73,7 @@ public class BotAI
             foreach (var ability in primaries)
             {
                 ;
-                if (!thisBot.Caster.TryPrepare(ability)) continue;
+                if (!owner.Caster.TryPrepare(ability)) continue;
                 List<TinyBot> targets = new(ability.Type == AbilityType.ATTACK ? enemies : allies);
                 foreach(var target in targets)
                 {
@@ -97,14 +96,14 @@ public class BotAI
         {
             foreach (var ability in dashes)
             {
-                if (!thisBot.Caster.TryPrepare(ability)) continue;
+                if (!owner.Caster.TryPrepare(ability)) continue;
 
-                List<Vector3Int> dashLocations = Pathfinder3D.GetDashTargets(thisBot.transform.position, 
-                ability.range, thisBot.PrimaryMovement.Style).OrderBy(DistanceFromOptimalRange(closestEnemyPosition)).ToList();
-                if(thisBot.PrimaryMovement.Style == MoveStyle.WALK)
+                List<Vector3Int> dashLocations = Pathfinder3D.GetDashTargets(owner.transform.position, 
+                ability.range, owner.Movement.Style).OrderBy(DistanceFromOptimalRange(closestEnemyPosition)).ToList();
+                if(owner.Movement.Style == MoveStyle.WALK)
                 {
                     dashLocations = Pathfinder3D.FilterByWalkAccessible(Vector3Int.RoundToInt(closestEnemyPosition), optimalDistance, dashLocations)
-                        .OrderByDescending(p => Vector3.Distance(thisBot.transform.position, p)).ToList();
+                        .OrderByDescending(p => Vector3.Distance(owner.transform.position, p)).ToList();
                 }
 
                 foreach (Vector3Int location in dashLocations)
@@ -122,7 +121,7 @@ public class BotAI
         IEnumerator MovePhase()
         {
             //this is a problem
-            float remainingMove = thisBot.Stats.Current[StatType.MOVEMENT];
+            float remainingMove = owner.Stats.Current[StatType.MOVEMENT];
             List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations();
             List<Vector3Int> goodLocations = pathableLocations.Where(IsWithinOptimalRange(closestEnemyPosition)).ToList();
             if (goodLocations.Count > 0) pathableLocations = goodLocations;
@@ -136,10 +135,10 @@ public class BotAI
             path = path.Take(endIndex).ToList();
             if (path.Count == 0) yield break;
 
-            path = thisBot.PrimaryMovement.SanitizePath(path);
-            thisBot.SpendResource(Mathf.RoundToInt(moveCosts[endIndex]), StatType.MOVEMENT);
+            path = owner.Movement.SanitizePath(path);
+            owner.SpendResource(Mathf.RoundToInt(moveCosts[endIndex]), StatType.MOVEMENT);
             
-            yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.TraversePath(path));
+            yield return owner.StartCoroutine(owner.Movement.TraversePath(path));
             yield return ShieldPhase();
         }
 
@@ -148,10 +147,10 @@ public class BotAI
             shields.Shuffle();
             if(shields.Count == 0) yield break;
             ActiveAbility shield = shields[0];
-            if(!thisBot.Caster.TryPrepare(shield)) yield break;
-            Vector3 myPosition = thisBot.transform.position;
+            if(!owner.Caster.TryPrepare(shield)) yield break;
+            Vector3 myPosition = owner.transform.position;
             List<Vector3> averages = new() {enemies.Select(x => x.TargetPoint.position - myPosition).ToList().Average(), 
-                Pathfinder3D.GetCrawlOrientation(thisBot.transform.position) };
+                Pathfinder3D.GetCrawlOrientation(owner.transform.position) };
             if (allies.Count > 0) averages.Add(-allies.Select(x => x.TargetPoint.position - myPosition).ToList().Average());
             Vector3 finalDirection = averages.Average();
             Vector3 finalPosition = myPosition + finalDirection;
@@ -164,32 +163,32 @@ public class BotAI
     void BeginTurn()
     {
         PrimaryCursor.TogglePlayerLockout(true);
-        Pathfinder3D.GeneratePathingTree(thisBot.MoveStyle, thisBot.transform.position);
+        Pathfinder3D.GeneratePathingTree(owner.MoveStyle, owner.transform.position);
     }
     void EndTurn()
     {
-        thisBot.ToggleActiveLayer(false);
+        owner.ToggleActiveLayer(false);
         PrimaryCursor.TogglePlayerLockout(true);
-        TurnManager.EndTurn(thisBot);
+        TurnManager.EndTurn(owner);
     }
 
     IEnumerator PathToCastingPosition(Vector3Int location)
     {
-        if (Vector3Int.RoundToInt(thisBot.transform.position) != location)
+        if (Vector3Int.RoundToInt(owner.transform.position) != location)
         {
-            MainCameraControl.TrackTarget(thisBot.TargetPoint);
+            MainCameraControl.TrackTarget(owner.TargetPoint);
             List<Vector3> path = Pathfinder3D.FindVectorPath(location, out var moveCosts);
             if(path == null || path.Count == 0) yield break;
-            thisBot.SpendResource(Mathf.RoundToInt(moveCosts[^1]), StatType.MOVEMENT);
-            yield return thisBot.StartCoroutine(thisBot.PrimaryMovement.TraversePath(path));
-            Pathfinder3D.GeneratePathingTree(thisBot.MoveStyle, thisBot.transform.position);
+            owner.SpendResource(Mathf.RoundToInt(moveCosts[^1]), StatType.MOVEMENT);
+            yield return owner.StartCoroutine(owner.Movement.TraversePath(path));
+            Pathfinder3D.GeneratePathingTree(owner.MoveStyle, owner.transform.position);
             MainCameraControl.ReleaseTracking();
         }
     }
     private IEnumerator UseAbility(ActiveAbility ability)
     {
-        yield return thisBot.Caster.CastSequence();
-        if (ability.EndTurn) thisBot.StopAllCoroutines();
+        yield return owner.Caster.CastSequence();
+        if (ability.EndTurn) owner.StopAllCoroutines();
     }
     #endregion
 

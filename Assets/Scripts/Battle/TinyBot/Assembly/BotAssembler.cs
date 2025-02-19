@@ -90,6 +90,9 @@ public class BotAssembler : MonoBehaviour
     {
         treeRoot.Traverse((part) => part.InitializePart());
         TinyBot echo = BuildBot(treeRoot, allegiance, true);
+        treeRoot.Traverse((part) => Debug.Log(part.BasePart.name));
+        Debug.Log("set echo");
+        Debug.Log(echo.Movement + " move");
         echo.DeclareEcho();
         botUnit.EchoMap = new();
         for(int i = 0; i < echo.ActiveAbilities.Count; i++) botUnit.EchoMap.Add(botUnit.ActiveAbilities[i], echo.ActiveAbilities[i]);
@@ -101,8 +104,8 @@ public class BotAssembler : MonoBehaviour
         tree.Traverse((part) => part.InitializePart());
         TinyBot summon = BuildBot(tree, owner.Allegiance);
         Pathfinder3D.GetLandingPointBy(position, summon.MoveStyle, out Vector3Int cleanPosition);
-        summon.transform.position = summon.PrimaryMovement.SanitizePoint(cleanPosition);
-        summon.PrimaryMovement.PivotToFacePosition(owner.transform.position, true);
+        summon.transform.position = summon.Movement.SanitizePoint(cleanPosition);
+        summon.Movement.PivotToFacePosition(owner.transform.position, true);
         botConditioning?.Invoke(summon);
         TurnManager.RegisterSummon(summon);
         Pathfinder3D.EvaluateNodeOccupancy(owner.transform.position);

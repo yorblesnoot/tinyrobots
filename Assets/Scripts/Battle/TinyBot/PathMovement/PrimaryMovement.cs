@@ -20,13 +20,26 @@ public abstract class PrimaryMovement : MonoBehaviour
     
 
     int sanitizeMask;
+    Animator animator;
     readonly float overlap = .01f;
     public readonly float PathHeight = .2f;
     public float FinalSpeed { get { return MoveSpeed * SpeedMultiplier; } }
 
-    private void Start()
+    private void Awake()
     {
+        AwakeInitialize();
+    }
+
+    protected virtual void AwakeInitialize()
+    {
+        Debug.Log("initialized " + gameObject.name);
         sanitizeMask = LayerMask.GetMask("Terrain", "Default");
+        animator = GetComponentInChildren<Animator>();
+    }
+
+    public void ToggleAnimations(bool on)
+    {
+        animator.speed = on ? 1f : 0f;
     }
 
     public IEnumerator TraversePath(List<Vector3> path)
@@ -128,7 +141,7 @@ public abstract class PrimaryMovement : MonoBehaviour
         {
             timeElapsed += Time.deltaTime;
             unit.rotation = Quaternion.Slerp(startRotation, targetRotation, timeElapsed / pivotDuration);
-            AnimateToOrientation(Vector3.zero);
+            AnimateToOrientation();
             yield return null;
         }
         unit.rotation = targetRotation;
@@ -139,7 +152,7 @@ public abstract class PrimaryMovement : MonoBehaviour
 
     }
 
-    public virtual void AnimateToOrientation(Vector3 direction) { }
+    public virtual void AnimateToOrientation(Vector3 direction = default) { }
     public virtual Quaternion GetRotationFromFacing(Vector3 position, Vector3 facing)
     {
         Vector3 targetNormal = GetUpVector(position);
@@ -163,7 +176,7 @@ public abstract class PrimaryMovement : MonoBehaviour
         Quaternion toRotation = GetRotationFromFacing(Owner.transform.position, worldTarget - Owner.transform.position);
         Owner.transform.rotation = instant ? toRotation : Quaternion.Slerp(Owner.transform.rotation, toRotation, lookSpeed * Time.deltaTime);
         if (instant) InstantNeutral(); 
-        else AnimateToOrientation(Vector3.zero);
+        else AnimateToOrientation();
     }
 
     public IEnumerator ApplyImpulseToBody(Vector3 direction, float distance, float snapTime, float returnTime)

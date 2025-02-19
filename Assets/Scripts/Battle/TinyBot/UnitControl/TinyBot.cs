@@ -15,7 +15,6 @@ public class TinyBot : Targetable
     [SerializeField] float hitRecoilTime;
     [SerializeField] float hitReturnTime;
     [SerializeField] float recoilDistancePerDamage;
-    [SerializeField] float backstabMultiplier = 1.5f;
     [SerializeField] BotStateFeedback feedback;
     [SerializeField] GameObject hitSpark;
     public Transform headshotPosition;
@@ -39,7 +38,7 @@ public class TinyBot : Targetable
 
     [HideInInspector] public BuffController Buffs;
     [HideInInspector] public BotCharacter LinkedCore;
-    [HideInInspector] public PrimaryMovement PrimaryMovement;
+    [HideInInspector] public PrimaryMovement Movement;
     [HideInInspector] public BotCaster Caster;
     public List<ActiveAbility> ActiveAbilities { get; private set; }
     public List<PassiveAbility> PassiveAbilities { get; private set;}
@@ -52,8 +51,8 @@ public class TinyBot : Targetable
     public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement, bool echo = false)
     {
         
-        PrimaryMovement = primaryMovement;
-        PrimaryMovement.Owner = this;
+        Movement = primaryMovement;
+        Movement.Owner = this;
         Buffs = new BuffController(this);
         SetAbilities(abilities, echo);
         if (echo) return;
@@ -131,7 +130,7 @@ public class TinyBot : Targetable
 
     public override MoveStyle GetMoveStyle()
     {
-        return PrimaryMovement.Style;
+        return Movement.Style;
     }
 
     public void SpendResource(int resource, StatType statType)
@@ -162,7 +161,7 @@ public class TinyBot : Targetable
         ToggleActiveLayer(true);
         if (Allegiance == Allegiance.PLAYER)
         {
-            Pathfinder3D.GeneratePathingTree(PrimaryMovement.Style, transform.position);
+            Pathfinder3D.GeneratePathingTree(Movement.Style, transform.position);
             PrimaryCursor.TogglePlayerLockout(false);
             PrimaryCursor.PlayerSelectedBot.Invoke(this);
         }
@@ -204,7 +203,7 @@ public class TinyBot : Targetable
         Vector3 hitDirection = (source.TargetPoint.position - transform.position).normalized;
 
         feedback.QueuePopup(finalDamage, finalDamage > 1.5f * baseDamage);
-        StartCoroutine(PrimaryMovement.ApplyImpulseToBody(-hitDirection, recoilDistancePerDamage * finalDamage, hitRecoilTime, hitReturnTime));
+        StartCoroutine(Movement.ApplyImpulseToBody(-hitDirection, recoilDistancePerDamage * finalDamage, hitRecoilTime, hitReturnTime));
         GameObject spark = Instantiate(hitSpark, hitPoint, Quaternion.identity);
         spark.transform.LookAt(source.TargetPoint.position);
         Destroy(spark, 1f);
@@ -228,7 +227,7 @@ public class TinyBot : Targetable
     {
         PhysicsBody.isKinematic = true;
         Vector3 surfaceNormal = MoveStyle == MoveStyle.CRAWL ? Pathfinder3D.GetCrawlOrientation(coords) : Vector3.up;
-        Vector3 finalPosition = PrimaryMovement.SanitizePoint(coords);
+        Vector3 finalPosition = Movement.SanitizePoint(coords);
         Quaternion rotationTarget = Quaternion.FromToRotation(transform.up, surfaceNormal) * transform.rotation;
         //StartCoroutine(PrimaryMovement.NeutralStance());
         Tween.Position(transform, endValue: finalPosition, duration: landingDuration).Group(
@@ -239,21 +238,22 @@ public class TinyBot : Targetable
     protected override void EndFall(float startHeight)
     {
         base.EndFall(startHeight);
-        PrimaryMovement.LandingStance();
-        Tween.Delay(.5f, () => StartCoroutine(PrimaryMovement.NeutralStance()));
+        Movement.LandingStance();
+        Tween.Delay(.5f, () => StartCoroutine(Movement.NeutralStance()));
     }
 
     public void PlaceAt(Vector3 landingPoint, Vector3 facing = default)
     {
         gameObject.SetActive(true);
-        Vector3 cleanPosition = PrimaryMovement.SanitizePoint(landingPoint);
+        Vector3 cleanPosition = Movement.SanitizePoint(landingPoint);
         transform.position = cleanPosition;
-        PrimaryMovement.PivotToFacePosition(transform.position + facing, true);
+        Movement.PivotToFacePosition(transform.position + facing, true);
     }
 
     public void DeclareEcho()
     {
         gameObject.name = "Echo";
+        Movement.ToggleAnimations(false);
         ToggleActiveLayer(true);
         Collider collider = GetComponent<Collider>();
         Destroy(collider);

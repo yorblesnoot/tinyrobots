@@ -37,14 +37,14 @@ public abstract class LegMovement : PrimaryMovement
     public override float LocomotionHeight => locomotionHeight;
     float locomotionHeight;
 
-    private void Awake()
+    protected override void AwakeInitialize()
     {
-        InitializeParameters();
+        base.AwakeInitialize();
+        baseLimbPositions = new();
+        sourceBone.TraverseHierarchy(SaveLimbPosition);
+        baseLimbPositions.Remove(sourceBone);
         TerrainMask = LayerMask.GetMask("Terrain");
-        foreach (var anchor in anchors)
-        {
-            anchor.Initialize();
-        }
+        foreach (var anchor in anchors) anchor.Initialize();
         locomotionHeight = transform.position.y - anchors[0].ikTarget.position.y;
     }
 
@@ -77,13 +77,7 @@ public abstract class LegMovement : PrimaryMovement
         foreach (var entry in baseLimbPositions) entry.Key.SetLocalPositionAndRotation(entry.Value.Item1, entry.Value.Item2);
     }
 
-    protected virtual void InitializeParameters()
-    {
-        baseLimbPositions = new();
-        sourceBone.TraverseHierarchy(SaveLimbPosition);
-        baseLimbPositions.Remove(sourceBone);
-    }
-    public override void AnimateToOrientation(Vector3 legDirection)
+    public override void AnimateToOrientation(Vector3 legDirection = default)
     {
         foreach (var anchor in anchors)
         {
@@ -112,8 +106,8 @@ public abstract class LegMovement : PrimaryMovement
 
     protected virtual float LegDistanceFromDeadZone(Anchor anchor, Vector3 legDirection)
     {
-        Vector3 localForward = anchor.ikTarget.InverseTransformDirection(legDirection).normalized;
-        return Vector3.Distance(anchor.ikTarget.localPosition, anchor.LocalBasePosition + localForward * forwardBias);
+        Vector3 anchorWorldBase = anchor.ikTarget.parent.TransformPoint(anchor.LocalBasePosition) + legDirection.normalized * forwardBias;
+        return Vector3.Distance(anchor.ikTarget.position, anchorWorldBase);
     }
     
     protected void TryStepToBase(Anchor anchor, Vector3 movementDirection)

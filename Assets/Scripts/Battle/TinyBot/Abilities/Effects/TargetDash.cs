@@ -13,7 +13,7 @@ public class TargetDash : AbilityEffect
         bool landingPoint = Pathfinder3D.GetLandingPointBy(trajectory[^1], owner.MoveStyle, out Vector3Int target);
         if (landingPoint)
         {
-            Quaternion finalRotation = owner.PrimaryMovement.GetRotationFromFacing(target, owner.transform.forward);
+            Quaternion finalRotation = owner.Movement.GetRotationFromFacing(target, owner.transform.forward);
             Tween.Rotation(owner.transform, finalRotation, intervalTime * trajectory.Count);
         }
         for (int i = 1; i < trajectory.Count; i++)
@@ -26,7 +26,7 @@ public class TargetDash : AbilityEffect
             Vector3 velocity = fallWithMomentum ? (trajectory[^1] - trajectory[^2]) / intervalTime : Vector3.zero;
             yield return StartCoroutine(owner.Fall(velocity));
         }
-        else owner.PrimaryMovement.LandingStance();
+        else owner.Movement.LandingStance();
         Pathfinder3D.GeneratePathingTree(owner.MoveStyle, owner.transform.position);
     }
 }

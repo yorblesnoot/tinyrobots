@@ -8,9 +8,9 @@ public class BipedalWalk : LegMovement
     readonly float legScanHeight = 2.5f;
     readonly float scanOriginHeight = 1;
 
-    protected override void InitializeParameters()
+    protected override void AwakeInitialize()
     {
-        base.InitializeParameters();
+        base.AwakeInitialize();
         sanitizationPositions = new() { Vector3.zero, Vector3.left * sanOffset, Vector3.right * sanOffset, Vector3.forward * sanOffset, Vector3.back * sanOffset };
     }
 

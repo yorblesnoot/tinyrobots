@@ -84,12 +84,12 @@ public class SpawnZone : MonoBehaviour
         List<Vector3> availableSpaces = styleNodes[bot.Allegiance][bot.MoveStyle];
         if (availableSpaces.Count == 0) Debug.LogError($"{bot.Allegiance} Bot with Movement {bot.MoveStyle} was unable to find space within a Spawn Zone.");
         Vector3 targetSpace =  availableSpaces.GrabRandomly();
-        bot.transform.position = bot.PrimaryMovement.SanitizePoint(targetSpace);
+        bot.transform.position = bot.Movement.SanitizePoint(targetSpace);
         foreach(var allegiance in styleNodes.Values) 
             foreach (var mode in allegiance.Values) mode.Remove(targetSpace);
         bot.gameObject.SetActive(true);
-        bot.PrimaryMovement.PivotToFacePosition(GetCenterColumn(bot), true);
-        bot.StartCoroutine(bot.PrimaryMovement.NeutralStance());
+        bot.Movement.PivotToFacePosition(GetCenterColumn(bot), true);
+        bot.StartCoroutine(bot.Movement.NeutralStance());
     }
 
     public static Vector3 GetCenterColumn(TinyBot bot)

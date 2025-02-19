@@ -12,7 +12,7 @@ public class ImpulseAnimation : AbilityEffect
     {
         Vector3 direction = trajectory[0] - trajectory[^1];
         if(direction == Vector3.zero) direction = owner.transform.forward;
-        if(waitForEnd) yield return StartCoroutine(owner.PrimaryMovement.ApplyImpulseToBody(direction, impulseLength, duration, returnDuration));
-        else StartCoroutine(owner.PrimaryMovement.ApplyImpulseToBody(direction, impulseLength, duration, returnDuration));
+        if(waitForEnd) yield return StartCoroutine(owner.Movement.ApplyImpulseToBody(direction, impulseLength, duration, returnDuration));
+        else StartCoroutine(owner.Movement.ApplyImpulseToBody(direction, impulseLength, duration, returnDuration));
     }
 }

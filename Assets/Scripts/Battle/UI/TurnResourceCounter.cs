@@ -65,7 +65,7 @@ public class TurnResourceCounter : MonoBehaviour
     void AnimateMoveBar()
     {
         float difference = currentBot.Stats.Current[StatType.MOVEMENT] - moveSlider.value;
-        float duration = Mathf.Abs(difference / currentBot.PrimaryMovement.FinalSpeed);
+        float duration = Mathf.Abs(difference / currentBot.Movement.FinalSpeed);
         Tween.Custom(moveSlider.value, currentBot.Stats.Current[StatType.MOVEMENT], duration, SetSliderAndNumber);
     }
 }

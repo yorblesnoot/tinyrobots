@@ -30,6 +30,7 @@ public class BotCaster : MonoBehaviour
             .OrderBy(position => Vector3.Distance(position, owner.transform.position))
             .ToList();
         if (owner.Allegiance == Allegiance.PLAYER) StartCoroutine(PlayerAimAbility(ability, PrimaryCursor.Transform.gameObject));
+        owner.Movement.ToggleAnimations(false);
         return true;
     }
 
@@ -44,6 +45,7 @@ public class BotCaster : MonoBehaviour
         tracking = false;
         HidePlayerTargeting();
         Ability = null;
+        owner.Movement.ToggleAnimations(true);
     }
 
     readonly float finalizeAimDuration = 1.0f;
@@ -84,22 +86,22 @@ public class BotCaster : MonoBehaviour
             Vector3Int cleanTarget = Vector3Int.RoundToInt(targetPosition);
             PossibleCast = Ability.SimulateCast(targetPosition);
             ability.PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
-            ActiveAbility aimer;
             if (ability.range > 0 && GetTargetQuality(targetPosition, PossibleCast.Trajectory) > targetOffsetTolerance)
             {
                 if(cleanTarget == lastCastTarget)
                 {
                     PossibleCast = Ability.SimulateCast(targetPosition, lastCastSource);
                 }
-                else if (FindValidCast(targetPosition, out PossibleCast validCast))
+                else if (FindValidCast(targetPosition, out PossibleCast validCast, PrimaryCursor.TargetedBot))
                 {
                     lastCastSource = validCast.Source;
                     Vector3 facing = targetPosition - validCast.Source;
                     PrimaryCursor.Instance.GenerateMovePreview(Vector3Int.RoundToInt(validCast.Source), facing);
+                    owner.EchoMap[ability].PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
                     PossibleCast = validCast;
                 }
                 lastCastTarget = cleanTarget;
-                //owner.EchoMap[ability].PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
+                
             }
             else PrimaryCursor.InvalidatePath();
             DrawPlayerTargeting(PossibleCast);
@@ -108,7 +110,7 @@ public class BotCaster : MonoBehaviour
     }
 
     readonly float targetOffsetTolerance = .5f;
-    bool FindValidCast(Vector3 targetPosition, out PossibleCast cast)
+    bool FindValidCast(Vector3 targetPosition, out PossibleCast cast, Targetable snapTarget = null)
     {
         cast = default;
         foreach (Vector3Int pathablePoint in pathableLocations)
@@ -117,7 +119,8 @@ public class BotCaster : MonoBehaviour
 
             PossibleCast possibleCast = Ability.SimulateCast(targetPosition, pathablePoint, false);
             float quality = GetTargetQuality(targetPosition, possibleCast.Trajectory);
-            if (quality <= targetOffsetTolerance)
+            bool gotSnapTarget = snapTarget != null && possibleCast.Targets.Contains(snapTarget);
+            if (quality <= targetOffsetTolerance || gotSnapTarget)
             {
                 cast = possibleCast;
                 return true;

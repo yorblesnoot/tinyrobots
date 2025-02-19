@@ -112,7 +112,7 @@ public class PrimaryCursor : MonoBehaviour
     {
         numRotator.SetActive(true);
         numRotator.transform.SetParent(null);
-        possiblePath = PlayerControlledBot.PrimaryMovement.SanitizePath(possiblePath);
+        possiblePath = PlayerControlledBot.Movement.SanitizePath(possiblePath);
         //get the indices in the raw path of the new path points
         //then replace the old distance list with 
         List<float> distances = GetPathDistances(possiblePath);
@@ -233,9 +233,9 @@ public class PrimaryCursor : MonoBehaviour
     private IEnumerator TraversePath()
     {
         TogglePlayerLockout(true);
-        yield return StartCoroutine(PlayerControlledBot.PrimaryMovement.TraversePath(currentPath));
+        yield return StartCoroutine(PlayerControlledBot.Movement.TraversePath(currentPath));
         InvalidatePath();
-        Pathfinder3D.GeneratePathingTree(PlayerControlledBot.PrimaryMovement.Style, PlayerControlledBot.transform.position);
+        Pathfinder3D.GeneratePathingTree(PlayerControlledBot.Movement.Style, PlayerControlledBot.transform.position);
         TogglePlayerLockout(false);
     }
 
