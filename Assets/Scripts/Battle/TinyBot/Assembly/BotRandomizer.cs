@@ -40,7 +40,7 @@ public static class BotRandomizer
         generableParts ??= new();
         if(!generableParts.TryGetValue(slotType, out List<CraftablePart> generables))
         {
-            generables = converter.PartLibrary.Where(part => !part.PrimaryLocomotion && PartSlot.PartCanSlot(part.Type, slotType)).ToList();
+            generables = converter.PartLibrary.Where(part => !part.PrimaryLocomotion && PartSlot.PartCanSlot(part.Type, slotType) && part.EnergyCost > 0).ToList();
             generableParts.Add(slotType, generables);
         }
         return generables;

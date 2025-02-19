@@ -85,7 +85,7 @@ public class BotCaster : MonoBehaviour
             PossibleCast = Ability.SimulateCast(targetPosition);
             ability.PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
             ActiveAbility aimer;
-            if (GetTargetQuality(targetPosition, PossibleCast.Trajectory) > targetOffsetTolerance)
+            if (ability.range > 0 && GetTargetQuality(targetPosition, PossibleCast.Trajectory) > targetOffsetTolerance)
             {
                 if(cleanTarget == lastCastTarget)
                 {

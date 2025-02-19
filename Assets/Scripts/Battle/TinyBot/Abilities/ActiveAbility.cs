@@ -106,6 +106,7 @@ public class ActiveAbility : Ability
     public void PhysicalAimAlongTrajectory(List<Vector3> trajectory)
     {
         if (trackingAnimation != null) trackingAnimation.Aim(trajectory);
+        if (range == 0) return;
         Owner.PrimaryMovement.PivotToFacePosition(trajectory[^1]);
     }
 
