@@ -49,7 +49,6 @@ public class BotCaster : MonoBehaviour
         CastOutcomeIndicator.Hide();
     }
 
-    readonly float finalizeAimDuration = 1.0f;
     public IEnumerator CastSequence()
     {
         yield return CastSequence(PossibleCast);
@@ -59,13 +58,7 @@ public class BotCaster : MonoBehaviour
     {
         EndTracking();
         PrimaryCursor.TogglePlayerLockout(true);
-        float timeElapsed = 0;
-        while(timeElapsed < finalizeAimDuration)
-        {
-            Ability.PhysicalAimAlongTrajectory(cast.Trajectory);
-            timeElapsed += Time.deltaTime;
-            yield return null;
-        }
+        yield return Ability.AdjustTrajectory(cast);
         Vector3Int startPosition = Vector3Int.RoundToInt(owner.transform.position);
         MainCameraControl.PanToPosition(cast.Trajectory[^1]);
         yield return Ability.Execute(cast.Trajectory, cast.Targets);
@@ -116,7 +109,6 @@ public class BotCaster : MonoBehaviour
     bool FindValidCast(Vector3 targetPosition, out PossibleCast cast, Targetable snapTarget = null)
     {
         cast = default;
-        Debug.Log(pathableLocations.Count);
         foreach (Vector3Int pathablePoint in pathableLocations)
         {
             if (Vector3.Distance(pathablePoint, targetPosition) > Ability.TotalRange) continue;
@@ -177,7 +169,7 @@ public class BotCaster : MonoBehaviour
     }
 }
 
-public struct PossibleCast
+public class PossibleCast
 {
     public Vector3 Source;
     public List<Vector3> Trajectory;

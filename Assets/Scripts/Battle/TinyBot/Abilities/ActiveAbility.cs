@@ -56,6 +56,20 @@ public class ActiveAbility : Ability
         //MainCameraControl.FindViewOfPosition(Owner.TargetPoint.position, false, false);
     }
 
+    readonly float finalizeAimDuration = 1.0f;
+    public IEnumerator AdjustTrajectory(PossibleCast cast)
+    {
+        float timeElapsed = 0;
+        while (timeElapsed < finalizeAimDuration)
+        {
+            
+            PhysicalAimAlongTrajectory(cast.Trajectory);
+            cast.Trajectory = TrajectoryDefinition.GetTrajectory(emissionPoint.transform.position, cast.Trajectory[^1], out _);
+            timeElapsed += Time.deltaTime;
+            yield return null;
+        }
+    }
+
     public PossibleCast SimulateCast(Vector3 castTarget, Vector3 ownerPosition = default, bool wide = false)
     {
         Vector3 emissionSource;
