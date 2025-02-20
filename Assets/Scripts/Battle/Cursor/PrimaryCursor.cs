@@ -184,7 +184,7 @@ public class PrimaryCursor : MonoBehaviour
     {
         if (skillActive)
         {
-            if (!PlayerControlledBot.Caster.IsCastValid()) yield break;
+            if (!PlayerControlledBot.Caster.CastIsValid()) yield break;
             PlayerControlledBot.Caster.EndTracking();
         } 
         if (currentPath != null && PlayerControlledBot != null && currentPath.Count > 0)

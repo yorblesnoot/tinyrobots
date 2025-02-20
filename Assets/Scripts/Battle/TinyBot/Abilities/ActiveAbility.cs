@@ -43,7 +43,7 @@ public class ActiveAbility : Ability
     {
         base.Initialize(botUnit);
         if (emissionPoint == null) emissionPoint = Owner.transform;
-        baseEmissionPosition = emissionPoint.localPosition;
+        baseEmissionPosition = botUnit.transform.InverseTransformPoint(emissionPoint.position);
     }
 
     public IEnumerator Execute(List<Vector3> trajectory, List<Targetable> targets)
@@ -70,7 +70,7 @@ public class ActiveAbility : Ability
         else
         {
             Vector3 facing = castTarget - ownerPosition;
-            emissionSource = JointPositionAt(emissionPoint.position, ownerPosition, facing, false);
+            emissionSource = JointPositionAt(baseEmissionPosition, ownerPosition, facing, true);
             rangeSource = JointPositionAt(transform.position, ownerPosition, facing);
         }
         PossibleCast eval = new() { Source = ownerPosition };
@@ -82,7 +82,7 @@ public class ActiveAbility : Ability
         return eval;
     }
 
-    Vector3 JointPositionAt(Vector3 jointPosition, Vector3 position, Vector3 facing, bool local = true)
+    Vector3 JointPositionAt(Vector3 jointPosition, Vector3 position, Vector3 facing, bool local = false)
     {
         Vector3 localGun = local ? jointPosition : Owner.transform.InverseTransformPoint(jointPosition);
         Quaternion locationRotation = Owner.Movement.GetRotationFromFacing(position, facing);

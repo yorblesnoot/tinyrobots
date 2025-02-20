@@ -32,7 +32,6 @@ public abstract class PrimaryMovement : MonoBehaviour
 
     protected virtual void AwakeInitialize()
     {
-        Debug.Log("initialized " + gameObject.name);
         sanitizeMask = LayerMask.GetMask("Terrain", "Default");
         animator = GetComponentInChildren<Animator>();
     }

@@ -46,6 +46,7 @@ public class BotCaster : MonoBehaviour
         HidePlayerTargeting();
         Ability = null;
         owner.Movement.ToggleAnimations(true);
+        CastOutcomeIndicator.Hide();
     }
 
     readonly float finalizeAimDuration = 1.0f;
@@ -88,7 +89,7 @@ public class BotCaster : MonoBehaviour
             ability.PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
             if (ability.range > 0 && GetTargetQuality(targetPosition, PossibleCast.Trajectory) > targetOffsetTolerance)
             {
-                if(cleanTarget == lastCastTarget)
+                if (cleanTarget == lastCastTarget)
                 {
                     PossibleCast = Ability.SimulateCast(targetPosition, lastCastSource);
                 }
@@ -97,14 +98,16 @@ public class BotCaster : MonoBehaviour
                     lastCastSource = validCast.Source;
                     Vector3 facing = targetPosition - validCast.Source;
                     PrimaryCursor.Instance.GenerateMovePreview(Vector3Int.RoundToInt(validCast.Source), facing);
-                    owner.EchoMap[ability].PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
+                    //owner.EchoMap[ability].PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
                     PossibleCast = validCast;
                 }
+                else Debug.LogError("no cast found");
                 lastCastTarget = cleanTarget;
                 
             }
             else PrimaryCursor.InvalidatePath();
             DrawPlayerTargeting(PossibleCast);
+            CastOutcomeIndicator.Show(PossibleCast.Trajectory[^1], CastIsValid());
             yield return null;
         }
     }
@@ -113,6 +116,7 @@ public class BotCaster : MonoBehaviour
     bool FindValidCast(Vector3 targetPosition, out PossibleCast cast, Targetable snapTarget = null)
     {
         cast = default;
+        Debug.Log(pathableLocations.Count);
         foreach (Vector3Int pathablePoint in pathableLocations)
         {
             if (Vector3.Distance(pathablePoint, targetPosition) > Ability.TotalRange) continue;
@@ -167,7 +171,7 @@ public class BotCaster : MonoBehaviour
         }
     }
 
-    public bool IsCastValid()
+    public bool CastIsValid()
     {
         return Ability.IsCastValid(PossibleCast);
     }

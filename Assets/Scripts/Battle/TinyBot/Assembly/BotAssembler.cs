@@ -91,8 +91,6 @@ public class BotAssembler : MonoBehaviour
         treeRoot.Traverse((part) => part.InitializePart());
         TinyBot echo = BuildBot(treeRoot, allegiance, true);
         treeRoot.Traverse((part) => Debug.Log(part.BasePart.name));
-        Debug.Log("set echo");
-        Debug.Log(echo.Movement + " move");
         echo.DeclareEcho();
         botUnit.EchoMap = new();
         for(int i = 0; i < echo.ActiveAbilities.Count; i++) botUnit.EchoMap.Add(botUnit.ActiveAbilities[i], echo.ActiveAbilities[i]);
