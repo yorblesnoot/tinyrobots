@@ -12,6 +12,7 @@ public enum MissionType
 public abstract class Mission : MonoBehaviour
 {
     [SerializeField] List<BotRecord> playerBotOverride;
+    [SerializeField] List<BotRecord> enemyBotOverride;
     [SerializeField] bool selectFirstBot = true;
     [SerializeField] bool useDeployment = true;
     public static Mission Active;
@@ -88,8 +89,8 @@ public abstract class Mission : MonoBehaviour
         {
             List<BotRecord> enemyRecords = table.GetSpawnList(SceneGlobals.PlayerData.Difficulty);
             bots.AddRange(enemyRecords.Select(record => SpawnBot(Allegiance.ENEMY, record)));
-            
         }
+        if (enemyBotOverride != null) bots.AddRange(enemyBotOverride.Select(record => SpawnBot(Allegiance.ENEMY, record)));
         return bots;
     }
 }

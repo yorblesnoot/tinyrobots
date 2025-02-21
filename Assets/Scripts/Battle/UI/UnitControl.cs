@@ -78,8 +78,8 @@ public class UnitControl : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Space)) EndPlayerTurn();
         if (deployedAbilities == null || !Input.anyKeyDown) return;
-        if(Input.GetKeyDown(KeyCode.Space)) EndPlayerTurn();
         for (int i = 0;i < deployedAbilities.Count; i++)
         {
             if (!Input.GetKeyDown(keyCodes[i])) continue;

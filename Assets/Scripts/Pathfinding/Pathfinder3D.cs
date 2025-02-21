@@ -187,19 +187,19 @@ public static class Pathfinder3D
         return compatible.Select(n => n.Location).ToList();
     }
 
-    public static List<Vector3Int> FilterByWalkAccessible(Vector3Int nearestTarget, float abilityRange, List<Vector3Int> nearPositions)
+    public static List<Vector3Int> FilterByAccessToCastPosition(Vector3Int nearestTarget, float abilityRange, List<Vector3Int> potentialPositions)
     {
         //find nodes within ability range of nearest enemy
-        List<Node> enemyRange = SearchSphere(nearestTarget, Mathf.FloorToInt(abilityRange));
+        List<Node> targetVicinity = SearchSphere(nearestTarget, Mathf.FloorToInt(abilityRange));
 
         //get flood zones of those nodes
-        HashSet<int> targetZones = enemyRange.Select(n => n.FloodZone).ToHashSet();
+        HashSet<int> usableZones = targetVicinity.Select(n => n.FloodZone).ToHashSet();
 
         //filter nearby nodes by the found flood zones
-        nearPositions = nearPositions.Where(p => targetZones.Contains(nodeMap[p].FloodZone)).ToList();
+        potentialPositions = potentialPositions.Where(p => usableZones.Contains(nodeMap[p].FloodZone)).ToList();
 
         //order those nodes by distance from the user
-        return nearPositions;
+        return potentialPositions;
     }
 
     static List<Node> SearchSphere(Vector3Int source, int radius)

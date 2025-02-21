@@ -11,6 +11,7 @@ public class ToggleAnimation : AbilityEffect
 
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
+        animator.speed = 1;
         animator.SetBool(animatorStateName, playValue);
         yield return new WaitForSeconds(duration);
     }

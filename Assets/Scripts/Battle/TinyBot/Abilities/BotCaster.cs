@@ -9,7 +9,7 @@ public class BotCaster : MonoBehaviour
     TinyBot owner;
     bool tracking;
     public ActiveAbility Ability { get; private set; }
-    protected PossibleCast PossibleCast;
+    public PossibleCast ActiveCast;
     List<Vector3Int> pathableLocations;
     public static UnityEvent ResetHighlights = new();
     public static UnityEvent ClearCasting = new();
@@ -36,7 +36,7 @@ public class BotCaster : MonoBehaviour
 
     public void CastLoadedSkill()
     {
-        StartCoroutine(CastSequence(PossibleCast));
+        StartCoroutine(CastSequence(ActiveCast));
     }
 
     void Cancel()
@@ -51,7 +51,7 @@ public class BotCaster : MonoBehaviour
 
     public IEnumerator CastSequence()
     {
-        yield return CastSequence(PossibleCast);
+        yield return CastSequence(ActiveCast);
     }
 
     IEnumerator CastSequence(PossibleCast cast)
@@ -78,35 +78,31 @@ public class BotCaster : MonoBehaviour
         {
             Vector3 targetPosition = trackedTarget.transform.position;
             Vector3Int cleanTarget = Vector3Int.RoundToInt(targetPosition);
-            PossibleCast = Ability.SimulateCast(targetPosition);
-            ability.PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
-            if (ability.range > 0 && GetTargetQuality(targetPosition, PossibleCast.Trajectory) > targetOffsetTolerance)
+            ActiveCast = Ability.SimulateCast(targetPosition);
+            ability.PhysicalAimAlongTrajectory(ActiveCast.Trajectory);
+            if (ability.range > 0 && GetTargetQuality(targetPosition, ActiveCast.Trajectory) > targetOffsetTolerance)
             {
-                if (cleanTarget == lastCastTarget)
-                {
-                    PossibleCast = Ability.SimulateCast(targetPosition, lastCastSource);
-                }
-                else if (FindValidCast(targetPosition, out PossibleCast validCast, PrimaryCursor.TargetedBot))
+                if (cleanTarget != lastCastTarget && FindValidCast(targetPosition, out PossibleCast validCast, PrimaryCursor.TargetedBot))
                 {
                     lastCastSource = validCast.Source;
                     Vector3 facing = targetPosition - validCast.Source;
                     PrimaryCursor.Instance.GenerateMovePreview(Vector3Int.RoundToInt(validCast.Source), facing);
                     //owner.EchoMap[ability].PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
-                    PossibleCast = validCast;
+                    ActiveCast = validCast;
                 }
-                else Debug.LogError("no cast found");
+                else ActiveCast = Ability.SimulateCast(targetPosition, lastCastSource);
                 lastCastTarget = cleanTarget;
                 
             }
             else PrimaryCursor.InvalidatePath();
-            DrawPlayerTargeting(PossibleCast);
-            CastOutcomeIndicator.Show(PossibleCast.Trajectory[^1], CastIsValid());
+            DrawPlayerTargeting(ActiveCast);
+            CastOutcomeIndicator.Show(ActiveCast.Trajectory[^1], CastIsValid());
             yield return null;
         }
     }
 
     readonly float targetOffsetTolerance = .5f;
-    bool FindValidCast(Vector3 targetPosition, out PossibleCast cast, Targetable snapTarget = null)
+    public bool FindValidCast(Vector3 targetPosition, out PossibleCast cast, Targetable snapTarget = null)
     {
         cast = default;
         foreach (Vector3Int pathablePoint in pathableLocations)
@@ -165,7 +161,7 @@ public class BotCaster : MonoBehaviour
 
     public bool CastIsValid()
     {
-        return Ability.IsCastValid(PossibleCast);
+        return Ability.IsCastValid(ActiveCast);
     }
 }
 

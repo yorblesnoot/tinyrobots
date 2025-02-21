@@ -56,7 +56,7 @@ public class ActiveAbility : Ability
         //MainCameraControl.FindViewOfPosition(Owner.TargetPoint.position, false, false);
     }
 
-    readonly float finalizeAimDuration = 1.0f;
+    readonly float finalizeAimDuration = .5f;
     public IEnumerator AdjustTrajectory(PossibleCast cast)
     {
         float timeElapsed = 0;
@@ -70,6 +70,8 @@ public class ActiveAbility : Ability
         }
     }
 
+
+    readonly float endCheckRadius = .1f;
     public PossibleCast SimulateCast(Vector3 castTarget, Vector3 ownerPosition = default, bool wide = false)
     {
         Vector3 emissionSource;
@@ -90,7 +92,7 @@ public class ActiveAbility : Ability
         PossibleCast eval = new() { Source = ownerPosition };
         Vector3 rangeTarget = GetRangeLimitedTarget(rangeSource, castTarget);
         eval.Trajectory = TrajectoryDefinition.GetTrajectory(emissionSource, rangeTarget, out RaycastHit hit, wide);
-        eval.Hit = hit.collider != null;
+        eval.Hit = hit.collider != null || Physics.CheckSphere(eval.Trajectory[^1], endCheckRadius, TrajectoryDefinition.BlockingLayerMask);
         List<Targetable> newTargets = range == 0 ? new() { Owner } : TargetType.FindTargets(eval.Trajectory);
         eval.Targets = new(newTargets);
         return eval;
