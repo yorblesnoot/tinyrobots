@@ -28,31 +28,23 @@ public class GraftPart : AbilityEffect
         List<PartModifier> parts = bot.PartModifiers.Where(part => part.SourcePart.BasePart.Type == SlotType.LATERAL && part.Abilities.Count() > 0).ToList();
         PartModifier target = parts.GrabRandomly(false);
         GraftPartToUnit(owner, target, graftAnimationDuration);
-
-        if(owner.BotEcho == null) return;
-        target.SourcePart.InitializePart();
-        PartModifier clone = target.SourcePart.Sample.GetComponent<PartModifier>();
-        GraftPartToUnit(owner.BotEcho, clone, .1f);
-        for(int i = 0; i < target.Abilities.Count(); i++)
-        {
-            ActiveAbility active = target.Abilities[i] as ActiveAbility;
-            if(active == null) continue;
-            owner.EchoMap.Add(active, clone.Abilities[i] as ActiveAbility);
-        }
     }
 
-    private void GraftPartToUnit(TinyBot owner, PartModifier target, float duration)
+    private void GraftPartToUnit(TinyBot owner, PartModifier part, float duration)
     {
-        if(target.TryGetComponent<Rigidbody>(out var body)) body.isKinematic = true;
+        if(part.TryGetComponent<Rigidbody>(out var body)) body.isKinematic = true;
         GameObject slot = availableSlots.GrabRandomly();
-        target.transform.SetParent(slot.transform.parent, true);
-        Tween.LocalPosition(target.transform, slot.transform.localPosition, duration);
-        Tween.LocalRotation(target.transform, slot.transform.localRotation, duration);
+        part.transform.SetParent(slot.transform.parent, true);
+        Tween.LocalPosition(part.transform, slot.transform.localPosition, duration)
+            .Group(Tween.LocalRotation(part.transform, slot.transform.localRotation, duration)).OnComplete(() => AddAbilities(part, owner));
         slot.SetActive(false);
 
+        
+    }
+
+    void AddAbilities(PartModifier target, TinyBot owner)
+    {
         foreach (var ability in target.Abilities)
-        {
             owner.AddAbility(ability);
-        }
     }
 }

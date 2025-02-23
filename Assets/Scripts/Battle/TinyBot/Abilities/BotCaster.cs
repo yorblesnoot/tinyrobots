@@ -63,9 +63,12 @@ public class BotCaster : MonoBehaviour
         MainCameraControl.PanToPosition(cast.Trajectory[^1]);
         yield return Ability.Execute(cast.Trajectory, cast.Targets);
         if (Vector3Int.RoundToInt(owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(owner.MoveStyle, owner.transform.position);
-        if (Ability.EndTurn) yield return new WaitForSeconds(1);
-        PrimaryCursor.TogglePlayerLockout(false);
-        if (Ability.EndTurn) TurnManager.EndTurn(owner);
+        if (Ability.EndTurn)
+        {
+            yield return new WaitForSeconds(1);
+            TurnManager.EndTurn(owner);
+        }
+        if (owner.Allegiance == Allegiance.PLAYER) PrimaryCursor.TogglePlayerLockout(false);
         ClearCasting.Invoke();
     }
 
@@ -107,7 +110,7 @@ public class BotCaster : MonoBehaviour
         cast = default;
         foreach (Vector3Int pathablePoint in pathableLocations)
         {
-            if (Vector3.Distance(pathablePoint, targetPosition) > Ability.TotalRange) continue;
+            //if (Vector3.Distance(pathablePoint, targetPosition) > Ability.TotalRange) continue;
 
             PossibleCast possibleCast = Ability.SimulateCast(targetPosition, pathablePoint, false);
             float quality = GetTargetQuality(targetPosition, possibleCast.Trajectory);

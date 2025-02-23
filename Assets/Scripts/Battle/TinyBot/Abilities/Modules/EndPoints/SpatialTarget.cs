@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SpatialTarget : TargetPoint
@@ -37,8 +38,8 @@ public class SpatialTarget : TargetPoint
         List<Collider> coneTargets = PhysicsHelper.OverlapCone(point, TargetRadius, direction, spatialDegree, layerMask);
 
         List<Targetable> targets = new();
-        foreach (Collider hit in coneTargets) if (hit.TryGetComponent(out Targetable target)) targets.Add(target);
-        return targets;
+        foreach (Collider hit in coneTargets) if (hit.TryGetComponent(out Targetable target)) targets.Add(target);        
+        return targets.OrderBy(target => Vector3.Distance(target.TargetPoint.position, trajectory[^1])).Take(maxTargets).ToList();
     }
 
     public override void Hide()

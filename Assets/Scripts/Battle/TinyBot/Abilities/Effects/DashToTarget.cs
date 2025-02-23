@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TargetDash : AbilityEffect
+public class DashToTarget : AbilityEffect
 {
     [SerializeField] float intervalTime = .2f;
     [SerializeField] bool fallWithMomentum = true;

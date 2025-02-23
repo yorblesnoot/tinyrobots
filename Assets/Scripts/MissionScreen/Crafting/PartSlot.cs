@@ -116,10 +116,8 @@ public class PartSlot : MonoBehaviour
         {
             foreach(Material material in renderer.materials)
             {
-                Tween.StopAll(material);
                 activeSequence.Group(Tween.MaterialProperty(material, Shader.PropertyToID(hologramAlphaPropName), 
                     startValue: on ? 0 : 1, endValue: on ? 1 : 0, duration: hologramFadeTime));
-                
             }
         }
         if (!on) activeSequence.OnComplete(ClearMockup);

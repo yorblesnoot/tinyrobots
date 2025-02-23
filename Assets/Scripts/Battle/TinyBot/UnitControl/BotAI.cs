@@ -179,11 +179,14 @@ public class BotAI
         Pathfinder3D.GeneratePathingTree(owner.MoveStyle, owner.transform.position);
         MainCameraControl.ReleaseTracking();
     }
+
+    readonly float skillDelay = .5f;
     private IEnumerator UseAbility(ActiveAbility ability, PossibleCast cast)
     {
         owner.Caster.ActiveCast = cast;
         yield return PathToCastingPosition(Vector3Int.RoundToInt(cast.Source));
         yield return owner.Caster.CastSequence();
+        yield return new WaitForSeconds(skillDelay);
         if (ability.EndTurn) owner.StopAllCoroutines();
     }
     #endregion

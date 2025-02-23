@@ -90,7 +90,7 @@ public class ActiveAbility : Ability
             rangeSource = JointPositionAt(transform.position, ownerPosition, facing);
         }
         PossibleCast eval = new() { Source = ownerPosition };
-        Vector3 rangeTarget = GetRangeLimitedTarget(rangeSource, castTarget);
+        Vector3 rangeTarget = TrajectoryDefinition.RestrictRange(castTarget, rangeSource, range);
         eval.Trajectory = TrajectoryDefinition.GetTrajectory(emissionSource, rangeTarget, out RaycastHit hit, wide);
         eval.Hit = hit.collider != null || Physics.CheckSphere(eval.Trajectory[^1], endCheckRadius, TrajectoryDefinition.BlockingLayerMask);
         List<Targetable> newTargets = range == 0 ? new() { Owner } : TargetType.FindTargets(eval.Trajectory);
@@ -105,13 +105,6 @@ public class ActiveAbility : Ability
         
         Vector3 rotatedGun = locationRotation * localGun;
         return position + rotatedGun;
-    }
-
-    Vector3 GetRangeLimitedTarget(Vector3 sourcePosition, Vector3 targetPosition)
-    {
-        float distance = Vector3.Distance(sourcePosition, targetPosition);
-        Vector3 direction = (targetPosition - sourcePosition).normalized;
-        return sourcePosition + direction * Mathf.Min(distance, range);
     }
 
     public virtual void EndAbility()
@@ -169,6 +162,7 @@ public class ActiveAbility : Ability
     public Color GetOutlineColor() => targetRequirement switch
     {
         TargetRequirement.ALLY => Color.green,
+        TargetRequirement.OPEN => Color.white,
         _ => Color.red,
     };
 

@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public abstract class Trajectory : MonoBehaviour
 {
     public string[] blockingLayers = { "Default", "Terrain", "Shield" };
-    public int BlockingLayerMask;
+    [HideInInspector] public int BlockingLayerMask;
 
     readonly float overlapLength = .1f;
 
@@ -18,6 +19,13 @@ public abstract class Trajectory : MonoBehaviour
         Vector3[] targets = CalculateTrajectory(sourcePosition, target);
         List < Vector3 > trajectory = CastAlongPoints(targets, BlockingLayerMask, out hit, wide ? BotAI.terrainCheckSize : 0);
         return trajectory;
+    }
+
+    public virtual Vector3 RestrictRange(Vector3 point, Vector3 source, float range)
+    {
+        float distance = Vector3.Distance(source, point);
+        Vector3 direction = (point - source).normalized;
+        return source + direction * Mathf.Min(distance, range);
     }
 
     protected abstract Vector3[] CalculateTrajectory(Vector3 source, Vector3 target);
