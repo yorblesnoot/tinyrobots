@@ -70,6 +70,11 @@ public class ActiveAbility : Ability
         }
     }
 
+    public bool PointIsInRange(Vector3 target, Vector3 source)
+    {
+        Vector3 rangeTarget = TrajectoryDefinition.RestrictRange(target, source, range);
+        return rangeTarget == target;
+    }
 
     readonly float endCheckRadius = .1f;
     public PossibleCast SimulateCast(Vector3 castTarget, Vector3 ownerPosition = default, bool wide = false)

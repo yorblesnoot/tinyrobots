@@ -197,13 +197,13 @@ public class TinyBot : Targetable
         Destroy(gameObject, 5f);
     }
 
-    public override void ReceiveHit(int baseDamage, TinyBot source, Vector3 hitPoint, bool canBackstab = true)
+    public override void ReceiveHit(int baseDamage, TinyBot source, Vector3 hitPoint, bool flinch = true)
     {
         int finalDamage = DamageCalculator.GetDamage(baseDamage, source, this, true);
         Vector3 hitDirection = (source.TargetPoint.position - transform.position).normalized;
 
         feedback.QueuePopup(finalDamage, finalDamage > 1.5f * baseDamage);
-        StartCoroutine(Movement.ApplyImpulseToBody(-hitDirection, recoilDistancePerDamage * finalDamage, hitRecoilTime, hitReturnTime));
+        if(flinch) StartCoroutine(Movement.ApplyImpulseToBody(-hitDirection, recoilDistancePerDamage * finalDamage, hitRecoilTime, hitReturnTime));
         GameObject spark = Instantiate(hitSpark, hitPoint, Quaternion.identity);
         spark.transform.LookAt(source.TargetPoint.position);
         Destroy(spark, 1f);

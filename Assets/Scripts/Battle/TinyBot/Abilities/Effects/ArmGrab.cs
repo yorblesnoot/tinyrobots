@@ -15,6 +15,7 @@ public class ArmGrab : AbilityEffect
         Grabbed.transform.SetParent(Ability.emissionPoint, true);
         owner.Stats.Current[StatType.MOVEMENT] /= 2;
         ToggleAbilityLock(owner);
+        FreezeIdleOfGrabbed(true);
         yield return null;
     }
     public void ToggleAbilityLock(TinyBot targetUnit, bool on = true)
@@ -25,5 +26,11 @@ public class ArmGrab : AbilityEffect
         }
         ActiveAbility active = armThrow.Ability as ActiveAbility;
         active.ProhibitAbility(this, !on);
+    }
+
+    public void FreezeIdleOfGrabbed(bool freeze)
+    {
+        TinyBot bot = Grabbed as TinyBot;
+        if (bot != null) bot.Movement.ToggleAnimations(!freeze);
     }
 }

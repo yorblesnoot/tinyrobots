@@ -75,17 +75,16 @@ public class BotCaster : MonoBehaviour
     IEnumerator PlayerAimAbility(ActiveAbility ability, GameObject trackedTarget)
     {
         tracking = true;
-        Vector3Int lastCastTarget = default;
+        //Vector3 lastCastTarget = default;
         Vector3 lastCastSource = owner.transform.position;
         while (tracking == true)
         {
             Vector3 targetPosition = trackedTarget.transform.position;
-            Vector3Int cleanTarget = Vector3Int.RoundToInt(targetPosition);
             ActiveCast = Ability.SimulateCast(targetPosition);
             ability.PhysicalAimAlongTrajectory(ActiveCast.Trajectory);
             if (ability.range > 0 && GetTargetQuality(targetPosition, ActiveCast.Trajectory) > targetOffsetTolerance)
             {
-                if (cleanTarget != lastCastTarget && FindValidCast(targetPosition, out PossibleCast validCast, PrimaryCursor.TargetedBot))
+                if (FindValidCast(targetPosition, out PossibleCast validCast, PrimaryCursor.TargetedBot))
                 {
                     lastCastSource = validCast.Source;
                     Vector3 facing = targetPosition - validCast.Source;
@@ -94,8 +93,7 @@ public class BotCaster : MonoBehaviour
                     ActiveCast = validCast;
                 }
                 else ActiveCast = Ability.SimulateCast(targetPosition, lastCastSource);
-                lastCastTarget = cleanTarget;
-                
+                //lastCastTarget = targetPosition;
             }
             else PrimaryCursor.InvalidatePath();
             DrawPlayerTargeting(ActiveCast);
@@ -110,7 +108,7 @@ public class BotCaster : MonoBehaviour
         cast = default;
         foreach (Vector3Int pathablePoint in pathableLocations)
         {
-            //if (Vector3.Distance(pathablePoint, targetPosition) > Ability.TotalRange) continue;
+            if (!Ability.PointIsInRange(pathablePoint, targetPosition)) continue;
 
             PossibleCast possibleCast = Ability.SimulateCast(targetPosition, pathablePoint, false);
             float quality = GetTargetQuality(targetPosition, possibleCast.Trajectory);

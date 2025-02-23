@@ -15,6 +15,7 @@ public class ArmDrop : AbilityEffect
 
     public void DropGrabbed()
     {
+        armGrab.FreezeIdleOfGrabbed(false);
         armGrab.Grabbed.ToggleActiveLayer(false);
         armGrab.Grabbed.transform.SetParent(null, true);
         armGrab.ToggleAbilityLock(Ability.Owner, false);
