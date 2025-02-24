@@ -5755,11 +5755,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faa26430eb7c50a40af6f9704df965fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerBotOverride: []
-  enemyBotOverride:
-  - {fileID: 11400000, guid: 34bb9a7fd65ac664f9f2cd78326426ce, type: 2}
-  - {fileID: 11400000, guid: 2d04b442a5e92754e9e6f78c68c54d17, type: 2}
-  - {fileID: 11400000, guid: 1821fb4422f036943b72b8dd3cf8b4cb, type: 2}
+  playerBotOverride:
+  - {fileID: 11400000, guid: 7a0a66f4bb35bd1499443428ebe9ef67, type: 2}
+  enemyBotOverride: []
   selectFirstBot: 1
   useDeployment: 0
 --- !u!1001 &551735183
@@ -17891,7 +17889,15 @@ MonoBehaviour:
   m_LookAt: {fileID: 1968512384}
   m_Follow: {fileID: 1968512384}
   m_ShowDebugText: 0
-  m_ChildCameras: []
+  m_ChildCameras:
+  - {fileID: 1159648236}
+  - {fileID: 1305581196}
+  - {fileID: 1519979681}
+  - {fileID: 2038490603}
+  - {fileID: 884183641}
+  - {fileID: 818697989}
+  - {fileID: 1181760181}
+  - {fileID: 1873713548}
   m_ActivateAfter: 0
   m_MinDuration: 2
   m_RandomizeChoice: 0

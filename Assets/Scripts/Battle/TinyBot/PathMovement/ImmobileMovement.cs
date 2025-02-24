@@ -14,8 +14,9 @@ public class ImmobileMovement : PrimaryMovement
     public override float LocomotionHeight => locomotionHeight;
     [SerializeField] float locomotionHeight;
 
-    private void Awake()
+    protected override void AwakeInitialize()
     {
+        base.AwakeInitialize();
         terrainMask = LayerMask.GetMask("Terrain");
         Style = MoveStyle.WALK;
     }

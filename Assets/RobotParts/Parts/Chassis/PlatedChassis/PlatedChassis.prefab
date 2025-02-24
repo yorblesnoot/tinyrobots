@@ -103,11 +103,9 @@ MonoBehaviour:
   range: 0
   ModifiableRange: 0
   cooldown: 0
-  EffectMagnitude: 30
   EffectivenessMultiplier: 1
   cost: 0
   icon: {fileID: 21300000, guid: 766686793cc92444db6e8e6f7c37a238, type: 3}
-  EffectDescription: ' Armor'
   CurrentCooldown: 0
   Owner: {fileID: 0}
   emissionPoint: {fileID: 0}
@@ -128,6 +126,7 @@ MonoBehaviour:
     - {fileID: 8202693648836993553}
   targeter: {fileID: 0}
   particleVisual: {fileID: 0}
+  staticAura: {fileID: 0}
   validTarget: 0
 --- !u!114 &2318693742398671684
 MonoBehaviour:
@@ -145,6 +144,7 @@ MonoBehaviour:
   BaseEffectMagnitude: 0
   target: {fileID: 4943244165503706272}
   on: 1
+  placement: 0
 --- !u!114 &1146162043356245092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -161,6 +161,7 @@ MonoBehaviour:
   BaseEffectMagnitude: 0
   target: {fileID: 4943244165503706272}
   on: 0
+  placement: 0
 --- !u!114 &8201112813870632715
 MonoBehaviour:
   m_ObjectHideFlags: 0

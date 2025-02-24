@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -76,24 +77,20 @@ public class BotCaster : MonoBehaviour
     {
         tracking = true;
         //Vector3 lastCastTarget = default;
-        Vector3 lastCastSource = owner.transform.position;
         while (tracking == true)
         {
             Vector3 targetPosition = trackedTarget.transform.position;
             ActiveCast = Ability.SimulateCast(targetPosition);
             ability.PhysicalAimAlongTrajectory(ActiveCast.Trajectory);
-            if (ability.range > 0 && GetTargetQuality(targetPosition, ActiveCast.Trajectory) > targetOffsetTolerance)
+            if (ability.range > 0 && owner.Stats.Current[StatType.MOVEMENT] > 0 && GetTargetQuality(targetPosition, ActiveCast.Trajectory) > targetOffsetTolerance)
             {
-                if (FindValidCast(targetPosition, out PossibleCast validCast, PrimaryCursor.TargetedBot))
+                if (!FindValidCast(targetPosition, out ActiveCast, PrimaryCursor.TargetedBot))
                 {
-                    lastCastSource = validCast.Source;
-                    Vector3 facing = targetPosition - validCast.Source;
-                    PrimaryCursor.Instance.GenerateMovePreview(Vector3Int.RoundToInt(validCast.Source), facing);
+                    ActiveCast = FindClosestCast(targetPosition);
                     //owner.EchoMap[ability].PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
-                    ActiveCast = validCast;
                 }
-                else ActiveCast = Ability.SimulateCast(targetPosition, lastCastSource);
-                //lastCastTarget = targetPosition;
+                Vector3 facing = targetPosition - ActiveCast.Source;
+                PrimaryCursor.Instance.GenerateMovePreview(Vector3Int.RoundToInt(ActiveCast.Source), facing);
             }
             else PrimaryCursor.InvalidatePath();
             DrawPlayerTargeting(ActiveCast);
@@ -120,6 +117,12 @@ public class BotCaster : MonoBehaviour
             }
         }
         return false;
+    }
+
+    PossibleCast FindClosestCast(Vector3 targetPoint)
+    {
+        Vector3 source = pathableLocations.OrderBy(location => Vector3.Distance(location, targetPoint)).First();
+        return Ability.SimulateCast(targetPoint, source);
     }
 
     float GetTargetQuality(Vector3 position, List<Vector3> trajectory)

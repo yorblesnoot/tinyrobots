@@ -69,6 +69,13 @@ MonoBehaviour:
       ModCounts: 00000000
       BaseWeight: 100
       TierWeight: -20
+  - BasePart: {fileID: 11400000, guid: 94e03dbca60c04a419924ebe602ada16, type: 2}
+    Mutators: []
+    Rarity:
+      TextColor: {r: 0.7735849, g: 0.7735849, b: 0.7735849, a: 1}
+      ModCounts: 00000000
+      BaseWeight: 100
+      TierWeight: -20
   - BasePart: {fileID: 11400000, guid: e4f0a6c54f37ac147b3577ed9669ce42, type: 2}
     Mutators: []
     Rarity:
@@ -162,125 +169,143 @@ MonoBehaviour:
       TierWeight: -20
   CoreInventory:
   - {fileID: 11400000, guid: f86c8696ca2c68f4b9ec558f25fc51ba, type: 2}
+  - {fileID: 11400000, guid: 6db67751bbc9d5646af1e56b8a5c4490, type: 2}
   - {fileID: 11400000, guid: a7692aba40afcd24ea4f5f7bcfa5e710, type: 2}
   MapData:
-    ZoneLocation: 4
+    ZoneLocation: 8
     Zones:
     - PieceIndex: 11
       Position: {x: 8, y: 0, z: 20}
       Rotation: {x: 0, y: -1, z: 0, w: -0.00000004371139}
-      NeighborIndices: 03000000
+      NeighborIndices: 0a000000
       Revealed: 0
       EventType: 3
     - PieceIndex: 12
-      Position: {x: 20, y: 0, z: 20}
-      Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-      NeighborIndices: 0a00000004000000
+      Position: {x: 8, y: 0, z: 8}
+      Rotation: {x: 0, y: -0.7071068, z: 0, w: -0.7071068}
+      NeighborIndices: 0400000007000000
+      Revealed: 0
+      EventType: 2
+    - PieceIndex: 12
+      Position: {x: 20, y: 0, z: 8}
+      Rotation: {x: 0, y: 0, z: 0, w: 1}
+      NeighborIndices: 0d0000000b000000
       Revealed: 1
       EventType: 0
     - PieceIndex: 7
-      Position: {x: 16, y: 0, z: 24}
-      Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-      NeighborIndices: 0400000003000000
-      Revealed: 0
-      EventType: 1
-    - PieceIndex: 2
-      Position: {x: 12, y: 0, z: 20}
-      Rotation: {x: 0, y: -0.7071068, z: 0, w: -0.7071068}
-      NeighborIndices: 0200000000000000
+      Position: {x: 24, y: 0, z: 12}
+      Rotation: {x: 0, y: 0, z: 0, w: 1}
+      NeighborIndices: 0d00000009000000
       Revealed: 0
       EventType: 2
     - PieceIndex: 2
-      Position: {x: 16, y: 0, z: 20}
-      Rotation: {x: 0, y: -1, z: 0, w: -0.00000004371139}
-      NeighborIndices: 0200000001000000
-      Revealed: 1
-      EventType: 1
-    - PieceIndex: 14
-      Position: {x: 8, y: 0, z: 8}
-      Rotation: {x: 0, y: -0.7071068, z: 0, w: -0.7071068}
-      NeighborIndices: 
-      Revealed: 0
-      EventType: 1
-    - PieceIndex: 14
-      Position: {x: 20, y: 0, z: 8}
-      Rotation: {x: 0, y: 0, z: 0, w: 1}
-      NeighborIndices: 
-      Revealed: 0
-      EventType: 1
-    - PieceIndex: 1
       Position: {x: 8, y: 0, z: 12}
+      Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+      NeighborIndices: 0500000001000000
+      Revealed: 0
+      EventType: 1
+    - PieceIndex: 2
+      Position: {x: 12, y: 0, z: 12}
+      Rotation: {x: 0, y: -0.7071068, z: 0, w: -0.7071068}
+      NeighborIndices: 0600000004000000
+      Revealed: 0
+      EventType: 1
+    - PieceIndex: 6
+      Position: {x: 12, y: 0, z: 16}
       Rotation: {x: 0, y: 0, z: 0, w: 1}
-      NeighborIndices: 080000000e000000
+      NeighborIndices: 0a0000000c0000000500000010000000
       Revealed: 0
       EventType: 2
-    - PieceIndex: 0
+    - PieceIndex: 1
       Position: {x: 12, y: 0, z: 8}
       Rotation: {x: 0, y: 0, z: 0, w: 1}
-      NeighborIndices: 0f000000070000000b000000
+      NeighborIndices: 0b00000001000000
+      Revealed: 0
+      EventType: 2
+    - PieceIndex: 1
+      Position: {x: 16, y: 0, z: 12}
+      Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+      NeighborIndices: 0c0000000b000000
+      Revealed: 1
+      EventType: 1
+    - PieceIndex: 1
+      Position: {x: 20, y: 0, z: 16}
+      Rotation: {x: 0, y: 0, z: 0, w: 1}
+      NeighborIndices: 030000000c000000
+      Revealed: 0
+      EventType: 2
+    - PieceIndex: 3
+      Position: {x: 12, y: 0, z: 20}
+      Rotation: {x: 0, y: 0, z: 0, w: 1}
+      NeighborIndices: 0f0000000600000000000000
+      Revealed: 0
+      EventType: 2
+    - PieceIndex: 3
+      Position: {x: 16, y: 0, z: 8}
+      Rotation: {x: 0, y: -1, z: 0, w: -0.00000004371139}
+      NeighborIndices: 080000000200000007000000
+      Revealed: 1
+      EventType: 0
+    - PieceIndex: 6
+      Position: {x: 16, y: 0, z: 16}
+      Rotation: {x: 0, y: 0, z: 0, w: 1}
+      NeighborIndices: 0f000000090000000800000006000000
+      Revealed: 0
+      EventType: 2
+    - PieceIndex: 2
+      Position: {x: 20, y: 0, z: 12}
+      Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+      NeighborIndices: 0300000002000000
+      Revealed: 1
+      EventType: 4
+    - PieceIndex: 14
+      Position: {x: 20, y: 0, z: 20}
+      Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+      NeighborIndices: 
+      Revealed: 0
+      EventType: 1
+    - PieceIndex: 2
+      Position: {x: 16, y: 0, z: 20}
+      Rotation: {x: 0, y: 0, z: 0, w: 1}
+      NeighborIndices: 0c0000000a000000
       Revealed: 0
       EventType: 1
     - PieceIndex: 1
       Position: {x: 8, y: 0, z: 16}
       Rotation: {x: 0, y: 0, z: 0, w: 1}
-      NeighborIndices: 0c0000000e000000
+      NeighborIndices: 0600000011000000
       Revealed: 0
       EventType: 2
-    - PieceIndex: 6
-      Position: {x: 20, y: 0, z: 16}
-      Rotation: {x: 0, y: 0, z: 0, w: 1}
-      NeighborIndices: 01000000100000000b0000000d000000
-      Revealed: 0
-      EventType: 4
-    - PieceIndex: 3
-      Position: {x: 20, y: 0, z: 12}
-      Rotation: {x: 0, y: -1, z: 0, w: -0.00000004371139}
-      NeighborIndices: 0a0000001000000008000000
-      Revealed: 0
-      EventType: 2
-    - PieceIndex: 4
-      Position: {x: 12, y: 0, z: 16}
-      Rotation: {x: 0, y: 0, z: 0, w: 1}
-      NeighborIndices: 09000000
-      Revealed: 0
-      EventType: 1
-    - PieceIndex: 4
-      Position: {x: 16, y: 0, z: 16}
-      Rotation: {x: 0, y: -1, z: 0, w: -0.00000004371139}
-      NeighborIndices: 0a000000
-      Revealed: 0
-      EventType: 1
-    - PieceIndex: 7
+    - PieceIndex: 8
       Position: {x: 4, y: 0, z: 16}
       Rotation: {x: 0, y: -1, z: 0, w: -0.00000004371139}
-      NeighborIndices: 0900000007000000
+      NeighborIndices: 10000000
       Revealed: 0
       EventType: 1
-    - PieceIndex: 7
+    - PieceIndex: 9
       Position: {x: 12, y: 0, z: 4}
       Rotation: {x: 0, y: -0.7071068, z: 0, w: -0.7071068}
-      NeighborIndices: 08000000
+      NeighborIndices: 
       Revealed: 0
-      EventType: 2
-    - PieceIndex: 7
-      Position: {x: 24, y: 0, z: 12}
-      Rotation: {x: 0, y: 0, z: 0, w: 1}
-      NeighborIndices: 0b0000000a000000
+      EventType: 1
+    - PieceIndex: 9
+      Position: {x: 16, y: 0, z: 24}
+      Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+      NeighborIndices: 
       Revealed: 0
       EventType: 1
   ShopData:
     Shops:
-    - Location: 10
+    - Location: 13
       <PartCurrency>k__BackingField: 200
       SavedInventory:
-      - 304fe392-0991-4f9d-b1d8-e54def1d2bc2!5b336885-5aae-4009-9341-26894c2b88aa!a9e6e4bb-55a2-4827-81de-fac8e6222ae0
-      - e0e9bfcf-be42-4108-ad2a-11811222fad7!924ec9c9-6b00-4818-b480-25b5923501d3!75d1fceb-7f4d-40ad-977d-cc616cda5a39
-      - 5f243082-293f-4abd-a68b-8a1e909bae0d!92a2d269-6c4c-47fb-bc1a-3766baa7dac7!860d15a8-6c77-49d2-9d1d-5f3685c3a3f7
-      - 5f243082-293f-4abd-a68b-8a1e909bae0d
-      - 304fe392-0991-4f9d-b1d8-e54def1d2bc2
-      - 0780a631-1ead-4f1c-bd51-89d72cde0073
-      - 50e74443-ba77-4d04-8077-77a2a0ebd7b7
-      - 96a7ea62-4470-45c8-b524-49b89bccf7ae
+      - 5f243082-293f-4abd-a68b-8a1e909bae0d!860d15a8-6c77-49d2-9d1d-5f3685c3a3f7!674a98e4-2179-4dea-b74d-6788a5e9d8a9!5b336885-5aae-4009-9341-26894c2b88aa!92a2d269-6c4c-47fb-bc1a-3766baa7dac7
+      - e0e9bfcf-be42-4108-ad2a-11811222fad7!75d1fceb-7f4d-40ad-977d-cc616cda5a39!674a98e4-2179-4dea-b74d-6788a5e9d8a9!860d15a8-6c77-49d2-9d1d-5f3685c3a3f7!924ec9c9-6b00-4818-b480-25b5923501d3
+      - ff0792c1-76df-47cd-afe4-c314e6123e80!004768cb-af96-4e29-a42b-b4f6e22ae115!e80b8f35-2fd8-424f-9ddb-4c86a6121763
+      - 7ab4b823-f27f-4453-a96f-c5a5640b4a41
+      - ff0792c1-76df-47cd-afe4-c314e6123e80
+      - 7ab4b823-f27f-4453-a96f-c5a5640b4a41
+      - 05f6bd1d-b4a6-4f46-9d9b-05ed43f8d0b2
   Difficulty: 1
   <PartCurrency>k__BackingField: 0
   DevMode: 1

@@ -264,7 +264,7 @@ public static class Pathfinder3D
 
     static readonly int crawlRadius = 3;
 
-    public static Vector3 GetCrawlOrientation(Vector3 source)
+    /*public static Vector3 GetCrawlOrientation(Vector3 source)
     {
         List<Vector3> directions = new();
         int layerMask = LayerMask.GetMask("Terrain");
@@ -284,24 +284,31 @@ public static class Pathfinder3D
         final.Normalize();
         Debug.DrawLine(source, source + final, Color.red, 1f);
         return final;
-    }
+    }*/
 
-    /*public static Vector3 GetCrawlOrientation(Vector3 source)
+    public static Vector3 GetCrawlOrientation(Vector3 position)
     {
+        Vector3Int nodePosition = Vector3Int.RoundToInt(position);
         Vector3 total = Vector3.zero;
+        float maxMagnitude = (Vector3.one * crawlRadius).magnitude;
         int number = 0;
-        Vector3Int node = Vector3Int.RoundToInt(source);
-        List<Node> sphere = SearchSphere(node, crawlRadius);
-        foreach(var neighbor in sphere)
+        for (int x = nodePosition.x - crawlRadius; x <= nodePosition.x + crawlRadius; x++)
         {
-            if (!neighbor.Terrain) continue;
-
-            Vector3 offset = neighbor.Location - source;
-            total += offset.normalized;
-            number++;
+            for (int y = nodePosition.y - crawlRadius; y <= nodePosition.y + crawlRadius; y++)
+            {
+                for (int z = nodePosition.z - crawlRadius; z <= nodePosition.z + crawlRadius; z++)
+                {
+                    Vector3Int checkedPosition = new(x, y, z);
+                    if (!nodeMap.TryGetValue(checkedPosition, out Node node) || !node.Terrain) continue;
+                    Vector3 offset = node.Location - position;
+                    Vector3 remapped = offset.normalized * (maxMagnitude - offset.magnitude);
+                    total += remapped;
+                    number++;
+                }
+            }
         }
         return -total/number;
-    }*/
+    }
     public static bool PointIsOffMap(int x, int y, int z)
     {
         if (x < 0 || y < 0 || z < 0) return true;

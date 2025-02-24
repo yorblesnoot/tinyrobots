@@ -40,5 +40,6 @@ public class BuffController
     {
         if(!ActiveBuffs.TryGetValue(buff, out AppliedBuff applied)) return;
         applied.Remove();
+        ActiveBuffs.Remove(buff);
     }
 }
