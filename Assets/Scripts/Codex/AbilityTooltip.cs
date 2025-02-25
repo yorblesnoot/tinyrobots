@@ -1,14 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class AbilityTooltip : MonoBehaviour
+public class AbilityTooltip : Tooltip
 {
     static AbilityTooltip instance;
-    [SerializeField] float heightModifier = 50;
-    [SerializeField] bool usePosition;
+    
 
     [Header("Components")]
     [SerializeField] TMP_Text abilityName;
@@ -19,15 +15,11 @@ public class AbilityTooltip : MonoBehaviour
     [SerializeField] TMP_Text cooldown;
     [SerializeField] TMP_Text cost;
     [SerializeField] TMP_Text description;
-
-    Image image;
-    static float showHeight;
     private void Awake()
     {
         instance = this;
         gameObject.SetActive(false);
-        image = GetComponent<Image>();
-        showHeight = image.rectTransform.rect.height/2 + heightModifier;
+        
     }
 
     public static void Show(Ability ability, Vector3 position)
@@ -41,10 +33,7 @@ public class AbilityTooltip : MonoBehaviour
         instance.cost.text = ability.cost + " AP";
         instance.description.text = ability.Description;
 
-        if (instance.usePosition) return;
-        position = instance.transform.parent.InverseTransformPoint(position);
-        position.y += position.y > 0 ? -showHeight : showHeight;
-        instance.transform.localPosition = position;
+        instance.SetPosition(position);
     }
 
     public static void Hide()

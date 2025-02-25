@@ -1,10 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Events;
 
 public class BuffController
 {
     public Dictionary<BuffType, AppliedBuff> ActiveBuffs;
     TinyBot owner;
+    public UnityEvent<TinyBot> BuffsChanged = new();
 
     public BuffController(TinyBot owner)
     {
@@ -24,7 +26,7 @@ public class BuffController
         {
             applied.ApplyStack();
         }
-
+        BuffsChanged?.Invoke(owner);
     }
 
     void ProgressBuffs()
@@ -34,6 +36,7 @@ public class BuffController
         {
             if(ActiveBuffs[buff].Tick()) ActiveBuffs.Remove(buff);
         }
+        BuffsChanged?.Invoke(owner);
     }
 
     public void RemoveBuff(BuffType buff)
@@ -41,5 +44,6 @@ public class BuffController
         if(!ActiveBuffs.TryGetValue(buff, out AppliedBuff applied)) return;
         applied.Remove();
         ActiveBuffs.Remove(buff);
+        BuffsChanged?.Invoke(owner);
     }
 }

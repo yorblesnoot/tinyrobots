@@ -11,6 +11,7 @@ public class AppliedBuff
     public int Stacks;
     int maxDuration;
     int elapsedDuration = 0;
+    public int RemainingDuration => maxDuration - elapsedDuration;
     BuffEffectCarrier spawnedFX;
 
 

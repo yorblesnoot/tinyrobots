@@ -1,0 +1,35 @@
+using TMPro;
+using UnityEngine;
+
+public class BuffTooltip : Tooltip
+{
+    [SerializeField] TMP_Text buffName;
+    [SerializeField] TMP_Text buffDescription;
+    [SerializeField] TMP_Text buffEffect;
+    [SerializeField] TMP_Text buffDuration;
+    static BuffTooltip instance;
+
+    private void Awake()
+    {
+        instance = this;
+    }
+    public static void Become(AppliedBuff applied, Vector3 position)
+    {
+        instance.BecomeInternal(applied, position);
+    }
+
+    void BecomeInternal(AppliedBuff applied, Vector3 position)
+    {
+        gameObject.SetActive(true);
+        buffName.text = applied.Buff.name;
+        buffDescription.text = applied.Buff.Description;
+        buffEffect.text = applied.Potency + applied.Buff.LineDescription;
+        buffDuration.text = applied.RemainingDuration.ToString();
+        instance.SetPosition(position);
+    }
+
+    public static void Hide()
+    {
+        instance.gameObject.SetActive(false);
+    }
+}
