@@ -1,7 +1,6 @@
 using PrimeTween;
 using System;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 public enum Allegiance
 {
@@ -16,11 +15,18 @@ public abstract class Targetable : MonoBehaviour
     public UnitStats Stats;
     [HideInInspector] public Rigidbody PhysicsBody;
     [HideInInspector] public Allegiance Allegiance;
-    [HideInInspector] public MoveStyle MoveStyle { get { return GetMoveStyle(); } }
+    [HideInInspector] public abstract MoveStyle MoveStyle { get; }
     
     public bool IsDead { get; protected set; } = false;
 
     protected Renderer[] PartRenderers;
+    protected Collider Collider;
+    int terrainMask;
+    private void Awake()
+    {
+        terrainMask = LayerMask.GetMask("Terrain");
+        Collider = GetComponent<Collider>();
+    }
 
     public virtual void SetOutlineColor(Color color)
     {
@@ -30,12 +36,11 @@ public abstract class Targetable : MonoBehaviour
     public virtual void Die(Vector3 hitSource = default)
     {
         StopAllCoroutines();
-        GetComponent<Collider>().isTrigger = false;
+        Collider.isTrigger = false;
         IsDead = true;
     }
 
     public abstract void ReceiveHit(int damage, TinyBot source, Vector3 hitPoint, bool canBackstab = true);
-    public abstract MoveStyle GetMoveStyle();
 
     protected virtual void ReduceHealth(int damage)
     {
@@ -47,6 +52,7 @@ public abstract class Targetable : MonoBehaviour
     readonly int maxFallDuration = 5;
     public IEnumerator Fall(Vector3 velocity = default)
     {
+        yield return Depenetrate();
         float startHeight = transform.position.z;
         PhysicsBody.isKinematic = false;
         PhysicsBody.velocity = velocity;
@@ -61,7 +67,6 @@ public abstract class Targetable : MonoBehaviour
             }
             if (Pathfinder3D.GetLandingPointBy(transform.position, MoveStyle, out Vector3Int coords))
             {
-
                 Land(coords, startHeight);
                 yield break;
             }
@@ -69,6 +74,33 @@ public abstract class Targetable : MonoBehaviour
             yield return null;
         }
         Die(transform.position);
+    }
+
+    readonly float depenetrationRadius = 1f;
+    readonly float depenetrationDuration = .3f;
+    IEnumerator Depenetrate()
+    {
+        if (!Physics.CheckSphere(TargetPoint.position, depenetrationRadius, terrainMask)) yield break;
+        Pathfinder3D.GetLandingPointBy(transform.position, MoveStyle, out Vector3Int cleanPosition, false);
+        Vector3 direction = Pathfinder3D.GetCrawlOrientation(cleanPosition);
+        Vector3 finalPosition = transform.position + direction * depenetrationRadius;
+        yield return Tween.Position(transform, finalPosition, depenetrationDuration).ToYieldInstruction();
+
+
+        /*Collider[] colliders = Physics.OverlapSphere(TargetPoint.position, depenetrationRadius, terrainMask);
+        if (colliders == null || colliders.Length == 0) yield break;
+       
+        foreach (Collider contactCollider in colliders)
+        {
+            if(Physics.ComputePenetration(Collider, transform.position, transform.rotation, contactCollider, 
+                contactCollider.transform.position, contactCollider.transform.rotation, out Vector3 direction, out float distance))
+            {
+                Vector3 position = transform.position + direction * distance;
+                Debug.Log(direction * distance);
+                yield return Tween.Position(transform, position, depenetrationDuration).ToYieldInstruction();
+                yield break;
+            }
+        }*/
     }
 
     protected readonly int ActiveLayer = 6;

@@ -107,7 +107,7 @@ public class BotCaster : MonoBehaviour
         {
             if (!Ability.PointIsInRange(pathablePoint, targetPosition)) continue;
 
-            PossibleCast possibleCast = Ability.SimulateCast(targetPosition, pathablePoint, false);
+            PossibleCast possibleCast = Ability.SimulateCast(targetPosition, pathablePoint);
             float quality = GetTargetQuality(targetPosition, possibleCast.Trajectory);
             bool gotSnapTarget = snapTarget != null && possibleCast.Targets.Contains(snapTarget);
             if (quality <= targetOffsetTolerance || gotSnapTarget)

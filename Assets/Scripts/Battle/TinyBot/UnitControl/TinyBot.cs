@@ -43,6 +43,8 @@ public class TinyBot : Targetable
     public List<ActiveAbility> ActiveAbilities { get; private set; }
     public List<PassiveAbility> PassiveAbilities { get; private set;}
 
+    public override MoveStyle MoveStyle => Movement.Style;
+
     [HideInInspector] public DamageCalculator DamageCalculator;
 
     [HideInInspector] public TinyBot BotEcho;
@@ -126,11 +128,6 @@ public class TinyBot : Targetable
             }
         }
         return materials;
-    }
-
-    public override MoveStyle GetMoveStyle()
-    {
-        return Movement.Style;
     }
 
     public void SpendResource(int resource, StatType statType)

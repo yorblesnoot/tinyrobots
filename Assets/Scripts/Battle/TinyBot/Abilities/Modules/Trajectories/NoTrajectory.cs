@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class NoTrajectory : Trajectory
 {
-    public override List<Vector3> GetTrajectory(Vector3 sourcePosition, Vector3 target, out RaycastHit hit, bool aiMode = false)
+    public override List<Vector3> GetTrajectory(Vector3 sourcePosition, Vector3 target, out RaycastHit hit)
     {
         hit = default;
         return CalculateTrajectory(sourcePosition, target).ToList();

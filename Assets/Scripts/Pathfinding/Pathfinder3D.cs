@@ -245,7 +245,7 @@ public static class Pathfinder3D
         return true;
     }
     
-    public static bool GetLandingPointBy(Vector3 target, MoveStyle style, out Vector3Int coords)
+    public static bool GetLandingPointBy(Vector3 target, MoveStyle style, out Vector3Int coords, bool requirePathable = true)
     {
         coords = Vector3Int.RoundToInt(target);
         if (!nodeMap.TryGetValue(coords, out Node origin)) return false;
@@ -254,7 +254,8 @@ public static class Pathfinder3D
         List<Vector3Int> candidates = new();
         foreach (var node in nodes)
         {
-            if(node.Occupied || node.Terrain || !node.IsAccessible(style)) continue;
+            if (node.Occupied || node.Terrain) continue;
+            if (requirePathable && !node.IsAccessible(style)) continue;
             candidates.Add(node.Location);
         }
         if(candidates.Count == 0) return false;

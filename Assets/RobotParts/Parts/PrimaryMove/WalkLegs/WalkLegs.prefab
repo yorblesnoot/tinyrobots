@@ -262,6 +262,7 @@ MonoBehaviour:
   - {fileID: 642142236824269102}
   - {fileID: 9008681664637824618}
   endEffects: []
+  TargetType: {fileID: 0}
 --- !u!114 &642142236824269102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -277,6 +278,7 @@ MonoBehaviour:
   Ability: {fileID: 0}
   BaseEffectMagnitude: 0
   intervalTime: 0.05
+  fallWithMomentum: 1
 --- !u!114 &353867226109267716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,8 +294,11 @@ MonoBehaviour:
   blockingLayers:
   - Terrain
   - Default
+  castWidth: 0
+  BlockingLayerMask: 0
   parabolaPoints: 10
-  gravityAccel: -0.4
+  gravityAccel: -0.3
+  gravityRange: 1
 --- !u!114 &5903685323051720892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -483,7 +488,7 @@ MonoBehaviour:
   MoveSpeed: 6
   PivotSpeed: 500
   legStepDuration: 0.2
-  anchorZoneRadius: 1.2
+  anchorZoneRadius: 1
   anchorUpwardLimit: 8.6
   anchorDownwardLength: 2.16
   legRaise:

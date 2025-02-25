@@ -6,6 +6,7 @@ using UnityEngine;
 public abstract class Trajectory : MonoBehaviour
 {
     public string[] blockingLayers = { "Default", "Terrain", "Shield" };
+    [SerializeField] float castWidth = 0;
     [HideInInspector] public int BlockingLayerMask;
 
     readonly float overlapLength = .1f;
@@ -14,12 +15,12 @@ public abstract class Trajectory : MonoBehaviour
     {
         BlockingLayerMask = LayerMask.GetMask(blockingLayers);
     }
-    public virtual List<Vector3> GetTrajectory(Vector3 sourcePosition, Vector3 target, out RaycastHit hit, bool wide = false)
+    public virtual List<Vector3> GetTrajectory(Vector3 sourcePosition, Vector3 target, out RaycastHit hit)
     {
         Vector3[] targets = CalculateTrajectory(sourcePosition, target);
         Vector3 finalDirection = (targets[^1] - targets[^2]).normalized;
         targets[^1] += finalDirection * overlapLength;
-        List < Vector3 > trajectory = CastAlongPoints(targets, BlockingLayerMask, out hit, wide ? BotAI.terrainCheckSize : 0);
+        List < Vector3 > trajectory = CastAlongPoints(targets, BlockingLayerMask, out hit, castWidth);
         return trajectory;
     }
 
@@ -43,13 +44,15 @@ public abstract class Trajectory : MonoBehaviour
         for (int i = 0; i < castTargets.Length - 1; i++)
         {
             Vector3 direction = castTargets[i + 1] - castTargets[i];
-            bool castHit = Physics.Raycast(castTargets[i], direction, out RaycastHit hitInfo, direction.magnitude + overlapLength, mask);
-            if (castHit && radius > 0) castHit = Physics.SphereCast(castTargets[i], radius, direction, out hitInfo, direction.magnitude + overlapLength, mask);
+            bool castHit = radius > 0 ? Physics.SphereCast(castTargets[i], radius, direction, out RaycastHit hitInfo, direction.magnitude + overlapLength, mask) 
+                :  Physics.Raycast(castTargets[i], direction, out hitInfo, direction.magnitude + overlapLength, mask);
             if (castHit)
             {
                 //add penetration here
-                modifiedTargets.Add(hitInfo.point);
+                
                 hit = hitInfo;
+                Vector3 finalPoint = hit.point + radius * hit.normal;
+                modifiedTargets.Add(finalPoint);
                 break;
             }
             else
