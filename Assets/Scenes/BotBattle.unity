@@ -19158,7 +19158,15 @@ MonoBehaviour:
   m_LookAt: {fileID: 1968512384}
   m_Follow: {fileID: 1968512384}
   m_ShowDebugText: 0
-  m_ChildCameras: []
+  m_ChildCameras:
+  - {fileID: 1159648236}
+  - {fileID: 1305581196}
+  - {fileID: 1519979681}
+  - {fileID: 2038490603}
+  - {fileID: 884183641}
+  - {fileID: 818697989}
+  - {fileID: 1181760181}
+  - {fileID: 1873713548}
   m_ActivateAfter: 0
   m_MinDuration: 2
   m_RandomizeChoice: 0
@@ -25952,6 +25960,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c50c72338d5b4e147acb9196374c61c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  heightModifier: 20
+  usePosition: 0
   buffName: {fileID: 693747270696783479}
   buffDescription: {fileID: 1955380483}
   buffEffect: {fileID: 5734573874565402695}

@@ -76,7 +76,6 @@ public class ActiveAbility : Ability
         return rangeTarget == target;
     }
 
-    readonly float endCheckRadius = .1f;
     public PossibleCast SimulateCast(Vector3 castTarget, Vector3 ownerPosition = default)
     {
         Vector3 emissionSource;

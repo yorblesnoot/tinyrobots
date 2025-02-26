@@ -21,10 +21,10 @@ public class BuffTooltip : Tooltip
     void BecomeInternal(AppliedBuff applied, Vector3 position)
     {
         gameObject.SetActive(true);
-        buffName.text = applied.Buff.name;
+        buffName.text = applied.Buff.DisplayName;
         buffDescription.text = applied.Buff.Description;
         buffEffect.text = applied.Potency + applied.Buff.LineDescription;
-        buffDuration.text = applied.RemainingDuration.ToString();
+        buffDuration.text = applied.RemainingDuration + " Turn" + (applied.RemainingDuration != 1 ? "s" : "");
         instance.SetPosition(position);
     }
 

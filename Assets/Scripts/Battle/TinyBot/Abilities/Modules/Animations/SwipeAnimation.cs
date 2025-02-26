@@ -14,7 +14,7 @@ public class SwipeAnimation : IKAnimation
         Debug.DrawLine(swingSource, swingSource + targetDirection, Color.green, 10f);
 
         Vector3 swingDirection = owner.TargetPoint.position - trajectory[0];
-        Vector3 midSwing = Vector3.Slerp(targetDirection, swingDirection, .5f);
+        Vector3 midSwing = Vector3.Slerp(targetDirection, swingDirection, swipeWidth);
         Debug.DrawLine(swingSource, swingSource + midSwing, Color.magenta, 10f);
 
         Vector3 reverseSwing = Vector3.Reflect(-midSwing, targetDirection.normalized);

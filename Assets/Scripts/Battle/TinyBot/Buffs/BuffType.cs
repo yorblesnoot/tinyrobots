@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class BuffType : ScriptableObject
 {
+    public string DisplayName;
     public int MaxStacks = 1;
     public Sprite Thumbnail;
     public int Duration = 0;
