@@ -5,24 +5,25 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class BotStateFeedback : MonoBehaviour
+public class HealthPopupGenerator : MonoBehaviour
 {
-    [SerializeField] PopupType normalPopup;
-    [SerializeField] PopupType critPopup;
+    [SerializeField] List<PopupType> popupTypes;
     [SerializeField] GameObject floatNumber;
 
-    public static ObjectPool numberPool;
+    public static ObjectPool NumberPool;
 
     [Serializable]
     struct PopupType
     {
         public Color Color;
+        public int Threshold;
         public int Size;
     }
 
     private void Awake()
     {
-        numberPool = new(floatNumber);
+        NumberPool = new(floatNumber);
+        popupTypes = popupTypes.OrderBy(type => type.Threshold).ToList();
     }
 
     readonly AvailableDisplacements displacements = new();
@@ -38,7 +39,7 @@ public class BotStateFeedback : MonoBehaviour
 
     Queue<Popup> popupQueue;
 
-    public void QueuePopup(int number, bool crit = false)
+    public void QueuePopup(int number)
     {
 
         if (popupQueue == null || popupQueue.Count == 0)
@@ -46,7 +47,16 @@ public class BotStateFeedback : MonoBehaviour
             popupQueue = new();
             StartCoroutine(SequencePopups());
         }
-        popupQueue.Enqueue(new Popup {  Number = number, Type = crit ? critPopup : normalPopup });
+        popupQueue.Enqueue(new Popup {  Number = number, Type = GetPopupType(number) });
+    }
+
+    PopupType GetPopupType(int number)
+    {
+        foreach (var type in popupTypes)
+        {
+            if(number < type.Threshold) return type;
+        }
+        return popupTypes[^1];
     }
 
     static readonly float popDelay = .2f;
@@ -68,7 +78,7 @@ public class BotStateFeedback : MonoBehaviour
         Vector3 popPosition = transform.position;
         popPosition += transform.rotation * displacementFactor * (displacement % 2);
         popPosition.y += Mathf.Abs(displacement) * riseFactor;
-        TMP_Text floatText = numberPool.InstantiateFromPool(popPosition, Quaternion.identity).GetComponentInChildren<TMP_Text>();
+        TMP_Text floatText = NumberPool.InstantiateFromPool(popPosition, Quaternion.identity).GetComponentInChildren<TMP_Text>();
         floatText.text = pop.Number.ToString();
         floatText.color = pop.Type.Color;
         floatText.fontSize = pop.Type.Size;

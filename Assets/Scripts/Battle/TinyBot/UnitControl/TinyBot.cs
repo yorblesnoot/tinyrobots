@@ -15,7 +15,7 @@ public class TinyBot : Targetable
     [SerializeField] float hitRecoilTime;
     [SerializeField] float hitReturnTime;
     [SerializeField] float recoilDistancePerDamage;
-    [SerializeField] BotStateFeedback feedback;
+    
     [SerializeField] GameObject hitSpark;
     public Transform headshotPosition;
     
@@ -199,7 +199,6 @@ public class TinyBot : Targetable
         int finalDamage = DamageCalculator.GetDamage(baseDamage, source, this, true);
         Vector3 hitDirection = (source.TargetPoint.position - transform.position).normalized;
 
-        feedback.QueuePopup(finalDamage, finalDamage > 1.5f * baseDamage);
         if(flinch) StartCoroutine(Movement.ApplyImpulseToBody(-hitDirection, recoilDistancePerDamage * finalDamage, hitRecoilTime, hitReturnTime));
         GameObject spark = Instantiate(hitSpark, hitPoint, Quaternion.identity);
         spark.transform.LookAt(source.TargetPoint.position);

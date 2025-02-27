@@ -58,7 +58,6 @@ public class ActivatablePart : PartButton, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("clicked");
         if(eventData.button == PointerEventData.InputButton.Right)
         {
             secondaryCallback(PartIdentity);

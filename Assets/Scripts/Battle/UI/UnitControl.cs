@@ -20,6 +20,11 @@ public class UnitControl : MonoBehaviour
         turnEnd.onClick.AddListener(EndPlayerTurn);
         PrimaryCursor.PlayerSelectedBot.AddListener(PlayerControlBot);
         TinyBot.ClearActiveBot.AddListener(ReleaseBot);
+    }
+
+    //avoid race conditions with child UIs; their listeners should be initialized on awake
+    private void Start()
+    {
         gameObject.SetActive(false);
     }
 

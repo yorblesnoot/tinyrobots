@@ -12,6 +12,9 @@ public class BotAI
     float RemainingMove => owner.Stats.Current[StatType.MOVEMENT];
     
     List<ActiveAbility> primaries, dashes, shields;
+    List<TinyBot> enemies = new();
+    List<TinyBot> allies = new();
+    Vector3 closestEnemyPosition;
     #region Initialization
     public BotAI(TinyBot bot)
     {
@@ -50,111 +53,116 @@ public class BotAI
     {
 
         BeginTurn();
-        List<TinyBot> enemies = new();
-        List<TinyBot> allies = new();
-        Vector3 closestEnemyPosition;
+        yield return AttackPhase();
+        yield return new WaitForSeconds(1);
+        EndTurn();
+    }
+
+    void UpdateTargetingData()
+    {
+        enemies = new();
+        allies = new();
         foreach (TinyBot bot in TurnManager.TurnTakers)
         {
-            if(bot.Allegiance == owner.Allegiance) allies.Add(bot);
+            if (bot.Allegiance == owner.Allegiance) allies.Add(bot);
             else enemies.Add(bot);
         }
         enemies = enemies.OrderBy(unit => Vector3.Distance(unit.transform.position, owner.transform.position)).ToList();
         closestEnemyPosition = enemies[0].transform.position;
-
-        yield return AttackPhase();
-        
-        yield return new WaitForSeconds(1);
-        EndTurn();
-
-        IEnumerator AttackPhase()
-        {
-            primaries.Shuffle();
-            foreach (var ability in primaries)
-            {
-                if (!owner.Caster.TryPrepare(ability)) continue;
-                List<TinyBot> targets = new(ability.Type == AbilityType.ATTACK ? enemies : allies);
-                foreach(var target in targets)
-                {
-                    Vector3 targetPoint = target.TargetPoint.position;
-                    if (!owner.Caster.FindValidCast(targetPoint, out var cast, target)) continue;
-                    yield return UseAbility(ability, cast);
-                    yield return AttackPhase();
-                    yield break;
-                }
-            }
-            yield return DashPhase();
-        }
-
-        IEnumerator DashPhase()
-        {
-            foreach (var ability in dashes)
-            {
-                if (!owner.Caster.TryPrepare(ability)) continue;
-                float maxDash = ability.range + RemainingMove;
-
-                List<Vector3Int> dashLocations = Pathfinder3D.GetDashTargets(owner.transform.position, maxDash, owner.Movement.Style);
-                if(owner.Movement.Style == MoveStyle.WALK)
-                {
-                    dashLocations = Pathfinder3D.FilterByAccessToCastPosition(Vector3Int.RoundToInt(closestEnemyPosition), optimalDistance, dashLocations);
-                }
-                else
-                {
-                    dashLocations = dashLocations.Where(location => Vector3.Distance(location, owner.transform.position) > ability.range/2).ToList();
-                }
-
-                dashLocations = dashLocations.OrderBy(DistanceFromOptimalRange(closestEnemyPosition, optimalDistance)).ToList();
-
-                foreach (Vector3Int location in dashLocations)
-                {
-                    if (!owner.Caster.FindValidCast(location, out var cast)) continue;
-                    yield return UseAbility(ability, cast);
-                    yield return AttackPhase();
-                    yield break;
-                }
-            }
-            yield return MovePhase();
-        }
-
-        IEnumerator MovePhase()
-        {
-            //this is a problem
-            List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations();
-            pathableLocations = pathableLocations.OrderBy(DistanceFromOptimalRange(closestEnemyPosition, optimalDistance)).ToList();
-
-            List<Vector3> path = Pathfinder3D.FindVectorPath(pathableLocations[0], out var moveCosts);
-            if (path == null) yield break;
-
-            float maxMove = moveCosts.Where(cost => cost < RemainingMove).LastOrDefault();
-            int endIndex = moveCosts.IndexOf(maxMove);
-            path = path.Take(endIndex).ToList();
-            if (path.Count == 0) yield break;
-
-            path = owner.Movement.SanitizePath(path);
-            owner.SpendResource(Mathf.RoundToInt(moveCosts[endIndex]), StatType.MOVEMENT);
-            
-            yield return owner.StartCoroutine(owner.Movement.TraversePath(path));
-            yield return ShieldPhase();
-        }
-
-        IEnumerator ShieldPhase()
-        {
-            shields.Shuffle();
-            foreach (var shield in shields)
-            {
-                if (!owner.Caster.TryPrepare(shield)) continue;
-                Vector3 myPosition = owner.transform.position;
-                List<Vector3> averages = new() {enemies.Select(x => x.TargetPoint.position - myPosition).ToList().Average(),
-                Pathfinder3D.GetCrawlOrientation(owner.transform.position) };
-                if (allies.Count > 0) averages.Add(-allies.Select(x => x.TargetPoint.position - myPosition).ToList().Average());
-                Vector3 finalDirection = averages.Average();
-                Vector3 finalPosition = myPosition + finalDirection;
-                owner.Caster.FindValidCast(finalPosition, out var cast);
-                yield return UseAbility(shield, cast); 
-            }
-            
-        }
     }
-    
+
+    IEnumerator AttackPhase()
+    {
+        UpdateTargetingData();
+        primaries.Shuffle();
+        foreach (var ability in primaries)
+        {
+            if (!owner.Caster.TryPrepare(ability)) continue;
+            List<TinyBot> targets = new(ability.Type == AbilityType.ATTACK ? enemies : allies);
+            foreach (var target in targets)
+            {
+                Vector3 targetPoint = target.TargetPoint.position;
+                if (!owner.Caster.FindValidCast(targetPoint, out var cast, target)) continue;
+                yield return UseAbility(ability, cast);
+                yield return AttackPhase();
+                yield break;
+            }
+        }
+        yield return DashPhase();
+    }
+
+    IEnumerator DashPhase()
+    {
+        UpdateTargetingData();
+        foreach (var ability in dashes)
+        {
+            if (!owner.Caster.TryPrepare(ability)) continue;
+            float maxDash = ability.range + RemainingMove;
+
+            List<Vector3Int> dashLocations = Pathfinder3D.GetDashTargets(owner.transform.position, maxDash, owner.Movement.Style);
+            if (owner.Movement.Style == MoveStyle.WALK)
+            {
+                dashLocations = Pathfinder3D.FilterByAccessToCastPosition(Vector3Int.RoundToInt(closestEnemyPosition), optimalDistance, dashLocations);
+            }
+            else
+            {
+                dashLocations = dashLocations.Where(location => Vector3.Distance(location, owner.transform.position) > ability.range / 2).ToList();
+            }
+
+            dashLocations = dashLocations.OrderBy(DistanceFromOptimalRange(closestEnemyPosition, optimalDistance)).ToList();
+
+            foreach (Vector3Int location in dashLocations)
+            {
+                if (!owner.Caster.FindValidCast(location, out var cast)) continue;
+                yield return UseAbility(ability, cast);
+                yield return AttackPhase();
+                yield break;
+            }
+        }
+        yield return MovePhase();
+    }
+
+    IEnumerator MovePhase()
+    {
+        UpdateTargetingData();
+        //this is a problem
+        List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations();
+        pathableLocations = pathableLocations.OrderBy(DistanceFromOptimalRange(closestEnemyPosition, optimalDistance)).ToList();
+
+        List<Vector3> path = Pathfinder3D.FindVectorPath(pathableLocations[0], out var moveCosts);
+        if (path == null) yield break;
+
+        float maxMove = moveCosts.Where(cost => cost < RemainingMove).LastOrDefault();
+        int endIndex = moveCosts.IndexOf(maxMove);
+        path = path.Take(endIndex).ToList();
+        if (path.Count == 0) yield break;
+
+        path = owner.Movement.SanitizePath(path);
+        owner.SpendResource(Mathf.RoundToInt(moveCosts[endIndex]), StatType.MOVEMENT);
+
+        yield return owner.StartCoroutine(owner.Movement.TraversePath(path));
+        yield return ShieldPhase();
+    }
+
+    IEnumerator ShieldPhase()
+    {
+        UpdateTargetingData();
+        shields.Shuffle();
+        foreach (var shield in shields)
+        {
+            if (!owner.Caster.TryPrepare(shield)) continue;
+            Vector3 myPosition = owner.transform.position;
+            List<Vector3> averages = new() {enemies.Select(x => x.TargetPoint.position - myPosition).ToList().Average(),
+                Pathfinder3D.GetCrawlOrientation(owner.transform.position) };
+            if (allies.Count > 0) averages.Add(-allies.Select(x => x.TargetPoint.position - myPosition).ToList().Average());
+            Vector3 finalDirection = averages.Average();
+            Vector3 finalPosition = myPosition + finalDirection;
+            owner.Caster.FindValidCast(finalPosition, out var cast);
+            yield return UseAbility(shield, cast);
+        }
+
+    }
+
     #region Unit Actions
     void BeginTurn()
     {
@@ -185,7 +193,7 @@ public class BotAI
     {
         owner.Caster.ActiveCast = cast;
         yield return PathToCastingPosition(Vector3Int.RoundToInt(cast.Source));
-        yield return owner.Caster.CastSequence();
+        yield return owner.Caster.CastActiveAbility();
         yield return new WaitForSeconds(skillDelay);
         if (ability.EndTurn) owner.StopAllCoroutines();
     }

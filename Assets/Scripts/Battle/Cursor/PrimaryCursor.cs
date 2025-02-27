@@ -201,7 +201,7 @@ public class PrimaryCursor : MonoBehaviour
     void PlayerCastAbility()
     {
         InvalidatePath();
-        PlayerControlledBot.Caster.CastLoadedSkill();
+        PlayerControlledBot.StartCoroutine(PlayerControlledBot.Caster.CastActiveAbility());
         Instance.statDisplay.SyncStatDisplay(PlayerControlledBot);
         ClickableAbility.RefreshUsability.Invoke();
     }

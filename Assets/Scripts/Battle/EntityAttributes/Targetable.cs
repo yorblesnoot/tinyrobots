@@ -16,7 +16,8 @@ public abstract class Targetable : MonoBehaviour
     [HideInInspector] public Rigidbody PhysicsBody;
     [HideInInspector] public Allegiance Allegiance;
     [HideInInspector] public abstract MoveStyle MoveStyle { get; }
-    
+    [SerializeField] protected HealthPopupGenerator Feedback;
+
     public bool IsDead { get; protected set; } = false;
 
     protected Renderer[] PartRenderers;
@@ -45,6 +46,7 @@ public abstract class Targetable : MonoBehaviour
     protected virtual void ReduceHealth(int damage)
     {
         Stats.Current[StatType.HEALTH] = Math.Clamp(Stats.Current[StatType.HEALTH] - damage, 0, Stats.Max[StatType.HEALTH]);
+        Feedback.QueuePopup(damage);
 
         if (Stats.Current[StatType.HEALTH] == 0) Die();
     }
@@ -85,22 +87,6 @@ public abstract class Targetable : MonoBehaviour
         Vector3 direction = Pathfinder3D.GetCrawlOrientation(cleanPosition);
         Vector3 finalPosition = transform.position + direction * depenetrationRadius;
         yield return Tween.Position(transform, finalPosition, depenetrationDuration).ToYieldInstruction();
-
-
-        /*Collider[] colliders = Physics.OverlapSphere(TargetPoint.position, depenetrationRadius, terrainMask);
-        if (colliders == null || colliders.Length == 0) yield break;
-       
-        foreach (Collider contactCollider in colliders)
-        {
-            if(Physics.ComputePenetration(Collider, transform.position, transform.rotation, contactCollider, 
-                contactCollider.transform.position, contactCollider.transform.rotation, out Vector3 direction, out float distance))
-            {
-                Vector3 position = transform.position + direction * distance;
-                Debug.Log(direction * distance);
-                yield return Tween.Position(transform, position, depenetrationDuration).ToYieldInstruction();
-                yield break;
-            }
-        }*/
     }
 
     protected readonly int ActiveLayer = 6;
@@ -117,10 +103,12 @@ public abstract class Targetable : MonoBehaviour
         Tween.Position(transform, endValue: coords, duration: .5f).OnComplete(() => EndFall(startHeight));
     }
 
+    readonly float safeFallDistance = 5;
     protected virtual void EndFall(float startHeight)
     {
-        float heightDifference = transform.position.z - startHeight;
-        float fallDamage = Mathf.Clamp(heightDifference * fallDamagePerUnit, 0, float.MaxValue);
+        float heightDifference = startHeight - transform.position.z;
+        heightDifference = Mathf.Max(heightDifference - safeFallDistance, 0);
+        float fallDamage = heightDifference * fallDamagePerUnit;
         ReduceHealth(Mathf.FloorToInt(fallDamage));
     }
 }

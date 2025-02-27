@@ -12,7 +12,7 @@ public class ShopData
     }
     public void Initialize()
     {
-        Shops.Select(s => s.Location).ToList().DebugContents();
+        //Shops.Select(s => s.Location).ToList().DebugContents();
         shopCodex = Shops.ToDictionary(shop => shop.Location, shop => shop);
     }
     public List<Shop> Shops = new();

@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class BotCaster : MonoBehaviour
 {
-    TinyBot owner;
+    TinyBot Owner;
     bool tracking;
     public ActiveAbility Ability { get; private set; }
     public PossibleCast ActiveCast;
@@ -17,27 +19,22 @@ public class BotCaster : MonoBehaviour
 
     private void Awake()
     {
-        owner = GetComponent<TinyBot>();
+        Owner = GetComponent<TinyBot>();
         TinyBot.ClearActiveBot.AddListener(ClearCasting.Invoke);
         ClearCasting.AddListener(Cancel);
     }
 
     public bool TryPrepare(ActiveAbility ability)
     {
-        if (!ability.IsAvailable() || owner.Stats.Current[StatType.ENERGY] < ability.cost) return false;
+        if (!ability.IsAvailable() || Owner.Stats.Current[StatType.ENERGY] < ability.cost) return false;
         Ability = ability;
         
-        pathableLocations = Pathfinder3D.GetPathableLocations(owner.Stats.Current[StatType.MOVEMENT])
-            .OrderBy(position => Vector3.Distance(position, owner.transform.position))
+        pathableLocations = Pathfinder3D.GetPathableLocations(Owner.Stats.Current[StatType.MOVEMENT])
+            .OrderBy(position => Vector3.Distance(position, Owner.transform.position))
             .ToList();
-        if (owner.Allegiance == Allegiance.PLAYER) StartCoroutine(PlayerAimAbility(ability, PrimaryCursor.Transform.gameObject));
-        owner.Movement.ToggleAnimations(false);
+        if (Owner.Allegiance == Allegiance.PLAYER) StartCoroutine(PlayerAimAbility(ability, PrimaryCursor.Transform.gameObject));
+        Owner.Movement.ToggleAnimations(false);
         return true;
-    }
-
-    public void CastLoadedSkill()
-    {
-        StartCoroutine(CastSequence(ActiveCast));
     }
 
     void Cancel()
@@ -46,12 +43,14 @@ public class BotCaster : MonoBehaviour
         tracking = false;
         HidePlayerTargeting();
         Ability = null;
-        owner.Movement.ToggleAnimations(true);
+        Owner.Movement.ToggleAnimations(true);
         CastOutcomeIndicator.Hide();
     }
 
-    public IEnumerator CastSequence()
+    public IEnumerator CastActiveAbility()
     {
+        Owner.SpendResource(Ability.cost, StatType.ACTION);
+        Ability.CurrentCooldown = SceneGlobals.PlayerData.DevMode && Owner.Allegiance == Allegiance.PLAYER ? 0 : Ability.cooldown;
         yield return CastSequence(ActiveCast);
     }
 
@@ -60,16 +59,16 @@ public class BotCaster : MonoBehaviour
         EndTracking();
         PrimaryCursor.TogglePlayerLockout(true);
         yield return Ability.AdjustTrajectory(cast);
-        Vector3Int startPosition = Vector3Int.RoundToInt(owner.transform.position);
+        Vector3Int startPosition = Vector3Int.RoundToInt(Owner.transform.position);
         MainCameraControl.PanToPosition(cast.Trajectory[^1]);
         yield return Ability.Execute(cast.Trajectory, cast.Targets);
-        if (Vector3Int.RoundToInt(owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(owner.MoveStyle, owner.transform.position);
+        if (Vector3Int.RoundToInt(Owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(Owner.MoveStyle, Owner.transform.position);
         if (Ability.EndTurn)
         {
             yield return new WaitForSeconds(1);
-            TurnManager.EndTurn(owner);
+            TurnManager.EndTurn(Owner);
         }
-        if (owner.Allegiance == Allegiance.PLAYER) PrimaryCursor.TogglePlayerLockout(false);
+        if (Owner.Allegiance == Allegiance.PLAYER) PrimaryCursor.TogglePlayerLockout(false);
         ClearCasting.Invoke();
     }
 
@@ -82,7 +81,7 @@ public class BotCaster : MonoBehaviour
             Vector3 targetPosition = trackedTarget.transform.position;
             ActiveCast = Ability.SimulateCast(targetPosition);
             ability.PhysicalAimAlongTrajectory(ActiveCast.Trajectory);
-            if (ability.range > 0 && owner.Stats.Current[StatType.MOVEMENT] > 0 && GetTargetQuality(targetPosition, ActiveCast.Trajectory) > targetOffsetTolerance)
+            if (ability.range > 0 && Owner.Stats.Current[StatType.MOVEMENT] > 0 && GetTargetQuality(targetPosition, ActiveCast.Trajectory) > targetOffsetTolerance)
             {
                 if (!FindValidCast(targetPosition, out ActiveCast, PrimaryCursor.TargetedBot))
                 {

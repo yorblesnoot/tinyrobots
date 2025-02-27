@@ -14,6 +14,7 @@ public class BuffsUI : MonoBehaviour
 
     void ShowBuffs(TinyBot bot)
     {
+        
         if(activeTarget != null) activeTarget.Buffs.BuffsChanged.RemoveListener(ShowBuffs);
         activeTarget = bot;
         bot.Buffs.BuffsChanged.AddListener(ShowBuffs);

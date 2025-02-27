@@ -222,9 +222,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   normalPopup:
     Color: {r: 1, g: 0.5423228, b: 0, a: 1}
+    Threshold: 0
     Size: 25
   critPopup:
     Color: {r: 1, g: 0.07661381, b: 0, a: 1}
+    Threshold: 0
+    Size: 35
+  popupTypes:
+  - Color: {r: 0.16078432, g: 0.9254902, b: 0.29411766, a: 1}
+    Threshold: -20
+    Size: 35
+  - Color: {r: 0.16135636, g: 0.9245283, b: 0.29582465, a: 1}
+    Threshold: 0
+    Size: 20
+  - Color: {r: 1, g: 0.9196936, b: 0.15566039, a: 1}
+    Threshold: 15
+    Size: 15
+  - Color: {r: 1, g: 0.42313194, b: 0, a: 1}
+    Threshold: 30
+    Size: 25
+  - Color: {r: 1, g: 0.078431375, b: 0, a: 1}
+    Threshold: 50
     Size: 35
   floatNumber: {fileID: 6650869779228163377, guid: 7ca50f46265ed084b8aa0e3b4a8c2f10,
     type: 3}
@@ -244,14 +262,13 @@ MonoBehaviour:
   TargetPoint: {fileID: 6429196684553612018}
   PhysicsBody: {fileID: 0}
   Allegiance: 0
+  Feedback: {fileID: 3745691473234048856}
   deathPushMulti: 1
   landingDuration: 0.3
   deathExplodeMaxForce: 3
   hitRecoilTime: 0.1
   hitReturnTime: 0.5
   recoilDistancePerDamage: 0.03
-  backstabMultiplier: 1.5
-  feedback: {fileID: 3745691473234048856}
   hitSpark: {fileID: 2635817547006723021, guid: 4779673784276bd41b3e7f295ad79d19,
     type: 3}
   headshotPosition: {fileID: 1977403559975929643}
@@ -271,7 +288,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   LinkedCore: {fileID: 0}
-  PrimaryMovement: {fileID: 0}
+  Movement: {fileID: 0}
   Caster: {fileID: 0}
   DamageCalculator: {fileID: 0}
   BotEcho: {fileID: 0}

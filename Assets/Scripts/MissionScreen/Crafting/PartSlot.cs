@@ -69,7 +69,7 @@ public class PartSlot : MonoBehaviour
     public void ClearPartIdentity(bool destroy, bool toInventory)
     {
         SlottedPart.Invoke(PartIdentity, false);
-        if(slotAnimator != null) slotAnimator.SetBool(contractionAnimation, false);
+        if(slotAnimator != null && slotAnimator.gameObject.activeSelf) slotAnimator.SetBool(contractionAnimation, false);
         if (PartIdentity != null)
         {
             if (mockup != null)

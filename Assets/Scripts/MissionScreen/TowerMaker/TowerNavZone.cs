@@ -119,7 +119,8 @@ public class TowerNavZone : MonoBehaviour
         foreach (var renderer in renderers)
         {
             renderer.material.SetVector(evaporationSource, source);
-            Tween.MaterialProperty(renderer.material, marginDistance, duration: instant ? 0 : revealDuration, endValue: maxDistance);
+            if (instant) renderer.material.SetFloat(marginDistance, maxDistance);
+            else Tween.MaterialProperty(renderer.material, marginDistance, duration: instant ? 0 : revealDuration, endValue: maxDistance);
         }
     }
 

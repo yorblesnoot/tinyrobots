@@ -16,7 +16,6 @@ public class ActiveAbility : Ability
     protected Trajectory TrajectoryDefinition;
     TrackingAnimation trackingAnimation;
 
-    readonly float skillDelay = .5f;
     HashSet<System.Object> prohibitionSources = new();
     
     [HideInInspector] public bool Locked { get { return prohibitionSources.Count > 0; } }
@@ -48,9 +47,6 @@ public class ActiveAbility : Ability
 
     public IEnumerator Execute(List<Vector3> trajectory, List<Targetable> targets)
     {
-        Owner.SpendResource(cost, StatType.ACTION);
-        CurrentCooldown = SceneGlobals.PlayerData.DevMode && Owner.Allegiance == Allegiance.PLAYER ? 0 : cooldown;
-        yield return new WaitForSeconds(skillDelay);
         foreach (var effect in abilityEffects) yield return effect.PerformEffect(Owner, trajectory, targets);
         ScheduleAbilityEnd();
         //MainCameraControl.FindViewOfPosition(Owner.TargetPoint.position, false, false);

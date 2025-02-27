@@ -23,6 +23,6 @@ public class FloatingNumber : MonoBehaviour
     private IEnumerator AnimateFloatingNumber()
     {
         yield return new WaitForSeconds(lifespan);
-        BotStateFeedback.numberPool.ReturnToPool(gameObject);
+        HealthPopupGenerator.NumberPool.ReturnToPool(gameObject);
     }
 }
