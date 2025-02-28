@@ -7,6 +7,7 @@ public class BotAssembler : MonoBehaviour
     [SerializeField] float botColliderOffset = 1;
     [SerializeField] GameObject suspensionStand;
     [SerializeField] GameObject botBase;
+    [SerializeField] List<GameObject> universalAbilityContainers;
 
     static BotAssembler instance;
     private void Awake()
@@ -18,6 +19,7 @@ public class BotAssembler : MonoBehaviour
     {
         
         GameObject spawnedBase = Instantiate(instance.botBase);
+        spawnedBase.transform.SetParent(instance.transform, false);
         TinyBot botUnit = spawnedBase.GetComponent<TinyBot>();
         
         PrimaryMovement locomotion = null;
@@ -146,7 +148,23 @@ public class BotAssembler : MonoBehaviour
             }
             abilities.AddRange(partAbilities);
         }
+        if(botUnit.Allegiance == Allegiance.PLAYER) abilities.AddRange(GetUniversals(botUnit));
 
+        return abilities;
+    }
+
+    static List<Ability> GetUniversals(TinyBot botUnit)
+    {
+        List<Ability> abilities = new();
+        foreach(var container in instance.universalAbilityContainers)
+        {
+            GameObject spawned = Instantiate(container);
+            spawned.name = spawned.name.Replace("(Clone)", "");
+            ActiveAbility ability = spawned.GetComponent<ActiveAbility>();
+            spawned.transform.SetParent(botUnit.transform, false);
+            spawned.transform.position = botUnit.TargetPoint.position;
+            abilities.Add(ability);
+        }
         return abilities;
     }
 }

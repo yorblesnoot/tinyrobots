@@ -34,7 +34,7 @@ public class ActiveAbility : Ability
 
         DurationModule = GetComponent<DurationModule>();
         TrajectoryDefinition = TryGetComponent(out Trajectory trajectory) ? trajectory : gameObject.AddComponent<NoTrajectory>();
-        TargetType = TryGetComponent(out TargetPoint point) ? point : gameObject.AddComponent<ImpactTarget>();
+        TargetType = gameObject.GetComponent<ImpactTarget>();
         trackingAnimation = GetComponent<TrackingAnimation>();
     }
 
@@ -42,7 +42,7 @@ public class ActiveAbility : Ability
     {
         base.Initialize(botUnit);
         if (emissionPoint == null) emissionPoint = Owner.transform;
-        baseEmissionPosition = botUnit.transform.InverseTransformPoint(emissionPoint.position);
+        baseEmissionPosition = Owner.transform.InverseTransformPoint(emissionPoint.position);
     }
 
     public IEnumerator Execute(List<Vector3> trajectory, List<Targetable> targets)
@@ -93,9 +93,17 @@ public class ActiveAbility : Ability
         Vector3 rangeTarget = TrajectoryDefinition.RestrictRange(castTarget, rangeSource, range);
         eval.Trajectory = TrajectoryDefinition.GetTrajectory(emissionSource, rangeTarget, out RaycastHit hit);
         eval.Hit = hit.collider != null; //|| Physics.CheckSphere(eval.Trajectory[^1], endCheckRadius, TrajectoryDefinition.BlockingLayerMask);
-        List<Targetable> newTargets = range == 0 ? new() { Owner } : TargetType.FindTargets(eval.Trajectory);
-        eval.Targets = new(newTargets);
+        eval.Targets = new(GetTargets(eval.Trajectory, hit));
         return eval;
+    }
+
+    List<Targetable> GetTargets(List<Vector3> trajectory, RaycastHit hit)
+    {
+        List<Targetable> targets = new();
+        if (range == 0) targets.Add(Owner);
+        else if (TargetType != null) targets.AddRange(TargetType.FindTargets(trajectory));
+        else if (hit.collider != null && hit.collider.TryGetComponent(out Targetable target)) targets.Add(target);
+        return targets;
     }
 
     Vector3 JointPositionAt(Vector3 jointPosition, Vector3 position, Vector3 facing, bool local = false)

@@ -110,6 +110,7 @@ public class PartSlot : MonoBehaviour
     static Sequence activeSequence;
     void AnimateHologram(bool on)
     {
+        //hologram fade is making slotted parts disappear ~~~~~
         if(activeSequence.isAlive) activeSequence.Stop();
         activeSequence = Sequence.Create();
         foreach(Renderer renderer in mockup.mainRenderers)

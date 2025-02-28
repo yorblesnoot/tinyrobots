@@ -4969,6 +4969,9 @@ MonoBehaviour:
   suspensionStand: {fileID: 3862043674041813392, guid: 1f8ac24d7ab61134984098e70e22c8e6,
     type: 3}
   botBase: {fileID: 9120402016229796176, guid: 176698837bd8e894b8fd5a9592676de8, type: 3}
+  universalAbilityContainers:
+  - {fileID: 9216798846531911190, guid: 278397ad00b42a1458c0a1c76cd40498, type: 3}
+  - {fileID: 881687718685601546, guid: 280db15aa10a7c742baa007bacc69521, type: 3}
 --- !u!4 &468739835
 Transform:
   m_ObjectHideFlags: 0
@@ -19157,15 +19160,7 @@ MonoBehaviour:
   m_LookAt: {fileID: 1968512384}
   m_Follow: {fileID: 1968512384}
   m_ShowDebugText: 0
-  m_ChildCameras:
-  - {fileID: 1159648236}
-  - {fileID: 1305581196}
-  - {fileID: 1519979681}
-  - {fileID: 2038490603}
-  - {fileID: 884183641}
-  - {fileID: 818697989}
-  - {fileID: 1181760181}
-  - {fileID: 1873713548}
+  m_ChildCameras: []
   m_ActivateAfter: 0
   m_MinDuration: 2
   m_RandomizeChoice: 0

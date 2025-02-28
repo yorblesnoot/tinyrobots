@@ -81,7 +81,9 @@ public class BotCaster : MonoBehaviour
             Vector3 targetPosition = trackedTarget.transform.position;
             ActiveCast = Ability.SimulateCast(targetPosition);
             ability.PhysicalAimAlongTrajectory(ActiveCast.Trajectory);
-            if (ability.range > 0 && Owner.Stats.Current[StatType.MOVEMENT] > 0 && GetTargetQuality(targetPosition, ActiveCast.Trajectory) > targetOffsetTolerance)
+            if (ability.range > 0 && Owner.Stats.Current[StatType.MOVEMENT] > 0
+                && !ActiveCast.Targets.Contains(PrimaryCursor.TargetedBot)
+                && GetTargetQuality(targetPosition, ActiveCast.Trajectory) > targetOffsetTolerance)
             {
                 if (!FindValidCast(targetPosition, out ActiveCast, PrimaryCursor.TargetedBot))
                 {
@@ -133,7 +135,7 @@ public class BotCaster : MonoBehaviour
     void DrawPlayerTargeting(PossibleCast cast)
     {
         if (cast.Trajectory != null && cast.Trajectory.Count > 0) LineMaker.DrawLine(cast.Trajectory.ToArray());
-        Ability.TargetType.Draw(cast.Trajectory);
+        if (Ability.TargetType != null) Ability.TargetType.Draw(cast.Trajectory);
         SetHighlightedTargets(cast.Targets);
     }
 
@@ -146,7 +148,7 @@ public class BotCaster : MonoBehaviour
     void HidePlayerTargeting()
     {
         LineMaker.HideLine();
-        Ability.TargetType.Hide();
+        if(Ability.TargetType != null) Ability.TargetType.Hide();
         SetHighlightedTargets(null);
     }
 
