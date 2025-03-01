@@ -82,7 +82,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
   BaseEffectMagnitude: 5
-  damageFlinch: 1
+  damageFlinch: 0
 --- !u!114 &1569337820721011347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,9 +115,9 @@ MonoBehaviour:
   Ability: {fileID: 0}
   BaseEffectMagnitude: 0
   impulseLength: -1
-  duration: 0.2
+  duration: 0.1
   returnDuration: 0.5
-  waitDuration: 0.2
+  waitDuration: 0.05
 --- !u!114 &5328852179625989309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,6 +131,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
-  BaseEffectMagnitude: 1
+  BaseEffectMagnitude: 2
   pushScanRadius: 0.5
-  pushDuration: 0.4
+  pushDuration: 0.5

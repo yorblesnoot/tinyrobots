@@ -1,11 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class BotCaster : MonoBehaviour
 {
@@ -128,7 +125,7 @@ public class BotCaster : MonoBehaviour
 
     float GetTargetQuality(Vector3 position, List<Vector3> trajectory)
     {
-        float offset = Vector3.Distance(position, trajectory[^1]) - Ability.TargetType.AddedRange;
+        float offset = Vector3.Distance(position, trajectory[^1]) - Ability.AddedRange;
         return Mathf.Clamp(offset, 0, float.MaxValue);
     }
 

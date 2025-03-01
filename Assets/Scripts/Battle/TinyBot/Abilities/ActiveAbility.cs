@@ -20,8 +20,8 @@ public class ActiveAbility : Ability
     
     [HideInInspector] public bool Locked { get { return prohibitionSources.Count > 0; } }
     
-
-    public float TotalRange { get { return range + TargetType.AddedRange; } }
+    public float AddedRange { get { return TargetType != null ? TargetType.AddedRange : 0; } }
+    public float TotalRange { get { return range + AddedRange; } }
     public override bool IsActive => true;
 
     protected override AbilityEffect[] Effects => abilityEffects;
@@ -34,7 +34,7 @@ public class ActiveAbility : Ability
 
         DurationModule = GetComponent<DurationModule>();
         TrajectoryDefinition = TryGetComponent(out Trajectory trajectory) ? trajectory : gameObject.AddComponent<NoTrajectory>();
-        TargetType = gameObject.GetComponent<ImpactTarget>();
+        TargetType = gameObject.GetComponent<TargetPoint>();
         trackingAnimation = GetComponent<TrackingAnimation>();
     }
 
@@ -66,10 +66,11 @@ public class ActiveAbility : Ability
         }
     }
 
+    readonly float rangeCheckThreshold = 1;
     public bool PointIsInRange(Vector3 target, Vector3 source)
     {
         Vector3 rangeTarget = TrajectoryDefinition.RestrictRange(target, source, range);
-        return rangeTarget == target;
+        return Vector3.Distance(rangeTarget, target) < rangeCheckThreshold;
     }
 
     public PossibleCast SimulateCast(Vector3 castTarget, Vector3 ownerPosition = default)

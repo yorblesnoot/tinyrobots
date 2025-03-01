@@ -109,6 +109,6 @@ public abstract class Targetable : MonoBehaviour
         float heightDifference = startHeight - transform.position.z;
         heightDifference = Mathf.Max(heightDifference - safeFallDistance, 0);
         float fallDamage = heightDifference * fallDamagePerUnit;
-        ReduceHealth(Mathf.FloorToInt(fallDamage));
+        if(fallDamage > 0) ReduceHealth(Mathf.FloorToInt(fallDamage));
     }
 }

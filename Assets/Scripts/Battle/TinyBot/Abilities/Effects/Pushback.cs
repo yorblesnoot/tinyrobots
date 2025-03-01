@@ -20,6 +20,7 @@ public class Pushback : AbilityEffect
         foreach (Targetable target in targets)
         {
             Vector3 pushDirection = target.transform.position - owner.transform.position;
+            pushDirection = Vector3.ProjectOnPlane(pushDirection, owner.transform.up);
             pushDirection.Normalize();
             bool hitSomething = Physics.SphereCast(target.TargetPoint.position, pushScanRadius, pushDirection, out RaycastHit hit, FinalEffectiveness, layerMask);
             Vector3 destination = hitSomething ? hit.point : target.transform.position + pushDirection * FinalEffectiveness;
