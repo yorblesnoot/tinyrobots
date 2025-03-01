@@ -4,6 +4,7 @@ using UnityEngine;
 
 public static class DebugPlus 
 {
+    [HideInCallstack]
     public static void DebugContents(this IEnumerable objects)
     {
         string output = objects.ToString() + ": ";

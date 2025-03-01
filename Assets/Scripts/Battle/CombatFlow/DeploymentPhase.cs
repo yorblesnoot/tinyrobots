@@ -30,10 +30,12 @@ public class DeploymentPhase : MonoBehaviour
         endCallback();
     }
 
-    Vector3Int lastPosition;
+    
     IEnumerator DeployUnit(TinyBot bot)
     {
         TinyBot echo = bot.BotEcho;
+        Vector3Int lastPosition = default;
+        Vector3 facing = default; 
         //foreach (var part in bot.PartModifiers) SceneGlobals.BotPalette.RecolorPart(part, BotPalette.Special.HOLOGRAM);
         while (!Input.GetMouseButtonDown(0))
         {
@@ -44,7 +46,8 @@ public class DeploymentPhase : MonoBehaviour
                 if (landingPoint == lastPosition) continue;
 
                 lastPosition = landingPoint;
-                echo.PlaceAt(landingPoint, SpawnZone.GetCenterColumn(echo));
+                facing = SpawnZone.GetCenterColumn(landingPoint) - landingPoint;
+                echo.PlaceAt(landingPoint, facing);
             }
             else
             {
@@ -55,7 +58,7 @@ public class DeploymentPhase : MonoBehaviour
 
         //foreach (var part in echo.PartModifiers) SceneGlobals.BotPalette.RecolorPart(part, echo.Allegiance);
         echo.gameObject.SetActive(false);
-        bot.PlaceAt(lastPosition, SpawnZone.GetCenterColumn(bot));
+        bot.PlaceAt(lastPosition, facing);
         yield return null;
     }
 

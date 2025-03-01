@@ -15,7 +15,7 @@ public class ThrustAnimation : IKAnimation
         Vector3 direction = point - trajectory[0];
         direction.Normalize();
         Vector3 thrustTarget = ikTarget.transform.position + direction * thrustLength;
-        StartCoroutine(owner.Movement.ApplyImpulseToBody(direction, 1, thrustDuration, returnDuration));
+        //StartCoroutine(owner.Movement.ApplyImpulseToBody(direction, 1, thrustDuration, returnDuration));
         yield return Tween.Position(ikTarget, thrustTarget, thrustDuration, ease: Ease.InCubic).ToYieldInstruction();
         yield return new WaitForSeconds(thrustLinger);
     }

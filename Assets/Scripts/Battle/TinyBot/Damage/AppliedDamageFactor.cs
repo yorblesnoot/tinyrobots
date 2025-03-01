@@ -12,11 +12,11 @@ public class AppliedDamageFactor
         Owner = owner;
     }
 
-    public float UseFactor(float incomingDamage, TinyBot damageSource, TinyBot damageTarget)
+    public float UseFactor(float incomingDamage, TinyBot damageSource, TinyBot damageTarget, bool consume)
     {
         if (Factor.Exclusive && damageSource != Owner) return incomingDamage;
         float output = Factor.UseFactor(incomingDamage, damageSource, damageTarget, potency, Owner);
-        if(output != incomingDamage) Uses++;
+        if(consume && output != incomingDamage) Uses++;
         return output;
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class SpawnZone : MonoBehaviour
 {
@@ -14,13 +13,14 @@ public class SpawnZone : MonoBehaviour
     [SerializeField] Mode mode;
     public Allegiance Allegiance;
     [SerializeField] Transform limitMarker;
+    [SerializeField] bool hideOnStart = true;
     float radius;
     static Dictionary<Allegiance, Dictionary<MoveStyle, List<Vector3>>> styleNodes;
     private void Awake()
     {
         if(styleNodes != null) styleNodes = null;
         Pathfinder3D.MapInitialized.AddListener(CalculateZoneNodes);
-        gameObject.SetActive(false);
+        gameObject.SetActive(!hideOnStart);
         radius = Vector3.Distance(transform.position, limitMarker.position);
     }
 
@@ -88,13 +88,13 @@ public class SpawnZone : MonoBehaviour
         foreach(var allegiance in styleNodes.Values) 
             foreach (var mode in allegiance.Values) mode.Remove(targetSpace);
         bot.gameObject.SetActive(true);
-        bot.Movement.PivotToFacePosition(GetCenterColumn(bot), true);
+        bot.Movement.PivotToFacePosition(GetCenterColumn(bot.transform.position), true);
         bot.StartCoroutine(bot.Movement.NeutralStance());
     }
 
-    public static Vector3 GetCenterColumn(TinyBot bot)
+    public static Vector3 GetCenterColumn(Vector3 position)
     {
-        return new(Pathfinder3D.XSize / 2, bot.transform.position.y, Pathfinder3D.ZSize / 2);
+        return new(Pathfinder3D.XSize / 2, position.y, Pathfinder3D.ZSize / 2);
     }
 
     private void OnDrawGizmos()

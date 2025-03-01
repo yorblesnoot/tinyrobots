@@ -15,12 +15,13 @@ public abstract class Trajectory : MonoBehaviour
     {
         BlockingLayerMask = LayerMask.GetMask(blockingLayers);
     }
-    public virtual List<Vector3> GetTrajectory(Vector3 sourcePosition, Vector3 target, out RaycastHit hit)
+    public virtual List<Vector3> GetTrajectory(Vector3 sourcePosition, Vector3 target, out Collider collider)
     {
         Vector3[] targets = CalculateTrajectory(sourcePosition, target);
         Vector3 finalDirection = (targets[^1] - targets[^2]).normalized;
         targets[^1] += finalDirection * overlapLength;
-        List < Vector3 > trajectory = CastAlongPoints(targets, BlockingLayerMask, out hit, castWidth);
+        List < Vector3 > trajectory = CastAlongPoints(targets, BlockingLayerMask, out RaycastHit hit, castWidth);
+        collider = hit.collider;
         return trajectory;
     }
 

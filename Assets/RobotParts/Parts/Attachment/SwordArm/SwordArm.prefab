@@ -200,6 +200,8 @@ GameObject:
   - component: {fileID: 1678144688368226067}
   - component: {fileID: 8481281637002415656}
   - component: {fileID: 6697166036674859764}
+  - component: {fileID: 274803420207788490}
+  - component: {fileID: 1810087901196890010}
   m_Layer: 0
   m_Name: Sword Strike
   m_TagString: Untagged
@@ -250,6 +252,8 @@ MonoBehaviour:
   targetRequirement: 0
   trackingToggle: {fileID: 0}
   abilityEffects:
+  - {fileID: 274803420207788490}
+  - {fileID: 1810087901196890010}
   - {fileID: 8481281637002415656}
   - {fileID: 6420332332597587671}
   endEffects: []
@@ -268,6 +272,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
   BaseEffectMagnitude: 15
+  damageFlinch: 1
 --- !u!114 &1678144688368226067
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,7 +304,7 @@ MonoBehaviour:
   BaseEffectMagnitude: 0
   ikTarget: {fileID: 8265051676045458903}
   thrustLength: 3
-  thrustDuration: 0.1
+  thrustDuration: 0.05
   thrustLinger: 0.1
   returnDuration: 0.5
 --- !u!114 &6697166036674859764
@@ -318,6 +323,42 @@ MonoBehaviour:
   maxTargets: 5
   spatialDegree: 20
   containWithinTrajectory: 1
+--- !u!114 &274803420207788490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8098520941806732672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d351610167a50409da2b9d8e02f3a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
+  impulseLength: 0.5
+  duration: 0.2
+  returnDuration: 0.05
+  waitDuration: 0.25
+--- !u!114 &1810087901196890010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8098520941806732672}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d351610167a50409da2b9d8e02f3a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
+  impulseLength: -1
+  duration: 0.05
+  returnDuration: 1
+  waitDuration: 0
 --- !u!1 &8658645440822617628
 GameObject:
   m_ObjectHideFlags: 0

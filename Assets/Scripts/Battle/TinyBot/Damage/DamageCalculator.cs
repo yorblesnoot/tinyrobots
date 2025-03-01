@@ -39,8 +39,7 @@ public class DamageCalculator : MonoBehaviour
         float currentDamage = baseDamage;
         foreach (var fact in finalFactors)
         {
-            if (consume) fact.Uses++;
-            currentDamage = fact.UseFactor(currentDamage, source, target);
+            currentDamage = fact.UseFactor(currentDamage, source, target, consume);
         }
         RemoveExpiredFactors(source.DamageCalculator);
         RemoveExpiredFactors(target.DamageCalculator);
@@ -53,7 +52,7 @@ public class DamageCalculator : MonoBehaviour
         foreach (var applied in factors)
         {
             DamageFactor factor = applied.Factor;
-            if(factor.UseLimit > 0 && applied.Uses > factor.UseLimit)
+            if(factor.UseLimit > 0 && applied.Uses >= factor.UseLimit)
             {
                 calculator.owner.Buffs.RemoveBuff(factor);
             }

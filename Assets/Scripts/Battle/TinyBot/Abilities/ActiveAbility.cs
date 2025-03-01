@@ -92,18 +92,18 @@ public class ActiveAbility : Ability
         }
         PossibleCast eval = new() { Source = ownerPosition };
         Vector3 rangeTarget = TrajectoryDefinition.RestrictRange(castTarget, rangeSource, range);
-        eval.Trajectory = TrajectoryDefinition.GetTrajectory(emissionSource, rangeTarget, out RaycastHit hit);
-        eval.Hit = hit.collider != null; //|| Physics.CheckSphere(eval.Trajectory[^1], endCheckRadius, TrajectoryDefinition.BlockingLayerMask);
-        eval.Targets = new(GetTargets(eval.Trajectory, hit));
+        eval.Trajectory = TrajectoryDefinition.GetTrajectory(emissionSource, rangeTarget, out Collider collider);
+        eval.Hit = collider != null; //|| Physics.CheckSphere(eval.Trajectory[^1], endCheckRadius, TrajectoryDefinition.BlockingLayerMask);
+        eval.Targets = GetTargets(eval.Trajectory, collider);
         return eval;
     }
 
-    List<Targetable> GetTargets(List<Vector3> trajectory, RaycastHit hit)
+    List<Targetable> GetTargets(List<Vector3> trajectory, Collider hit)
     {
         List<Targetable> targets = new();
         if (range == 0) targets.Add(Owner);
         else if (TargetType != null) targets.AddRange(TargetType.FindTargets(trajectory));
-        else if (hit.collider != null && hit.collider.TryGetComponent(out Targetable target)) targets.Add(target);
+        else if (hit != null && hit.TryGetComponent(out Targetable target)) targets.Add(target);
         return targets;
     }
 

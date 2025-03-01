@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1282613824092406646}
   - component: {fileID: 8339660230777350491}
   - component: {fileID: 1569337820721011347}
+  - component: {fileID: 5273897447964168714}
   - component: {fileID: 8674963648291627615}
   - component: {fileID: 5328852179625989309}
   m_Layer: 0
@@ -63,6 +64,7 @@ MonoBehaviour:
   targetRequirement: 2
   trackingToggle: {fileID: 0}
   abilityEffects:
+  - {fileID: 5273897447964168714}
   - {fileID: 8674963648291627615}
   - {fileID: 8339660230777350491}
   - {fileID: 5328852179625989309}
@@ -100,6 +102,24 @@ MonoBehaviour:
   - Terrain
   castWidth: 0
   BlockingLayerMask: 0
+--- !u!114 &5273897447964168714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 881687718685601546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2d351610167a50409da2b9d8e02f3a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ability: {fileID: 0}
+  BaseEffectMagnitude: 0
+  impulseLength: 1
+  duration: 0.5
+  returnDuration: 0.05
+  waitDuration: 0.55
 --- !u!114 &8674963648291627615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,10 +134,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
   BaseEffectMagnitude: 0
-  impulseLength: -1
-  duration: 0.1
+  impulseLength: -2
+  duration: 0.05
   returnDuration: 0.5
-  waitDuration: 0.05
+  waitDuration: 0.03
 --- !u!114 &5328852179625989309
 MonoBehaviour:
   m_ObjectHideFlags: 0

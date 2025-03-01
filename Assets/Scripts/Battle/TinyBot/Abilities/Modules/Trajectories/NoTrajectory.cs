@@ -5,9 +5,12 @@ using UnityEngine;
 
 public class NoTrajectory : Trajectory
 {
-    public override List<Vector3> GetTrajectory(Vector3 sourcePosition, Vector3 target, out RaycastHit hit)
+    readonly float endSize = .1f;
+    Collider[] colliders = new Collider[1];
+    public override List<Vector3> GetTrajectory(Vector3 sourcePosition, Vector3 target, out Collider collider)
     {
-        hit = default;
+        Physics.OverlapSphereNonAlloc(target, endSize, colliders, BlockingLayerMask);
+        collider = colliders[0];
         return CalculateTrajectory(sourcePosition, target).ToList();
     }
     protected override Vector3[] CalculateTrajectory(Vector3 source, Vector3 target)
