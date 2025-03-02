@@ -132,8 +132,8 @@ public class TinyBot : Targetable
 
     public void SpendResource(int resource, StatType statType)
     {
-        Stats.Current[statType] -= resource;
-        if (Stats.Current[statType] < 0) Stats.Current[statType] = 0;
+        int newTotal = Mathf.Max(Stats.Current[statType] - resource, 0);
+        Stats.Current[statType] = newTotal;
     }
 
     public void BecomeAvailableForTurn()

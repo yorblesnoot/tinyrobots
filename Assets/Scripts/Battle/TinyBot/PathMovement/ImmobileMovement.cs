@@ -28,6 +28,8 @@ public class ImmobileMovement : PrimaryMovement
         Vector3 direction = (Vector3.down - bot.transform.forward) * 2;
         Vector3 origin = bot.TargetPoint.position + direction;
         bool ray = Physics.Raycast(origin, -direction, out RaycastHit hit, 5, mask);
+        Debug.Log(ray);
+        Debug.Log(origin);
         Debug.DrawLine(origin, hit.point, Color.magenta, 10f);
         transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
         transform.SetParent(bot.TargetPoint, true);
@@ -43,8 +45,10 @@ public class ImmobileMovement : PrimaryMovement
         Vector3 lookDirection = Owner.transform.forward;
         lookDirection.y = 0;
         ikTarget.rotation = Quaternion.LookRotation(lookDirection, -hit.normal);
+        rotatorBase.localRotation = Quaternion.identity;
         HandleImpulse();
         yield return null;
+        
         gluedRotation = rotatorBase.rotation;
     }
 

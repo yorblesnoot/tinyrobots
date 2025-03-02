@@ -62,6 +62,7 @@ public class PartSlot : MonoBehaviour
     void PlayerSlotPart()
     {
         if (activePart.BasePart.PrimaryLocomotion && PrimaryLocomotionSlotted) return;
+        activeSequence.Stop();
         SetPartIdentity(activePart);
         BotCrafter.Instance.PartInventory.RemovePart(BotCrafter.Instance.PartInventory.ActivePart);
     }
@@ -121,19 +122,13 @@ public class PartSlot : MonoBehaviour
                     startValue: on ? 0 : 1, endValue: on ? 1 : 0, duration: hologramFadeTime));
             }
         }
-        if (!on) activeSequence.OnComplete(ClearMockup);
-
-        void ClearMockup()
-        {
-            mockup.gameObject.SetActive(false);
-            mockup = null;
-        }
     }
 
     private void OnMouseExit()
     {
         if (mockup == null || PartIdentity != null) return;
-        AnimateHologram(false);
+        mockup.gameObject.SetActive(false);
+        mockup = null;
     }
 
     

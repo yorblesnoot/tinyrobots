@@ -51,6 +51,7 @@ public class TurnResourceCounter : MonoBehaviour
 
     void SetSliderAndNumber(float value)
     {
+        value = Mathf.Max(value, 0);
         moveSlider.value = value;
         moveCount.text = Mathf.RoundToInt(value).ToString();
     }
