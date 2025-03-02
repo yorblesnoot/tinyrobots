@@ -82,7 +82,7 @@ public class BotCaster : MonoBehaviour
                 && !ActiveCast.Targets.Contains(PrimaryCursor.TargetedBot)
                 && GetTargetQuality(targetPosition, ActiveCast.Trajectory) > targetOffsetTolerance)
             {
-                if (!FindValidCast(targetPosition, out ActiveCast, PrimaryCursor.TargetedBot))
+                if (!FindValidCast(targetPosition, out ActiveCast, snapTarget: PrimaryCursor.TargetedBot))
                 {
                     ActiveCast = FindClosestCast(targetPosition);
                     //owner.EchoMap[ability].PhysicalAimAlongTrajectory(PossibleCast.Trajectory);
@@ -98,14 +98,14 @@ public class BotCaster : MonoBehaviour
     }
 
     readonly float targetOffsetTolerance = .5f;
-    public bool FindValidCast(Vector3 targetPosition, out PossibleCast cast, Targetable snapTarget = null)
+    public bool FindValidCast(Vector3 targetPosition, out PossibleCast cast, bool enforceUsable = false, Targetable snapTarget = null)
     {
         cast = default;
         foreach (Vector3Int pathablePoint in pathableLocations)
         {
             if (!Ability.PointIsInRange(pathablePoint, targetPosition)) continue;
-
             PossibleCast possibleCast = Ability.SimulateCast(targetPosition, pathablePoint);
+            if (enforceUsable && !Ability.IsCastUsable(possibleCast)) continue;
             float quality = GetTargetQuality(targetPosition, possibleCast.Trajectory);
             bool gotSnapTarget = snapTarget != null && possibleCast.Targets.Contains(snapTarget);
             if (quality <= targetOffsetTolerance || gotSnapTarget)
@@ -163,7 +163,7 @@ public class BotCaster : MonoBehaviour
 
     public bool CastIsValid()
     {
-        return Ability.IsCastValid(ActiveCast);
+        return Ability.IsCastUsable(ActiveCast);
     }
 }
 

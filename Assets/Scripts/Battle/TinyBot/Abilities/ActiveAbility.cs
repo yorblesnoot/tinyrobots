@@ -143,7 +143,7 @@ public class ActiveAbility : Ability
         else DurationModule.SetDuration(Owner, EndAbility);
     }
 
-    public bool IsCastValid(PossibleCast cast)
+    public bool IsCastUsable(PossibleCast cast)
     {
         if (targetRequirement == TargetRequirement.NONE) return true;
         else if (targetRequirement == TargetRequirement.OPEN && cast.Trajectory != null

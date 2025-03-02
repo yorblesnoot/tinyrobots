@@ -58,4 +58,9 @@ public class AppliedBuff
         }
         return false;
     }
+
+    public override string ToString()
+    {
+        return Buff.name;
+    }
 }

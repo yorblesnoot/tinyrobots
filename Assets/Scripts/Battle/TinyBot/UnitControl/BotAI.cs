@@ -82,7 +82,7 @@ public class BotAI
             foreach (var target in targets)
             {
                 Vector3 targetPoint = target.TargetPoint.position;
-                if (!owner.Caster.FindValidCast(targetPoint, out var cast, target)) continue;
+                if (!owner.Caster.FindValidCast(targetPoint, out var cast, true, target)) continue;
                 yield return UseAbility(ability, cast);
                 yield return AttackPhase();
                 yield break;
@@ -113,7 +113,7 @@ public class BotAI
 
             foreach (Vector3Int location in dashLocations)
             {
-                if (!owner.Caster.FindValidCast(location, out var cast)) continue;
+                if (!owner.Caster.FindValidCast(location, out var cast, true)) continue;
                 yield return UseAbility(ability, cast);
                 yield return AttackPhase();
                 yield break;
