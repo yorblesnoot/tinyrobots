@@ -175,6 +175,16 @@ public class ActiveAbility : Ability
         _ => Color.red,
     };
 
+    protected override void AddTo(TinyBot bot)
+    {
+        bot.ActiveAbilities.Add(this);
+    }
+
+    protected override void RemoveFrom(TinyBot bot)
+    {
+        bot.ActiveAbilities.Remove(this);
+    }
+
     enum TargetRequirement
     {
         NONE,

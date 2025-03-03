@@ -26,6 +26,17 @@ public abstract class Ability : MonoBehaviour
         Owner.BeganTurn.AddListener(LapseCooldown);
     }
 
+    public void ModifyOn(TinyBot bot, bool add)
+    {
+        if(add) AddTo(bot);
+        else RemoveFrom(bot);
+        bot.AbilitiesChanged.Invoke();
+    }
+
+    protected abstract void AddTo(TinyBot bot);
+    protected abstract void RemoveFrom(TinyBot bot);
+
+
     public bool IsScalable()
     {
         foreach (var effect in Effects)

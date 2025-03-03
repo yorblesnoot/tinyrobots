@@ -42,13 +42,13 @@ public class TinyBot : Targetable
     [HideInInspector] public BotCaster Caster;
     public List<ActiveAbility> ActiveAbilities { get; private set; }
     public List<PassiveAbility> PassiveAbilities { get; private set;}
+    public List<MetaAbility> MetaAbilities { get; private set; }
 
     public override MoveStyle MoveStyle => Movement.Style;
 
     [HideInInspector] public DamageCalculator DamageCalculator;
 
     [HideInInspector] public TinyBot BotEcho;
-    public Dictionary<ActiveAbility, ActiveAbility> EchoMap;
 
     public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement, bool echo = false)
     {
@@ -56,7 +56,7 @@ public class TinyBot : Targetable
         Movement = primaryMovement;
         Movement.Owner = this;
         Buffs = new BuffController(this);
-        SetAbilities(abilities, echo);
+        if(!echo) SetAbilities(abilities);
         if (echo) return;
         DamageCalculator = GetComponent<DamageCalculator>();
         Caster = GetComponent<BotCaster>();
@@ -87,25 +87,17 @@ public class TinyBot : Targetable
         Pathfinder3D.SetNodeOccupancy(Vector3Int.RoundToInt(transform.position), true);
     }
 
-    private void SetAbilities(List<Ability> abilities, bool echo = false)
+    private void SetAbilities(List<Ability> abilities)
     {
         ActiveAbilities = new();
         PassiveAbilities = new();
+        MetaAbilities = new();
         foreach (var ability in abilities)
         {
-            if (echo && !ability.IsActive) continue;
-            AddAbility(ability);
+            ability.ModifyOn(this, true);
         }
     }
 
-    public void AddAbility(Ability ability)
-    {
-        ability.Initialize(this);
-        ActiveAbility active = ability as ActiveAbility;
-        if (active != null) ActiveAbilities.Add(active);
-        else PassiveAbilities.Add(ability as PassiveAbility);
-        AbilitiesChanged.Invoke();
-    }
 
     List<Material> cachedMaterials;
     public override void SetOutlineColor(Color color)

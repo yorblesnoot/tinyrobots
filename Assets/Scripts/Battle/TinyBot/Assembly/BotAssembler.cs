@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
 public class BotAssembler : MonoBehaviour
 {
@@ -27,7 +26,7 @@ public class BotAssembler : MonoBehaviour
         PrimaryMovement locomotion = null;
         List<PartModifier> spawnedParts = new();
         UnitStats botStats = new();
-        GameObject core = RecursiveConstruction(treeRoot);
+        GameObject core = RecursiveConstruction(treeRoot, spawnedParts, botStats, ref locomotion);
         core.transform.SetParent(botUnit.TargetPoint, false);
         
         if (SceneGlobals.PlayerData.DevMode && allegiance == Allegiance.PLAYER) botStats.TestMode();
@@ -54,38 +53,40 @@ public class BotAssembler : MonoBehaviour
 
         return botUnit;
 
-        GameObject RecursiveConstruction(TreeNode<ModdedPart> currentNode, AttachmentPoint attachmentPoint = null)
-        {
-            PartModifier modifier = currentNode.Value.Sample;
-            GameObject spawned = modifier.gameObject;
-            spawned.SetActive(true);
-            
-            AddPartStats(currentNode.Value);
-            spawnedParts.Add(modifier);
-            if(attachmentPoint != null) spawned.transform.SetParent(attachmentPoint.transform, false);
-            spawned.transform.localRotation = Quaternion.identity;
-            if (currentNode.Value.BasePart.PrimaryLocomotion) locomotion = spawned.GetComponent<PrimaryMovement>();
-            List<TreeNode<ModdedPart>> children = currentNode.Children;
-
-            for (int i = 0; i < children.Count; i++)
-            {
-                if(modifier.AttachmentPoints[i].ContainsSubTree) modifier.AddSubTree(children[i]);
-                else RecursiveConstruction(children[i], modifier.AttachmentPoints[i]);
-            }
-            return spawned;
-        }
+        
 
         static void RestructureHierarchy(PrimaryMovement locomotion, Transform initialAttachmentPoint, Transform bot)
         {
             locomotion.transform.SetParent(bot, true);
             initialAttachmentPoint.SetParent(locomotion.sourceBone, true);
         }
+    }
+
+    public static GameObject RecursiveConstruction(TreeNode<ModdedPart> currentNode, List<PartModifier> spawnedParts, UnitStats statBlock, ref PrimaryMovement locomotion, AttachmentPoint attachmentPoint = null)
+    {
+        PartModifier modifier = currentNode.Value.Sample;
+        GameObject spawned = modifier.gameObject;
+        spawned.SetActive(true);
+
+        AddPartStats(currentNode.Value);
+        spawnedParts.Add(modifier);
+        if (attachmentPoint != null) spawned.transform.SetParent(attachmentPoint.transform, false);
+        spawned.transform.localRotation = Quaternion.identity;
+        if(currentNode.Value.BasePart.PrimaryLocomotion) locomotion = spawned.GetComponent<PrimaryMovement>();
+        List<TreeNode<ModdedPart>> children = currentNode.Children;
+
+        for (int i = 0; i < children.Count; i++)
+        {
+            if (modifier.AttachmentPoints[i].ContainsSubTree) modifier.AddSubTree(children[i]);
+            else RecursiveConstruction(children[i], spawnedParts, statBlock, ref locomotion, modifier.AttachmentPoints[i]);
+        }
+        return spawned;
 
         void AddPartStats(ModdedPart part)
         {
             foreach (var stat in part.FinalStats)
             {
-                botStats.Max[stat.Key] += stat.Value;
+                statBlock.Max[stat.Key] += stat.Value;
             }
         }
     }
@@ -95,8 +96,6 @@ public class BotAssembler : MonoBehaviour
         treeRoot.Traverse((part) => part.InitializePart());
         TinyBot echo = BuildBot(treeRoot, allegiance, true);
         echo.DeclareEcho();
-        botUnit.EchoMap = new();
-        //for(int i = 0; i < echo.ActiveAbilities.Count; i++) botUnit.EchoMap.Add(botUnit.ActiveAbilities[i], echo.ActiveAbilities[i]);
         return echo;
     }
 
