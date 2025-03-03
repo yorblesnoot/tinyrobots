@@ -146,10 +146,10 @@ public class ActiveAbility : Ability
     public bool IsCastUsable(PossibleCast cast)
     {
         if (targetRequirement == TargetRequirement.NONE) return true;
-        else if (targetRequirement == TargetRequirement.OPEN && cast.Trajectory != null
+        else if (targetRequirement == TargetRequirement.LANDABLE && cast.Trajectory != null
             && Pathfinder3D.GetLandingPointBy(cast.Trajectory[^1], Owner.MoveStyle, out _)) return true;
         else if (targetRequirement == TargetRequirement.UNIT && cast.Targets.Count > 0) return true;
-        else if (targetRequirement == TargetRequirement.TERRAIN && cast.Hit) return true;
+        else if (targetRequirement == TargetRequirement.TRAJECTORYHIT && cast.Hit) return true;
         else if (targetRequirement == TargetRequirement.ALLY && cast.Targets.Count > 0
             && cast.Targets[0].Allegiance == Owner.Allegiance) return true;
         return false;
@@ -171,16 +171,16 @@ public class ActiveAbility : Ability
     public Color GetOutlineColor() => targetRequirement switch
     {
         TargetRequirement.ALLY => Color.green,
-        TargetRequirement.OPEN => Color.white,
+        TargetRequirement.LANDABLE => Color.white,
         _ => Color.red,
     };
 
     enum TargetRequirement
     {
         NONE,
-        OPEN,
+        LANDABLE,
         UNIT,
-        TERRAIN,
+        TRAJECTORYHIT,
         ALLY
     }
 }

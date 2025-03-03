@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class BotAssembler : MonoBehaviour
 {
@@ -45,7 +47,7 @@ public class BotAssembler : MonoBehaviour
             else SceneGlobals.BotPalette.RecolorPart(partModifier, allegiance);
         }
         
-        List<Ability> abilities = GetAbilityList(spawnedParts, botUnit);
+        List<Ability> abilities = GetAbilityList(spawnedParts);
         if (grantUniversals) abilities.AddRange(GetUniversals(botUnit));
         botUnit.Initialize(abilities, spawnedParts, locomotion, echo);
         if (allegiance == Allegiance.PLAYER && echo == false) botUnit.BotEcho = CreateEcho(treeRoot, allegiance, botUnit);
@@ -107,8 +109,14 @@ public class BotAssembler : MonoBehaviour
         summon.Movement.PivotToFacePosition(owner.transform.position, true);
         botConditioning?.Invoke(summon);
         TurnManager.RegisterSummon(summon);
-        Pathfinder3D.EvaluateNodeOccupancy(owner.transform.position);
+        summon.StartCoroutine(FinalizeSummon(summon, owner));
         return summon;
+    }
+
+    static IEnumerator FinalizeSummon(TinyBot summon, TinyBot owner)
+    {
+        yield return summon.Fall();
+        Pathfinder3D.EvaluateNodeOccupancy(owner.transform.position);
     }
 
     private static PrimaryMovement AddImmobileLocomotion(TinyBot bot, out PartModifier mod)
@@ -136,7 +144,7 @@ public class BotAssembler : MonoBehaviour
         bot.GetComponent<CapsuleCollider>().center = colliderCenter;
     }
 
-    static List<Ability> GetAbilityList(List<PartModifier> spawnedParts, TinyBot botUnit)
+    static List<Ability> GetAbilityList(List<PartModifier> spawnedParts)
     {
         List<Ability> abilities = new();
         foreach (var part in spawnedParts)
