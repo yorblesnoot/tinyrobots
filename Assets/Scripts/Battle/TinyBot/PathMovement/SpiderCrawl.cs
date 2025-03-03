@@ -5,11 +5,6 @@ using UnityEngine;
 
 public class SpiderCrawl : LegMovement
 {
-    protected override Vector3 GetUpVector(Vector3 position)
-    {
-        return Pathfinder3D.GetCrawlOrientation(position);
-    }
-
     public override List<Vector3> SanitizePath(List<Vector3> path)
     {
         path = StandardizeHeight(path);

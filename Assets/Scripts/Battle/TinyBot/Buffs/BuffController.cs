@@ -36,7 +36,6 @@ public class BuffController
         {
             if(ActiveBuffs[buff].Tick()) ActiveBuffs.Remove(buff);
         }
-        BuffsChanged?.Invoke(owner);
     }
 
     public void RemoveBuff(BuffType buff)

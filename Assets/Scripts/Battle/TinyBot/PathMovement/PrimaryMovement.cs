@@ -4,14 +4,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class PrimaryMovement : MonoBehaviour
+public class PrimaryMovement : MonoBehaviour
 {
     [field: SerializeField] public MoveStyle Style { get; protected set; }
     [HideInInspector] public TinyBot Owner;
     [HideInInspector] public float SpeedMultiplier = 1;
 
 
-    public abstract float LocomotionHeight { get; }
+    public virtual float LocomotionHeight { get { return 0; } }
     public Transform sourceBone;
 
     [SerializeField] float lookSpeed = 1f;
@@ -38,6 +38,7 @@ public abstract class PrimaryMovement : MonoBehaviour
 
     public void ToggleAnimations(bool on)
     {
+        if(animator == null) return;
         animator.speed = on ? 1f : 0f;
     }
 
@@ -152,8 +153,9 @@ public abstract class PrimaryMovement : MonoBehaviour
     }
 
     public virtual void AnimateToOrientation(Vector3 direction = default) { }
-    public virtual Quaternion GetRotationFromFacing(Vector3 position, Vector3 facing)
+    public Quaternion GetRotationFromFacing(Vector3 position, Vector3 facing)
     {
+        if(Style == MoveStyle.FLY && facing.normalized == Vector3.up) return Owner.transform.rotation;
         Vector3 targetNormal = GetUpVector(position);
         Vector3 lookTarget = Vector3.ProjectOnPlane(facing, targetNormal);
         if(lookTarget == Vector3.zero) return Owner.transform.rotation;
@@ -162,14 +164,18 @@ public abstract class PrimaryMovement : MonoBehaviour
         return targetRotation;
     }
 
-    protected virtual Vector3 GetUpVector(Vector3 position)
+    protected Vector3 GetUpVector(Vector3 position)
     {
-        return Vector3.up;
+        if(Style != MoveStyle.CRAWL) return Vector3.up;
+        return Pathfinder3D.GetCrawlOrientation(position);
     }
 
-    protected abstract void InstantNeutral();
+    protected virtual void InstantNeutral() { }
     
-    public abstract IEnumerator NeutralStance();
+    public virtual IEnumerator NeutralStance()
+    {
+        yield return null;
+    }
 
     public void PivotToFacePosition(Vector3 worldTarget, bool instant = false)
     {

@@ -5,7 +5,7 @@ public class PartModifier : MonoBehaviour
 {
     [SerializeField] Transform abilityContainer;
 
-    public List<TreeNode<ModdedPart>> SubTrees;
+    
     public List<Renderer> mainRenderers;
     [HideInInspector] public AttachmentPoint[] AttachmentPoints;
     [HideInInspector] public Ability[] Abilities;
@@ -15,5 +15,14 @@ public class PartModifier : MonoBehaviour
     {
         Abilities = abilityContainer.GetComponentsInChildren<Ability>();
         AttachmentPoints = gameObject.GetComponentsInChildren<AttachmentPoint>();
+    }
+
+    public void AddSubTree(TreeNode<ModdedPart> subTree)
+    {
+        foreach(Ability ability in Abilities)
+        {
+            ability.SubTrees ??= new();
+            ability.SubTrees.Add(subTree);
+        }
     }
 }

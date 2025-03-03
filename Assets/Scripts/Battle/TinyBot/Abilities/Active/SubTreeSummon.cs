@@ -1,27 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.UI.GridLayoutGroup;
 
-public class SubTreeSummon : AbilityEffect, ISubTreeConsumer
+public class SubTreeSummon : AbilityEffect
 {
     [SerializeField] CraftablePart summonOrigin;
     ModdedPart modOrigin;
-    TinyBot Owner;
-
-    public List<TreeNode<ModdedPart>> SubTrees { get; set; }
+    public override string Description => " Summon Health";
 
     public override void Initialize(Ability ability)
     {
-        Owner = ability.Owner;
+        base.Initialize(ability);
         modOrigin = new(summonOrigin);
     }
 
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
         TreeNode<ModdedPart> finalTree = new(modOrigin);
-        finalTree.AddChild(SubTrees[0]);
-        TinyBot summon = BotAssembler.BuildBot(finalTree, Owner.Allegiance);
+        finalTree.AddChild(Ability.SubTrees[0]);
+        TinyBot summon = BotAssembler.SummonBot(finalTree, owner, trajectory[^1], ConditionSummon, false);
         yield break;
+    }
+
+    void ConditionSummon(TinyBot bot)
+    {
+        foreach (var part in bot.PartModifiers)
+        {
+            SceneGlobals.BotPalette.RecolorPart(part, BotPalette.Special.HOLOGRAM);
+        }
+        bot.Stats.Max[StatType.HEALTH] = FinalEffectiveness;
+        bot.Stats.Current[StatType.HEALTH] = FinalEffectiveness;
     }
 }

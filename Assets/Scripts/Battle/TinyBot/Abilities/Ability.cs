@@ -16,6 +16,7 @@ public abstract class Ability : MonoBehaviour
     [HideInInspector] public TinyBot Owner;
 
     public Transform emissionPoint;
+    public List<TreeNode<ModdedPart>> SubTrees;
 
     protected abstract AbilityEffect[] Effects { get; }
 

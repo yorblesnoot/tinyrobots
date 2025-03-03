@@ -15,7 +15,7 @@ public class BotAssembler : MonoBehaviour
         instance = this;
     }
 
-    public static TinyBot BuildBot(TreeNode<ModdedPart> treeRoot, Allegiance allegiance, bool echo = false)
+    public static TinyBot BuildBot(TreeNode<ModdedPart> treeRoot, Allegiance allegiance, bool echo = false, bool grantUniversals = true)
     {
         
         GameObject spawnedBase = Instantiate(instance.botBase);
@@ -46,6 +46,7 @@ public class BotAssembler : MonoBehaviour
         }
         
         List<Ability> abilities = GetAbilityList(spawnedParts, botUnit);
+        if (grantUniversals) abilities.AddRange(GetUniversals(botUnit));
         botUnit.Initialize(abilities, spawnedParts, locomotion, echo);
         if (allegiance == Allegiance.PLAYER && echo == false) botUnit.BotEcho = CreateEcho(treeRoot, allegiance, botUnit);
 
@@ -66,8 +67,7 @@ public class BotAssembler : MonoBehaviour
 
             for (int i = 0; i < children.Count; i++)
             {
-                modifier.SubTrees = new();
-                if(modifier.AttachmentPoints[i].ContainsSubTree) modifier.SubTrees.Add(children[i]);
+                if(modifier.AttachmentPoints[i].ContainsSubTree) modifier.AddSubTree(children[i]);
                 else RecursiveConstruction(children[i], modifier.AttachmentPoints[i]);
             }
             return spawned;
@@ -94,20 +94,21 @@ public class BotAssembler : MonoBehaviour
         TinyBot echo = BuildBot(treeRoot, allegiance, true);
         echo.DeclareEcho();
         botUnit.EchoMap = new();
-        for(int i = 0; i < echo.ActiveAbilities.Count; i++) botUnit.EchoMap.Add(botUnit.ActiveAbilities[i], echo.ActiveAbilities[i]);
+        //for(int i = 0; i < echo.ActiveAbilities.Count; i++) botUnit.EchoMap.Add(botUnit.ActiveAbilities[i], echo.ActiveAbilities[i]);
         return echo;
     }
 
-    public static void SummonBot(TreeNode<ModdedPart> tree, TinyBot owner, Vector3 position, Action<TinyBot> botConditioning = null)
+    public static TinyBot SummonBot(TreeNode<ModdedPart> tree, TinyBot owner, Vector3 position, Action<TinyBot> botConditioning = null, bool grantUniversals = true)
     {
         tree.Traverse((part) => part.InitializePart());
-        TinyBot summon = BuildBot(tree, owner.Allegiance);
+        TinyBot summon = BuildBot(tree, owner.Allegiance, grantUniversals: grantUniversals);
         Pathfinder3D.GetLandingPointBy(position, summon.MoveStyle, out Vector3Int cleanPosition);
         summon.transform.position = summon.Movement.SanitizePoint(cleanPosition);
         summon.Movement.PivotToFacePosition(owner.transform.position, true);
         botConditioning?.Invoke(summon);
         TurnManager.RegisterSummon(summon);
         Pathfinder3D.EvaluateNodeOccupancy(owner.transform.position);
+        return summon;
     }
 
     private static PrimaryMovement AddImmobileLocomotion(TinyBot bot, out PartModifier mod)
@@ -115,7 +116,7 @@ public class BotAssembler : MonoBehaviour
         bot.Stats.Max[StatType.MOVEMENT] = 0;
         bot.Stats.Current[StatType.MOVEMENT] = 0;
         GameObject stand = Instantiate(instance.suspensionStand);
-        ImmobileMovement movement = stand.GetComponent<ImmobileMovement>();
+        SuspendedMovement movement = stand.GetComponent<SuspendedMovement>();
         mod = stand.GetComponent<PartModifier>();
         movement.AttachToChassis(bot);
         return movement;
@@ -142,13 +143,8 @@ public class BotAssembler : MonoBehaviour
         {
             Ability[] partAbilities = part.Abilities;
             if(partAbilities == null) continue;
-            foreach (var ability in partAbilities)
-            {
-                if (ability is ISubTreeConsumer consumer) consumer.SubTrees = part.SubTrees;
-            }
             abilities.AddRange(partAbilities);
         }
-        if(botUnit.Allegiance == Allegiance.PLAYER) abilities.AddRange(GetUniversals(botUnit));
 
         return abilities;
     }

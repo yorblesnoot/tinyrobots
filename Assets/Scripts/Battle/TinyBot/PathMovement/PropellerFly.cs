@@ -13,12 +13,6 @@ public class PropellerFly : PrimaryMovement
         Style = MoveStyle.FLY;
     }
 
-    public override Quaternion GetRotationFromFacing(Vector3 position, Vector3 facing)
-    {
-        if(facing.normalized == Vector3.up) return Owner.transform.rotation;
-        return base.GetRotationFromFacing(position, facing);
-    }
-
     public override IEnumerator NeutralStance()
     {
         yield return null;
@@ -30,7 +24,4 @@ public class PropellerFly : PrimaryMovement
         return ShortcutPath(path);
     }
 
-    
-
-    protected override void InstantNeutral() { }
 }

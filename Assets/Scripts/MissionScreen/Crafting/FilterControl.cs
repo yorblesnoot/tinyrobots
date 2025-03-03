@@ -35,7 +35,7 @@ public class FilterControl : MonoBehaviour
     public List<ModdedPart> GetFilteredParts(List<ModdedPart> incoming)
     {
         //uninitialized serializable filterButton isn't null for some reason... might be a bug
-        if (activeFilter.Button == null) Initialize();
+        if (activeFilter == null || activeFilter.Button == null) Initialize();
         List<ModdedPart> filteredParts = activeFilter.FilterParts(incoming).OrderBy(part => part.BasePart.name).ToList();
         return filteredParts;
     }

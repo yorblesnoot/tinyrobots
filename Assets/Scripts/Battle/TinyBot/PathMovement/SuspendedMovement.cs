@@ -1,8 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ImmobileMovement : PrimaryMovement
+public class SuspendedMovement : PrimaryMovement
 {
     [SerializeField] float ikOffset = .7f;
     [SerializeField] Transform ikTarget;
