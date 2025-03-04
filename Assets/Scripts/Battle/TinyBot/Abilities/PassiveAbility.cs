@@ -30,8 +30,8 @@ public class PassiveAbility : Ability
     {
         base.Initialize(botUnit);
         foreach (var trigger in triggers) trigger.Initialize(botUnit, this);
-        
-        
+
+        if (targeter == null) return;
         targeter.transform.localScale = 2 * range * Vector3.one;
 
 
@@ -46,18 +46,17 @@ public class PassiveAbility : Ability
             ApplyTriggeredEffect(Owner, true);
             return;
         }
-        ToggleVisuals(true);
-        targeter.gameObject.SetActive(true);
+        ToggleAura(true);
     }
 
     protected override void RemoveFrom(TinyBot bot)
     {
-        ToggleVisuals(false);
-        targeter.gameObject.SetActive(false);
+        ToggleAura(false);
     }
 
-    void ToggleVisuals(bool toggle)
+    void ToggleAura(bool toggle)
     {
+        if (targeter != null) targeter.gameObject.SetActive(toggle);
         if (particleVisual != null)
         {
             //Debug.Log("played aura particle " + name);
@@ -71,6 +70,7 @@ public class PassiveAbility : Ability
             staticAura.transform.localScale = Vector3.one * range;
             staticAura.transform.SetParent(Owner.transform, true);
         }
+
     }
 
     AbilityEffect[] GetFinalEffects()

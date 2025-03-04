@@ -20,9 +20,10 @@ public abstract class Ability : MonoBehaviour
 
     protected abstract AbilityEffect[] Effects { get; }
 
-    public virtual void Initialize(TinyBot botUnit)
+    public virtual void Initialize(TinyBot bot)
     {
-        Owner = botUnit;
+        Owner = bot;
+        bot.Abilities.Add(this);
         Owner.BeganTurn.AddListener(LapseCooldown);
     }
 

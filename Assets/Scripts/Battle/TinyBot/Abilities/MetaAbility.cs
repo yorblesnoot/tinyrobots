@@ -9,6 +9,8 @@ public class MetaAbility : Ability
     protected override AbilityEffect[] Effects => triggeredEffects;
     [SerializeField] AbilityEffect[] triggeredEffects;
     [SerializeField] bool onlyLastTriggers = false;
+    [SerializeField] ModType abilityMod;
+    [SerializeField] int modValue;
 
     List<AlternatePart> alternateParts;
     AlternatePart active;
@@ -66,6 +68,7 @@ public class MetaAbility : Ability
             {
                 alternate.Abilities.Add(ability);
                 ability.Initialize(botUnit);
+                ModdedPart.ApplyMod(ability, new KeyValuePair<ModType, int>(abilityMod, modValue));
             }
         }
         alternate.Root = spawned;

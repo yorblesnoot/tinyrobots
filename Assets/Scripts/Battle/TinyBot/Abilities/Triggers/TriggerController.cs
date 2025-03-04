@@ -18,7 +18,6 @@ public abstract class TriggerController
     [SerializeField] Condition activationCondition;
     [SerializeField] protected bool alwaysTargetSelf;
     [SerializeField] int activationLimit = 0;
-    [SerializeField] Condition procResetCondition;
     protected TinyBot Owner;
 
     Dictionary<TinyBot, TriggerCondition> activeTriggers;
@@ -75,7 +74,7 @@ public abstract class TriggerController
         if (!activationCounts.ContainsKey(target))
         {
             activationCounts.Add(target, 0);
-            if (activationLimit > 0) SetTrigger(target, procResetCondition, ResetLinked);
+            if (activationLimit > 0) SetTrigger(target, Condition.ROUNDEND, ResetLinked);
         }
         if (activationLimit > 0 && activationCounts[target] > activationLimit) return;
         activationCounts[target]++;

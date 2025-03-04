@@ -40,9 +40,11 @@ public class TinyBot : Targetable
     [HideInInspector] public BotCharacter LinkedCore;
     [HideInInspector] public PrimaryMovement Movement;
     [HideInInspector] public BotCaster Caster;
-    public List<ActiveAbility> ActiveAbilities { get; private set; }
-    public List<PassiveAbility> PassiveAbilities { get; private set;}
-    public List<MetaAbility> MetaAbilities { get; private set; }
+
+    public List<Ability> Abilities = new();
+    public List<ActiveAbility> ActiveAbilities { get; private set; } = new();
+    public List<PassiveAbility> PassiveAbilities { get; private set; } = new();
+    public List<MetaAbility> MetaAbilities { get; private set; } = new();
 
     public override MoveStyle MoveStyle => Movement.Style;
 
@@ -89,11 +91,9 @@ public class TinyBot : Targetable
 
     private void SetAbilities(List<Ability> abilities)
     {
-        ActiveAbilities = new();
-        PassiveAbilities = new();
-        MetaAbilities = new();
         foreach (var ability in abilities)
         {
+            ability.Initialize(this);
             ability.ModifyOn(this, true);
         }
     }

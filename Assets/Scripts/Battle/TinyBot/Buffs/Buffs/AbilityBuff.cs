@@ -19,11 +19,8 @@ public class AbilityBuff : BuffType
 
     void ModifyAbilities(int value, TinyBot target)
     {
-        List<Ability> abilities = new();
-        abilities.AddRange(target.ActiveAbilities);
-        abilities.AddRange(target.PassiveAbilities);
         KeyValuePair<ModType, int> pair = new(abilityParameter, value);
-        foreach(Ability ability in abilities)
+        foreach(Ability ability in target.Abilities)
         {
             ModdedPart.ApplyMod(ability, pair);
         }

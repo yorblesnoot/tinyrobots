@@ -43,7 +43,7 @@ public static class StringHelper
 
     public static string ToOxfordList(this List<string> list)
     {
-        if (list.Count == 0) return null;
+        if (list.Count == 0) return "";
         if(list.Count == 1)
         {
             return list[0];
