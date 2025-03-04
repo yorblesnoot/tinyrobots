@@ -13,7 +13,11 @@ public class PartModifier : MonoBehaviour
 
     private void Awake()
     {
-        Abilities = abilityContainer.GetComponentsInChildren<Ability>();
+        Abilities = new Ability[abilityContainer.childCount];
+        for (int i = 0; i < Abilities.Length; i++)
+        {
+            Abilities[i] = abilityContainer.GetChild(i).GetComponent<Ability>();
+        }
         AttachmentPoints = gameObject.GetComponentsInChildren<AttachmentPoint>();
     }
 

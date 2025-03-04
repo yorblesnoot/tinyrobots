@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class ActiveAbility : Ability
 {   
@@ -19,6 +20,7 @@ public class ActiveAbility : Ability
     HashSet<System.Object> prohibitionSources = new();
     
     [HideInInspector] public bool Locked { get { return prohibitionSources.Count > 0; } }
+    [HideInInspector] public UnityEvent Used = new();
     
     public float AddedRange { get { return TargetType != null ? TargetType.AddedRange : 0; } }
     public float TotalRange { get { return range + AddedRange; } }
@@ -48,6 +50,7 @@ public class ActiveAbility : Ability
     public IEnumerator Execute(List<Vector3> trajectory, List<Targetable> targets)
     {
         foreach (var effect in abilityEffects) yield return effect.PerformEffect(Owner, trajectory, targets);
+        Used.Invoke();
         ScheduleAbilityEnd();
         //MainCameraControl.FindViewOfPosition(Owner.TargetPoint.position, false, false);
     }
