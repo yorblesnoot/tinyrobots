@@ -40,87 +40,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1826974062939252413}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &2278306338839043257
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 754036020131527662}
-  - component: {fileID: 713071702476186430}
-  - component: {fileID: 5282056700452611801}
-  m_Layer: 0
-  m_Name: Randomize
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &754036020131527662
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2278306338839043257}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 6468262133784238081}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &713071702476186430
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2278306338839043257}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd246dbbea25a9944a852e2b7c95675f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Description: At the start of each round, gain one of the connected parts at random
-    until the end of the round.
-  range: 0
-  ModifiableRange: 0
-  cooldown: 1
-  EffectivenessMultiplier: 1
-  cost: 0
-  icon: {fileID: 0}
-  CurrentCooldown: 0
-  Owner: {fileID: 0}
-  emissionPoint: {fileID: 0}
-  triggers:
-  - activationCondition: 4
-    alwaysTargetSelf: 0
-    activationLimit: 0
-    OutputEffect:
-    - {fileID: 5282056700452611801}
-  targeter: {fileID: 0}
-  particleVisual: {fileID: 0}
-  staticAura: {fileID: 0}
-  validTarget: 0
---- !u!114 &5282056700452611801
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2278306338839043257}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5a647b2f9191c734e845fae6e2603afa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Ability: {fileID: 0}
-  BaseEffectMagnitude: 0
-  metaAbility: {fileID: 1705087562804811540}
 --- !u!1 &5346682063686468209
 GameObject:
   m_ObjectHideFlags: 0
@@ -165,7 +84,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afae1e8ba1b10454cacaa7b1706ba2b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: 
+  Description: At the start of each round, gain one of the connected parts at random
+    until the end of the round.
   range: 0
   ModifiableRange: 0
   cooldown: 1
@@ -177,6 +97,7 @@ MonoBehaviour:
   emissionPoint: {fileID: 8093975021914855686}
   triggeredEffects: []
   onlyLastTriggers: 0
+  cycleOnRoundEnd: 1
   abilityMod: 0
   modValue: 0
 --- !u!1001 &567007596522925853
@@ -727,10 +648,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 6003003469962766497}
-    - targetCorrespondingSourceObject: {fileID: 551280132427253427, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 754036020131527662}
     - targetCorrespondingSourceObject: {fileID: 3453657280514900982, guid: efe31d825ac3a73448c7a58c0e7e6f7f,
         type: 3}
       insertIndex: -1

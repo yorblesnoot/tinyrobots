@@ -9,6 +9,7 @@ public class MetaAbility : Ability
     protected override AbilityEffect[] Effects => triggeredEffects;
     [SerializeField] AbilityEffect[] triggeredEffects;
     [SerializeField] bool onlyLastTriggers = false;
+    [SerializeField] bool cycleOnRoundEnd = false;
     [SerializeField] ModType abilityMod;
     [SerializeField] int modValue;
 
@@ -28,11 +29,12 @@ public class MetaAbility : Ability
             AttachTriggers(alternate);
             alternateParts.Add(alternate);
         }
+        if (cycleOnRoundEnd) TurnManager.RoundEnded.AddListener(() => SetActiveAlternate());
     }
 
     public void SetActiveAlternate(int index = -1)
     {
-
+        if(!Owner.MetaAbilities.Contains(this)) return;
         if(active != null)
         {
             ToggleAlternate(active, false);
