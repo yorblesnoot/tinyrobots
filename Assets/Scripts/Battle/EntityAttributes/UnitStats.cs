@@ -10,7 +10,8 @@ public enum StatType
     ARMOR, //flat
     SHIELD, //flat
     INITIATIVE, //flat
-    ENERGY //percent
+    ENERGY, //percent
+    MANA
 }
 public class UnitStats
 {

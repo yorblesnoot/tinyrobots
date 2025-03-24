@@ -7,6 +7,7 @@ public class ActiveAbility : Ability
 {   
     public AbilityType Type;
     public bool EndTurn = false;
+    [SerializeField] bool costsMana = false;
     [SerializeField] TargetRequirement targetRequirement;
     [SerializeField] ToggleAnimation trackingToggle;
     [SerializeField] AbilityEffect[] abilityEffects;
@@ -27,6 +28,7 @@ public class ActiveAbility : Ability
     public override bool IsActive => true;
 
     protected override AbilityEffect[] Effects => abilityEffects;
+    public StatType CastingResource => costsMana ? StatType.MANA : StatType.ACTION;
     Vector3 baseEmissionPosition;
 
     private void Awake()
@@ -146,7 +148,7 @@ public class ActiveAbility : Ability
         else DurationModule.SetDuration(Owner, EndAbility);
     }
 
-    public bool IsCastUsable(PossibleCast cast)
+    public bool IsCastable(PossibleCast cast)
     {
         if (targetRequirement == TargetRequirement.NONE) return true;
         else if (targetRequirement == TargetRequirement.LANDABLE && cast.Trajectory != null
@@ -158,10 +160,15 @@ public class ActiveAbility : Ability
         return false;
     }
 
-    public virtual bool IsAvailable()
+    public bool IsAvailable()
     {
         if (CurrentCooldown > 0 || Locked) return false;
         return true;
+    }
+
+    public bool IsAffordable()
+    {
+        return cost <= Owner.Stats.Current[CastingResource];
     }
 
     public void ProhibitAbility(object source, bool prohibit = true)

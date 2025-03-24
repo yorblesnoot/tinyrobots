@@ -18,6 +18,8 @@ public class BotCharacter : SOWithGUID
     }
     [HideInInspector] public UnityEvent HealthRatioChanged = new();
 
+    public int Mana;
+
     public Sprite CharacterPortrait;
     [HideInInspector] public bool Energized = true;
     [HideInInspector] public ModdedPart ModdedCore;

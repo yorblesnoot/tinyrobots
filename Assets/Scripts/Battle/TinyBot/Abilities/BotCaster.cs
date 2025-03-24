@@ -23,7 +23,7 @@ public class BotCaster : MonoBehaviour
 
     public bool TryPrepare(ActiveAbility ability)
     {
-        if (!ability.IsAvailable() || Owner.Stats.Current[StatType.ENERGY] < ability.cost) return false;
+        if (!ability.IsAvailable() || !ability.IsAffordable()) return false;
         Ability = ability;
         
         pathableLocations = Pathfinder3D.GetPathableLocations(Owner.Stats.Current[StatType.MOVEMENT])
@@ -46,7 +46,7 @@ public class BotCaster : MonoBehaviour
 
     public IEnumerator CastActiveAbility()
     {
-        Owner.SpendResource(Ability.cost, StatType.ACTION);
+        Owner.SpendResource(Ability.cost, Ability.CastingResource);
         Ability.CurrentCooldown = SceneGlobals.PlayerData.DevMode && Owner.Allegiance == Allegiance.PLAYER ? 0 : Ability.cooldown;
         yield return CastSequence(ActiveCast);
     }
@@ -105,7 +105,7 @@ public class BotCaster : MonoBehaviour
         {
             if (!Ability.PointIsInRange(pathablePoint, targetPosition)) continue;
             PossibleCast possibleCast = Ability.SimulateCast(targetPosition, pathablePoint);
-            if (enforceUsable && !Ability.IsCastUsable(possibleCast)) continue;
+            if (enforceUsable && !Ability.IsCastable(possibleCast)) continue;
             float quality = GetTargetQuality(targetPosition, possibleCast.Trajectory);
             bool gotSnapTarget = snapTarget != null && possibleCast.Targets.Contains(snapTarget);
             if (quality <= targetOffsetTolerance || gotSnapTarget)
@@ -163,7 +163,7 @@ public class BotCaster : MonoBehaviour
 
     public bool CastIsValid()
     {
-        return Ability.IsCastUsable(ActiveCast);
+        return Ability.IsCastable(ActiveCast);
     }
 }
 

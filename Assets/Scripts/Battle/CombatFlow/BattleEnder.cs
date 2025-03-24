@@ -43,9 +43,15 @@ public class BattleEnder : MonoBehaviour
 
         foreach(TinyBot bot in TurnManager.TurnTakers.Where(bot => bot.Allegiance == Allegiance.PLAYER))
         {
-            if(bot == null || bot.LinkedCore == null) continue;
-            bot.LinkedCore.HealthRatio = (float)bot.Stats.Current[StatType.HEALTH] / bot.Stats.Max[StatType.HEALTH];
+            CheckoutBot(bot);
         }
+    }
+
+    public static void CheckoutBot(TinyBot bot)
+    {
+        if (bot == null || bot.LinkedCore == null) return;
+        bot.LinkedCore.HealthRatio = (float)bot.Stats.Current[StatType.HEALTH] / bot.Stats.Max[StatType.HEALTH];
+        bot.LinkedCore.Mana = bot.Stats.Current[StatType.MANA];
     }
 
     static void GameOver()

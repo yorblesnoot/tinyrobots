@@ -50,7 +50,7 @@ MonoBehaviour:
     movement and action points.
   range: 10
   ModifiableRange: 0
-  cooldown: 2
+  cooldown: 0
   EffectivenessMultiplier: 1
   cost: 1
   icon: {fileID: 0}
@@ -59,12 +59,17 @@ MonoBehaviour:
   emissionPoint: {fileID: 7078860119662324335}
   Type: 1
   EndTurn: 0
+  costsMana: 1
   targetRequirement: 0
   trackingToggle: {fileID: 0}
   abilityEffects:
   - {fileID: 5069433764908319661}
   - {fileID: 386957215181609916}
   endEffects: []
+  TargetType: {fileID: 0}
+  Used:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &5069433764908319661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -149,7 +154,7 @@ MonoBehaviour:
   Description: Expel a burst of revitalizing energy, healing targets in a small area.
   range: 10
   ModifiableRange: 0
-  cooldown: 2
+  cooldown: 0
   EffectivenessMultiplier: 1
   cost: 1
   icon: {fileID: 0}
@@ -158,6 +163,7 @@ MonoBehaviour:
   emissionPoint: {fileID: 7078860119662324335}
   Type: 1
   EndTurn: 0
+  costsMana: 1
   targetRequirement: 2
   trackingToggle: {fileID: 0}
   abilityEffects:
@@ -165,6 +171,10 @@ MonoBehaviour:
   - {fileID: 6436042280163188933}
   - {fileID: 4071241401931612263}
   endEffects: []
+  TargetType: {fileID: 0}
+  Used:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &7351991484839539218
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -180,6 +190,7 @@ MonoBehaviour:
   TargetRadius: 2
   maxTargets: 100
   spatialDegree: 360
+  containWithinTrajectory: 0
 --- !u!114 &6436042280163188933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,8 +223,11 @@ MonoBehaviour:
   - Default
   - Terrain
   - Shield
+  castWidth: 0
+  BlockingLayerMask: 0
   parabolaPoints: 10
   gravityAccel: -0.3
+  gravityRange: 1
 --- !u!114 &6648983456687058940
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -65,6 +65,7 @@ public class SaveContainer
             {
                 Guid = core.Id,
                 HealthRatio = core.HealthRatio,
+                Mana = core.Mana,
                 Bot = BotConverter.BotToString(core.Bot)
             };
             coreInventory.Add(coreData);
@@ -106,6 +107,7 @@ public class SaveContainer
             BotCharacter loadedCore = converter.GetCore(core.Guid);
             loadedCore.Bot = converter.StringToBot(core.Bot);
             loadedCore.HealthRatio = core.HealthRatio;
+            loadedCore.Mana = core.Mana;
             finalCores.Add(loadedCore);
         }
         return finalCores;
@@ -137,5 +139,6 @@ public class SaveContainer
         public string Guid;
         public string Bot;
         public float HealthRatio;
+        public int Mana;
     }
 }

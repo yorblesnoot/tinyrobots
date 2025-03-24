@@ -49,7 +49,7 @@ MonoBehaviour:
     deals to that target will be massively increased.
   range: 20
   ModifiableRange: 1
-  cooldown: 2
+  cooldown: 0
   EffectivenessMultiplier: 1
   cost: 1
   icon: {fileID: 21300000, guid: 482884d1759cf4bdbad2fa53c99aee5c, type: 3}
@@ -58,11 +58,16 @@ MonoBehaviour:
   emissionPoint: {fileID: 2225096929108382477}
   Type: 0
   EndTurn: 1
+  costsMana: 1
   targetRequirement: 2
   trackingToggle: {fileID: 0}
   abilityEffects:
   - {fileID: 8537088767614016421}
   endEffects: []
+  TargetType: {fileID: 0}
+  Used:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &8537088767614016421
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9921,7 +9926,6 @@ MonoBehaviour:
   - activationCondition: 0
     alwaysTargetSelf: 0
     activationLimit: 0
-    procResetCondition: 0
     OutputEffect:
     - {fileID: 894722615517940058}
   targeter: {fileID: 0}

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -11,13 +12,15 @@ public class ClickableAbility : AbilityDisplay
     [SerializeField] Button button;
     [SerializeField] TMP_Text cooldown;
     [SerializeField] Image cooldownPanel;
-    [SerializeField] Transform pipHolder;
     [SerializeField] List<Image> actionPoints;
+    [SerializeField] Color manaColor;
+    Color actionColor;
 
     [HideInInspector] public ActiveAbility Ability;
     BotCaster caster;
     private void Awake()
     {
+        actionColor = actionPoints[0].color;
         RefreshUsability.AddListener(UpdateUsability);
         BotCaster.ClearCasting.AddListener(EndUsableAbilityState);
         button.onClick.AddListener(Activate);
@@ -38,6 +41,8 @@ public class ClickableAbility : AbilityDisplay
         button.interactable = true;
         ability.Owner.BeganTurn.AddListener(UpdateUsability);
         
+        //update this with a different shape
+        actionPoints.Select(pip => pip.color = Ability.CastingResource == StatType.MANA ? manaColor : actionColor);
         SetPips(ability.cost);
         UpdateUsability();
     }
@@ -45,13 +50,11 @@ public class ClickableAbility : AbilityDisplay
     void UpdateUsability()
     {
         if (Ability == null) return;
-        bool usable = true;
-        bool offCooldown = Ability.CurrentCooldown == 0;
-        usable &= Ability.cost <= UnitControl.PlayerControlledBot.Stats.Current[StatType.ACTION];
-        usable &= Ability.IsAvailable();
-        usable &= offCooldown;
+        bool usable = Ability.IsAffordable() && Ability.IsAvailable();
         cooldownPanel.gameObject.SetActive(!usable);
-        cooldown.text = offCooldown ? "" : Ability.CurrentCooldown.ToString();
+        if (Ability.Locked) cooldown.text = "X";
+        else if (Ability.CurrentCooldown > 0) cooldown.text = Ability.CurrentCooldown.ToString();
+        else cooldown.text = "";
     }
 
     void OnDisable()
@@ -60,7 +63,6 @@ public class ClickableAbility : AbilityDisplay
         image.color = Color.white;
         Ability = null;
         SetPips(0);
-        
     }
 
     void EndUsableAbilityState()

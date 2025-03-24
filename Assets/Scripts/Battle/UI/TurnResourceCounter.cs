@@ -1,16 +1,11 @@
 using PrimeTween;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class TurnResourceCounter : MonoBehaviour
 {
-    [SerializeField] float durationPerMove = .3f;
-
-
     [Header("Components")]
     [SerializeField] List<Image> abilityPoints;
     [SerializeField] TMP_Text abilityCount;

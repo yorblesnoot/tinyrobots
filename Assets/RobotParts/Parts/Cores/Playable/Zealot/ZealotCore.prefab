@@ -61,13 +61,11 @@ MonoBehaviour:
   - activationCondition: 0
     alwaysTargetSelf: 0
     activationLimit: 0
-    procResetCondition: 0
     OutputEffect:
     - {fileID: 3559474279166219779}
   - activationCondition: 1
     alwaysTargetSelf: 0
     activationLimit: 0
-    procResetCondition: 0
     OutputEffect:
     - {fileID: 5534827538052045}
   targeter: {fileID: 2909427039412315178}
@@ -10404,7 +10402,7 @@ MonoBehaviour:
   Description: The user recovers a percent of their missing health.
   range: 0
   ModifiableRange: 0
-  cooldown: 2
+  cooldown: 0
   EffectivenessMultiplier: 1
   cost: 1
   icon: {fileID: 21300000, guid: 1f393ce6e380249d39c1af7924bb6967, type: 3}
@@ -10413,6 +10411,7 @@ MonoBehaviour:
   emissionPoint: {fileID: 2233072332111360487}
   Type: 1
   EndTurn: 0
+  costsMana: 1
   targetRequirement: 0
   trackingToggle: {fileID: 0}
   abilityEffects:
@@ -10420,6 +10419,10 @@ MonoBehaviour:
   - {fileID: 8429314292612242268}
   - {fileID: 4626460224172847347}
   endEffects: []
+  TargetType: {fileID: 0}
+  Used:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &8429314292612242268
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10471,7 +10474,7 @@ MonoBehaviour:
   impulseLength: -0.4
   duration: 2
   returnDuration: 0.1
-  waitForEnd: 1
+  waitDuration: 0.5
 --- !u!1 &6035111953131087808
 GameObject:
   m_ObjectHideFlags: 0

@@ -9838,12 +9838,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 987a16f33931ce74282945de6b45b49f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: Summon an illusion of the user at the target location. The illusion
-    has access to the user's other abilities, deals half damage, and dies upon taking
-    damage.
+  Description: 'Summon an illusion of the user at the target location. The illusion
+    has access to the user''s non-core abilities, deals half damage, and dies upon
+    taking damage.
+
+
+    Only one illusion can be active at once.'
   range: 5
   ModifiableRange: 0
-  cooldown: 3
+  cooldown: 0
   EffectivenessMultiplier: 1
   cost: 1
   icon: {fileID: 21300000, guid: 973b80daceb574e4a899fdde92cc3e42, type: 3}
@@ -9852,6 +9855,7 @@ MonoBehaviour:
   emissionPoint: {fileID: 3643193084582578330}
   Type: 4
   EndTurn: 0
+  costsMana: 1
   targetRequirement: 1
   trackingToggle: {fileID: 0}
   abilityEffects:
@@ -9860,6 +9864,10 @@ MonoBehaviour:
   - {fileID: 3036506339782271919}
   - {fileID: 5891947895135078763}
   endEffects: []
+  TargetType: {fileID: 0}
+  Used:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &3036506339782271919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9876,6 +9884,7 @@ MonoBehaviour:
   BaseEffectMagnitude: 50
   illusionMaterial: {fileID: 2100000, guid: 8a2a8c4f2ff3bb649a75613ca8a99a12, type: 2}
   multiplier: {fileID: 11400000, guid: 1f6551aef2a2da747aba6f3c23cfe9ed, type: 2}
+  summonLimit: 1
 --- !u!114 &6036351917969036493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9892,6 +9901,8 @@ MonoBehaviour:
   - Default
   - Terrain
   - Shield
+  castWidth: 0
+  BlockingLayerMask: 0
 --- !u!114 &7326935782977378231
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9945,7 +9956,7 @@ MonoBehaviour:
   impulseLength: -0.5
   duration: 0.05
   returnDuration: 0.1
-  waitForEnd: 1
+  waitDuration: 0.5
 --- !u!1 &2401065546282669962
 GameObject:
   m_ObjectHideFlags: 0
@@ -24636,7 +24647,7 @@ MonoBehaviour:
   Description: Swap places with the targeted ally.
   range: 10
   ModifiableRange: 1
-  cooldown: 3
+  cooldown: 0
   EffectivenessMultiplier: 1
   cost: 1
   icon: {fileID: 21300000, guid: 2728f77a1347547bca66ec2ed7475fd0, type: 3}
@@ -24645,6 +24656,7 @@ MonoBehaviour:
   emissionPoint: {fileID: 3643193084582578330}
   Type: 1
   EndTurn: 0
+  costsMana: 1
   targetRequirement: 4
   trackingToggle: {fileID: 0}
   abilityEffects:
@@ -24652,6 +24664,10 @@ MonoBehaviour:
   - {fileID: 948033725631327387}
   - {fileID: 4124181895961499932}
   endEffects: []
+  TargetType: {fileID: 0}
+  Used:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &4124181895961499932
 MonoBehaviour:
   m_ObjectHideFlags: 0

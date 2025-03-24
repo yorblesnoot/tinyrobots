@@ -49,7 +49,7 @@ MonoBehaviour:
     a percent of the damage that ally takes is redirected to the user.
   range: 20
   ModifiableRange: 1
-  cooldown: 2
+  cooldown: 0
   EffectivenessMultiplier: 1
   cost: 1
   icon: {fileID: 21300000, guid: d50ba2527cf084bd9a23196a21e185ca, type: 3}
@@ -58,11 +58,16 @@ MonoBehaviour:
   emissionPoint: {fileID: 8912451724934569233}
   Type: 1
   EndTurn: 0
+  costsMana: 1
   targetRequirement: 4
   trackingToggle: {fileID: 0}
   abilityEffects:
   - {fileID: 5662479814062520952}
   endEffects: []
+  TargetType: {fileID: 0}
+  Used:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &5662479814062520952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,13 +145,11 @@ MonoBehaviour:
   - activationCondition: 0
     alwaysTargetSelf: 0
     activationLimit: 0
-    procResetCondition: 0
     OutputEffect:
     - {fileID: 2256102057186688393}
   - activationCondition: 1
     alwaysTargetSelf: 0
     activationLimit: 0
-    procResetCondition: 0
     OutputEffect:
     - {fileID: 8701674799261509466}
   targeter: {fileID: 604787091509839435}
