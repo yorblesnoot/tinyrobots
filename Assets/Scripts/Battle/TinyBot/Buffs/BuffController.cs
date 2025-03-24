@@ -5,7 +5,7 @@ using UnityEngine.Events;
 public class BuffController
 {
     public Dictionary<BuffType, AppliedBuff> ActiveBuffs;
-    TinyBot owner;
+    readonly TinyBot owner;
     public UnityEvent<TinyBot> BuffsChanged = new();
 
     public BuffController(TinyBot owner)
@@ -22,10 +22,7 @@ public class BuffController
             applied = new(buff, owner, source, potency);
             ActiveBuffs.Add(buff, applied);
         }
-        if(applied.Stacks < applied.Buff.MaxStacks)
-        {
-            applied.ApplyStack();
-        }
+        applied.Apply();
         BuffsChanged?.Invoke(owner);
     }
 

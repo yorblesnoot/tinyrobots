@@ -180,7 +180,6 @@ public class BotAI
     {
         if (Vector3Int.RoundToInt(owner.transform.position) == location) yield break;
 
-        MainCameraControl.TrackTarget(owner.TargetPoint);
         List<Vector3> path = Pathfinder3D.FindVectorPath(location, out var moveCosts);
         owner.SpendResource(Mathf.RoundToInt(moveCosts[^1]), StatType.MOVEMENT);
         yield return owner.StartCoroutine(owner.Movement.TraversePath(path));

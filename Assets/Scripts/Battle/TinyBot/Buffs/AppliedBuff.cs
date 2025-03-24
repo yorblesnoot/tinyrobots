@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AppliedBuff
@@ -8,7 +6,6 @@ public class AppliedBuff
     public int Potency;
     public TinyBot Source;
     public TinyBot Target;
-    public int Stacks;
     int maxDuration;
     int elapsedDuration = 0;
     public int RemainingDuration => maxDuration - elapsedDuration;
@@ -25,23 +22,22 @@ public class AppliedBuff
         elapsedDuration = 0;
     }
 
-    public void ApplyStack()
+    public void Apply()
     {
         elapsedDuration = 0;
         Buff.ApplyEffect(Target, Source, Potency);
         if (Buff.Triggers != null) foreach (BuffTrigger trigger in Buff.Triggers) trigger.ApplyTo(Target);
-        if(Stacks == 0 && Buff.FX != null)
+        if(Buff.FX != null)
         {
             spawnedFX = GameObject.Instantiate(Buff.FX).GetComponent<BuffEffectCarrier>();
             spawnedFX.transform.SetParent(Target.TargetPoint, false);
             spawnedFX.Toggle(true, Source, Target);
         }
-        Stacks++;
     }
 
     public void Remove()
     {
-        for(int i = 0; i < Stacks; i++) Buff.RemoveEffect(Target, Potency);
+        Buff.RemoveEffect(Target, Potency);
         if(Buff.Triggers != null) foreach (BuffTrigger trigger in Buff.Triggers) trigger.RemoveFrom(Target);
         if(spawnedFX != null) spawnedFX.Toggle(false, Source, Target);
     }
