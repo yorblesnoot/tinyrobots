@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -40,9 +39,9 @@ public class ClickableAbility : AbilityDisplay
         caster = ability.Owner.Caster;
         button.interactable = true;
         ability.Owner.BeganTurn.AddListener(UpdateUsability);
-        
+
         //update this with a different shape
-        actionPoints.Select(pip => pip.color = Ability.CastingResource == StatType.MANA ? manaColor : actionColor);
+        foreach (var pip in actionPoints) pip.color = Ability.CastingResource == StatType.MANA ? manaColor : actionColor;
         SetPips(ability.cost);
         UpdateUsability();
     }

@@ -244,7 +244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Description: Leap to the target location.
-  range: 10
+  range: 8
   ModifiableRange: 1
   cooldown: 1
   EffectivenessMultiplier: 1
@@ -255,6 +255,7 @@ MonoBehaviour:
   emissionPoint: {fileID: 0}
   Type: 3
   EndTurn: 0
+  costsMana: 0
   targetRequirement: 0
   trackingToggle: {fileID: 0}
   abilityEffects:
@@ -263,6 +264,9 @@ MonoBehaviour:
   - {fileID: 9008681664637824618}
   endEffects: []
   TargetType: {fileID: 0}
+  Used:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &642142236824269102
 MonoBehaviour:
   m_ObjectHideFlags: 0

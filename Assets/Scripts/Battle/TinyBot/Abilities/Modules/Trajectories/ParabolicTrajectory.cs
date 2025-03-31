@@ -28,6 +28,19 @@ public class ParabolicTrajectory : Trajectory
         return points.ToArray();
     }
 
+    readonly float widthPerHeight = .1f;
+    public override Vector3 RestrictRange(Vector3 point, Vector3 source, float range)
+    {
+        if (!gravityRange || point.y > source.y) return base.RestrictRange(point, source, range);
+        float heightDifference = source.y - point.y;
+        source.y = point.y;
+        Vector3 ringOffset = point - source;
+        float distance = Mathf.Min(ringOffset.magnitude, range + widthPerHeight * heightDifference);
+        ringOffset.Normalize();
+        Vector3 finalPoint = source + ringOffset * distance;
+        return finalPoint;
+    }
+    /*
     public override Vector3 RestrictRange(Vector3 point, Vector3 source, float range)
     {
         if(!gravityRange) return base.RestrictRange(point, source, range);
@@ -44,4 +57,5 @@ public class ParabolicTrajectory : Trajectory
         finalPoint.y = point.y;
         return finalPoint;
     }
+    */
 }
