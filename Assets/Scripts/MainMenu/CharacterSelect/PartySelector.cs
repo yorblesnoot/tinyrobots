@@ -94,9 +94,11 @@ public class PartySelector : MonoBehaviour
         foreach (var core in SceneGlobals.PlayerData.CoreInventory)
         {
             core.HealthRatio = 1;
+            core.Initialize();
+            core.Mana = core.ModdedCore.FinalStats[StatType.MANA];
             if(SceneGlobals.PlayerData.DevMode)
             {
-                core.Initialize();
+                
                 core.Bot = new(core.ModdedCore);
             }
             else core.Bot = SceneGlobals.PlayerData.BotConverter.StringToBot(core.StarterRecord.Record);

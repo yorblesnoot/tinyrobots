@@ -16,10 +16,21 @@ public class BossEvent : BattleEvent
     {
         SceneGlobals.PlayerData.MapData = new();
         SceneGlobals.PlayerData.Difficulty--;
+        ResetMana();
         yield return new WaitForSeconds(2);
         towerBuilder.DeployTowerFloor(SceneGlobals.PlayerData.MapData, true);
         
         eventComplete();
         yield break;
+    }
+
+    void ResetMana()
+    {
+        
+        foreach(var character in SceneGlobals.PlayerData.CoreInventory)
+        {
+            ModdedPart core = character.Bot.Value;
+            character.Mana = core.FinalStats[StatType.MANA];
+        }
     }
 }

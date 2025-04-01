@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,7 @@ public class PartyPortrait : MonoBehaviour
     [SerializeField] Button button;
     [SerializeField] HealthOverlay healthOverlay;
     [SerializeField] GameObject weightOverlay;
+    [SerializeField] List<Image> manaPips;
     BotCharacter activeCore;
     public void Become(BotCharacter core, Action<BotCharacter> coreCallback)
     {
@@ -18,6 +20,7 @@ public class PartyPortrait : MonoBehaviour
         UpdateHealthOverlay();
         weightOverlay.SetActive(!core.Energized);
         core.HealthRatioChanged.AddListener(UpdateHealthOverlay);
+        SetManaPips();
     }
 
     void UpdateHealthOverlay()
@@ -27,5 +30,13 @@ public class PartyPortrait : MonoBehaviour
     private void OnDisable()
     {
         if(activeCore != null) activeCore.HealthRatioChanged.RemoveListener(UpdateHealthOverlay);
+    }
+
+    void SetManaPips()
+    {
+        for(int i = 0; i < activeCore.Mana;  i++)
+        {
+            manaPips[i].gameObject.SetActive(i < activeCore.Mana);
+        }
     }
 }
