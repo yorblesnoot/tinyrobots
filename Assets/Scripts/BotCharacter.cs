@@ -11,14 +11,10 @@ public class BotCharacter : SOWithGUID
 
     public TreeNode<ModdedPart> Bot;
     public readonly int EnergyCapacity = 100;
-    float healthRatio = 1f;
-    public float HealthRatio { 
-        get { return healthRatio; } 
-        set {  healthRatio = value; HealthRatioChanged?.Invoke(); } 
-    }
-    [HideInInspector] public UnityEvent HealthRatioChanged = new();
 
-    public int Mana;
+
+    public Observable<float> HealthRatio = new() { Value = 1.0f };
+    public Observable<int> Mana = new();
 
     public Sprite CharacterPortrait;
     [HideInInspector] public bool Energized = true;

@@ -9,7 +9,7 @@ public class HealEvent : ZoneEvent
     {
         foreach(var core in playerData.CoreInventory)
         {
-            core.HealthRatio = Mathf.Clamp01(core.HealthRatio + healAmount); 
+            core.HealthRatio.Value = Mathf.Clamp01(core.HealthRatio.Value + healAmount); 
         }
         eventComplete();
     }

@@ -50,8 +50,8 @@ public class BattleEnder : MonoBehaviour
     public static void CheckoutBot(TinyBot bot)
     {
         if (bot == null || bot.LinkedCore == null) return;
-        bot.LinkedCore.HealthRatio = (float)bot.Stats.Current[StatType.HEALTH] / bot.Stats.Max[StatType.HEALTH];
-        bot.LinkedCore.Mana = bot.Stats.Current[StatType.MANA];
+        bot.LinkedCore.HealthRatio.Value = (float)bot.Stats.Current[StatType.HEALTH] / bot.Stats.Max[StatType.HEALTH];
+        bot.LinkedCore.Mana.Value = bot.Stats.Current[StatType.MANA];
     }
 
     static void GameOver()

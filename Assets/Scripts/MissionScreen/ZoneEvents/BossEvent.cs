@@ -30,7 +30,7 @@ public class BossEvent : BattleEvent
         foreach(var character in SceneGlobals.PlayerData.CoreInventory)
         {
             ModdedPart core = character.Bot.Value;
-            character.Mana = core.FinalStats[StatType.MANA];
+            character.Mana.Value = core.FinalStats[StatType.MANA];
         }
     }
 }

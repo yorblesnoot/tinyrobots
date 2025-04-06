@@ -69,12 +69,12 @@ public abstract class Mission : MonoBehaviour
         if (playerBotOverride != null) bots.AddRange(playerBotOverride.Select(record => SpawnBot(Allegiance.PLAYER, record)));
         foreach (var core in SceneGlobals.PlayerData.CoreInventory)
         {
-            if (core.HealthRatio == 0 && !SceneGlobals.PlayerData.DevMode) continue;
+            if (core.HealthRatio.Value == 0 && !SceneGlobals.PlayerData.DevMode) continue;
             TinyBot bot = BotAssembler.BuildBot(core.Bot, Allegiance.PLAYER, grantUniversals: true);
             bot.LinkedCore = core;
-            float healthRatio = SceneGlobals.PlayerData.DevMode ? 1 : core.HealthRatio;
+            float healthRatio = SceneGlobals.PlayerData.DevMode ? 1 : core.HealthRatio.Value;
             bot.Stats.Current[StatType.HEALTH] = Mathf.RoundToInt(bot.Stats.Max[StatType.HEALTH] * healthRatio);
-            bot.Stats.Current[StatType.MANA] = core.Mana;
+            bot.Stats.Current[StatType.MANA] = core.Mana.Value;
             TurnManager.AddTurnTaker(bot);
             bots.Add(bot);
             bot.gameObject.SetActive(false);

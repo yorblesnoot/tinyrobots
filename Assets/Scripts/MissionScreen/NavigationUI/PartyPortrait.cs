@@ -19,24 +19,25 @@ public class PartyPortrait : MonoBehaviour
         button.onClick.AddListener(() => coreCallback(core));
         UpdateHealthOverlay();
         weightOverlay.SetActive(!core.Energized);
-        core.HealthRatioChanged.AddListener(UpdateHealthOverlay);
+        core.HealthRatio.OnChange.AddListener(UpdateHealthOverlay);
+        core.Mana.OnChange.AddListener(SetManaPips);
         SetManaPips();
     }
 
     void UpdateHealthOverlay()
     {
-        healthOverlay.UpdateHealth(Mathf.RoundToInt(activeCore.HealthRatio * 100), 100);
+        healthOverlay.UpdateHealth(Mathf.RoundToInt(activeCore.HealthRatio.Value * 100), 100);
     }
     private void OnDisable()
     {
-        if(activeCore != null) activeCore.HealthRatioChanged.RemoveListener(UpdateHealthOverlay);
+        if(activeCore != null) activeCore.HealthRatio.OnChange.RemoveListener(UpdateHealthOverlay);
     }
 
     void SetManaPips()
     {
-        for(int i = 0; i < activeCore.Mana;  i++)
+        for(int i = 0; i < activeCore.Mana.Value;  i++)
         {
-            manaPips[i].gameObject.SetActive(i < activeCore.Mana);
+            manaPips[i].gameObject.SetActive(i < activeCore.Mana.Value);
         }
     }
 }

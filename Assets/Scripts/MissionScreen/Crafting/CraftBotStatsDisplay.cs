@@ -56,7 +56,7 @@ public class CraftBotStatsDisplay : MonoBehaviour
         }
 
         foreach(var entry in entries.Values) entry.Display.text = entry.Value.ToString();
-        healthDisplay.text = $"{Mathf.RoundToInt(BotCrafter.ActiveCore.HealthRatio * totalHealth)} / {totalHealth}";
+        healthDisplay.text = $"{Mathf.RoundToInt(BotCrafter.ActiveCore.HealthRatio.Value * totalHealth)} / {totalHealth}";
         weightDisplay.text = $"{totalWeight} / {BotCrafter.ActiveCore.EnergyCapacity}";
         weightDisplay.color = IsDeployable() ?  Color.white : Color.red;
 
