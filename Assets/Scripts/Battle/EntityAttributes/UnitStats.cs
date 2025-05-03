@@ -49,6 +49,14 @@ public class UnitStats
         Max[StatType.MOVEMENT] = 100000;
         Max[StatType.ACTION] = 1000;
     }
+
+    public void AddPartStats(ModdedPart part)
+    {
+        foreach (var stat in part.FinalStats)
+        {
+            Max[stat.Key] += stat.Value;
+        }
+    }
 }
 
 public class StatBlock

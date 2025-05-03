@@ -52,9 +52,10 @@ public class TinyBot : Targetable
 
     [HideInInspector] public TinyBot BotEcho;
 
-    public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement, bool echo = false)
+    public void Initialize(List<Ability> abilities, List<PartModifier> parts, PrimaryMovement primaryMovement, bool echo, UnitStats stats, Allegiance allegiance)
     {
-        
+        Stats = stats;
+        Allegiance = allegiance;
         Movement = primaryMovement;
         Movement.Owner = this;
         Buffs = new BuffController(this);

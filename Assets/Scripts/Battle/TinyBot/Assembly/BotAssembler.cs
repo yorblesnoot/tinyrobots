@@ -31,8 +31,6 @@ public class BotAssembler : MonoBehaviour
         
         if (SceneGlobals.PlayerData.DevMode && allegiance == Allegiance.PLAYER) botStats.TestMode();
         botStats.MaxAll();
-        botUnit.Stats = botStats;
-        botUnit.Allegiance = allegiance;
         if (locomotion == null)
         {
             locomotion = AddImmobileLocomotion(botUnit, out PartModifier stand);
@@ -48,7 +46,7 @@ public class BotAssembler : MonoBehaviour
         
         List<Ability> abilities = GetAbilityList(spawnedParts);
         if (grantUniversals) abilities.AddRange(GetUniversals(botUnit));
-        botUnit.Initialize(abilities, spawnedParts, locomotion, echo);
+        botUnit.Initialize(abilities, spawnedParts, locomotion, echo, botStats, allegiance);
         if (allegiance == Allegiance.PLAYER && echo == false) botUnit.BotEcho = CreateEcho(treeRoot, allegiance, botUnit);
 
         return botUnit;
@@ -68,7 +66,7 @@ public class BotAssembler : MonoBehaviour
         GameObject spawned = modifier.gameObject;
         spawned.SetActive(true);
 
-        AddPartStats(currentNode.Value);
+        statBlock.AddPartStats(currentNode.Value);
         spawnedParts.Add(modifier);
         if (attachmentPoint != null) spawned.transform.SetParent(attachmentPoint.transform, false);
         spawned.transform.localRotation = Quaternion.identity;
@@ -82,13 +80,7 @@ public class BotAssembler : MonoBehaviour
         }
         return spawned;
 
-        void AddPartStats(ModdedPart part)
-        {
-            foreach (var stat in part.FinalStats)
-            {
-                statBlock.Max[stat.Key] += stat.Value;
-            }
-        }
+        
     }
 
     private static TinyBot CreateEcho(TreeNode<ModdedPart> treeRoot, Allegiance allegiance, TinyBot botUnit)

@@ -42,7 +42,7 @@ public class PrimaryMovement : MonoBehaviour
         animator.speed = on ? 1f : 0f;
     }
 
-    public IEnumerator TraversePath(List<Vector3> path)
+    public virtual IEnumerator TraversePath(List<Vector3> path)
     {
         MainCameraControl.TrackTarget(Owner.transform);
         float timeElapsed = 0;
