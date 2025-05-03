@@ -27,4 +27,23 @@ public static class VectorHelper
         }
         return total / vectors.Count();
     }
+
+    public static float GetTotalDistance(this IEnumerable<Vector3> vectors)
+    {
+        float totalDistance = 0f;
+        Vector3 lastVector = Vector3.zero;
+        bool first = true;
+        foreach (var vector in vectors)
+        {
+            if (first)
+            {
+                lastVector = vector;
+                first = false;
+                continue;
+            }
+            totalDistance += Vector3.Distance(lastVector, vector);
+            lastVector = vector;
+        }
+        return totalDistance;
+    }
 }
