@@ -91,7 +91,6 @@ public class BotCrafter : MonoBehaviour
     {
         if (ActiveCore == null) return;
 
-        ActiveCore.Energized = unitStatsDisplay.IsDeployable();
         ActiveCore.Bot = BuildBot();
         OriginSlot.ClearPartIdentity(false, false);
         SaveContainer.SaveGame(SceneGlobals.PlayerData);

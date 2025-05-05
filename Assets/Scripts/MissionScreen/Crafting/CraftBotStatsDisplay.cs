@@ -22,12 +22,8 @@ public class CraftBotStatsDisplay : MonoBehaviour
     {
         if (entries != null) return;
         PartSlot.ModifiedParts.AddListener(RefreshDisplays);
+        BotCrafter.Instance.PartInventory.PartActivated.AddListener((_) => RefreshDisplays());
         entries = stats.ToDictionary(stat => stat.Type, stat => stat);
-    }
-
-    public bool IsDeployable()
-    {
-        return totalWeight <= BotCrafter.ActiveCore.EnergyCapacity;
     }
 
     public void RefreshDisplays()
@@ -50,8 +46,15 @@ public class CraftBotStatsDisplay : MonoBehaviour
 
         foreach(var entry in entries.Values) entry.Display.text = entry.Value.ToString();
         healthDisplay.text = $"{Mathf.RoundToInt(BotCrafter.ActiveCore.HealthRatio.Value * totalHealth)} / {totalHealth}";
-        weightDisplay.text = $"{totalWeight} / {BotCrafter.ActiveCore.EnergyCapacity}";
-        weightDisplay.color = IsDeployable() ?  Color.white : Color.red;
+        string weightText = totalWeight.ToString();
+        if(BotCrafter.Instance.PartInventory.ActivePart != null)
+        {
+            int activeWeight = BotCrafter.Instance.PartInventory.ActivePart.FinalStats[StatType.ENERGY];
+            weightText += " " + BotCrafter.Instance.PartInventory.ActivePart != null ? " + " + activeWeight.ToString() : "";
+        }
+        weightText += " / " + BotCrafter.ActiveCore.EnergyCapacity.ToString();
+        weightDisplay.text = weightText;
+        weightDisplay.color = PartSlot.ActivePartIsUnderWeightLimit() ?  Color.green : Color.red;
 
         activeAbilities.PassDataToUI(abilityDisplays, (ability, display) => display.Become(ability));
     }

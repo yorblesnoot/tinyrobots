@@ -17,7 +17,6 @@ public class BotCharacter : SOWithGUID
     public Observable<int> Mana = new();
 
     public Sprite CharacterPortrait;
-    [HideInInspector] public bool Energized = true;
     [HideInInspector] public ModdedPart ModdedCore;
 
     [Header("Characteristics")]

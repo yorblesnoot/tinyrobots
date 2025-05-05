@@ -8,7 +8,6 @@ public class PartyPortrait : MonoBehaviour
     [SerializeField] Image portrait;
     [SerializeField] Button button;
     [SerializeField] HealthOverlay healthOverlay;
-    [SerializeField] GameObject weightOverlay;
     [SerializeField] List<Image> manaPips;
     BotCharacter activeCore;
     public void Become(BotCharacter core, Action<BotCharacter> coreCallback)
@@ -18,7 +17,6 @@ public class PartyPortrait : MonoBehaviour
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => coreCallback(core));
         UpdateHealthOverlay();
-        weightOverlay.SetActive(!core.Energized);
         core.HealthRatio.OnChange.AddListener(UpdateHealthOverlay);
         core.Mana.OnChange.AddListener(SetManaPips);
         SetManaPips();

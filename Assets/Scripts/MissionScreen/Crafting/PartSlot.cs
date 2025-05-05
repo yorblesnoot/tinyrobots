@@ -89,21 +89,22 @@ public class PartSlot : MonoBehaviour
     void PlayerSlotPart()
     {
         if (activePart.BasePart.PrimaryLocomotion && PrimaryLocomotionSlotted) return;
-        if (!SceneGlobals.PlayerData.DevMode && !PartIsUnderWeightLimit(SlottedParts, activePart)) return;
+        if (!SceneGlobals.PlayerData.DevMode && !ActivePartIsUnderWeightLimit()) return;
 
         activeSequence.Stop();
         SetPartIdentity(activePart);
         BotCrafter.Instance.PartInventory.RemovePart(BotCrafter.Instance.PartInventory.ActivePart);
     }
 
-    static bool PartIsUnderWeightLimit(List<ModdedPart> parts, ModdedPart incoming)
+    public static bool ActivePartIsUnderWeightLimit()
     {
+        if(activePart == null) return true;
         int totalWeight = 0;
-        foreach (ModdedPart part in parts)
+        foreach (ModdedPart part in SlottedParts)
         {
             totalWeight += part.FinalStats[StatType.ENERGY];
         }
-        return (totalWeight + incoming.FinalStats[StatType.ENERGY] <= BotCrafter.ActiveCore.EnergyCapacity);
+        return (totalWeight + activePart.FinalStats[StatType.ENERGY] <= BotCrafter.ActiveCore.EnergyCapacity);
     }
 
     public void ClearPartIdentity(bool destroy, bool toInventory)

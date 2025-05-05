@@ -12,7 +12,11 @@ public class PlayerData : ScriptableObject, ITrader
         foreach(BotCharacter core in CoreInventory)
         {
             if (RandomizeParty) core.Bot = BotRandomizer.GeneratePartTree(core.ModdedCore, BotConverter);
-            else if (core.Bot == null && core.StarterRecord != null) core.Bot = BotConverter.StringToBot(core.StarterRecord.Record);
+            else if (core.Bot == null)
+            {
+                if (core.StarterRecord != null) core.Bot = BotConverter.StringToBot(core.StarterRecord.Record);
+                else core.Bot = new(core.ModdedCore);
+            } 
         }
     }
     [field: SerializeField] public List<ModdedPart> PartInventory { get; set; }
