@@ -98,7 +98,6 @@ public class PartySelector : MonoBehaviour
             core.Mana.Value = core.ModdedCore.FinalStats[StatType.MANA];
             if(SceneGlobals.PlayerData.DevMode)
             {
-                
                 core.Bot = new(core.ModdedCore);
             }
             else core.Bot = SceneGlobals.PlayerData.BotConverter.StringToBot(core.StarterRecord.Record);

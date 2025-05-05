@@ -1,5 +1,6 @@
 using PrimeTween;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -20,8 +21,10 @@ public class PartSlot : MonoBehaviour
     public SlotType SlotType { get { return AttachmentPoint == null ? SlotType.CHASSIS : AttachmentPoint.SlotType; } }
     PartSlot[] childSlots;
     readonly string contractionAnimation = "contract";
+    readonly string pulseAnimation = "pulse";
 
-    public static UnityEvent<ModdedPart, bool> SlottedPart = new();
+    public static UnityEvent ModifiedParts = new();
+    public static List<ModdedPart> SlottedParts = new();
     public static bool PrimaryLocomotionSlotted {get; private set;}
 
     static ModdedPart activePart {  get { return BotCrafter.Instance.PartInventory.ActivePart; } }
@@ -46,7 +49,31 @@ public class PartSlot : MonoBehaviour
         else if (PartCanSlot(activePart.BasePart.Type, SlotType)) PlayerSlotPart();
     }
 
-    
+    private void OnMouseEnter()
+    {
+        if (PartIdentity != null) return;
+        slotAnimator.SetBool(pulseAnimation, true);
+        if (activePart == null || !PartCanSlot(activePart.BasePart.Type, SlotType)) return;
+        DecorateMockup(activePart);
+        SceneGlobals.BotPalette.RecolorPart(mockup, BotPalette.Special.HOLOGRAM);
+        AnimateHologram(true);
+    }
+
+    private void OnMouseExit()
+    {
+        if (PartIdentity != null) return;
+        slotAnimator.SetBool(pulseAnimation, false);
+        if (mockup == null) return;
+        mockup.gameObject.SetActive(false);
+        mockup = null;
+    }
+
+    void ModifySlottedParts(ModdedPart part, bool add)
+    {
+        if (add) SlottedParts.Add(part);
+        else SlottedParts.Remove(part);
+        ModifiedParts.Invoke();
+    }
 
     public static bool PartCanSlot(SlotType part, SlotType slot)
     {
@@ -62,14 +89,26 @@ public class PartSlot : MonoBehaviour
     void PlayerSlotPart()
     {
         if (activePart.BasePart.PrimaryLocomotion && PrimaryLocomotionSlotted) return;
+        if (!SceneGlobals.PlayerData.DevMode && !PartIsUnderWeightLimit(SlottedParts, activePart)) return;
+
         activeSequence.Stop();
         SetPartIdentity(activePart);
         BotCrafter.Instance.PartInventory.RemovePart(BotCrafter.Instance.PartInventory.ActivePart);
     }
 
+    static bool PartIsUnderWeightLimit(List<ModdedPart> parts, ModdedPart incoming)
+    {
+        int totalWeight = 0;
+        foreach (ModdedPart part in parts)
+        {
+            totalWeight += part.FinalStats[StatType.ENERGY];
+        }
+        return (totalWeight + incoming.FinalStats[StatType.ENERGY] <= BotCrafter.ActiveCore.EnergyCapacity);
+    }
+
     public void ClearPartIdentity(bool destroy, bool toInventory)
     {
-        SlottedPart.Invoke(PartIdentity, false);
+        ModifySlottedParts(PartIdentity, false);
         if(slotAnimator != null && slotAnimator.gameObject.activeSelf) slotAnimator.SetBool(contractionAnimation, false);
         if (PartIdentity != null)
         {
@@ -100,13 +139,7 @@ public class PartSlot : MonoBehaviour
         }
     }
 
-    private void OnMouseEnter()
-    {
-        if (PartIdentity != null || activePart == null || !PartCanSlot(activePart.BasePart.Type, SlotType)) return;
-        DecorateMockup(activePart);
-        SceneGlobals.BotPalette.RecolorPart(mockup, BotPalette.Special.HOLOGRAM);
-        AnimateHologram(true);
-    }
+    
 
     static Sequence activeSequence;
     void AnimateHologram(bool on)
@@ -123,20 +156,14 @@ public class PartSlot : MonoBehaviour
             }
         }
     }
-
-    private void OnMouseExit()
-    {
-        if (mockup == null || PartIdentity != null) return;
-        mockup.gameObject.SetActive(false);
-        mockup = null;
-    }
+    
 
     
 
     public PartSlot[] SetPartIdentity(ModdedPart part)
     {
         PrimaryLocomotionSlotted |= part.BasePart.PrimaryLocomotion;
-        SlottedPart.Invoke(part, true);
+        ModifySlottedParts(part, true);
         slotAnimator.SetBool(contractionAnimation, true);
         
         DecorateMockup(part);

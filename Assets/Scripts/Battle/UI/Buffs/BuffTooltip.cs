@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class BuffTooltip : Tooltip
+public class BuffTooltip : TooltipBase
 {
     [SerializeField] TMP_Text buffName;
     [SerializeField] TMP_Text buffDescription;

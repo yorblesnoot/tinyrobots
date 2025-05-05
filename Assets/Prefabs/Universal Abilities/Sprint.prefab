@@ -59,12 +59,16 @@ MonoBehaviour:
   emissionPoint: {fileID: 0}
   Type: 1
   EndTurn: 0
+  costsMana: 0
   targetRequirement: 4
   trackingToggle: {fileID: 0}
   abilityEffects:
   - {fileID: 2360519628655605620}
   endEffects: []
   TargetType: {fileID: 0}
+  Used:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2360519628655605620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,7 +82,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
-  BaseEffectMagnitude: 100
+  BaseEffectMagnitude: 50
   statType: 2
   mode: 1
 --- !u!114 &7271841698239757169

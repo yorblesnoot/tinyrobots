@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class AbilityTooltip : Tooltip
+public class AbilityTooltip : TooltipBase
 {
     static AbilityTooltip instance;
     

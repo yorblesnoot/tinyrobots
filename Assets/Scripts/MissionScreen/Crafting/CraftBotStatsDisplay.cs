@@ -14,22 +14,15 @@ public class CraftBotStatsDisplay : MonoBehaviour
     [SerializeField] VisualizedPartInventory blueprintControl;
 
     Dictionary<StatType, StatEntry> entries;
-    List<ModdedPart> activeParts = new();
+    
     int totalWeight;
     float totalHealth;
 
     public void Initialize()
     {
         if (entries != null) return;
-        PartSlot.SlottedPart.AddListener(ModifyPartStats);
+        PartSlot.ModifiedParts.AddListener(RefreshDisplays);
         entries = stats.ToDictionary(stat => stat.Type, stat => stat);
-    }
-
-    void ModifyPartStats(ModdedPart part, bool add)
-    {
-        if(add) activeParts.Add(part);
-        else activeParts.Remove(part);
-        RefreshDisplays();
     }
 
     public bool IsDeployable()
@@ -43,7 +36,7 @@ public class CraftBotStatsDisplay : MonoBehaviour
         totalHealth = totalWeight = 0;
         List <Ability> activeAbilities = new();
 
-        foreach(var part in activeParts)
+        foreach(var part in PartSlot.SlottedParts)
         {
             activeAbilities.AddRange(part.Abilities);
             foreach (StatType stat in part.FinalStats.Keys)

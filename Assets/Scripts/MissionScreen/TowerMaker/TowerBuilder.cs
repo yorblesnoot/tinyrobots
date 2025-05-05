@@ -7,7 +7,8 @@ using UnityEngine;
 public class TowerBuilder : MonoBehaviour
 {
     [Header("Settings")]
-    
+
+    [Range (0, 3)] [SerializeField] int healQuanity = 1;
     [SerializeField] int sideLength = 6, pieceSize = 4;
     [SerializeField] float circleRadius = 3;
     [SerializeField] float floorRiseLength = 5;
@@ -74,7 +75,7 @@ public class TowerBuilder : MonoBehaviour
             TowerPiece piece = allPieces[saved.PieceIndex];
             TowerNavZone zone = InstantiatePiece(piece, saved.Position, saved.Rotation);
             zone.ZoneIndex = i;
-            PrimeZone(zone, saved.EventType);
+            PrimeZoneWithEvent(zone, saved.EventType);
             zones.Add(zone);
         }
         for (int i = 0; i < data.Zones.Count; i++)
@@ -91,6 +92,13 @@ public class TowerBuilder : MonoBehaviour
         zoneRooms[path[0].room].ZoneEvent = null;
         zoneRooms[path[0].room].ZoneEventType = 0;
         eventProvider.PlaceBossEvent(zoneRooms[path[^1].room]);
+        int segmentCount = healQuanity + 1;
+        int segmentLength = path.Count / segmentCount;
+        for(int i = 1; i < segmentCount; i++)
+        {
+            int index = segmentLength * i;
+            eventProvider.PlaceHealEvent(zoneRooms[path[index].room]);
+        }
     }
 
     private void PlaceMapPieces(List<MapNode> path)
@@ -207,7 +215,7 @@ public class TowerBuilder : MonoBehaviour
     {
         Quaternion rotation = Quaternion.Euler(0, -orientation.rotationAngle, 0);
         TowerNavZone zone = InstantiatePiece(piece, GetWorldVector(node.position), rotation);
-        PrimeZone(zone);
+        PrimeZoneWithEvent(zone);
 
         foreach (PlacedRoom room in placedRooms)
         {
@@ -224,7 +232,7 @@ public class TowerBuilder : MonoBehaviour
         return zone;
     }
 
-    private void PrimeZone(TowerNavZone zone, int eventIndex = -1)
+    private void PrimeZoneWithEvent(TowerNavZone zone, int eventIndex = -1)
     {
         zone.ZoneEventType = eventIndex < 0 ? eventProvider.GetRandomWeightedEvent() : eventIndex;
         zone.ZoneEvent = eventProvider[zone.ZoneEventType];

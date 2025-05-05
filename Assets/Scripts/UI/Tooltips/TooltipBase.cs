@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Tooltip : MonoBehaviour
+public class TooltipBase : MonoBehaviour
 {
     [SerializeField] protected float heightModifier = 50;
     [SerializeField] protected bool usePosition;

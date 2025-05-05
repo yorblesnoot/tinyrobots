@@ -10,8 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 7997421335284908480}
   - component: {fileID: 8794640450469654157}
+  - component: {fileID: 7126601409022545620}
+  - component: {fileID: 8792970297263788268}
   m_Layer: 5
-  m_Name: PartStat
+  m_Name: PartStatIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -54,29 +56,81 @@ MonoBehaviour:
   - type: 1
     icon: {fileID: 21300000, guid: 85bfeedc4991ba1438f0ec94cec83eaa, type: 3}
     color: {r: 1, g: 0.9828663, b: 0.08018869, a: 1}
+    description: Action Points are used to activate part abilities. A unit's action
+      points refill each round of combat.
   - type: 0
     icon: {fileID: 21300000, guid: 32825427ebf76e54a8d129df764dee48, type: 3}
     color: {r: 1, g: 0.13482638, b: 0.07843137, a: 1}
+    description: Health is the remaining durability of a unit. When it is reduced
+      to 0, the unit is removed from combat.
   - type: 2
     icon: {fileID: 21300000, guid: 0d659cb8a9cbebb478dc38ead2959460, type: 3}
     color: {r: 0.07843137, g: 1, b: 0.14332232, a: 1}
+    description: Movement point are spent to move a unit. A unit's movement points
+      refill each round of combat. refill
   - type: 3
     icon: {fileID: 21300000, guid: 2a46ec119178edb429a73c1d2e8758fe, type: 3}
     color: {r: 0.25, g: 0.42015612, b: 1, a: 1}
+    description: Armor reduces incoming damage by a percentage.
   - type: 5
     icon: {fileID: 21300000, guid: 2af72b785275c97428d6b4780ffc3abd, type: 3}
     color: {r: 1, g: 1, b: 1, a: 1}
+    description: Initiative determines turn order for combatants. Higher initiative
+      units act first.
   - type: 4
     icon: {fileID: 21300000, guid: 0e24490ffdc9777458f8c9710c84cced, type: 3}
     color: {r: 0.2971698, g: 1, b: 0.83640003, a: 1}
+    description: '[CURRENTLY UNUSED]'
   - type: 6
     icon: {fileID: 21300000, guid: d5d0d4062d6f0284a8d76ed002ea1fc5, type: 3}
     color: {r: 0.5188679, g: 0.5188679, b: 0.5188679, a: 1}
+    description: Energy is required to attach parts to a unit. If the part requires
+      more energy than is available, it can't be attached.
   - type: 7
     icon: {fileID: 21300000, guid: 3d14d32f7f68ae64ba2ab46fa0eb9c86, type: 3}
     color: {r: 0.42056054, g: 0.14159843, b: 0.8113208, a: 1}
+    description: Mana is used to cast core abilities. It refills to max between tower
+      levels and at heal points.
   amount: {fileID: 3052244608484842993}
   displayedIcon: {fileID: 1849603620399489239}
+--- !u!222 &7126601409022545620
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452384097377740350}
+  m_CullTransparentMesh: 1
+--- !u!114 &8792970297263788268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452384097377740350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &2518322925297275001
 GameObject:
   m_ObjectHideFlags: 0

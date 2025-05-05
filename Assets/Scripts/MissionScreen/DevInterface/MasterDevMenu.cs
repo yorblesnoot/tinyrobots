@@ -16,6 +16,7 @@ public class MasterDevMenu : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.F1)) menu.SetActive(!menu.activeSelf);
+        if (Input.GetKeyDown(KeyCode.F1)) menu.SetActive(!menu.activeSelf);
+        else if (Input.GetKeyDown(KeyCode.F2)) SceneGlobals.PlayerData.DevMode = !SceneGlobals.PlayerData.DevMode;
     }
 }
