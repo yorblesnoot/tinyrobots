@@ -33,7 +33,7 @@ public class BotAssembler : MonoBehaviour
         botStats.MaxAll();
         if (locomotion == null)
         {
-            locomotion = AddImmobileLocomotion(botUnit, out PartModifier stand);
+            locomotion = AddImmobileLocomotion(botUnit, botStats, out PartModifier stand);
             spawnedParts.Add(stand);
         }
         SetBotTallness(locomotion, botUnit.TargetPoint, botUnit);
@@ -68,8 +68,9 @@ public class BotAssembler : MonoBehaviour
 
         statBlock.AddPartStats(currentNode.Value);
         spawnedParts.Add(modifier);
-        if (attachmentPoint != null) spawned.transform.SetParent(attachmentPoint.transform, false);
-        spawned.transform.localRotation = Quaternion.identity;
+
+        modifier.AttachPart(attachmentPoint.transform);
+
         if(currentNode.Value.BasePart.PrimaryLocomotion) locomotion = spawned.GetComponent<PrimaryMovement>();
         List<TreeNode<ModdedPart>> children = currentNode.Children;
 
@@ -110,10 +111,10 @@ public class BotAssembler : MonoBehaviour
         Pathfinder3D.EvaluateNodeOccupancy(owner.transform.position);
     }
 
-    private static PrimaryMovement AddImmobileLocomotion(TinyBot bot, out PartModifier mod)
+    private static PrimaryMovement AddImmobileLocomotion(TinyBot bot, UnitStats stats, out PartModifier mod)
     {
-        bot.Stats.Max[StatType.MOVEMENT] = 0;
-        bot.Stats.Current[StatType.MOVEMENT] = 0;
+        stats.Max[StatType.MOVEMENT] = 0;
+        stats.Current[StatType.MOVEMENT] = 0;
         GameObject stand = Instantiate(instance.suspensionStand);
         SuspendedMovement movement = stand.GetComponent<SuspendedMovement>();
         mod = stand.GetComponent<PartModifier>();

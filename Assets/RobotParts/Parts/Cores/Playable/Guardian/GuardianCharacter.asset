@@ -13,12 +13,17 @@ MonoBehaviour:
   m_Name: GuardianCharacter
   m_EditorClassIdentifier: 
   Id: efc71003-d85f-49aa-9ec0-8650efd11fef
-  HealthRatioChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  Mana: 3
+  HealthRatio:
+    OnChange:
+      m_PersistentCalls:
+        m_Calls: []
+    localValue: 1
+  Mana:
+    OnChange:
+      m_PersistentCalls:
+        m_Calls: []
+    localValue: 2
   CharacterPortrait: {fileID: 21300000, guid: 3dcea47a4ee836d47aa6cd3fe4ea9a6e, type: 3}
-  Energized: 1
   ModdedCore:
     BasePart: {fileID: 11400000, guid: aeb575570a152ee489b693cf08c89bca, type: 2}
     Mutators: []

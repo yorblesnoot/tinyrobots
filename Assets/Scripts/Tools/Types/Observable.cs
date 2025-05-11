@@ -1,9 +1,11 @@
+using UnityEngine;
 using UnityEngine.Events;
 
+[System.Serializable]
 public class Observable<T> where T : struct
 {
-    public UnityEvent OnChange = new();
-    T localValue;
+    [HideInInspector] public UnityEvent OnChange = new();
+    [SerializeField] T localValue;
     public T Value { get { return localValue; }
         set { localValue = value; OnChange?.Invoke(); }
     }

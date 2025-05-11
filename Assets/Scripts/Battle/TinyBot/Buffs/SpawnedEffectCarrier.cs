@@ -2,7 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuffEffectCarrier : MonoBehaviour
+/// <summary>
+///  Attached to a VFX or other deployed prefab that needs to perform ability effects on spawn and despawn.
+/// </summary>
+public class SpawnedEffectCarrier : MonoBehaviour
 {
     [SerializeField] List<AbilityEffect> activationEffects;
     [SerializeField] List<AbilityEffect> deactivationEffects;

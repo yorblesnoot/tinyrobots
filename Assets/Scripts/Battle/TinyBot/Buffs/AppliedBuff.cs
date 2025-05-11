@@ -9,7 +9,7 @@ public class AppliedBuff
     int maxDuration;
     int elapsedDuration = 0;
     public int RemainingDuration => maxDuration - elapsedDuration;
-    BuffEffectCarrier spawnedFX;
+    SpawnedEffectCarrier spawnedFX;
 
 
     public AppliedBuff(BuffType buff, TinyBot target, TinyBot source, int potency)
@@ -29,7 +29,7 @@ public class AppliedBuff
         if (Buff.Triggers != null) foreach (BuffTrigger trigger in Buff.Triggers) trigger.ApplyTo(Target);
         if(Buff.FX != null)
         {
-            spawnedFX = GameObject.Instantiate(Buff.FX).GetComponent<BuffEffectCarrier>();
+            spawnedFX = GameObject.Instantiate(Buff.FX).GetComponent<SpawnedEffectCarrier>();
             spawnedFX.transform.SetParent(Target.TargetPoint, false);
             spawnedFX.Toggle(true, Source, Target);
         }

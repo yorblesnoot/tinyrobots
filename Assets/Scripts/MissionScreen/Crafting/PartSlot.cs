@@ -186,14 +186,12 @@ public class PartSlot : MonoBehaviour
 
     private void DecorateMockup(ModdedPart part)
     {
-        mockup = part.Sample.GetComponent<PartModifier>();
+        mockup = part.Sample;
         if (mockup.TryGetComponent(out Collider collider)) collider.enabled = false;
         mockup.gameObject.SetActive(true);
         Animator partAnimator = mockup.GetComponentInChildren<Animator>();
         if (partAnimator != null) partAnimator.speed = 0;
-        mockup.transform.SetParent(AttachmentPoint == null ? transform : AttachmentPoint.transform, false);
-        mockup.transform.localPosition = Vector3.zero;
-        mockup.transform.localRotation = Quaternion.identity;
+        mockup.AttachPart(AttachmentPoint == null ? transform : AttachmentPoint.transform);
     }
 
     public TreeNode<ModdedPart> BuildTree()
