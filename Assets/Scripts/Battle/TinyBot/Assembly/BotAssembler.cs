@@ -69,7 +69,7 @@ public class BotAssembler : MonoBehaviour
         statBlock.AddPartStats(currentNode.Value);
         spawnedParts.Add(modifier);
 
-        modifier.AttachPart(attachmentPoint.transform);
+        modifier.AttachPart(attachmentPoint != null ? attachmentPoint.transform : null);
 
         if(currentNode.Value.BasePart.PrimaryLocomotion) locomotion = spawned.GetComponent<PrimaryMovement>();
         List<TreeNode<ModdedPart>> children = currentNode.Children;
