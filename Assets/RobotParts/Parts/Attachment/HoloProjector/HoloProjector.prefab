@@ -80,7 +80,7 @@ MonoBehaviour:
     m_UpAxis: 0
     m_WorldUpType: 3
     m_WorldUpObject: {fileID: 815183708165566401}
-    m_WorldUpAxis: 2
+    m_WorldUpAxis: 4
     m_MaintainOffset: 0
     m_ConstrainedAxes:
       x: 1
@@ -116,8 +116,8 @@ Transform:
   m_LocalScale: {x: 1.4845438, y: 1.4845442, z: 1.4845443}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5124811662925634934}
   - {fileID: 4082303358036551564}
+  - {fileID: 5124811662925634934}
   m_Father: {fileID: 6541023758532373319}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8822551764892424777
@@ -182,7 +182,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 987a16f33931ce74282945de6b45b49f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Description: Summon a hologram of embedded parts. It can use all associated abilities.
+  Description: Summon a hologram of embedded parts. It can use *sub/all associated
+    abilities/.
   range: 10
   ModifiableRange: 0
   cooldown: 3
@@ -272,7 +273,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ikTarget: {fileID: 4423487660278082746}
   aimDistance: 1
-  aimPoint: {fileID: 0}
+  aimPoint: {fileID: 261287015604643871}
 --- !u!1 &6763153565067516047
 GameObject:
   m_ObjectHideFlags: 0

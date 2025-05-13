@@ -31,7 +31,7 @@ public class AbilityTooltip : TooltipBase
         instance.range.text = ability.range + " Ft";
         instance.cooldown.text = ability.cooldown + " Turns";
         instance.cost.text = ability.cost + " AP";
-        instance.description.text = ability.Description;
+        instance.description.text = DynamicAbilityDescription.Describe(ability);
 
         instance.SetPosition(position);
     }

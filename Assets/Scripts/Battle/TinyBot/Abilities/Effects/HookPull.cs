@@ -25,6 +25,7 @@ public class HookPull : HookAbility
         trajectory.Reverse();
         Vector3 direction = (trajectory[0] - trajectory[^1]).normalized;
         trajectory[^1] = Ability.emissionPoint.position + direction * dropDistance;
+        Transform previousParent = null;
 
         if (target != null)
         {
@@ -32,11 +33,17 @@ public class HookPull : HookAbility
             if (target.IsDead) target = null;
             else
             {
-                yield return new WaitForSeconds(pullDelay);
-                StartCoroutine(ProjectileMovement.LaunchAlongLine(target.gameObject, travelTime, trajectory));
+                //yield return new WaitForSeconds(pullDelay);
+                //StartCoroutine(ProjectileMovement.LaunchAlongLine(target.gameObject, travelTime, trajectory));
+                previousParent = target.transform.parent;
+                target.transform.SetParent(projectile.transform, true);
             }
         }
         yield return StartCoroutine(LaunchWithLine(projectile, trajectory, intervalTime, false));
+        if (previousParent != null)
+        {
+            target.transform.SetParent(previousParent, true);
+        }
         ResetHook();
         if (target != null) yield return StartCoroutine(target.Fall());
         Pathfinder3D.EvaluateNodeOccupancy(owner.transform.position);
