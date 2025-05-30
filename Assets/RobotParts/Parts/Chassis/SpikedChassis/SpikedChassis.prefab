@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2744516518611649984
 Transform:
   m_ObjectHideFlags: 0
@@ -4890,7 +4890,6 @@ MonoBehaviour:
   - activationCondition: 0
     alwaysTargetSelf: 0
     activationLimit: 1
-    procResetCondition: 4
     OutputEffect:
     - {fileID: 7903811093348112724}
   targeter: {fileID: 2086499050853252097}
@@ -4911,6 +4910,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Ability: {fileID: 0}
   BaseEffectMagnitude: 5
+  damageFlinch: 1
 --- !u!1001 &58940792939902435
 PrefabInstance:
   m_ObjectHideFlags: 0
