@@ -13,12 +13,17 @@ MonoBehaviour:
   m_Name: SupplicantCharacter
   m_EditorClassIdentifier: 
   Id: c9526ec8-4dfe-419b-8fa9-6f04e2602f5b
-  HealthRatioChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  Mana: 3
+  HealthRatio:
+    OnChange:
+      m_PersistentCalls:
+        m_Calls: []
+    localValue: 1
+  Mana:
+    OnChange:
+      m_PersistentCalls:
+        m_Calls: []
+    localValue: 2
   CharacterPortrait: {fileID: 21300000, guid: f69a48a6e293c9247bcff6f749a099b7, type: 3}
-  Energized: 1
   ModdedCore:
     BasePart: {fileID: 11400000, guid: 7ca78f1c555484d46b50fbc524a0eb86, type: 2}
     Mutators: []

@@ -74,7 +74,7 @@ public abstract class Mission : MonoBehaviour
             bot.LinkedCore = core;
             float healthRatio = SceneGlobals.PlayerData.DevMode ? 1 : core.HealthRatio.Value;
             bot.Stats.Current[StatType.HEALTH] = Mathf.RoundToInt(bot.Stats.Max[StatType.HEALTH] * healthRatio);
-            bot.Stats.Current[StatType.MANA] = core.Mana.Value;
+            bot.Stats.Current[StatType.MANA] = SceneGlobals.PlayerData.DevMode ? 100 : core.Mana.Value;
             TurnManager.AddTurnTaker(bot);
             bots.Add(bot);
             bot.gameObject.SetActive(false);

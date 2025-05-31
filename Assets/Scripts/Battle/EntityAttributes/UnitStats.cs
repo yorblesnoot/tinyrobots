@@ -48,6 +48,7 @@ public class UnitStats
         Max[StatType.HEALTH] = 1000;
         Max[StatType.MOVEMENT] = 100000;
         Max[StatType.ACTION] = 1000;
+        Current[StatType.MANA] = 1000;
     }
 
     public void AddPartStats(ModdedPart part)

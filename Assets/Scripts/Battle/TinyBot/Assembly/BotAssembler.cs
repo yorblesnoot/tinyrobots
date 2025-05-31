@@ -28,9 +28,10 @@ public class BotAssembler : MonoBehaviour
         UnitStats botStats = new();
         GameObject core = RecursiveConstruction(treeRoot, spawnedParts, botStats, ref locomotion);
         core.transform.SetParent(botUnit.TargetPoint, false);
-        
-        if (SceneGlobals.PlayerData.DevMode && allegiance == Allegiance.PLAYER) botStats.TestMode();
+
         botStats.MaxAll();
+        if (SceneGlobals.PlayerData.DevMode && allegiance == Allegiance.PLAYER) botStats.TestMode();
+        
         if (locomotion == null)
         {
             locomotion = AddImmobileLocomotion(botUnit, botStats, out PartModifier stand);

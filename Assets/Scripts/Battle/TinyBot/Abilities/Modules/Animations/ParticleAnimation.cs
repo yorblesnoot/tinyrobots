@@ -45,7 +45,7 @@ public class ParticleAnimation : AbilityEffect
             else
             {
                 particle.System.gameObject.transform.position = trajectory[^1];
-                particle.System.transform.rotation = location == ParticleLocation.TERRAINPOINT ? GetTerrainParticleFacing(owner, trajectory) : Quaternion.identity;
+                if (location == ParticleLocation.TERRAINPOINT) particle.System.transform.rotation = GetTerrainParticleFacing(owner, trajectory);
             }
             if (unparentOnPlay) particle.System.transform.SetParent(null, true);
             particle.System.Play();

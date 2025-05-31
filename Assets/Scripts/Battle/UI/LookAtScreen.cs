@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class LookAtScreen : MonoBehaviour
 {
-    void LateUpdate()
+
+    public static void Look(Transform transform)
     {
         Vector3 towardsCamera = -Camera.main.transform.forward;
         transform.rotation = Quaternion.LookRotation(towardsCamera);
+    }
+
+    void LateUpdate()
+    {
+        Look(transform);
     }
 }
