@@ -13,8 +13,8 @@ public class HookGrapple : HookAbility
         line.positionCount = 2;
         projectile.transform.SetParent(null, true);
         
-        float intervalTime = travelTime / trajectory.Count;
-        yield return StartCoroutine(LaunchWithLine(projectile, trajectory, intervalTime));
+        
+        yield return StartCoroutine(LaunchWithLine(projectile, trajectory, TravelSpeed));
         bool hitSomething = Vector3.Distance(trajectory[0], trajectory[^1]) < Ability.range;
 
         if (targets.Count > 0) targets[0].ReceiveHit(FinalEffectiveness, owner, trajectory[^1]);
@@ -23,7 +23,7 @@ public class HookGrapple : HookAbility
         backDirection *= backDistance;
         Vector3 secondTarget = trajectory[1] - backDirection;
         List<Vector3> secondaryTrajectory = new() { trajectory[0], secondTarget };
-        yield return StartCoroutine(LaunchWithLine(owner.gameObject, secondaryTrajectory, intervalTime));
+        yield return StartCoroutine(LaunchWithLine(owner.gameObject, secondaryTrajectory, TravelSpeed));
         
         ResetHook();
         if (hitSomething)

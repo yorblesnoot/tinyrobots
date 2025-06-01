@@ -6,17 +6,15 @@ using UnityEngine.Events;
 
 public class TurnManager : MonoBehaviour
 {
-    public static TurnManager Singleton;
+    public static TurnManager Instance;
 
-    [SerializeField] List<TurnPortrait> turnPortraitList;
+    [SerializeField] GameObject turnPortrait;
     [SerializeField] PortraitGenerator portraitGenerator;
     [SerializeField] float activeUnitScaleFactor = 1.5f;
     [SerializeField] float summonScaleFactor = .7f;
     [SerializeField] BattleEnder battleEnder;
-    
-    static List<TurnPortrait> portraitStock;
-    static float cardWidth;
-    static float cardHeight;
+    [SerializeField] float cardWidth = 60;
+    [SerializeField] float cardHeight = 60;
     static int activeIndex = 0;
 
     public static List<TinyBot> TurnTakers;
@@ -33,19 +31,14 @@ public class TurnManager : MonoBehaviour
         TurnTakers = new();
         activeIndex = 0;
         TurnTakers = new(); activePortraits = new(); currentlyActive = new();
-        portraitStock = turnPortraitList;
-        Singleton = this;
-        RectTransform rectTransform = turnPortraitList[0].GetComponent<RectTransform>();
-        cardWidth = rectTransform.rect.width;
-        cardHeight = rectTransform.rect.height;
+        Instance = this;
     }
     public static void AddTurnTaker(TinyBot bot, int index = 0)
     {
-        Singleton.portraitGenerator.AttachPortrait(bot);
-        if (portraitStock.Count == 1) portraitStock.Add(Instantiate(portraitStock[0]));
-        portraitStock[0].Become(bot);
-        activePortraits.Add(bot, portraitStock[0]);
-        portraitStock.RemoveAt(0);
+        Instance.portraitGenerator.AttachPortrait(bot);
+        TurnPortrait portrait = Instantiate(Instance.turnPortrait, Instance.transform).GetComponent<TurnPortrait>();
+        portrait.Become(bot);
+        activePortraits.Add(bot, portrait);
         if(index > 0) TurnTakers.Insert(index, bot);
         else TurnTakers.Add(bot);
     }
@@ -72,7 +65,7 @@ public class TurnManager : MonoBehaviour
         TurnPortrait removed = activePortraits[bot];
         removed.Die();
         activePortraits.Remove(bot);
-        Singleton.StartCoroutine(RecyclePortrait(removed, 1.5f));
+        Instance.StartCoroutine(RecyclePortrait(removed, 1.5f));
         
     }
 
@@ -80,7 +73,6 @@ public class TurnManager : MonoBehaviour
     {
         yield return new WaitForSeconds(wait);
         removed.Clear();
-        portraitStock.Add(removed);
         ArrangePortraits(currentlyActive);
     }
 
@@ -149,31 +141,26 @@ public class TurnManager : MonoBehaviour
 
     static void ArrangePortraits(List<TinyBot> active)
     {
-        float currentX = 0f;
-        foreach(var portrait in portraitStock) portrait.gameObject.SetActive(false);
         foreach (TinyBot turnTaker in TurnTakers)
         {
-            float width = cardWidth;
-            float height = cardHeight;
+            float width = Instance.cardWidth;
+            float height = Instance.cardHeight;
             RectTransform portraitRect = activePortraits[turnTaker].GetComponent<RectTransform>();
             portraitRect.gameObject.SetActive(true);
+            portraitRect.transform.SetAsLastSibling();
             if (active.Contains(turnTaker))
             {
-                height *= Singleton.activeUnitScaleFactor;
-                width *= Singleton.activeUnitScaleFactor;
+                height *= Instance.activeUnitScaleFactor;
+                width *= Instance.activeUnitScaleFactor;
             }
             if(summoned.Contains(turnTaker))
             {
-                height *= Singleton.summonScaleFactor;
-                width *= Singleton.summonScaleFactor;
+                height *= Instance.summonScaleFactor;
+                width *= Instance.summonScaleFactor;
             }
-            
-            float currentY = -height / 2;
+
             portraitRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
             portraitRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
-            Vector3 newPosition = new(currentX + width / 2, currentY, 0);
-            portraitRect.transform.localPosition = newPosition;
-            currentX += width;
         }
     }
 

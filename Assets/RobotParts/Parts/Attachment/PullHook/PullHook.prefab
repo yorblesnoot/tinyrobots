@@ -547,12 +547,18 @@ MonoBehaviour:
   Owner: {fileID: 0}
   emissionPoint: {fileID: 267596326149554641}
   Type: 0
+  AIPriority: 0
   EndTurn: 0
+  costsMana: 0
   targetRequirement: 2
   trackingToggle: {fileID: 0}
   abilityEffects:
   - {fileID: 8901974070791791103}
   endEffects: []
+  TargetType: {fileID: 0}
+  Used:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &8901974070791791103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -571,7 +577,7 @@ MonoBehaviour:
   projectile: {fileID: 4549332990311462824}
   travelTime: 1
   dropDistance: 2
-  pullDelay: 0.5
+  pullDelay: 0.6
 --- !u!114 &3015369353320182564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -603,6 +609,8 @@ MonoBehaviour:
   - Default
   - Terrain
   - Shield
+  castWidth: 0
+  BlockingLayerMask: 0
 --- !u!1 &8205968175181487802
 GameObject:
   m_ObjectHideFlags: 0

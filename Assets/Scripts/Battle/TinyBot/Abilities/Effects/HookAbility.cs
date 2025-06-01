@@ -6,7 +6,7 @@ public abstract class HookAbility : AbilityEffect
 {
     [SerializeField] protected LineRenderer line;
     [SerializeField] protected GameObject projectile;
-    [SerializeField] protected float travelTime = 1;
+    [SerializeField] protected float TravelSpeed = 10;
     protected Vector3 BaseHookPosition;
     protected Quaternion BaseHookRotation;
     protected Transform BaseParent;
@@ -18,8 +18,10 @@ public abstract class HookAbility : AbilityEffect
         BaseParent = projectile.transform.parent;
         line.useWorldSpace = true;
     }
-    protected IEnumerator LaunchWithLine(GameObject launched, List<Vector3> trajectory, float intervalTime, bool faceMove = true)
+    protected IEnumerator LaunchWithLine(GameObject launched, List<Vector3> trajectory, float velocity, bool faceMove = true)
     {
+        float travelTime = Vector3.Distance(trajectory[0], trajectory[^1]) / velocity;
+        float intervalTime = travelTime / trajectory.Count;
         float timeElapsed;
         Vector3 baseDirection = trajectory[1] - trajectory[0];
         launched.transform.rotation = Quaternion.LookRotation(faceMove ? baseDirection : -baseDirection);
