@@ -70,7 +70,7 @@ public abstract class Mission : MonoBehaviour
         foreach (var core in SceneGlobals.PlayerData.CoreInventory)
         {
             if (core.HealthRatio.Value == 0 && !SceneGlobals.PlayerData.DevMode) continue;
-            TinyBot bot = BotAssembler.BuildBot(core.Bot, Allegiance.PLAYER, grantUniversals: true);
+            TinyBot bot = BotAssembler.BuildBot(core.Bot, Allegiance.PLAYER);
             bot.LinkedCore = core;
             float healthRatio = SceneGlobals.PlayerData.DevMode ? 1 : core.HealthRatio.Value;
             bot.Stats.Current[StatType.HEALTH] = Mathf.RoundToInt(bot.Stats.Max[StatType.HEALTH] * healthRatio);

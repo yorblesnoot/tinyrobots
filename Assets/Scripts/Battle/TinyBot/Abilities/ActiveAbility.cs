@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class ActiveAbility : Ability
 {   
     public AbilityType Type;
+    [Range(-5,5)] public int AIPriority = 0;
     public bool EndTurn = false;
     [SerializeField] bool costsMana = false;
     [SerializeField] TargetRequirement targetRequirement;

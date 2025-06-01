@@ -11,7 +11,8 @@ public class BotAI
     readonly float optimalDistance;
     float RemainingMove => owner.Stats.Current[StatType.MOVEMENT];
     
-    List<ActiveAbility> primaries, dashes, shields;
+    Dictionary<AbilityType, List<ActiveAbility>> abilityPools = new();
+
     List<TinyBot> enemies = new();
     List<TinyBot> allies = new();
     Vector3 closestEnemyPosition;
@@ -24,14 +25,14 @@ public class BotAI
     }
     void BuildAbilityLists()
     {
-        primaries = new();
-        dashes = new();
-        shields = new();
+        foreach (AbilityType type in Enum.GetValues(typeof(AbilityType)))
+        {
+            abilityPools[type] = new List<ActiveAbility>();
+        }
         foreach (ActiveAbility ability in owner.ActiveAbilities)
         {
-            if (ability.Type == AbilityType.DASH) dashes.Add(ability);
-            else if (ability.Type == AbilityType.SHIELD) shields.Add(ability);
-            else primaries.Add(ability);
+            AbilityType type = ability.Type == AbilityType.BUFF ? AbilityType.ATTACK : ability.Type;
+            abilityPools[type].Add(ability);
         }
     }
     float FindOptimalDistance()
@@ -51,11 +52,22 @@ public class BotAI
 
     public IEnumerator TakeTurn()
     {
-
         BeginTurn();
-        yield return AttackPhase();
+        yield return CastPhase();
+        yield return MovePhase();
+        yield return ShieldPhase();
         yield return new WaitForSeconds(1);
         EndTurn();
+    }
+
+    void ShufflePools()
+    {
+        List<AbilityType> abilityTypes = abilityPools.Keys.ToList();
+        foreach (var abilityType in abilityTypes)
+        {
+            abilityPools[abilityType].Shuffle();
+            abilityPools[abilityType] = abilityPools[abilityType].OrderByDescending(ability => ability.AIPriority).ToList();
+        }
     }
 
     void UpdateTargetingData()
@@ -71,11 +83,10 @@ public class BotAI
         closestEnemyPosition = enemies[0].transform.position;
     }
 
-    IEnumerator AttackPhase()
+    IEnumerator CastPhase()
     {
         UpdateTargetingData();
-        primaries.Shuffle();
-        foreach (var ability in primaries)
+        foreach (var ability in abilityPools[AbilityType.ATTACK])
         {
             if (!owner.Caster.TryPrepare(ability)) continue;
             List<TinyBot> targets = new(ability.Type == AbilityType.ATTACK ? enemies : allies);
@@ -84,7 +95,7 @@ public class BotAI
                 Vector3 targetPoint = target.TargetPoint.position;
                 if (!owner.Caster.FindValidCast(targetPoint, out var cast, true, target)) continue;
                 yield return UseAbility(ability, cast);
-                yield return AttackPhase();
+                yield return CastPhase();
                 yield break;
             }
         }
@@ -94,7 +105,7 @@ public class BotAI
     IEnumerator DashPhase()
     {
         UpdateTargetingData();
-        foreach (var ability in dashes)
+        foreach (var ability in abilityPools[AbilityType.DASH])
         {
             if (!owner.Caster.TryPrepare(ability)) continue;
             float maxDash = ability.range + RemainingMove;
@@ -115,11 +126,10 @@ public class BotAI
             {
                 if (!owner.Caster.FindValidCast(location, out var cast, true)) continue;
                 yield return UseAbility(ability, cast);
-                yield return AttackPhase();
+                yield return CastPhase();
                 yield break;
             }
         }
-        yield return MovePhase();
     }
 
     IEnumerator MovePhase()
@@ -141,14 +151,12 @@ public class BotAI
         owner.SpendResource(Mathf.RoundToInt(moveCosts[endIndex]), StatType.MOVEMENT);
 
         yield return owner.StartCoroutine(owner.Movement.TraversePath(path));
-        yield return ShieldPhase();
     }
 
     IEnumerator ShieldPhase()
     {
         UpdateTargetingData();
-        shields.Shuffle();
-        foreach (var shield in shields)
+        foreach (var shield in abilityPools[AbilityType.SHIELD])
         {
             if (!owner.Caster.TryPrepare(shield)) continue;
             Vector3 myPosition = owner.transform.position;
@@ -160,7 +168,6 @@ public class BotAI
             owner.Caster.FindValidCast(finalPosition, out var cast);
             yield return UseAbility(shield, cast);
         }
-
     }
 
     #region Unit Actions
@@ -168,10 +175,10 @@ public class BotAI
     {
         PrimaryCursor.TogglePlayerLockout(true);
         Pathfinder3D.GeneratePathingTree(owner.MoveStyle, owner.transform.position);
+        ShufflePools();
     }
     void EndTurn()
     {
-        owner.ToggleActiveLayer(false);
         PrimaryCursor.TogglePlayerLockout(true);
         TurnManager.EndTurn(owner);
     }
