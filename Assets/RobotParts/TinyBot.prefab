@@ -220,30 +220,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4dec2c1ab19d94b4486aa18d6cb145cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalPopup:
-    Color: {r: 1, g: 0.5423228, b: 0, a: 1}
-    Threshold: 0
-    Size: 25
-  critPopup:
-    Color: {r: 1, g: 0.07661381, b: 0, a: 1}
-    Threshold: 0
-    Size: 35
   popupTypes:
   - Color: {r: 0.16078432, g: 0.9254902, b: 0.29411766, a: 1}
     Threshold: -20
-    Size: 35
+    Size: 20
   - Color: {r: 0.16135636, g: 0.9245283, b: 0.29582465, a: 1}
     Threshold: 0
-    Size: 20
+    Size: 15
   - Color: {r: 1, g: 0.9196936, b: 0.15566039, a: 1}
     Threshold: 15
     Size: 15
   - Color: {r: 1, g: 0.42313194, b: 0, a: 1}
     Threshold: 30
-    Size: 25
+    Size: 20
   - Color: {r: 1, g: 0.078431375, b: 0, a: 1}
     Threshold: 50
-    Size: 35
+    Size: 25
   floatNumber: {fileID: 6650869779228163377, guid: 7ca50f46265ed084b8aa0e3b4a8c2f10,
     type: 3}
 --- !u!114 &5015652637622662206
@@ -290,6 +282,7 @@ MonoBehaviour:
   LinkedCore: {fileID: 0}
   Movement: {fileID: 0}
   Caster: {fileID: 0}
+  Abilities: []
   DamageCalculator: {fileID: 0}
   BotEcho: {fileID: 0}
 --- !u!114 &2455562850691036458

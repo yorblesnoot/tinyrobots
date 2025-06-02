@@ -13,7 +13,7 @@ public class SpatialTarget : TargetPoint
 
     private void Awake()
     {
-        layerMask = LayerMask.GetMask("Default");
+        layerMask = LayerMask.GetMask("Default", "ActiveBot");
     }
 
     public override void Draw(List<Vector3> trajectory)

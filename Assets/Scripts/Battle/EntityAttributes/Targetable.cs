@@ -43,7 +43,7 @@ public abstract class Targetable : MonoBehaviour
 
     public abstract void ReceiveHit(int damage, TinyBot source, Vector3 hitPoint, bool canBackstab = true);
 
-    protected virtual void ReduceHealth(int damage)
+    public virtual void ReduceHealth(int damage)
     {
         Stats.Current[StatType.HEALTH] = Math.Clamp(Stats.Current[StatType.HEALTH] - damage, 0, Stats.Max[StatType.HEALTH]);
         Feedback.QueuePopup(damage);

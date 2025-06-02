@@ -53,6 +53,14 @@ public class TurnManager : MonoBehaviour
             currentlyActive.Add(bot);
             bot.BecomeAvailableForTurn();
         }
+        Instance.StartCoroutine(DelayArrange());
+        //ArrangePortraits(currentlyActive);
+    }
+
+    //this is necessary because of some weirdness with the layout group
+    static IEnumerator DelayArrange()
+    {
+        yield return null;
         ArrangePortraits(currentlyActive);
     }
 
@@ -141,13 +149,13 @@ public class TurnManager : MonoBehaviour
 
     static void ArrangePortraits(List<TinyBot> active)
     {
+        Debug.Log("Arranging portraits for " + TurnTakers.Count + " bots.");
         foreach (TinyBot turnTaker in TurnTakers)
         {
             float width = Instance.cardWidth;
             float height = Instance.cardHeight;
             RectTransform portraitRect = activePortraits[turnTaker].GetComponent<RectTransform>();
-            portraitRect.gameObject.SetActive(true);
-            portraitRect.transform.SetAsLastSibling();
+            
             if (active.Contains(turnTaker))
             {
                 height *= Instance.activeUnitScaleFactor;
@@ -161,6 +169,8 @@ public class TurnManager : MonoBehaviour
 
             portraitRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
             portraitRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
+            portraitRect.transform.SetAsLastSibling();
+            Debug.Log(portraitRect.rect.height + ", " + portraitRect.rect.width);
         }
     }
 

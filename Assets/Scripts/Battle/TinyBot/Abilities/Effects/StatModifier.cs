@@ -42,7 +42,8 @@ public class StatModifier : AbilityEffect
 
     public static void ModifyStat(TinyBot target, int amount, StatType stat, BonusMode mode)
     {
-        target.Stats.Current[stat] += GetFinalBonus(amount, mode, target, stat);
+        if(stat == StatType.HEALTH) target.ReduceHealth(-amount);
+        else target.Stats.Current[stat] += GetFinalBonus(amount, mode, target, stat);
     }
 
     public static string GetLineDescription(StatType stat, BonusMode mode)

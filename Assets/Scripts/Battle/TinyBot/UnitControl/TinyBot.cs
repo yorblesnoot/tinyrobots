@@ -70,7 +70,6 @@ public class TinyBot : Targetable
         AbilitiesChanged.AddListener(() => cachedMaterials = CacheMaterials());
         Pathfinder3D.GetOccupancy.AddListener(DeclareOccupancy);
         BotCaster.ResetHighlights.AddListener(() => SetOutlineColor(Color.white));
-        
     }
 
     private void OnDestroy()
@@ -200,16 +199,10 @@ public class TinyBot : Targetable
         ReceivedHit.Invoke();
     }
 
-    protected override void ReduceHealth(int damage)
+    public override void ReduceHealth(int damage)
     {
         base.ReduceHealth(damage);
         BattleEnder.IsMissionOver();
-    }
-
-    public void Heal(int amount)
-    {
-        ReduceHealth(-amount);
-        //heal vfx
     }
 
     protected override void Land(Vector3Int coords, float startHeight)

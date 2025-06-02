@@ -103,9 +103,8 @@ public class BotCaster : MonoBehaviour
         cast = default;
         foreach (Vector3Int pathablePoint in pathableLocations)
         {
-            if (!Ability.PointIsInRange(pathablePoint, targetPosition)) continue;
-            PossibleCast possibleCast = Ability.SimulateCast(targetPosition, pathablePoint);
-            if (enforceUsable && !Ability.IsCastable(possibleCast)) continue;
+            PossibleCast possibleCast = SimulatePossibleCast(targetPosition, enforceUsable, pathablePoint);
+            if(possibleCast == null) continue;
             float quality = GetTargetQuality(targetPosition, possibleCast.Trajectory);
             bool gotSnapTarget = snapTarget != null && possibleCast.Targets.Contains(snapTarget);
             if (quality <= targetOffsetTolerance || gotSnapTarget)
@@ -115,6 +114,14 @@ public class BotCaster : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public PossibleCast SimulatePossibleCast(Vector3 targetPosition, bool enforceUsable, Vector3 pathablePoint)
+    {
+        if (!Ability.PointIsInRange(pathablePoint, targetPosition)) return null;
+        PossibleCast possibleCast = Ability.SimulateCast(targetPosition, pathablePoint);
+        if (enforceUsable && !Ability.IsCastable(possibleCast)) return null;
+        return possibleCast;
     }
 
     PossibleCast FindClosestCast(Vector3 targetPoint)

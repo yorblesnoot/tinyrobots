@@ -47,7 +47,7 @@ public class HealthPopupGenerator : MonoBehaviour
             popupQueue = new();
             StartCoroutine(SequencePopups());
         }
-        popupQueue.Enqueue(new Popup {  Number = number, Type = GetPopupType(number) });
+        popupQueue.Enqueue(new Popup {  Number = Mathf.Abs(number), Type = GetPopupType(number) });
     }
 
     PopupType GetPopupType(int number)
