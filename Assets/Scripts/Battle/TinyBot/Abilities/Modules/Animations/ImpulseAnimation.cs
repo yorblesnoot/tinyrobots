@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ImpulseAnimation : AbilityEffect
 {
+    [SerializeField] bool upDown = false;
     [SerializeField] float impulseLength = .5f;
     [SerializeField] float duration = .05f;
     [SerializeField] float returnDuration = .1f;
@@ -11,7 +12,8 @@ public class ImpulseAnimation : AbilityEffect
     public override IEnumerator PerformEffect(TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
     {
         Vector3 direction = trajectory[0] - trajectory[^1];
-        if(direction == Vector3.zero) direction = owner.transform.forward;
+        if (upDown) direction = owner.transform.up;
+        else if(direction == Vector3.zero) direction = owner.transform.forward;
         StartCoroutine(owner.Movement.ApplyImpulseToBody(direction, impulseLength, duration, returnDuration));
         yield return new WaitForSeconds(waitDuration);
     }

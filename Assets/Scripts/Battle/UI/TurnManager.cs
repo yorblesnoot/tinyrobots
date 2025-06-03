@@ -66,7 +66,7 @@ public class TurnManager : MonoBehaviour
 
     public static void RemoveTurnTaker(TinyBot bot)
     {
-        currentlyActive.Remove(bot);
+        if (currentlyActive.Contains(bot)) EndTurn(bot);
         summoned.Remove(bot);
         if (TurnTakers.IndexOf(bot) < activeIndex) activeIndex--;
         TurnTakers.Remove(bot);
@@ -149,7 +149,6 @@ public class TurnManager : MonoBehaviour
 
     static void ArrangePortraits(List<TinyBot> active)
     {
-        Debug.Log("Arranging portraits for " + TurnTakers.Count + " bots.");
         foreach (TinyBot turnTaker in TurnTakers)
         {
             float width = Instance.cardWidth;
@@ -170,7 +169,6 @@ public class TurnManager : MonoBehaviour
             portraitRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, width);
             portraitRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, height);
             portraitRect.transform.SetAsLastSibling();
-            Debug.Log(portraitRect.rect.height + ", " + portraitRect.rect.width);
         }
     }
 

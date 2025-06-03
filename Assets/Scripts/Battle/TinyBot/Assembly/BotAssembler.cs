@@ -11,15 +11,18 @@ public class BotAssembler : MonoBehaviour
     [SerializeField] List<GameObject> universalAbilityContainers;
 
     static BotAssembler instance;
+    static int[] nameCounts;
     private void Awake()
     {
         instance = this;
+        nameCounts = new int[Enum.GetNames(typeof(Allegiance)).Length];
     }
 
     public static TinyBot BuildBot(TreeNode<ModdedPart> treeRoot, Allegiance allegiance, bool echo = false, bool grantUniversals = true)
     {
         
         GameObject spawnedBase = Instantiate(instance.botBase);
+        NameBot(spawnedBase, allegiance);
         spawnedBase.transform.SetParent(instance.transform, false);
         TinyBot botUnit = spawnedBase.GetComponent<TinyBot>();
         
@@ -59,6 +62,13 @@ public class BotAssembler : MonoBehaviour
             locomotion.transform.SetParent(bot, true);
             initialAttachmentPoint.SetParent(locomotion.sourceBone, true);
         }
+    }
+
+    private static void NameBot(GameObject spawnedBase, Allegiance allegiance)
+    {
+        int allegianceIndex = (int)allegiance;
+        nameCounts[allegianceIndex]++;
+        spawnedBase.name = $"{allegiance} Bot {nameCounts[allegianceIndex]}";
     }
 
     public static GameObject RecursiveConstruction(TreeNode<ModdedPart> currentNode, List<PartModifier> spawnedParts, UnitStats statBlock, ref PrimaryMovement locomotion, AttachmentPoint attachmentPoint = null)

@@ -116,10 +116,10 @@ public class BotCaster : MonoBehaviour
         return false;
     }
 
-    public PossibleCast SimulatePossibleCast(Vector3 targetPosition, bool enforceUsable, Vector3 pathablePoint)
+    public PossibleCast SimulatePossibleCast(Vector3 targetPosition, bool enforceUsable, Vector3 origin)
     {
-        if (!Ability.PointIsInRange(pathablePoint, targetPosition)) return null;
-        PossibleCast possibleCast = Ability.SimulateCast(targetPosition, pathablePoint);
+        if (!Ability.PointIsInRange(targetPosition, origin)) return null;
+        PossibleCast possibleCast = Ability.SimulateCast(targetPosition, origin);
         if (enforceUsable && !Ability.IsCastable(possibleCast)) return null;
         return possibleCast;
     }
@@ -138,9 +138,16 @@ public class BotCaster : MonoBehaviour
 
     void DrawPlayerTargeting(PossibleCast cast)
     {
-        if (cast.Trajectory != null && cast.Trajectory.Count > 0) LineMaker.DrawLine(cast.Trajectory.ToArray());
+        DrawTrajectory(cast);
         if (Ability.TargetType != null) Ability.TargetType.Draw(cast.Trajectory);
         SetHighlightedTargets(cast.Targets);
+    }
+
+    void DrawTrajectory(PossibleCast cast)
+    {
+        if (cast == null || cast.Trajectory.Count == 0) return;
+        if(Ability.TargetType != null && !Ability.TargetType.UseLine) return;
+        LineMaker.DrawLine(cast.Trajectory.ToArray());
     }
 
     public void EndTracking()
@@ -153,13 +160,12 @@ public class BotCaster : MonoBehaviour
     {
         LineMaker.HideLine();
         if(Ability.TargetType != null) Ability.TargetType.Hide();
-        SetHighlightedTargets(null);
+        ResetHighlights?.Invoke();
     }
 
     void SetHighlightedTargets(List<Targetable> newTargets)
     {
         ResetHighlights?.Invoke();
-        if (newTargets == null) return;
         for (int i = 0; i < newTargets.Count; i++)
         {
             Targetable bot = newTargets[i];

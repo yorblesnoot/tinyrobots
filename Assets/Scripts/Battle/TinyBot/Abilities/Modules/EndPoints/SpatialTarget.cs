@@ -7,6 +7,7 @@ public class SpatialTarget : TargetPoint
     [SerializeField] protected int maxTargets = 100;
     [Range(0, 360)][SerializeField] int spatialDegree = 45;
     [SerializeField] bool containWithinTrajectory = false;
+    public override bool UseLine => !containWithinTrajectory;
 
     public override float AddedRange => containWithinTrajectory ? 0 : TargetRadius;
     int layerMask;

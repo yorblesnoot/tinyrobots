@@ -89,6 +89,7 @@ public class BotAI
 
     IEnumerator CastPhase()
     {
+        DebugAction($"entered Cast Phase.");
         UpdateTargetingData();
         foreach (var ability in primaryAbilities)
         {
@@ -101,38 +102,44 @@ public class BotAI
 
     IEnumerator SummonPhase(ActiveAbility ability)
     {
+        DebugAction($"entered Summon Phase with {ability}.");
         yield return MovePhase();
         List<Vector3Int> summonLocations = GetDashLocations(ability);
-        foreach (Vector3Int location in summonLocations)
+        foreach (Vector3 location in summonLocations)
         {
             PossibleCast cast = owner.Caster.SimulatePossibleCast(location, true, owner.transform.position);
             if (cast == null) continue;
             yield return UseAbility(ability, cast);
+            yield return CastPhase();
             yield break;
         }
     }
 
     IEnumerator AttackPhase(ActiveAbility ability)
     {
+        DebugAction($"entered Attack Phase with {ability}.");
         List<TinyBot> targets = new(ability.Type == AbilityType.ATTACK ? enemies : allies);
         foreach (var target in targets)
         {
             Vector3 targetPoint = target.TargetPoint.position;
             if (!owner.Caster.FindValidCast(targetPoint, out var cast, true, target)) continue;
             yield return UseAbility(ability, cast);
+            yield return CastPhase();
             yield break;
         }
-        
     }
 
     IEnumerator DashPhase(List<ActiveAbility> abilities)
     {
+        DebugAction($"entered Dash Phase.");
         UpdateTargetingData();
         foreach (var ability in abilities)
         {
             if (!owner.Caster.TryPrepare(ability)) continue;
-            List<Vector3Int> dashLocations = GetDashLocations(ability);
-            foreach (Vector3Int location in dashLocations)
+            DebugAction($"simulated {ability.name}.");
+            List<Vector3> dashLocations = GetDashLocations(ability).Select(l => (Vector3)l).ToList();
+            if(ability.range == 0) dashLocations.Add(owner.transform.position);
+            foreach (Vector3 location in dashLocations)
             {
                 PossibleCast cast = owner.Caster.SimulatePossibleCast(location, true, owner.transform.position);
                 if (cast == null) continue;
@@ -143,26 +150,11 @@ public class BotAI
         }
     }
 
-    private List<Vector3Int> GetDashLocations(ActiveAbility ability)
-    {
-        float maxDash = ability.range + RemainingMove;
-
-        List<Vector3Int> dashLocations = Pathfinder3D.GetDashTargets(owner.transform.position, maxDash, owner.Movement.Style);
-        if (owner.Movement.Style == MoveStyle.WALK)
-        {
-            dashLocations = Pathfinder3D.FilterByAccessToCastPosition(Vector3Int.RoundToInt(closestEnemyPosition), optimalDistance, dashLocations);
-        }
-        else
-        {
-            dashLocations = dashLocations.Where(location => Vector3.Distance(location, owner.transform.position) > ability.range / 2).ToList();
-        }
-
-        dashLocations = dashLocations.OrderBy(DistanceFromOptimalRange(closestEnemyPosition, optimalDistance)).ToList();
-        return dashLocations;
-    }
+    
 
     IEnumerator MovePhase()
     {
+        DebugAction($"entered Move Phase.");
         UpdateTargetingData();
         //this is a problem
         List<Vector3Int> pathableLocations = Pathfinder3D.GetPathableLocations();
@@ -184,6 +176,7 @@ public class BotAI
 
     IEnumerator ShieldPhase()
     {
+        DebugAction($"entered Shield Phase.");
         UpdateTargetingData();
         foreach (var shield in defensiveAbilities)
         {
@@ -199,6 +192,11 @@ public class BotAI
 
             yield return UseAbility(shield, cast);
         }
+    }
+
+    void DebugAction(string words)
+    {
+        Debug.Log($"{owner.name} {words}");
     }
 
     #region Unit Actions
@@ -228,6 +226,7 @@ public class BotAI
     readonly float skillDelay = .5f;
     private IEnumerator UseAbility(ActiveAbility ability, PossibleCast cast)
     {
+        DebugAction($"used {ability.name}.");
         owner.Caster.ActiveCast = cast;
         yield return PathToCastingPosition(Vector3Int.RoundToInt(cast.Source));
         yield return owner.Caster.CastActiveAbility();
@@ -237,7 +236,25 @@ public class BotAI
     #endregion
 
     #region Decision Tools
-    
+    private List<Vector3Int> GetDashLocations(ActiveAbility ability)
+    {
+
+        float maxDash = ability.range;
+
+        List<Vector3Int> dashLocations = Pathfinder3D.GetDashTargets(owner.transform.position, maxDash, owner.Movement.Style);
+        if (owner.Movement.Style == MoveStyle.WALK)
+        {
+            dashLocations = Pathfinder3D.FilterByAccessToCastPosition(Vector3Int.RoundToInt(closestEnemyPosition), optimalDistance, dashLocations);
+        }
+        else
+        {
+            dashLocations = dashLocations.Where(location => Vector3.Distance(location, owner.transform.position) > ability.range / 2).ToList();
+        }
+
+        dashLocations = dashLocations.OrderBy(DistanceFromOptimalRange(closestEnemyPosition, optimalDistance)).ToList();
+        return dashLocations;
+    }
+
     Func<Vector3Int, float> DistanceFromOptimalRange(Vector3 closestEnemyPosition, float optimalDistance)
     {
         return location => Mathf.Abs(Vector3.Distance(location, closestEnemyPosition) - optimalDistance);

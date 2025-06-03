@@ -339,7 +339,8 @@ public static class Pathfinder3D
 
     public static void SetNodeOccupancy(Vector3Int position, bool status)
     {
-        if(status) lastOccupied.Add(position);
+        if (!nodeMap.ContainsKey(position)) return;
+        if (status) lastOccupied.Add(position);
         Node node = nodeMap[position];
         node.Occupied = status;
         foreach(var edge in node.Edges)
