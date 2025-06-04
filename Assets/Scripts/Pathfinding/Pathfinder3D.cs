@@ -174,6 +174,7 @@ public static class Pathfinder3D
     }
     public static List<Vector3Int> GetPathableLocations(int moveBudget)
     {
+        moveBudget++; //to account for the starting node
         return nodeMap.Values.Where(node => node.G <= moveBudget).OrderBy(node => node.G).Select(node => node.Location).ToList();
     }
     public static List<Vector3Int> GetPathableLocations()

@@ -44,6 +44,7 @@ public class GraftPart : AbilityEffect
 
     void AddAbilities(PartModifier target, TinyBot owner)
     {
+        owner.PartModifiers.Add(target);
         foreach (var ability in target.Abilities)
         {
             ability.Initialize(owner);

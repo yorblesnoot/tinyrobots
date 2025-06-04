@@ -38,7 +38,7 @@ public class BotAI
     }
     float FindOptimalDistance()
     {
-        List<Ability> abilities = new(owner.ActiveAbilities);
+        List<Ability> abilities = new(owner.ActiveAbilities.Where(skill => skill.AIPriority >= 0));
         abilities.AddRange(owner.PassiveAbilities);
         abilities = abilities.Where(skill => skill.range > 0).ToList();
         if(abilities.Count == 0)

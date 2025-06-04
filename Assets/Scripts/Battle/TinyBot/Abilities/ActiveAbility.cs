@@ -8,7 +8,7 @@ public class ActiveAbility : Ability
     public AbilityType Type;
     [Range(-5,5)] public int AIPriority = 0;
     public bool EndTurn = false;
-    [SerializeField] bool costsMana = false;
+    public bool costsMana = false;
     [SerializeField] TargetRequirement targetRequirement;
     [SerializeField] ToggleAnimation trackingToggle;
     [SerializeField] AbilityEffect[] abilityEffects;
@@ -92,8 +92,9 @@ public class ActiveAbility : Ability
         }
         else
         {
+            ownerPosition = Owner.Movement.SanitizePoint(ownerPosition);
             Vector3 facing = castTarget - ownerPosition;
-            emissionSource = JointPositionAt(baseEmissionPosition, ownerPosition, facing, true);
+            emissionSource = JointPositionAt(transform.position, ownerPosition, facing);
             rangeSource = JointPositionAt(transform.position, ownerPosition, facing);
         }
         PossibleCast eval = new() { Source = ownerPosition };
@@ -113,9 +114,9 @@ public class ActiveAbility : Ability
         return targets;
     }
 
-    Vector3 JointPositionAt(Vector3 jointPosition, Vector3 position, Vector3 facing, bool local = false)
+    Vector3 JointPositionAt(Vector3 jointPosition, Vector3 position, Vector3 facing, bool inputIsLocal = false)
     {
-        Vector3 localGun = local ? jointPosition : Owner.transform.InverseTransformPoint(jointPosition);
+        Vector3 localGun = inputIsLocal ? jointPosition : Owner.transform.InverseTransformPoint(jointPosition);
         Quaternion locationRotation = Owner.Movement.GetRotationFromFacing(position, facing);
         
         Vector3 rotatedGun = locationRotation * localGun;

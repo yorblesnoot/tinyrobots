@@ -30,10 +30,18 @@ public class AbilityTooltip : TooltipBase
         instance.damage.text = ability.GetEffectPhrases();
         instance.range.text = ability.range + " Ft";
         instance.cooldown.text = ability.cooldown + " Turns";
-        instance.cost.text = ability.cost + " AP";
+        instance.cost.text = ability.cost + $" {GetCostName(ability)}";
         instance.description.text = DynamicAbilityDescription.Describe(ability);
 
         instance.SetPosition(position);
+    }
+
+    static string GetCostName(Ability ability)
+    {
+        string name = " AP";
+        ActiveAbility active = ability as ActiveAbility;
+        if(active != null && active.costsMana) name = " MP";
+        return name;
     }
 
     public static void Hide()
