@@ -92,7 +92,7 @@ public class ActiveAbility : Ability
         }
         else
         {
-            ownerPosition = Owner.Movement.SanitizePoint(ownerPosition);
+            //ownerPosition = Owner.Movement.SanitizePoint(ownerPosition);
             Vector3 facing = castTarget - ownerPosition;
             emissionSource = JointPositionAt(transform.position, ownerPosition, facing);
             rangeSource = JointPositionAt(transform.position, ownerPosition, facing);

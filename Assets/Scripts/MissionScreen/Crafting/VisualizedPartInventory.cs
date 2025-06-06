@@ -32,9 +32,9 @@ public class VisualizedPartInventory : MonoBehaviour
     public void Initialize(List<ModdedPart> source)
     {
         ActivePart = null;
-        partOverviewPanel.gameObject.SetActive(false);
         inventorySource = source;
-        if(filterControl != null) filterControl.FiltersChanged.AddListener(UpdatePartDisplays);
+        ActivatablePart.resetActivation.AddListener(() => SetActivePart(null));
+        if (filterControl != null) filterControl.FiltersChanged.AddListener(UpdatePartDisplays);
     }
 
     private void OnDestroy()

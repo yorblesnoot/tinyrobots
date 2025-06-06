@@ -182,135 +182,135 @@ MonoBehaviour:
       BaseWeight: 100
       TierWeight: -20
   CoreInventory:
-  - {fileID: 11400000, guid: f44ae767906db7149bc54988265d239c, type: 2}
   - {fileID: 11400000, guid: f86c8696ca2c68f4b9ec558f25fc51ba, type: 2}
-  - {fileID: 11400000, guid: a7692aba40afcd24ea4f5f7bcfa5e710, type: 2}
+  - {fileID: 11400000, guid: 6db67751bbc9d5646af1e56b8a5c4490, type: 2}
+  - {fileID: 11400000, guid: f44ae767906db7149bc54988265d239c, type: 2}
   MapData:
-    ZoneLocation: 4
+    ZoneLocation: 1
     Zones:
-    - PieceIndex: 13
-      Position: {x: 8, y: 0, z: 8}
-      Rotation: {x: 0, y: -0.7071068, z: 0, w: -0.7071068}
-      NeighborIndices: 03000000
-      Revealed: 0
-      EventType: 3
-    - PieceIndex: 12
-      Position: {x: 20, y: 0, z: 8}
-      Rotation: {x: 0, y: 0, z: 0, w: 1}
-      NeighborIndices: 0b00000004000000
-      Revealed: 1
-      EventType: 0
-    - PieceIndex: 7
-      Position: {x: 12, y: 0, z: 4}
-      Rotation: {x: 0, y: -0.7071068, z: 0, w: -0.7071068}
-      NeighborIndices: 0300000004000000
-      Revealed: 0
-      EventType: 2
-    - PieceIndex: 2
-      Position: {x: 12, y: 0, z: 8}
-      Rotation: {x: 0, y: 0, z: 0, w: 1}
-      NeighborIndices: 0200000000000000
-      Revealed: 0
-      EventType: 1
-    - PieceIndex: 2
-      Position: {x: 16, y: 0, z: 8}
-      Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-      NeighborIndices: 0100000002000000
-      Revealed: 1
-      EventType: 1
-    - PieceIndex: 13
-      Position: {x: 8, y: 0, z: 20}
-      Rotation: {x: 0, y: -1, z: 0, w: -0.00000004371139}
-      NeighborIndices: 09000000
-      Revealed: 0
-      EventType: 1
     - PieceIndex: 11
-      Position: {x: 20, y: 0, z: 20}
-      Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-      NeighborIndices: 0c000000
-      Revealed: 0
-      EventType: 1
-    - PieceIndex: 3
-      Position: {x: 8, y: 0, z: 12}
-      Rotation: {x: 0, y: -1, z: 0, w: -0.00000004371139}
-      NeighborIndices: 090000000800000013000000
-      Revealed: 0
-      EventType: 1
-    - PieceIndex: 4
-      Position: {x: 12, y: 0, z: 12}
+      Position: {x: 20, y: 0, z: 8}
       Rotation: {x: 0, y: 0, z: 0, w: 1}
       NeighborIndices: 07000000
       Revealed: 0
+      EventType: 3
+    - PieceIndex: 13
+      Position: {x: 20, y: 0, z: 20}
+      Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+      NeighborIndices: 0a000000
+      Revealed: 1
+      EventType: 0
+    - PieceIndex: 7
+      Position: {x: 16, y: 0, z: 24}
+      Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+      NeighborIndices: 0a00000006000000
+      Revealed: 0
+      EventType: 1
+    - PieceIndex: 6
+      Position: {x: 12, y: 0, z: 8}
+      Rotation: {x: 0, y: 0, z: 0, w: 1}
+      NeighborIndices: 0400000007000000120000000c000000
+      Revealed: 0
       EventType: 4
     - PieceIndex: 3
-      Position: {x: 8, y: 0, z: 16}
-      Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-      NeighborIndices: 050000000a00000007000000
+      Position: {x: 12, y: 0, z: 12}
+      Rotation: {x: 0, y: 0, z: 0, w: 1}
+      NeighborIndices: 09000000030000000e000000
       Revealed: 0
       EventType: 1
-    - PieceIndex: 2
+    - PieceIndex: 3
       Position: {x: 12, y: 0, z: 16}
-      Rotation: {x: 0, y: -0.7071068, z: 0, w: -0.7071068}
-      NeighborIndices: 0d00000009000000
+      Rotation: {x: 0, y: -1, z: 0, w: -0.00000004371139}
+      NeighborIndices: 06000000080000000d000000
       Revealed: 0
       EventType: 1
-    - PieceIndex: 6
-      Position: {x: 20, y: 0, z: 12}
-      Rotation: {x: 0, y: 0, z: 0, w: 1}
-      NeighborIndices: 0c00000012000000010000000e000000
-      Revealed: 0
-      EventType: 1
-    - PieceIndex: 6
-      Position: {x: 20, y: 0, z: 16}
-      Rotation: {x: 0, y: 0, z: 0, w: 1}
-      NeighborIndices: 06000000120000000b0000000f000000
-      Revealed: 0
-      EventType: 1
-    - PieceIndex: 2
+    - PieceIndex: 3
       Position: {x: 12, y: 0, z: 20}
       Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-      NeighborIndices: 100000000a000000
+      NeighborIndices: 020000000a00000005000000
       Revealed: 0
-      EventType: 1
-    - PieceIndex: 4
-      Position: {x: 16, y: 0, z: 12}
-      Rotation: {x: 0, y: -1, z: 0, w: -0.00000004371139}
-      NeighborIndices: 0b000000
+      EventType: 4
+    - PieceIndex: 6
+      Position: {x: 16, y: 0, z: 8}
+      Rotation: {x: 0, y: 0, z: 0, w: 1}
+      NeighborIndices: 09000000000000001200000003000000
       Revealed: 0
       EventType: 1
     - PieceIndex: 2
       Position: {x: 16, y: 0, z: 16}
-      Rotation: {x: 0, y: -1, z: 0, w: -0.00000004371139}
-      NeighborIndices: 100000000c000000
+      Rotation: {x: 0, y: 0, z: 0, w: 1}
+      NeighborIndices: 0900000005000000
+      Revealed: 0
+      EventType: 2
+    - PieceIndex: 6
+      Position: {x: 16, y: 0, z: 12}
+      Rotation: {x: 0, y: 0, z: 0, w: 1}
+      NeighborIndices: 080000000f0000000700000004000000
       Revealed: 0
       EventType: 1
     - PieceIndex: 3
       Position: {x: 16, y: 0, z: 20}
-      Rotation: {x: 0, y: -0.7071068, z: 0, w: -0.7071068}
-      NeighborIndices: 110000000f0000000d000000
+      Rotation: {x: 0, y: -1, z: 0, w: -0.00000004371139}
+      NeighborIndices: 020000000100000006000000
       Revealed: 0
       EventType: 1
-    - PieceIndex: 8
-      Position: {x: 16, y: 0, z: 24}
+    - PieceIndex: 14
+      Position: {x: 8, y: 0, z: 20}
+      Rotation: {x: 0, y: -1, z: 0, w: -0.00000004371139}
+      NeighborIndices: 
+      Revealed: 0
+      EventType: 1
+    - PieceIndex: 12
+      Position: {x: 8, y: 0, z: 8}
+      Rotation: {x: 0, y: -0.7071068, z: 0, w: -0.7071068}
+      NeighborIndices: 0e00000003000000
+      Revealed: 0
+      EventType: 1
+    - PieceIndex: 1
+      Position: {x: 8, y: 0, z: 16}
+      Rotation: {x: 0, y: 0, z: 0, w: 1}
+      NeighborIndices: 0500000013000000
+      Revealed: 0
+      EventType: 4
+    - PieceIndex: 2
+      Position: {x: 8, y: 0, z: 12}
       Rotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+      NeighborIndices: 040000000c000000
+      Revealed: 0
+      EventType: 1
+    - PieceIndex: 4
+      Position: {x: 20, y: 0, z: 12}
+      Rotation: {x: 0, y: 0, z: 0, w: 1}
+      NeighborIndices: 09000000
+      Revealed: 0
+      EventType: 1
+    - PieceIndex: 4
+      Position: {x: 20, y: 0, z: 16}
+      Rotation: {x: 0, y: -1, z: 0, w: -0.00000004371139}
+      NeighborIndices: 11000000
+      Revealed: 0
+      EventType: 1
+    - PieceIndex: 10
+      Position: {x: 24, y: 0, z: 12}
+      Rotation: {x: 0, y: 0, z: 0, w: 1}
       NeighborIndices: 10000000
       Revealed: 0
       EventType: 1
     - PieceIndex: 7
-      Position: {x: 24, y: 0, z: 12}
-      Rotation: {x: 0, y: 0, z: 0, w: 1}
-      NeighborIndices: 0b0000000c000000
+      Position: {x: 12, y: 0, z: 4}
+      Rotation: {x: 0, y: -0.7071068, z: 0, w: -0.7071068}
+      NeighborIndices: 0300000007000000
       Revealed: 0
-      EventType: 1
-    - PieceIndex: 10
+      EventType: 4
+    - PieceIndex: 8
       Position: {x: 4, y: 0, z: 16}
       Rotation: {x: 0, y: -1, z: 0, w: -0.00000004371139}
-      NeighborIndices: 07000000
+      NeighborIndices: 0d000000
       Revealed: 0
       EventType: 1
   ShopData:
     Shops: []
-  Difficulty: 3
+  Difficulty: 1
   <PartCurrency>k__BackingField: 0
   DevMode: 1
   RandomizeParty: 0

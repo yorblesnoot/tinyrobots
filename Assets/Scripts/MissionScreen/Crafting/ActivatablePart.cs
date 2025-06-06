@@ -53,7 +53,6 @@ public class ActivatablePart : PartButton, IPointerClickHandler
     {
         //this doesnt disable the part on the inventory's end ~~~~
         active = false;
-        submitPartCallback(null);
         if (activationOverlay.alpha == 0) return;
         Tween.Alpha(activationOverlay, 0, duration: activationFadeTime);
     }

@@ -139,8 +139,7 @@ public class TinyBot : Targetable
     public void Select(bool force = false)
     {
         if (MainCameraControl.CameraAnimating && !force) return;
-        if(gameObject.layer == ActiveLayer) return;
-        ClearActiveBot.Invoke();
+        if(AvailableForTurn && gameObject.layer != ActiveLayer) ClearActiveBot.Invoke();
         MainCameraControl.FindViewOfPosition(TargetPoint.position, AvailableForTurn ? BeginTurn : null);
     }
 

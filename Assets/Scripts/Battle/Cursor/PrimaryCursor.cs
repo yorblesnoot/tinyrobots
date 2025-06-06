@@ -94,7 +94,8 @@ public class PrimaryCursor : MonoBehaviour
     {
         lastPosition = pathPosition;
         List<Vector3> possiblePath = Pathfinder3D.FindVectorPath(pathPosition, out _);
-        if (possiblePath == null || possiblePath.Count == 0) return;
+        if (possiblePath == null || possiblePath.Count == 0) return; 
+        //it seems like this branch is causing the echo and path to get stuck while the cast indicator moves
         ProcessAndPreviewPath(possiblePath);
         activeEcho = PlayerControlledBot.BotEcho;
         if (currentPath.Count == 0)

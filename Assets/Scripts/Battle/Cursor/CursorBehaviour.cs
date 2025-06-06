@@ -36,8 +36,9 @@ public class CursorBehaviour : MonoBehaviour
         bool scrollBack = scroll < 0;
         if(scroll != 0) PrimaryCursor.Unsnap();
         if (scrollBack) ScrollDepthPlane(scroll);
-
-        Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var combinedHit, maximumCameraDistance, combinedMask);
+        Ray screenRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        screenRay.origin += screenRay.direction * (minimumCameraDistance - 1);
+        Physics.Raycast(screenRay, out var combinedHit, maximumCameraDistance, combinedMask);
         if (scrollBack)
         {
             AirMode();
@@ -45,7 +46,7 @@ public class CursorBehaviour : MonoBehaviour
             transform.position = combinedHit.point;
             return;
         }
-        Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out var terrainHit, maximumCameraDistance, terrainMask);
+        Physics.Raycast(screenRay, out var terrainHit, maximumCameraDistance, terrainMask);
         //if plane is deeper than terrain, snap to terrain
         if(combinedHit.collider != null && combinedHit.collider.gameObject.layer == terrainLayer)
         {
