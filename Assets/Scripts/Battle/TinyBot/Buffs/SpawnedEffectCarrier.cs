@@ -18,7 +18,7 @@ public class SpawnedEffectCarrier : MonoBehaviour
     IEnumerator ToggleSequence(bool on, TinyBot owner, TinyBot target)
     {
         List<AbilityEffect> effects = on ? activationEffects : deactivationEffects;
-        foreach (var effect in effects) yield return effect.PerformEffect(owner, null, new() { target });
+        yield return ActiveAbility.RunEffectSequence(effects, owner, null, new() { target });
         if(!on) Destroy(gameObject);
     }
 }

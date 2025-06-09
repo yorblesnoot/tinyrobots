@@ -15,7 +15,6 @@ public class EffectTrigger : TriggerController
 
     protected override void ActivateEffect(TinyBot target)
     {
-        foreach (var effect in OutputEffect)
-            Owner.StartCoroutine(effect.PerformEffect(Owner, null, new() { alwaysTargetSelf ? Owner : target }));
+        Owner.StartCoroutine(ActiveAbility.RunEffectSequence(OutputEffect, Owner, null, new() { alwaysTargetSelf ? Owner : target }));
     }
 }

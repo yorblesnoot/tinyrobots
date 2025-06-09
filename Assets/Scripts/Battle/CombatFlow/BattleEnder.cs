@@ -17,6 +17,7 @@ public class BattleEnder : MonoBehaviour
     private void Awake()
     {
         instance = this;
+        TinyBot.BotDied.AddListener(CheckoutBot);
     }
 
     public static bool IsMissionOver()
@@ -47,7 +48,7 @@ public class BattleEnder : MonoBehaviour
         }
     }
 
-    public static void CheckoutBot(TinyBot bot)
+    static void CheckoutBot(TinyBot bot)
     {
         if (bot == null || bot.LinkedCore == null) return;
         bot.LinkedCore.HealthRatio.Value = (float)bot.Stats.Current[StatType.HEALTH] / bot.Stats.Max[StatType.HEALTH];

@@ -22,7 +22,7 @@ public class MainCameraControl : MonoBehaviour
     [SerializeField] CinemachineConfiner[] confiners;
 
     Vector3Int mapCorner;
-    static CameraSet Cams;
+    static CameraSet Cams => Instance.cams;
     string xInput;
     string yInput;
 
@@ -50,7 +50,6 @@ public class MainCameraControl : MonoBehaviour
     {
         mapCorner = new(map.GetLength(0), map.GetLength(1), map.GetLength(2));
         if(confineCameras) ConfineCameras(mapCorner);
-        Cams = cams;
         Instance = this;
         xInput = Cams.Free.m_XAxis.m_InputAxisName; //Mouse X
         yInput = Cams.Free.m_YAxis.m_InputAxisName; //Mouse Y
@@ -233,7 +232,11 @@ public class MainCameraControl : MonoBehaviour
 
     static void ToggleAutoCam(bool on = true)
     {
-        if (!on) Cams.FreeFocalPoint.position = Cams.AutoFocalPoint.position;
+        if (!on)
+        {
+            Cams.FreeFocalPoint.position = Cams.AutoFocalPoint.position;
+            Cams.Brain.ManualUpdate();
+        }
         //Cams.Automatic.gameObject.SetActive(on);
         Cams.Free.Priority = on ? 0 : 3;
         
@@ -253,13 +256,16 @@ public class MainCameraControl : MonoBehaviour
 
     static IEnumerator TrackTowardsEntity(Transform target)
     {
-        Transform tracker = Cams.FreeFocalPoint;
+        ToggleAutoCam(true);
+        Transform tracker = Cams.AutoFocalPoint;
         while (tracking)
         {
             Vector3 targetPosition = Vector3.Lerp(tracker.position, target.position, Time.deltaTime);
             tracker.position = targetPosition;
+            Cams.FreeFocalPoint.position = targetPosition;
             yield return null;
         }
+        ToggleAutoCam(false);
     }
 
     

@@ -28,7 +28,6 @@ public class PrimaryCursor : MonoBehaviour
 
     [Header("Components")]
     [SerializeField] CursorBehaviour cursorBehaviour;
-    [SerializeField] TurnResourceCounter statDisplay;
     [SerializeField] LineRenderer pathingLine;
     [SerializeField] LineRenderer redLine;
     [SerializeField] GameObject numRotator;
@@ -39,7 +38,7 @@ public class PrimaryCursor : MonoBehaviour
 
     public static UnityEvent<TinyBot> PlayerSelectedBot = new();
 
-    bool skillActive { get { return PlayerControlledBot != null && PlayerControlledBot.Caster.Ability != null; } }
+    bool skillActive { get { return PlayerControlledBot != null && PlayerControlledBot.Caster.ActiveAbility != null; } }
 
     TinyBot activeEcho;
     private void Awake()
@@ -203,7 +202,6 @@ public class PrimaryCursor : MonoBehaviour
     {
         InvalidatePath();
         PlayerControlledBot.StartCoroutine(PlayerControlledBot.Caster.CastActiveAbility());
-        Instance.statDisplay.SyncStatDisplay(PlayerControlledBot);
         ClickableAbility.RefreshUsability.Invoke();
     }
 

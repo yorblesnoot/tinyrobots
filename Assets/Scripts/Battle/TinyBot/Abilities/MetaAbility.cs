@@ -98,10 +98,7 @@ public class MetaAbility : Ability
     {
         List<Vector3> trajectory = new() { Owner.TargetPoint.position, Owner.TargetPoint.position };
         List<Targetable> targets = new() { Owner };
-        foreach (AbilityEffect effect in triggeredEffects)
-        {
-            yield return effect.PerformEffect(Owner, trajectory, targets);
-        }
+        yield return ActiveAbility.RunEffectSequence(triggeredEffects, Owner, trajectory, targets);
     }
 
     protected override void AddTo(TinyBot bot)

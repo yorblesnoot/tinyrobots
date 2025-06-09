@@ -28,7 +28,7 @@ public class Pushback : AbilityEffect
             Vector3 destination = hitSomething ? hit.point : target.transform.position + pushDirection * FinalEffectiveness;
             tween.Group(Tween.Position(target.transform, destination, duration: pushDuration));
             Tween.Position(target.transform, destination, duration: pushDuration);
-            Debug.DrawLine(destination, destination + Vector3.up * 3, Color.white, 20);
+            //Debug.DrawLine(destination, destination + Vector3.up * 3, Color.white, 20);
         }
         yield return tween.ToYieldInstruction();
         foreach (Targetable target in targets) StartCoroutine(target.Fall());

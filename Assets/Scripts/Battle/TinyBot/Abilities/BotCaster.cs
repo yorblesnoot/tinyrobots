@@ -8,7 +8,7 @@ public class BotCaster : MonoBehaviour
 {
     TinyBot Owner;
     bool tracking;
-    public ActiveAbility Ability { get; private set; }
+    public ActiveAbility ActiveAbility { get; private set; }
     public PossibleCast ActiveCast;
     List<Vector3Int> pathableLocations;
     public static UnityEvent ResetHighlights = new();
@@ -24,7 +24,7 @@ public class BotCaster : MonoBehaviour
     public bool TryPrepare(ActiveAbility ability)
     {
         if (!ability.IsAvailable() || !ability.IsAffordable()) return false;
-        Ability = ability;
+        ActiveAbility = ability;
         
         pathableLocations = Pathfinder3D.GetPathableLocations(Owner.Stats.Current[StatType.MOVEMENT])
             .OrderBy(position => Vector3.Distance(position, Owner.transform.position))
@@ -36,31 +36,31 @@ public class BotCaster : MonoBehaviour
 
     void Cancel()
     {
-        if(Ability == null) return;
+        if(ActiveAbility == null) return;
         tracking = false;
         HidePlayerTargeting();
-        Ability = null;
+        ActiveAbility = null;
         Owner.Movement.ToggleAnimations(true);
         CastOutcomeIndicator.Hide();
     }
 
     public IEnumerator CastActiveAbility()
     {
-        Owner.SpendResource(Ability.cost, Ability.CastingResource);
-        Ability.CurrentCooldown = SceneGlobals.PlayerData.DevMode && Owner.Allegiance == Allegiance.PLAYER ? 0 : Ability.cooldown;
-        yield return CastSequence(ActiveCast);
+        Owner.SpendResource(ActiveAbility.cost, ActiveAbility.CastingResource);
+        ActiveAbility.CurrentCooldown = SceneGlobals.PlayerData.DevMode && Owner.Allegiance == Allegiance.PLAYER ? 0 : ActiveAbility.cooldown;
+        yield return CastSequence(ActiveAbility, ActiveCast);
     }
 
-    IEnumerator CastSequence(PossibleCast cast)
+    IEnumerator CastSequence(ActiveAbility ability, PossibleCast cast)
     {
         EndTracking();
         PrimaryCursor.TogglePlayerLockout(true);
-        yield return Ability.AdjustTrajectory(cast);
+        yield return ability.AdjustTrajectory(cast);
         Vector3Int startPosition = Vector3Int.RoundToInt(Owner.transform.position);
         MainCameraControl.PanToPosition(cast.Trajectory[^1]);
-        yield return Ability.Execute(cast.Trajectory, cast.Targets);
+        yield return ability.Execute(cast.Trajectory, cast.Targets);
         if (Vector3Int.RoundToInt(Owner.transform.position) != startPosition) Pathfinder3D.GeneratePathingTree(Owner.MoveStyle, Owner.transform.position);
-        if (Ability.EndTurn)
+        if (ability.EndTurn)
         {
             yield return new WaitForSeconds(1);
             TurnManager.EndTurn(Owner);
@@ -76,7 +76,7 @@ public class BotCaster : MonoBehaviour
         while (tracking == true)
         {
             Vector3 targetPosition = trackedTarget.transform.position;
-            ActiveCast = Ability.SimulateCast(targetPosition);
+            ActiveCast = ActiveAbility.SimulateCast(targetPosition);
             ability.PhysicalAimAlongTrajectory(ActiveCast.Trajectory);
             if (ability.range > 0 && Owner.Stats.Current[StatType.MOVEMENT] > 0
                 && !ActiveCast.Targets.Contains(PrimaryCursor.TargetedBot)
@@ -118,35 +118,35 @@ public class BotCaster : MonoBehaviour
 
     public PossibleCast SimulatePossibleCast(Vector3 targetPosition, bool enforceUsable, Vector3 origin)
     {
-        if (!Ability.PointIsInRange(targetPosition, origin)) return null;
-        PossibleCast possibleCast = Ability.SimulateCast(targetPosition, origin);
-        if (enforceUsable && !Ability.IsCastable(possibleCast)) return null;
+        if (!ActiveAbility.PointIsInRange(targetPosition, origin)) return null;
+        PossibleCast possibleCast = ActiveAbility.SimulateCast(targetPosition, origin);
+        if (enforceUsable && !ActiveAbility.IsCastable(possibleCast)) return null;
         return possibleCast;
     }
 
     PossibleCast FindClosestCast(Vector3 targetPoint)
     {
         Vector3 source = pathableLocations.OrderBy(location => Vector3.Distance(location, targetPoint)).First();
-        return Ability.SimulateCast(targetPoint, source);
+        return ActiveAbility.SimulateCast(targetPoint, source);
     }
 
     float GetTargetQuality(Vector3 position, List<Vector3> trajectory)
     {
-        float offset = Vector3.Distance(position, trajectory[^1]) - Ability.AddedRange;
+        float offset = Vector3.Distance(position, trajectory[^1]) - ActiveAbility.AddedRange;
         return Mathf.Clamp(offset, 0, float.MaxValue);
     }
 
     void DrawPlayerTargeting(PossibleCast cast)
     {
         DrawTrajectory(cast);
-        if (Ability.TargetType != null) Ability.TargetType.Draw(cast.Trajectory);
+        if (ActiveAbility.TargetType != null) ActiveAbility.TargetType.Draw(cast.Trajectory);
         SetHighlightedTargets(cast.Targets);
     }
 
     void DrawTrajectory(PossibleCast cast)
     {
         if (cast == null || cast.Trajectory.Count == 0) return;
-        if(Ability.TargetType != null && !Ability.TargetType.UseLine) return;
+        if(ActiveAbility.TargetType != null && !ActiveAbility.TargetType.UseLine) return;
         LineMaker.DrawLine(cast.Trajectory.ToArray());
     }
 
@@ -159,7 +159,7 @@ public class BotCaster : MonoBehaviour
     void HidePlayerTargeting()
     {
         LineMaker.HideLine();
-        if(Ability.TargetType != null) Ability.TargetType.Hide();
+        if(ActiveAbility.TargetType != null) ActiveAbility.TargetType.Hide();
         ResetHighlights?.Invoke();
     }
 
@@ -170,13 +170,13 @@ public class BotCaster : MonoBehaviour
         {
             Targetable bot = newTargets[i];
             if (bot == null) newTargets.Remove(bot);
-            bot.SetOutlineColor(Ability.GetOutlineColor());
+            bot.SetOutlineColor(ActiveAbility.GetOutlineColor());
         }
     }
 
     public bool CastIsValid()
     {
-        return Ability.IsCastable(ActiveCast);
+        return ActiveAbility.IsCastable(ActiveCast);
     }
 }
 

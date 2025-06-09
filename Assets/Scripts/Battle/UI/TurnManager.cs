@@ -32,6 +32,12 @@ public class TurnManager : MonoBehaviour
         activeIndex = 0;
         TurnTakers = new(); activePortraits = new(); currentlyActive = new();
         Instance = this;
+        TinyBot.BotDied.AddListener(RemoveTurnTaker);
+    }
+
+    private void OnDestroy()
+    {
+        TinyBot.BotDied.RemoveListener(RemoveTurnTaker);
     }
     public static void AddTurnTaker(TinyBot bot, int index = 0)
     {
@@ -54,7 +60,6 @@ public class TurnManager : MonoBehaviour
             bot.BecomeAvailableForTurn();
         }
         Instance.StartCoroutine(DelayArrange());
-        //ArrangePortraits(currentlyActive);
     }
 
     //this is necessary because of some weirdness with the layout group
@@ -64,16 +69,17 @@ public class TurnManager : MonoBehaviour
         ArrangePortraits(currentlyActive);
     }
 
-    public static void RemoveTurnTaker(TinyBot bot)
+    static void RemoveTurnTaker(TinyBot bot)
     {
+        Debug.Log("Removed turntaker " + bot.name);
         if (currentlyActive.Contains(bot)) EndTurn(bot);
         summoned.Remove(bot);
         if (TurnTakers.IndexOf(bot) < activeIndex) activeIndex--;
         TurnTakers.Remove(bot);
-        TurnPortrait removed = activePortraits[bot];
-        removed.Die();
+        TurnPortrait removedPortrait = activePortraits[bot];
+        removedPortrait.Die();
         activePortraits.Remove(bot);
-        Instance.StartCoroutine(RecyclePortrait(removed, 1.5f));
+        Instance.StartCoroutine(RecyclePortrait(removedPortrait, 1.5f));
         
     }
 

@@ -18,8 +18,6 @@ public abstract class Targetable : MonoBehaviour
     [HideInInspector] public abstract MoveStyle MoveStyle { get; }
     [SerializeField] protected HealthPopupGenerator Feedback;
 
-    public bool IsDead { get; protected set; } = false;
-
     protected Renderer[] PartRenderers;
     protected Collider Collider;
     int terrainMask;
@@ -37,8 +35,7 @@ public abstract class Targetable : MonoBehaviour
     public virtual void Die(Vector3 hitSource = default)
     {
         StopAllCoroutines();
-        Collider.isTrigger = false;
-        IsDead = true;
+        Collider.enabled = false;
     }
 
     public abstract void ReceiveHit(int damage, TinyBot source, Vector3 hitPoint, bool canBackstab = true);

@@ -30,8 +30,7 @@ public class HookPull : HookAbility
         if (target != null)
         {
             target.ReceiveHit(FinalEffectiveness, owner, trajectory[0]);
-            if (target.IsDead) target = null;
-            else
+            if(target != null)
             {
                 yield return new WaitForSeconds(pullDelay);
                 previousParent = target.transform.parent;

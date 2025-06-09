@@ -96,7 +96,14 @@ public class SaveContainer
 
     public static List<ModdedPart> LoadInventory(List<string> input, BotConverter converter)
     {
-        return input.Select(s => { converter.GetPartFromSequence(s, 0, out ModdedPart part); return part; }).ToList();
+        List<ModdedPart> parts = new();
+        foreach (var partString in input)
+        {
+            converter.GetPartFromSequence(partString, 0, out ModdedPart part);
+            parts.Add(part);
+            Debug.Log($"Loaded part: {part.BasePart.name} with {part.Mutators.Count} mutators.");
+        }
+        return parts;
     }
 
     List<BotCharacter> LoadCores(Save save, BotConverter converter)

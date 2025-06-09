@@ -10,6 +10,7 @@ public class DealDamage : AbilityEffect
     {
         foreach (Targetable target in targets)
         {
+            Debug.Log(target.name + " received damage: " + FinalEffectiveness);
             target.ReceiveHit(FinalEffectiveness, owner, target.TargetPoint.position, damageFlinch);
         }
         yield break;

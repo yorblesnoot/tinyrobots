@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -52,10 +54,21 @@ public class ActiveAbility : Ability
 
     public IEnumerator Execute(List<Vector3> trajectory, List<Targetable> targets)
     {
-        foreach (var effect in abilityEffects) yield return effect.PerformEffect(Owner, trajectory, targets);
+        yield return RunEffectSequence(abilityEffects, Owner, trajectory, targets);
         Used.Invoke();
         ScheduleAbilityEnd();
         //MainCameraControl.FindViewOfPosition(Owner.TargetPoint.position, false, false);
+    }
+
+    public static IEnumerator RunEffectSequence(IEnumerable<AbilityEffect> effects, TinyBot owner, List<Vector3> trajectory, List<Targetable> targets)
+    {
+        foreach (var effect in effects)
+        {
+            Debug.Log("activating effect : " + effect.GetType().ToString());
+            yield return effect.PerformEffect(owner, trajectory, targets);
+            targets = targets.Where(t => t != null).ToList(); 
+            if (owner == null) yield break; 
+        }
     }
 
     readonly float finalizeAimDuration = .5f;
@@ -127,8 +140,7 @@ public class ActiveAbility : Ability
     {
         if(DurationModule != null) DurationModule.ClearCallback();
         if(trackingAnimation != null) trackingAnimation.ResetTracking();
-        foreach(var effect in endEffects)
-            StartCoroutine(effect.PerformEffect(Owner, null, null));
+        StartCoroutine(RunEffectSequence(endEffects, Owner, null, null));
     }
 
     public void PhysicalAimAlongTrajectory(List<Vector3> trajectory)
@@ -180,12 +192,12 @@ public class ActiveAbility : Ability
         ClickableAbility.RefreshUsability.Invoke();
     }
 
-    public Color GetOutlineColor() => targetRequirement switch
+    public Color GetOutlineColor()
     {
-        TargetRequirement.ALLY => Color.green,
-        TargetRequirement.LANDABLE => Color.white,
-        _ => Color.red,
-    };
+        if(targetRequirement == TargetRequirement.ALLY || Type == AbilityType.BUFF) return Color.green;
+        else if(targetRequirement == TargetRequirement.LANDABLE) return Color.white;
+        else return Color.red;
+    }
 
     protected override void AddTo(TinyBot bot)
     {

@@ -121,6 +121,11 @@ public abstract class LegMovement : PrimaryMovement
 
         void UpdateFootPosition(float progress)
         {
+            if (Owner == null)
+            {
+                StepProgress = 1;
+                return;
+            }
             Vector3 interimPosition = Vector3.Lerp(startPosition, finalPosition, progress);
             Vector3 upAmount = movementDirection != Vector3.zero ? Owner.transform.up * legRaise.Evaluate(progress) : Vector3.zero;
             anchor.ikTarget.position = interimPosition + upAmount;

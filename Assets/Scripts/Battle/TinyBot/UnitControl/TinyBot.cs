@@ -167,22 +167,24 @@ public class TinyBot : Targetable
 
     public override void Die(Vector3 hitSource = default)
     {
+        
+
         base.Die(hitSource);
         Pathfinder3D.GetOccupancy.RemoveListener(DeclareOccupancy);
         if (PrimaryCursor.TargetedBot == this) PrimaryCursor.Unsnap();
         Vector3 hitPush = (transform.position - hitSource).normalized * deathPushMulti;
         foreach(var part in PartModifiers)
         {
-            if(!part.TryGetComponent(out Rigidbody rigidPart)) rigidPart = part.gameObject.AddComponent<Rigidbody>();
+            part.transform.SetParent(null, true);
+            if (!part.TryGetComponent(out Rigidbody rigidPart)) rigidPart = part.gameObject.AddComponent<Rigidbody>();
             Vector3 explodeForce = new(Random.Range(deathExplodeMinForce, deathExplodeMaxForce), 
                 Random.Range(deathExplodeMinForce, deathExplodeMaxForce), 
                 Random.Range(deathExplodeMinForce, deathExplodeMaxForce));
             rigidPart.velocity = explodeForce + hitPush;
         }
-        TurnManager.RemoveTurnTaker(this);
-        BattleEnder.CheckoutBot(this);
         BotDied.Invoke(this);
-        Destroy(gameObject, 5f);
+        Debug.Log("BotDied invoked for " + this.name + " at " + Time.frameCount);
+        Destroy(gameObject);
     }
 
     public override void ReceiveHit(int baseDamage, TinyBot source, Vector3 hitPoint, bool flinch = true)
@@ -219,6 +221,7 @@ public class TinyBot : Targetable
     protected override void EndFall(float startHeight)
     {
         base.EndFall(startHeight);
+        Pathfinder3D.EvaluateNodeOccupancy(transform.position);
         Movement.LandingStance();
         Tween.Delay(.5f, () => StartCoroutine(Movement.NeutralStance()));
     }
