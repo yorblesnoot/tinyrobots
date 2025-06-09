@@ -66,7 +66,7 @@ public class ActiveAbility : Ability
         {
             Debug.Log("activating effect : " + effect.GetType().ToString());
             yield return effect.PerformEffect(owner, trajectory, targets);
-            targets = targets.Where(t => t != null).ToList(); 
+            targets.RemoveAll(target => target == null);
             if (owner == null) yield break; 
         }
     }

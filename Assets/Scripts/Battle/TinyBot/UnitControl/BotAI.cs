@@ -63,14 +63,14 @@ public class BotAI
 
     void ShufflePools()
     {
-        ShufflePool(primaryAbilities);
-        ShufflePool(movementAbilities);
-        ShufflePool(defensiveAbilities);
+        primaryAbilities = ShufflePool(primaryAbilities);
+        movementAbilities = ShufflePool(movementAbilities);
+        defensiveAbilities = ShufflePool(defensiveAbilities);
 
-        void ShufflePool(List<ActiveAbility> pool)
+        List<ActiveAbility> ShufflePool(List<ActiveAbility> pool)
         {
             pool.Shuffle();
-            pool = pool.OrderByDescending(ability => ability.AIPriority).ToList();
+            return pool.OrderByDescending(ability => ability.AIPriority).ToList();
         }
     }
 
@@ -90,6 +90,8 @@ public class BotAI
     IEnumerator CastPhase()
     {
         DebugAction($"entered Cast Phase.");
+        primaryAbilities.DebugContents();
+        primaryAbilities.Select(a => a.AIPriority).DebugContents();
         UpdateTargetingData();
         foreach (var ability in primaryAbilities)
         {

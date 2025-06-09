@@ -101,7 +101,7 @@ public class SaveContainer
         {
             converter.GetPartFromSequence(partString, 0, out ModdedPart part);
             parts.Add(part);
-            Debug.Log($"Loaded part: {part.BasePart.name} with {part.Mutators.Count} mutators.");
+            //Debug.Log($"Loaded part: {part.BasePart.name} with {part.Mutators.Count} mutators.");
         }
         return parts;
     }

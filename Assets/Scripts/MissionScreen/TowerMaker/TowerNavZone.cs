@@ -47,7 +47,9 @@ public class TowerNavZone : MonoBehaviour
         Sequence sequence = Sequence.Create();
         foreach (var renderer in renderers)
         {
-            sequence.Group(Tween.MaterialProperty(renderer.material, glowThreshold, up ? -maxGlow/2 : -1, highlightDuration));
+            float endValue = up ? -maxGlow / 2 : -1;
+            if(renderer.material.GetFloat(glowThreshold) == endValue) continue;
+            sequence.Group(Tween.MaterialProperty(renderer.material, glowThreshold, endValue, highlightDuration));
         }
         yield return sequence.ToYieldInstruction();
     }

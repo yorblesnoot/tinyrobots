@@ -26,10 +26,7 @@ public class SuspendedMovement : PrimaryMovement
         int mask = LayerMask.GetMask("ParticleChassis");
         Vector3 direction = (Vector3.down - bot.transform.forward) * 2;
         Vector3 origin = bot.TargetPoint.position + direction;
-        bool ray = Physics.Raycast(origin, -direction, out RaycastHit hit, 5, mask);
-        Debug.Log(ray);
-        Debug.Log(origin);
-        Debug.DrawLine(origin, hit.point, Color.magenta, 10f);
+        Physics.Raycast(origin, -direction, out RaycastHit hit, 5, mask);
         transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal));
         transform.SetParent(bot.TargetPoint, true);
     }
