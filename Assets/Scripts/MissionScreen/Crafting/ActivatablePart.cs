@@ -12,7 +12,7 @@ public class ActivatablePart : PartButton, IPointerClickHandler
     [SerializeField] float activationFadeTime = .5f;
 
 
-    public static UnityEvent resetActivation = new();
+    public static UnityEvent ResetActivation = new();
 
     UnityAction<ModdedPart> submitPartCallback;
     UnityAction<ModdedPart> secondaryCallback;
@@ -26,7 +26,7 @@ public class ActivatablePart : PartButton, IPointerClickHandler
         nameDisplay.text = part.BasePart.name;
         selectButton.onClick.RemoveAllListeners();
         selectButton.onClick.AddListener(BecomeActive);
-        resetActivation.AddListener(BecomeInactive);
+        ResetActivation.AddListener(BecomeInactive);
 
         weightDisplay.text = value.ToString();
     }
@@ -39,7 +39,7 @@ public class ActivatablePart : PartButton, IPointerClickHandler
     void BecomeActive()
     {
         bool previouslyActive = active;
-        resetActivation.Invoke();
+        ResetActivation.Invoke();
         if(previouslyActive) secondaryCallback?.Invoke(PartIdentity);
         else
         {

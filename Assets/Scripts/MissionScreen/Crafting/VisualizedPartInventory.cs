@@ -1,7 +1,4 @@
-using Cinemachine;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -33,7 +30,7 @@ public class VisualizedPartInventory : MonoBehaviour
     {
         ActivePart = null;
         inventorySource = source;
-        ActivatablePart.resetActivation.AddListener(() => SetActivePart(null));
+        ActivatablePart.ResetActivation.AddListener(() => SetActivePart(null));
         if (filterControl != null) filterControl.FiltersChanged.AddListener(UpdatePartDisplays);
     }
 
@@ -44,11 +41,8 @@ public class VisualizedPartInventory : MonoBehaviour
 
     public void RemovePart(ModdedPart part)
     {
-
         if (!SceneGlobals.PlayerData.DevMode) inventorySource.Remove(part);
-        SetActivePart(null);
-
-        ActivatablePart.resetActivation.Invoke();
+        ActivatablePart.ResetActivation.Invoke();
         UpdatePartDisplays();
     }
 

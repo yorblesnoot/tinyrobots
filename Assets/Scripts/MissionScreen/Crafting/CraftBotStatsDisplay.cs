@@ -28,6 +28,8 @@ public class CraftBotStatsDisplay : MonoBehaviour
 
     public void RefreshDisplays()
     {
+        //dont try to refresh if the crafting screen is not active; otherwise, this will be activated by the shop
+        if (BotCrafter.Instance.gameObject.activeInHierarchy == false) return;
         foreach (var entry in entries.Values) entry.Value = 0;
         totalHealth = totalWeight = 0;
         List <Ability> activeAbilities = new();
