@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ArmThrow : AbilityEffect
@@ -23,7 +24,13 @@ public class ArmThrow : AbilityEffect
         yield return StartCoroutine(ProjectileMovement.LaunchAlongLine(thrown.gameObject, thrownAirTime, trajectory));
         float intervalTime = thrownAirTime / trajectory.Count;
         Vector3 displacement = trajectory[^1] - trajectory[^2];
-        yield return StartCoroutine(thrown.Fall(displacement / intervalTime));
+        yield return StartCoroutine(thrown.Fall(displacement / intervalTime, GetFallBonus(trajectory)));
         Pathfinder3D.EvaluateNodeOccupancy(owner.transform.position);
+    }
+
+    float GetFallBonus(List<Vector3> trajectory)
+    { 
+        float peak = trajectory.Select(point => point.y).Max();
+        return peak - trajectory[^1].y;
     }
 }

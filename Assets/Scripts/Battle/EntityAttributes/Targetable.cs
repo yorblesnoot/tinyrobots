@@ -49,10 +49,10 @@ public abstract class Targetable : MonoBehaviour
     }
 
     readonly int maxFallDuration = 5;
-    public IEnumerator Fall(Vector3 velocity = default)
+    public IEnumerator Fall(Vector3 velocity = default, float heightBonus = 0)
     {
         yield return Depenetrate();
-        float startHeight = transform.position.z;
+        float startHeight = transform.position.y + heightBonus;
         PhysicsBody.isKinematic = false;
         PhysicsBody.velocity = velocity;
         float elapsedTime = 0;
@@ -103,7 +103,7 @@ public abstract class Targetable : MonoBehaviour
     readonly float safeFallDistance = 5;
     protected virtual void EndFall(float startHeight)
     {
-        float heightDifference = startHeight - transform.position.z;
+        float heightDifference = startHeight - transform.position.y;
         heightDifference = Mathf.Max(heightDifference - safeFallDistance, 0);
         float fallDamage = heightDifference * fallDamagePerUnit;
         if(fallDamage > 0) ReduceHealth(Mathf.FloorToInt(fallDamage));

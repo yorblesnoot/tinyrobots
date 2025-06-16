@@ -10,57 +10,61 @@ public class DeploymentPhase : MonoBehaviour
     [SerializeField] float fadeDuration = .5f;
 
     static DeploymentPhase instance;
+    static Queue<TinyBot> deploymentQueue;
+    static TinyBot activeDeployment;
 
     private void Awake()
     {
         instance = this;
         deploymentBanner.alpha = 0;
+        gameObject.SetActive(false);
+        deploymentQueue = new();
     }
     public static IEnumerator BeginDeployment(List<TinyBot> playerBots, Action endCallback)
     {
         PrimaryCursor.TogglePlayerLockout(false);
+        instance.gameObject.SetActive(true);
         DeploymentZone.BeginDeployment();
+        deploymentQueue = new();
+        foreach (var bot in playerBots) deploymentQueue.Enqueue(bot);
+        GetNextDeployment();
         yield return Tween.Alpha(instance.deploymentBanner, 1f, instance.fadeDuration).ToYieldInstruction();
-        foreach (TinyBot bot in playerBots)
-        {
-            yield return instance.DeployUnit(bot);
-        }
+        yield return new WaitUntil(() => activeDeployment == null);
         yield return Tween.Alpha(instance.deploymentBanner, 0f, instance.fadeDuration).ToYieldInstruction();
         DeploymentZone.EndDeployment();
         endCallback();
+        instance.gameObject.SetActive(false);
     }
 
-    
-    IEnumerator DeployUnit(TinyBot bot)
+    private void Update()
     {
-        TinyBot echo = bot.BotEcho;
-        Vector3Int lastPosition = default;
-        Vector3 facing = default; 
-        //foreach (var part in bot.PartModifiers) SceneGlobals.BotPalette.RecolorPart(part, BotPalette.Special.HOLOGRAM);
-        while (!Input.GetMouseButtonDown(0))
+        if (activeDeployment == null) return;
+
+        activeDeployment.BotEcho.gameObject.SetActive(true);
+        Vector3 clampedPosition = DeploymentZone.ClampInZone(PrimaryCursor.Transform.position);
+        if (Pathfinder3D.GetLandingPointBy(clampedPosition, activeDeployment.BotEcho.MoveStyle, out Vector3Int landingPoint))
         {
-            yield return null;
-            Vector3 clampedPosition = DeploymentZone.ClampInZone(PrimaryCursor.Transform.position);
-            if(Pathfinder3D.GetLandingPointBy(clampedPosition, echo.MoveStyle, out Vector3Int landingPoint))
-            {
-                if (landingPoint == lastPosition) continue;
+            Vector3 facing = SpawnZone.GetCenterColumn(landingPoint) - landingPoint;
+            activeDeployment.BotEcho.PlaceAt(landingPoint, facing);
+            if (!Input.GetMouseButtonDown(0)) return;
 
-                lastPosition = landingPoint;
-                facing = SpawnZone.GetCenterColumn(landingPoint) - landingPoint;
-                echo.PlaceAt(landingPoint, facing);
-            }
-            else
-            {
-                echo.gameObject.SetActive(false);
-            }
-            
+            activeDeployment.BotEcho.gameObject.SetActive(false);
+            activeDeployment.PlaceAt(landingPoint, facing);
+            GetNextDeployment();
         }
-
-        //foreach (var part in echo.PartModifiers) SceneGlobals.BotPalette.RecolorPart(part, echo.Allegiance);
-        echo.gameObject.SetActive(false);
-        bot.PlaceAt(lastPosition, facing);
-        yield return null;
+        else
+        {
+            activeDeployment.BotEcho.gameObject.SetActive(false);
+        }
     }
 
-    
+    static void GetNextDeployment()
+    {
+        if (deploymentQueue.Count == 0)
+        {
+            activeDeployment = null;
+            return;
+        }
+        activeDeployment = deploymentQueue.Dequeue();
+    }    
 }

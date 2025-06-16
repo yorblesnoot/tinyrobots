@@ -40,7 +40,8 @@ public class SuspendedMovement : PrimaryMovement
         gluedPosition.y += ikOffset;
         Vector3 lookDirection = Owner.transform.forward;
         lookDirection.y = 0;
-        ikTarget.rotation = Quaternion.LookRotation(lookDirection, -hit.normal);
+        Vector3 pathNormal = -Pathfinder3D.GetCrawlOrientation(hit.point);
+        ikTarget.rotation = Quaternion.LookRotation(lookDirection, pathNormal);
         rotatorBase.localRotation = Quaternion.identity;
         HandleImpulse();
         yield return null;
