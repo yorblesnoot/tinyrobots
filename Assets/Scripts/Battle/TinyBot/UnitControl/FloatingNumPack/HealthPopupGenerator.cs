@@ -37,17 +37,12 @@ public class HealthPopupGenerator : MonoBehaviour
         public PopupType Type;
     }
 
-    Queue<Popup> popupQueue;
-
     public void QueuePopup(int number)
     {
-
-        if (popupQueue == null || popupQueue.Count == 0)
-        {
-            popupQueue = new();
-            StartCoroutine(SequencePopups());
-        }
-        popupQueue.Enqueue(new Popup {  Number = Mathf.Abs(number), Type = GetPopupType(number) });
+        Popup popup = new() { Number = Mathf.Abs(number), Type = GetPopupType(number) };
+        int displace = displacements.CheckoutDisplacement();
+        StartCoroutine(displacements.CountdownToCheckIn(FloatingNumber.lifespan, displace));
+        PopupFloatingNumber(popup, displace);
     }
 
     PopupType GetPopupType(int number)
@@ -57,20 +52,6 @@ public class HealthPopupGenerator : MonoBehaviour
             if(number < type.Threshold) return type;
         }
         return popupTypes[^1];
-    }
-
-    static readonly float popDelay = .2f;
-    private IEnumerator SequencePopups()
-    {
-        yield return null;
-        while(popupQueue.Count > 0)
-        {
-            yield return new WaitForSeconds(popDelay);
-            Popup newpop = popupQueue.Dequeue();
-            int displace = displacements.CheckoutDisplacement();
-            StartCoroutine(displacements.CountdownToCheckIn(FloatingNumber.lifespan, displace));
-            PopupFloatingNumber(newpop, displace);
-        }
     }
 
     void PopupFloatingNumber(Popup pop, int displacement)

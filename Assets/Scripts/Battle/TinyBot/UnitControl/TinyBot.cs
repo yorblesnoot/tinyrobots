@@ -25,6 +25,7 @@ public class TinyBot : Targetable
     [HideInInspector] public Sprite Portrait;
     
     [HideInInspector] public bool AvailableForTurn;
+    [HideInInspector] public bool Summoned;
     [HideInInspector] public List<PartModifier> PartModifiers;
 
     [HideInInspector] public UnityEvent BeganTurn = new();

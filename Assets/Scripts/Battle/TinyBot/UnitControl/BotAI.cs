@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System;
+using static UnityEngine.UI.GridLayoutGroup;
 
 public class BotAI
 {
@@ -16,6 +17,7 @@ public class BotAI
     List<TinyBot> enemies = new();
     List<TinyBot> allies = new();
     Vector3 closestEnemyPosition;
+    ActiveAbility reservedSkill;
     #region Initialization
     public BotAI(TinyBot bot)
     {
@@ -56,7 +58,7 @@ public class BotAI
         BeginTurn();
         yield return CastPhase();
         yield return MovePhase();
-        yield return ShieldPhase();
+        yield return EndPhase();
         yield return new WaitForSeconds(1);
         EndTurn();
     }
@@ -96,10 +98,35 @@ public class BotAI
         foreach (var ability in primaryAbilities)
         {
             if (!owner.Caster.TryPrepare(ability)) continue;
-            if(ability.Type == AbilityType.SUMMON) yield return SummonPhase(ability);
-            else yield return AttackPhase(ability);
+            if (ability.EndTurn)
+            {
+                if (reservedSkill == null) ReserveSkill(ability);
+                continue;
+            }
+            yield return SelectPhase(ability);
         }
         yield return DashPhase(movementAbilities);
+    }
+
+    void ReserveSkill(ActiveAbility ability)
+    {
+        reservedSkill = ability;
+        owner.SpendResource(ability.cost, ability.CastingResource);
+    }
+
+    IEnumerator EndPhase()
+    {
+        if(reservedSkill == null) yield break;
+        owner.SpendResource(-reservedSkill.cost, reservedSkill.CastingResource);
+        owner.Caster.TryPrepare(reservedSkill);
+        SelectPhase(reservedSkill);
+    }
+
+    private IEnumerator SelectPhase(ActiveAbility ability)
+    {
+        if (ability.Type == AbilityType.SUMMON) yield return SummonPhase(ability);
+        else if (ability.Type == AbilityType.SHIELD) yield return ShieldPhase();
+        else yield return AttackPhase(ability);
     }
 
     IEnumerator SummonPhase(ActiveAbility ability)
@@ -207,6 +234,7 @@ public class BotAI
         PrimaryCursor.TogglePlayerLockout(true);
         Pathfinder3D.GeneratePathingTree(owner.MoveStyle, owner.transform.position);
         ShufflePools();
+        reservedSkill = null;
     }
     void EndTurn()
     {

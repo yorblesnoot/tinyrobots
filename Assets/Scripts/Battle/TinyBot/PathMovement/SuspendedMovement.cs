@@ -55,6 +55,7 @@ public class SuspendedMovement : PrimaryMovement
 
     public override void AnimateToOrientation(Vector3 offset)
     {
+        //if neutral stance isn't called after movement, the glued position can be very far from the bot
         HandleImpulse();
         rotatorBase.rotation = gluedRotation;
     }

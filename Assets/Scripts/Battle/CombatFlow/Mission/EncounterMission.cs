@@ -6,6 +6,6 @@ public class EncounterMission : Mission
 {
     public override bool MetVictoryCondition()
     {
-        return TurnManager.TurnTakers.Where(bot => bot.Allegiance == Allegiance.ENEMY).Count() == 0;
+        return TurnManager.TurnTakers.Where(bot => bot.Allegiance == Allegiance.ENEMY && !bot.Summoned).Count() == 0;
     }
 }

@@ -107,6 +107,7 @@ public class BotAssembler : MonoBehaviour
     {
         tree.Traverse((part) => part.InitializePart());
         TinyBot summon = BuildBot(tree, owner.Allegiance, grantUniversals: grantUniversals);
+        summon.Summoned = true;
         Pathfinder3D.GetLandingPointBy(position, summon.MoveStyle, out Vector3Int cleanPosition);
         summon.transform.position = summon.Movement.SanitizePoint(cleanPosition);
         summon.Movement.PivotToFacePosition(owner.transform.position, true);

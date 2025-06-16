@@ -21,13 +21,11 @@ public class TurnManager : MonoBehaviour
     public static Mission Mission;
     static Dictionary<TinyBot, TurnPortrait> activePortraits;
     static List<TinyBot> currentlyActive;
-    static HashSet<TinyBot> summoned;
 
     public static UnityEvent RoundEnded;
     private void Awake()
     {
         RoundEnded = new();
-        summoned = new();
         TurnTakers = new();
         activeIndex = 0;
         TurnTakers = new(); activePortraits = new(); currentlyActive = new();
@@ -52,7 +50,6 @@ public class TurnManager : MonoBehaviour
     public static void RegisterSummon(TinyBot bot)
     {
         AddTurnTaker(bot, activeIndex);
-        summoned.Add(bot);
         if (bot.Allegiance == Allegiance.PLAYER)
         {
             activeIndex++;
@@ -73,7 +70,6 @@ public class TurnManager : MonoBehaviour
     {
         Debug.Log("Removed turntaker " + bot.name);
         if (currentlyActive.Contains(bot)) EndTurn(bot);
-        summoned.Remove(bot);
         if (TurnTakers.IndexOf(bot) < activeIndex) activeIndex--;
         TurnTakers.Remove(bot);
         TurnPortrait removedPortrait = activePortraits[bot];
@@ -166,7 +162,7 @@ public class TurnManager : MonoBehaviour
                 height *= Instance.activeUnitScaleFactor;
                 width *= Instance.activeUnitScaleFactor;
             }
-            if(summoned.Contains(turnTaker))
+            if(turnTaker.Summoned)
             {
                 height *= Instance.summonScaleFactor;
                 width *= Instance.summonScaleFactor;

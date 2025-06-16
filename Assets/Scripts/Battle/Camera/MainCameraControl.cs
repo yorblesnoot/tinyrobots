@@ -256,16 +256,16 @@ public class MainCameraControl : MonoBehaviour
 
     static IEnumerator TrackTowardsEntity(Transform target)
     {
-        ToggleAutoCam(true);
-        Transform tracker = Cams.AutoFocalPoint;
+        //ToggleAutoCam(true);
+        Transform tracker = Cams.FreeFocalPoint;
         while (tracking)
         {
             Vector3 targetPosition = Vector3.Lerp(tracker.position, target.position, Time.deltaTime);
             tracker.position = targetPosition;
-            Cams.FreeFocalPoint.position = targetPosition;
+            //Cams.FreeFocalPoint.position = targetPosition;
             yield return null;
         }
-        ToggleAutoCam(false);
+        //ToggleAutoCam(false);
     }
 
     

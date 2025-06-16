@@ -26,7 +26,7 @@ public class GraftPart : AbilityEffect
         if (availableSlots.Count == 0) return;
 
         List<PartModifier> parts = bot.PartModifiers.Where(part => part.SourcePart.BasePart.Type == SlotType.LATERAL && part.Abilities.Count() > 0).ToList();
-        PartModifier target = parts.GrabRandomly(false);
+        PartModifier target = parts.GrabRandomly();
         GraftPartToUnit(owner, target, graftAnimationDuration);
     }
 
@@ -34,6 +34,7 @@ public class GraftPart : AbilityEffect
     {
         if(part.TryGetComponent<Rigidbody>(out var body)) body.isKinematic = true;
         GameObject slot = availableSlots.GrabRandomly();
+        owner.PartModifiers.Add(part);
         part.transform.SetParent(slot.transform.parent, true);
         Tween.LocalPosition(part.transform, slot.transform.localPosition, duration)
             .Group(Tween.LocalRotation(part.transform, slot.transform.localRotation, duration)).OnComplete(() => AddAbilities(part, owner));

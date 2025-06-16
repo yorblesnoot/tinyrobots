@@ -194,14 +194,14 @@ public class PrimaryCursor : MonoBehaviour
         }
         if (skillActive)
         {
-            PlayerCastAbility();
+            PlayerControlledBot.StartCoroutine(PlayerCastAbility());
         }
     }
 
-    void PlayerCastAbility()
+    IEnumerator PlayerCastAbility()
     {
         InvalidatePath();
-        PlayerControlledBot.StartCoroutine(PlayerControlledBot.Caster.CastActiveAbility());
+        yield return PlayerControlledBot.Caster.CastActiveAbility();
         ClickableAbility.RefreshUsability.Invoke();
     }
 
