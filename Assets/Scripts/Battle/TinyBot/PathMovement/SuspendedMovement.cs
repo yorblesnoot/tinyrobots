@@ -4,6 +4,7 @@ using UnityEngine;
 public class SuspendedMovement : PrimaryMovement
 {
     [SerializeField] float ikOffset = .7f;
+    [SerializeField] float castWidth = .5f;
     [SerializeField] Transform ikTarget;
     [SerializeField] Transform rotatorBase;
     int terrainMask;
@@ -34,7 +35,7 @@ public class SuspendedMovement : PrimaryMovement
     public override IEnumerator NeutralStance()
     {
         Vector3 raySource = Owner.transform.position;
-        Physics.Raycast(raySource, Vector3.down, out RaycastHit hit, 3, terrainMask);
+        Physics.SphereCast(raySource, castWidth, Vector3.down, out RaycastHit hit, 3, terrainMask);
         Debug.DrawRay(raySource, Vector3.down, Color.cyan, 100);
         gluedPosition = hit.point;
         gluedPosition.y += ikOffset;
