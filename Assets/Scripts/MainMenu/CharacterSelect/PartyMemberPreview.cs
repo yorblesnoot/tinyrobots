@@ -13,7 +13,7 @@ public class PartyMemberPreview : MonoBehaviour
     [SerializeField] TMP_Text charDesc;
     public void Become(BotCharacter character)
     {
-        charName.text = character.GetCoreName();
+        charName.text = character.CoreName;
         energyCapacity.text = character.EnergyCapacity.ToString();
         character.ModdedCore.FinalStats.ToList().PassDataToUI(charStats, (entry, icon) => icon.AssignStat(entry.Key, entry.Value));
         character.ModdedCore.Abilities.PassDataToUI(abilities, (ability, icon) => icon.Become(ability));

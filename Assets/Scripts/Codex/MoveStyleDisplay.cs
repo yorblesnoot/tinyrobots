@@ -4,6 +4,12 @@ using UnityEngine.UI;
 public class MoveStyleDisplay : MonoDictionary<MoveStyle, Sprite>
 {
     [SerializeField] Image icon;
+    [SerializeField] MoveStyle defaultStyle;
+
+    private void Awake()
+    {
+        icon.sprite = this[defaultStyle];
+    }
 
     public void Become(ModdedPart part)
     {

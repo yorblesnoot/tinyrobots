@@ -13,7 +13,7 @@ public class UnitTab : MonoBehaviour
     {
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(clickEffect);
-        coreName.text = core.GetCoreName();
+        coreName.text = core.CoreName;
     }
 
     

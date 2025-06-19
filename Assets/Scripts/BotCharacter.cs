@@ -11,6 +11,7 @@ public class BotCharacter : SOWithGUID
 
     public TreeNode<ModdedPart> Bot;
     public readonly int EnergyCapacity = 100;
+    public string CoreName => DisplayName == "" ? name.Replace("Character", "") : DisplayName;
 
 
     public Observable<float> HealthRatio = new() { Value = 1.0f };
@@ -26,11 +27,6 @@ public class BotCharacter : SOWithGUID
 
     [field: SerializeField] public BotRecord StarterRecord {  get; private set; }
     [SerializeField] CraftablePart corePart;
-
-    public string GetCoreName()
-    {
-        return DisplayName == "" ? name.Replace("Character", "") : DisplayName;
-    }
 
     //skill tree?
 }

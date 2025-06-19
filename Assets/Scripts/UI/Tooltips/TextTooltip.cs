@@ -13,9 +13,10 @@ public class TextTooltip : TooltipBase
         instance = this;
         gameObject.SetActive(false);
     }
-    public static void Show(string text, Vector3 position)
+    public static void Show(string text, Vector3 position, Color color)
     {
         instance.gameObject.SetActive(true);
+        instance.text.color = (Color)color;
         instance.text.text = text;
         instance.SetPosition(position);
     }

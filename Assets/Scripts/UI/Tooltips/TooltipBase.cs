@@ -7,15 +7,15 @@ public class TooltipBase : MonoBehaviour
 {
     [SerializeField] protected float heightModifier = 50;
     [SerializeField] protected bool usePosition;
-    Image image;
     protected void SetPosition(Vector3 position)
     {
         if (usePosition) return;
-        if(image == null) image = GetComponent<Image>();
-        float showHeight = image.rectTransform.rect.height / 2 + heightModifier;
         position = transform.parent.InverseTransformPoint(position);
-        position.y += position.y > 0 ? -showHeight : showHeight;
-        transform.localPosition = position;
+        float distance = position.magnitude;
+        distance -= heightModifier;
+        position.Normalize();
+        Vector3 finalPosition = position * distance;
+        transform.localPosition = finalPosition;
     }
 
 

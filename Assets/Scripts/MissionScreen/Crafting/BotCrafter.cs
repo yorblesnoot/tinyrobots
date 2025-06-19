@@ -69,7 +69,7 @@ public class BotCrafter : MonoBehaviour
         if (newCore == ActiveCore) return;
         SaveActiveBotToCore();
         ActiveCore = newCore;
-        nameDisplay.text = newCore.GetCoreName();
+        nameDisplay.text = newCore.CoreName;
         
         if (newCore.Bot != null) PlacePartsInSlots(newCore.Bot, OriginSlot);
         unitStatsDisplay.RefreshDisplays();

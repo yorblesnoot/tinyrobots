@@ -1,6 +1,7 @@
 using PrimeTween;
 using System;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -27,8 +28,8 @@ public class PartSlot : MonoBehaviour
     public static List<ModdedPart> SlottedParts = new();
     public static bool PrimaryLocomotionSlotted {get; private set;}
 
-    static ModdedPart activePart {  get { return BotCrafter.Instance.PartInventory.ActivePart; } }
-    static VisualizedPartInventory inventory {  get { return BotCrafter.Instance.PartInventory; } }
+    static ModdedPart ActivePart {  get { return BotCrafter.Instance.PartInventory.ActivePart; } }
+    static VisualizedPartInventory Inventory {  get { return BotCrafter.Instance.PartInventory; } }
     private void OnEnable()
     {
         PartIdentity = null;
@@ -43,18 +44,18 @@ public class PartSlot : MonoBehaviour
         if (PartIdentity != null && PartIdentity.BasePart.Type != SlotType.CORE)
         {
             ClearPartIdentity(false, true);
-            BotCrafter.HideUnusableSlots(inventory.ActivePart);
+            BotCrafter.HideUnusableSlots(Inventory.ActivePart);
         }
-        else if (activePart == null) return;
-        else if (PartCanSlot(activePart.BasePart.Type, SlotType)) PlayerSlotPart();
+        else if (ActivePart == null) return;
+        else if (PartCanSlot(ActivePart.BasePart.Type, SlotType)) PlayerSlotPart();
     }
 
     private void OnMouseEnter()
     {
         if (PartIdentity != null) return;
         slotAnimator.SetBool(pulseAnimation, true);
-        if (activePart == null || !PartCanSlot(activePart.BasePart.Type, SlotType)) return;
-        DecorateMockup(activePart);
+        if (ActivePart == null || !PartCanSlot(ActivePart.BasePart.Type, SlotType)) return;
+        DecorateMockup(ActivePart);
         SceneGlobals.BotPalette.RecolorPart(mockup, BotPalette.Special.HOLOGRAM);
         AnimateHologram(true);
     }
@@ -66,13 +67,6 @@ public class PartSlot : MonoBehaviour
         if (mockup == null) return;
         mockup.gameObject.SetActive(false);
         mockup = null;
-    }
-
-    void ModifySlottedParts(ModdedPart part, bool add)
-    {
-        if (add) SlottedParts.Add(part);
-        else SlottedParts.Remove(part);
-        ModifiedParts.Invoke();
     }
 
     public static bool PartCanSlot(SlotType part, SlotType slot)
@@ -88,29 +82,30 @@ public class PartSlot : MonoBehaviour
 
     void PlayerSlotPart()
     {
-        if (activePart.BasePart.PrimaryLocomotion && PrimaryLocomotionSlotted) return;
+        if (ActivePart.BasePart.PrimaryLocomotion && PrimaryLocomotionSlotted) return;
         if (!SceneGlobals.PlayerData.DevMode && !ActivePartIsUnderWeightLimit()) return;
 
         activeSequence.Stop();
-        SetPartIdentity(activePart);
+        SetPartIdentity(ActivePart);
         BotCrafter.Instance.PartInventory.RemovePart(BotCrafter.Instance.PartInventory.ActivePart);
     }
 
     public static bool ActivePartIsUnderWeightLimit()
     {
-        if(activePart == null) return true;
+        if(ActivePart == null) return true;
         int totalWeight = 0;
         foreach (ModdedPart part in SlottedParts)
         {
             totalWeight += part.FinalStats[StatType.ENERGY];
         }
-        return (totalWeight + activePart.FinalStats[StatType.ENERGY] <= BotCrafter.ActiveCore.EnergyCapacity);
+        return (totalWeight + ActivePart.FinalStats[StatType.ENERGY] <= BotCrafter.ActiveCore.EnergyCapacity);
     }
 
     public void ClearPartIdentity(bool destroy, bool toInventory)
     {
-        ModifySlottedParts(PartIdentity, false);
-        if(slotAnimator != null && slotAnimator.gameObject.activeSelf) slotAnimator.SetBool(contractionAnimation, false);
+        SlottedParts.Remove(PartIdentity);
+        
+        if (slotAnimator != null && slotAnimator.gameObject.activeSelf) slotAnimator.SetBool(contractionAnimation, false);
         if (PartIdentity != null)
         {
             if (mockup != null)
@@ -131,8 +126,10 @@ public class PartSlot : MonoBehaviour
             //this ordering is to avoid disrupting the smart filter, which checks part identity when the list is updated
             ModdedPart returnPart = PartIdentity;
             PartIdentity = null;
-            if (toInventory) inventory.AddPart(returnPart);
+            if (toInventory) Inventory.AddPart(returnPart);
+            ModifiedParts.Invoke();
         }
+        
 
         if (destroy)
         {
@@ -164,13 +161,15 @@ public class PartSlot : MonoBehaviour
     public PartSlot[] SetPartIdentity(ModdedPart part)
     {
         PrimaryLocomotionSlotted |= part.BasePart.PrimaryLocomotion;
-        ModifySlottedParts(part, true);
+        SlottedParts.Add(part);
+        
         slotAnimator.SetBool(contractionAnimation, true);
         
         DecorateMockup(part);
         SceneGlobals.BotPalette.RecolorPart(mockup, Allegiance.PLAYER);
         AttachmentPoint[] attachmentPoints = mockup.GetComponentsInChildren<AttachmentPoint>();
         PartIdentity = part;
+        ModifiedParts.Invoke();
 
         childSlots = new PartSlot[attachmentPoints.Length];
         for (int i = 0; i < attachmentPoints.Length; i++)
