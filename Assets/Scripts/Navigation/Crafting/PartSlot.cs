@@ -30,12 +30,19 @@ public class PartSlot : MonoBehaviour
 
     static ModdedPart ActivePart {  get { return BotCrafter.Instance.PartInventory.ActivePart; } }
     static VisualizedPartInventory Inventory {  get { return BotCrafter.Instance.PartInventory; } }
+
+    PartLinkDrawer linkDrawer;
+    private void Awake()
+    {
+        linkDrawer = GetComponent<PartLinkDrawer>();
+    }
+
     private void OnEnable()
     {
         PartIdentity = null;
         activeIndicator.transform.localPosition = Vector3.zero;
         Vector3 towardsCamera = -BotCrafter.GetCameraForward();
-        activeIndicator.transform.SetPositionAndRotation(transform.position + towardsCamera * cameraApproachDistance, 
+        activeIndicator.transform.SetPositionAndRotation(ApproachCamera(transform.position), 
             Quaternion.LookRotation(towardsCamera));
     }
 
@@ -169,7 +176,7 @@ public class PartSlot : MonoBehaviour
         SceneGlobals.BotPalette.RecolorPart(mockup, Allegiance.PLAYER);
         AttachmentPoint[] attachmentPoints = mockup.GetComponentsInChildren<AttachmentPoint>();
         PartIdentity = part;
-        ModifiedParts.Invoke();
+        
 
         childSlots = new PartSlot[attachmentPoints.Length];
         for (int i = 0; i < attachmentPoints.Length; i++)
@@ -177,10 +184,18 @@ public class PartSlot : MonoBehaviour
             GameObject slot = Instantiate(BotCrafter.Instance.NewSlot);
             slot.transform.position = attachmentPoints[i].transform.position;
             childSlots[i] = slot.GetComponent<PartSlot>();
+            linkDrawer.LinkToSlot(childSlots[i]);
             childSlots[i].AttachmentPoint = attachmentPoints[i];
         }
+        ModifiedParts.Invoke();
 
         return childSlots;
+    }
+
+    public Vector3 ApproachCamera(Vector3 point)
+    {
+        Vector3 towardsCamera = -BotCrafter.GetCameraForward();
+        return point + towardsCamera * cameraApproachDistance;
     }
 
     private void DecorateMockup(ModdedPart part)
