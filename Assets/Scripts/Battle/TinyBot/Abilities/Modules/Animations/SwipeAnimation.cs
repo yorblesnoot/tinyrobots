@@ -22,7 +22,7 @@ public class SwipeAnimation : IKAnimation
         Debug.DrawLine(swingSource, swingSource + reverseSwing, Color.blue, 10f);
 
         yield return Tween.Position(ikTarget, reverseSwing + swingSource, duration: swingTime).ToYieldInstruction();
-        StartCoroutine(owner.Movement.ApplyImpulseToBody(targetDirection, 1, swingTime, swingTime * 2));
+        owner.StartCoroutine(owner.Movement.ApplyImpulseToBody(targetDirection, 1, swingTime, swingTime * 2));
         float timeElapsed = 0;
         while(timeElapsed < swingTime)
         {

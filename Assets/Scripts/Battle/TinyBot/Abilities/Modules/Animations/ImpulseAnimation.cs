@@ -14,7 +14,7 @@ public class ImpulseAnimation : AbilityEffect
         Vector3 direction = trajectory[0] - trajectory[^1];
         if (upDown) direction = owner.transform.up;
         else if(direction == Vector3.zero) direction = owner.transform.forward;
-        StartCoroutine(owner.Movement.ApplyImpulseToBody(direction, impulseLength, duration, returnDuration));
+        owner.StartCoroutine(owner.Movement.ApplyImpulseToBody(direction, impulseLength, duration, returnDuration));
         yield return new WaitForSeconds(waitDuration);
     }
 }

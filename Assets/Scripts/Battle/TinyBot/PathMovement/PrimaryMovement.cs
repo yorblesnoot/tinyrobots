@@ -193,23 +193,20 @@ public class PrimaryMovement : MonoBehaviour
         Vector3 neutralPosition = target.position;
         Vector3 snapPosition = neutralPosition + direction * distance;
 
+        yield return ProcessImpulseDirection(neutralPosition, snapPosition, snapTime);
+        yield return ProcessImpulseDirection(snapPosition, neutralPosition, returnTime);        
+    }
+
+    IEnumerator ProcessImpulseDirection(Vector3 neutralPosition, Vector3 snapPosition, float snapTime)
+    {
         float timeElapsed = 0;
         while (timeElapsed < snapTime)
         {
-            target.position = Vector3.Lerp(neutralPosition, snapPosition, timeElapsed / snapTime);
+            Owner.transform.position = Vector3.Lerp(neutralPosition, snapPosition, timeElapsed / snapTime);
             timeElapsed += Time.deltaTime;
             HandleImpulse();
             yield return null;
         }
-        timeElapsed = 0;
-        while (timeElapsed < returnTime)
-        {
-            target.position = Vector3.Lerp(snapPosition, neutralPosition, timeElapsed / returnTime);
-            timeElapsed += Time.deltaTime;
-            HandleImpulse();
-            yield return null;
-        }
-        
     }
 
     public virtual void LandingStance() { }

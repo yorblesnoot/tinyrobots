@@ -13,6 +13,7 @@ public static class PhysicsHelper
         Vector3 startPosition = local ? transform.localPosition : transform.position;
         while (timeElapsed < duration)
         {
+            if(transform == null) yield break;
             Vector3 step = Vector3.Lerp(startPosition, endPosition, timeElapsed / duration);
             timeElapsed += Time.deltaTime;
             if(local) transform.localPosition = step;
