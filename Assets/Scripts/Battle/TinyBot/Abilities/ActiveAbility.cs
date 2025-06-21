@@ -56,7 +56,8 @@ public class ActiveAbility : Ability
     {
         yield return RunEffectSequence(abilityEffects, Owner, trajectory, targets);
         Used.Invoke();
-        ScheduleAbilityEnd();
+        if (DurationModule == null) EndAbility();
+        else DurationModule.SetDuration(Owner, EndAbility);
         //MainCameraControl.FindViewOfPosition(Owner.TargetPoint.position, false, false);
     }
 
@@ -152,14 +153,8 @@ public class ActiveAbility : Ability
 
     public void ResetAim()
     {
-        trackingAnimation.ResetTracking();
-        trackingToggle.Stop();
-    }
-
-    void ScheduleAbilityEnd()
-    {
-        if (DurationModule == null) EndAbility();
-        else DurationModule.SetDuration(Owner, EndAbility);
+        if(trackingAnimation != null) trackingAnimation.ResetTracking();
+        if(trackingToggle != null) trackingToggle.Stop();
     }
 
     public bool IsCastable(PossibleCast cast)

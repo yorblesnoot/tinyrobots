@@ -8,7 +8,7 @@ public class BotCaster : MonoBehaviour
 {
     TinyBot Owner;
     bool tracking;
-    public ActiveAbility ActiveAbility { get; private set; }
+    public ActiveAbility PreparedAbility { get; private set; }
     public PossibleCast ActiveCast;
     List<Vector3Int> pathableLocations;
     public static UnityEvent ResetHighlights = new();
@@ -24,7 +24,7 @@ public class BotCaster : MonoBehaviour
     public bool TryPrepare(ActiveAbility ability)
     {
         if (!ability.IsAvailable() || !ability.IsAffordable()) return false;
-        ActiveAbility = ability;
+        PreparedAbility = ability;
         
         pathableLocations = Pathfinder3D.GetPathableLocations(Owner.Stats.Current[StatType.MOVEMENT])
             .OrderBy(position => Vector3.Distance(position, Owner.transform.position))
@@ -36,19 +36,20 @@ public class BotCaster : MonoBehaviour
 
     void Cancel()
     {
-        if(ActiveAbility == null) return;
+        if(PreparedAbility == null) return;
         tracking = false;
         HidePlayerTargeting();
-        ActiveAbility = null;
+        PreparedAbility.ResetAim();
+        PreparedAbility = null;
         Owner.Movement.ToggleAnimations(true);
         CastOutcomeIndicator.Hide();
     }
 
     public IEnumerator CastActiveAbility()
     {
-        Owner.SpendResource(ActiveAbility.cost, ActiveAbility.CastingResource);
-        ActiveAbility.CurrentCooldown = SceneGlobals.PlayerData.DevMode && Owner.Allegiance == Allegiance.PLAYER ? 0 : ActiveAbility.cooldown;
-        yield return CastSequence(ActiveAbility, ActiveCast);
+        Owner.SpendResource(PreparedAbility.cost, PreparedAbility.CastingResource);
+        PreparedAbility.CurrentCooldown = SceneGlobals.PlayerData.DevMode && Owner.Allegiance == Allegiance.PLAYER ? 0 : PreparedAbility.cooldown;
+        yield return CastSequence(PreparedAbility, ActiveCast);
     }
 
     IEnumerator CastSequence(ActiveAbility ability, PossibleCast cast)
@@ -76,7 +77,7 @@ public class BotCaster : MonoBehaviour
         while (tracking == true)
         {
             Vector3 targetPosition = trackedTarget.transform.position;
-            ActiveCast = ActiveAbility.SimulateCast(targetPosition);
+            ActiveCast = PreparedAbility.SimulateCast(targetPosition);
             ability.PhysicalAimAlongTrajectory(ActiveCast.Trajectory);
             if (ability.range > 0 && Owner.Stats.Current[StatType.MOVEMENT] > 0
                 && !ActiveCast.Targets.Contains(PrimaryCursor.TargetedBot)
@@ -118,35 +119,35 @@ public class BotCaster : MonoBehaviour
 
     public PossibleCast SimulatePossibleCast(Vector3 targetPosition, bool enforceUsable, Vector3 origin)
     {
-        if (!ActiveAbility.PointIsInRange(targetPosition, origin)) return null;
-        PossibleCast possibleCast = ActiveAbility.SimulateCast(targetPosition, origin);
-        if (enforceUsable && !ActiveAbility.IsCastable(possibleCast)) return null;
+        if (!PreparedAbility.PointIsInRange(targetPosition, origin)) return null;
+        PossibleCast possibleCast = PreparedAbility.SimulateCast(targetPosition, origin);
+        if (enforceUsable && !PreparedAbility.IsCastable(possibleCast)) return null;
         return possibleCast;
     }
 
     PossibleCast FindClosestCast(Vector3 targetPoint)
     {
         Vector3 source = pathableLocations.OrderBy(location => Vector3.Distance(location, targetPoint)).First();
-        return ActiveAbility.SimulateCast(targetPoint, source);
+        return PreparedAbility.SimulateCast(targetPoint, source);
     }
 
     float GetTargetQuality(Vector3 position, List<Vector3> trajectory)
     {
-        float offset = Vector3.Distance(position, trajectory[^1]) - ActiveAbility.AddedRange;
+        float offset = Vector3.Distance(position, trajectory[^1]) - PreparedAbility.AddedRange;
         return Mathf.Clamp(offset, 0, float.MaxValue);
     }
 
     void DrawPlayerTargeting(PossibleCast cast)
     {
         DrawTrajectory(cast);
-        if (ActiveAbility.TargetType != null) ActiveAbility.TargetType.Draw(cast.Trajectory);
+        if (PreparedAbility.TargetType != null) PreparedAbility.TargetType.Draw(cast.Trajectory);
         SetHighlightedTargets(cast.Targets);
     }
 
     void DrawTrajectory(PossibleCast cast)
     {
         if (cast == null || cast.Trajectory.Count == 0) return;
-        if(ActiveAbility.TargetType != null && !ActiveAbility.TargetType.UseLine) return;
+        if(PreparedAbility.TargetType != null && !PreparedAbility.TargetType.UseLine) return;
         LineMaker.DrawLine(cast.Trajectory.ToArray());
     }
 
@@ -159,7 +160,7 @@ public class BotCaster : MonoBehaviour
     void HidePlayerTargeting()
     {
         LineMaker.HideLine();
-        if(ActiveAbility.TargetType != null) ActiveAbility.TargetType.Hide();
+        if(PreparedAbility.TargetType != null) PreparedAbility.TargetType.Hide();
         ResetHighlights?.Invoke();
     }
 
@@ -170,13 +171,13 @@ public class BotCaster : MonoBehaviour
         {
             Targetable bot = newTargets[i];
             if (bot == null) newTargets.Remove(bot);
-            bot.SetOutlineColor(ActiveAbility.GetOutlineColor());
+            bot.SetOutlineColor(PreparedAbility.GetOutlineColor());
         }
     }
 
     public bool CastIsValid()
     {
-        return ActiveAbility.IsCastable(ActiveCast);
+        return PreparedAbility.IsCastable(ActiveCast);
     }
 }
 

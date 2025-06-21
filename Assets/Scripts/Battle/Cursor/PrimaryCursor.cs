@@ -38,7 +38,7 @@ public class PrimaryCursor : MonoBehaviour
 
     public static UnityEvent<TinyBot> PlayerSelectedBot = new();
 
-    bool skillActive { get { return PlayerControlledBot != null && PlayerControlledBot.Caster.ActiveAbility != null; } }
+    bool skillActive { get { return PlayerControlledBot != null && PlayerControlledBot.Caster.PreparedAbility != null; } }
 
     TinyBot activeEcho;
     private void Awake()

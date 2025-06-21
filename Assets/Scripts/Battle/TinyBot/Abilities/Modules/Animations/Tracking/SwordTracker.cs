@@ -10,9 +10,4 @@ public class SwordTracker : TrackingAnimation
     {
         ikTarget.position = Vector3.Lerp(ikTarget.position, readyPosition.position, 1 / aimLag);
     }
-
-    public override void ResetTracking()
-    {
-        base.ResetTracking();
-    }
 }

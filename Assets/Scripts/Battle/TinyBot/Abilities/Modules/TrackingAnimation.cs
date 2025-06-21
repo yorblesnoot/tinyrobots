@@ -17,6 +17,7 @@ public abstract class TrackingAnimation : MonoBehaviour
 
     public virtual void ResetTracking()
     {
+        Debug.Log($"Resetting tracking for {gameObject.name} at {Time.frameCount}");
         Tween.LocalPosition(ikTarget, endValue: basePosition, duration: .5f);
     }
 }
