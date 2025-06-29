@@ -12,13 +12,12 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _OUTLINETYPE_NORMAL
+  - _OUTLINETYPE_POSITION
   - _OVERLAYMODE1_NONE
   - _OVERLAYMODE_NONE
   - _RIMSPLITCOLOR_NOSPLIT
   - _USEHATCHINGCONSTANTSCALE_ON
   - _USELIGHTRAMP_STEP
-  - _USEOUTLINE_ON
   - _USEPURESKETCH_ON
   - _USESPECULAR_ON
   m_InvalidKeywords:
@@ -124,7 +123,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _ASEOutlineWidth: 0
-    - _AdaptiveThicnkess: 0
+    - _AdaptiveThicnkess: 0.06
     - _AdditionalLightsAmount: 1
     - _AdditionalLightsFaloff: 1
     - _AdditionalLightsIntesity: 1
@@ -140,7 +139,7 @@ Material:
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
-    - _Cutoff: 0.5
+    - _Cutoff: 0.51
     - _Darken: 0
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
@@ -153,7 +152,7 @@ Material:
     - _DstBlendAlpha: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
-    - _Glossiness: 0
+    - _Glossiness: 0.2
     - _GlossyReflections: 0
     - _HalftoneEdgeOffset: 0.1
     - _HalftoneSmoothness: 0.3
@@ -161,7 +160,7 @@ Material:
     - _HalftoneToonAffect: 0
     - _HaltonePatternSize: 0
     - _IndirectLightAffectOnHatch: 0
-    - _IndirectLightStrength: 0.33
+    - _IndirectLightStrength: 0.65
     - _InverseMask: 0
     - _LightRampOffset: 0
     - _Lighten: 0
@@ -171,10 +170,10 @@ Material:
     - _NormalMapStrength: 1
     - _OcclusionStrength: 1
     - _OutlineDynamicSpeed: 0
-    - _OutlineNoiseIntesity: 1
+    - _OutlineNoiseIntesity: 0.92
     - _OutlineNoiseScale: 10
     - _OutlineTextureStrength: 0
-    - _OutlineType: 0
+    - _OutlineType: 1
     - _OverlayMode: 0
     - _OverlayMode1: 0
     - _OverlayRotation: 0
@@ -207,10 +206,10 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _StepHalftoneTexture: 0
-    - _StepOffset: -0.151
+    - _StepOffset: -0.04
     - _Strength: 0
     - _Surface: 0
-    - _Thicnkess: 0.0067
+    - _Thicnkess: 0.006
     - _UVAnimationSpeed: 0
     - _UVAnimationSpeedSpec: 0
     - _UVAnimationSpeedWarp: 0
@@ -232,7 +231,7 @@ Material:
     - _UseEnvironmentRefletion: 0
     - _UseHatchingConstantScale: 1
     - _UseLightRamp: 0
-    - _UseOutline: 1
+    - _UseOutline: 0
     - _UsePureSketch: 1
     - _UseRimLight: 0
     - _UseScreenUvs: 0
