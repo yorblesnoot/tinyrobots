@@ -27,6 +27,24 @@ MonoBehaviour:
       type: 3}
   OutlineShaders:
     OutlineDetection: {fileID: 4800000, guid: c59878161c7e0ad40b0661b47620d0e5, type: 3}
+--- !u!114 &-5489198947413134949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9377bada70366419aa6301068e988aa4, type: 3}
+  m_Name: EdgeDetection
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings: {fileID: 11400000, guid: d03d179d2c3c8954c93ec6eb0177280c, type: 2}
+  shaders:
+    section: {fileID: 4800000, guid: 555b69c4bab64af2aab316a4335ad6be, type: 3}
+    sectionMask: {fileID: 4800000, guid: 66bb1bcc44054ea3bf6082c4d4e9edf9, type: 3}
+    outline: {fileID: 4800000, guid: 0049e25744c864ee4916fc340cf7957f, type: 3}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49,7 +67,8 @@ MonoBehaviour:
   - {fileID: 6700837827621927910}
   - {fileID: 7543657391090879447}
   - {fileID: 6801032054229894988}
-  m_RendererFeatureMap: 7f41c8c22ab1b298f72f98866e0fe974e6bbe76c8028fe5cd7cb38df6d74b0684c076bb29e1e625e
+  - {fileID: -5489198947413134949}
+  m_RendererFeatureMap: 7f41c8c22ab1b298f72f98866e0fe974e6bbe76c8028fe5cd7cb38df6d74b0684c076bb29e1e625e9bf1fdeda372d2b3
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
